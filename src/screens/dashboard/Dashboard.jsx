@@ -10,12 +10,14 @@ export default function Dashboard() {
     dispatch(userLogout(userToken));
     dispatch(handleLogout(userToken));
   };
+
   return (
-    <div className='text-white w-full'>
-      <div className='bg-[#2f2a40] p-2 items-center h-16 w-full flex justify-end border-b-[.5px] border-[#ffffff81]'>
+    <div className="text-white w-full">
+      <div className="bg-[#2f2a40] p-2 items-center h-16 w-full flex justify-end border-b-[.5px] border-[#ffffff81]">
         <button
-          className='bg-[#02001c] p-2 px-6 rounded-md active:bg-opacity-50'
-          onClick={() => logout()}>
+          className="bg-[#02001c] p-2 px-6 rounded-md active:bg-opacity-50"
+          onClick={() => logout()}
+        >
           Logout
         </button>
       </div>
