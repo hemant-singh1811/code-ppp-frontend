@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { ViewsComponent } from "../Table/tableUtilityBar/tableViews/TableUtilityViews";
+import { ViewsComponent } from "./tableViews/TableUtilityViews";
 
 export const ResizableSidebar = ({ children }) => {
     const ref = useRef(null);

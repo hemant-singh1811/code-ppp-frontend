@@ -18,8 +18,6 @@ export const alphaTruckingApi = createApi({
   }),
 
   endpoints: (builder) => ({
-    // views api endpoint
-
     GetBases: builder.query({
       query: () => ({
         url: '/API/V1/bases',
@@ -38,28 +36,16 @@ export const alphaTruckingApi = createApi({
         method: 'POST',
       }),
     }),
-    // http://localhost/API/V1/getmodel/<send table_id here>
+    PostViews: builder.mutation({
+      query: (payload) => ({
+        url: 'API/V1/changesaved',
+        body: { model: payload },
+        method: 'POST',
+      }),
+    }),
     GetLoad: builder.query({
       query: () => ({
         url: '/API/V1/getload',
-        method: 'POST',
-      }),
-    }),
-    GetTrucks: builder.query({
-      query: () => ({
-        url: '/API/V1/getAllTrucks',
-        method: 'POST',
-      }),
-    }),
-    GetDrivers: builder.query({
-      query: () => ({
-        url: 'API/V1/getAllDrivers',
-        method: 'POST',
-      }),
-    }),
-    GetTrailers: builder.query({
-      query: () => ({
-        url: 'API/V1/getAllTrailers',
         method: 'POST',
       }),
     }),
@@ -69,144 +55,14 @@ export const alphaTruckingApi = createApi({
         method: 'POST',
       }),
     }),
-    GetClaims: builder.query({
-      query: () => ({
-        url: 'API/V1/getClaimsData',
-        method: 'POST',
-      }),
-    }),
-    GetRecruitmentDHTeamData: builder.query({
-      query: () => ({
-        url: 'API/V1/GetRecruitmentDHTeamData',
-        method: 'POST',
-      }),
-    }),
-    GetCourtClaimData: builder.query({
-      query: () => ({
-        url: 'API/V1/GetCourtClaimData',
-        method: 'POST',
-      }),
-    }),
-    GetDriverHiringFormData: builder.query({
-      query: () => ({
-        url: 'API/V1/getDriverHiringFormData',
-        method: 'POST',
-      }),
-    }),
-    GetCarriersData: builder.query({
-      query: () => ({
-        url: 'API/V1/getCarriersData',
-        method: 'POST',
-      }),
-    }),
-    PostViews: builder.mutation({
-      query: (payload) => ({
-        url: 'API/V1/changesaved',
-        body: { model: payload },
-        method: 'POST',
-      }),
-    }),
-    // OPERATIONS API
-    GetDriverRecruitmentData: builder.query({
-      query: () => ({
-        url: 'API/V1/getDriverRecruitmentData',
-        method: 'POST',
-      }),
-    }),
-    GetSocialMedia: builder.query({
-      query: () => ({
-        url: 'API/V1/getSocialMedia',
-        method: 'POST',
-      }),
-    }),
-    GetDriverHiringInstructions: builder.query({
-      query: () => ({
-        url: 'API/V1/getDriverHiringInstructions',
-        method: 'POST',
-      }),
-    }),
-    GetSmsViolationSummary: builder.query({
-      query: () => ({
-        url: 'API/V1/getSmsViolationSummary',
-        method: 'POST',
-      }),
-    }),
-    GetExaminationTickets: builder.query({
-      query: () => ({
-        url: 'API/V1/getExaminationTickets',
-        method: 'POST',
-      }),
-    }),
-    GetInsuranceCompany: builder.query({
-      query: () => ({
-        url: 'API/V1/getInsuranceCompany',
-        method: 'POST',
-      }),
-    }),
-    GetInsuranceAdjuster: builder.query({
-      query: () => ({
-        url: 'API/V1/getInsuranceAdjuster',
-        method: 'POST',
-      }),
-    }),
-    GetInsuranceClaims: builder.query({
-      query: () => ({
-        url: 'API/V1/getInsuranceClaims',
-        method: 'POST',
-      }),
-    }),
-    GetRecordableAccidents: builder.query({
-      query: () => ({
-        url: 'API/V1/getRecordableAccidents',
-        method: 'POST',
-      }),
-    }),
-    GetAssets: builder.query({
-      query: () => ({
-        url: 'API/V1/getAssets',
-        method: 'POST',
-      }),
-    }),
-    GetLossRuns: builder.query({
-      query: () => ({
-        url: 'API/V1/getLossRuns',
-        method: 'POST',
-      }),
-    }),
-    GetCarriers: builder.query({
-      query: () => ({
-        url: 'API/V1/getCarriers',
-        method: 'POST',
-      }),
-    }),
   }),
 });
 
 export const {
-  useGetRecruitmentDHTeamDataQuery,
-  useGetSmsViolationSummaryQuery,
-  useGetDriverHiringInstructionsQuery,
-  useGetCourtClaimDataQuery,
-  useGetDriverHiringFormDataQuery,
-  useGetCarriersDataQuery,
-  useGetCarriersQuery,
-  useGetClaimsQuery,
-  useGetLoadQuery,
-  useGetAssetsQuery,
-  useGetLossRunsQuery,
-  useGetRecordableAccidentsQuery,
-  useGetInsuranceClaimsQuery,
-  useGetInsuranceAdjusterQuery,
-  useGetInsuranceCompanyQuery,
-  useGetExaminationTicketsQuery,
-  useGetTrucksQuery,
-  useGetDriversQuery,
-  useGetTrailersQuery,
-  useGetSavedViewQuery,
-  useGetSocialMediaQuery,
   usePostViewsMutation,
-  // |||||||||||||
   useGetBasesQuery,
   useGetModelQuery,
   useGetTableDataQuery,
+  useGetLoadQuery,
+  useGetSavedViewQuery,
 } = alphaTruckingApi;

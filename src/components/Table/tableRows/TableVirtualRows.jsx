@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { flexRender } from '@tanstack/react-table';
 import { useVirtual } from 'react-virtual';
 import { TableContext } from '../tableComponents/TableComponents';
-import ImageReader from '../../utilities/ImageReader';
+import ImageReader from '../tableUtilities/ImageReader';
 
 export default function TableVirtualRows({ tableContainerRef, rows }) {
   const { activeRowHeight, activeNumberOfLines } = useContext(TableContext);

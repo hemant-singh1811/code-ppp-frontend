@@ -3,7 +3,7 @@ import TableVirtualRows from "../tableRows/TableVirtualRows";
 import { useDrag, useDrop } from "react-dnd";
 import { flexRender } from "@tanstack/react-table";
 import { TableContext } from "./TableComponents";
-import { ResizableSidebar } from "../../utilities/ResizableSidebar";
+import { ResizableSidebar } from "../tableUtilityBar/ResizableSidebar";
 
 const DraggableColumnHeader = ({ header, table, index }) => {
   const { setColumnOrder } = table;
