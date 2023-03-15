@@ -8,9 +8,12 @@ export default function ImageReader({ data }) {
     let images;
     let thumbnails;
     if (data) {
-        thumbnails = data?.map(({ thumbnails }) => thumbnails?.medium?.url)
+        thumbnails = data?.map(({ thumbnails }) => thumbnails?.large?.url)
         images = data?.map(({ url }) => url)
     }
+
+    console.log(data)
+    // console.log(thumbnails)
 
     const openImageViewer = useCallback((index) => {
         setCurrentImage(index);
@@ -31,7 +34,7 @@ export default function ImageReader({ data }) {
                         onClick={() => openImageViewer(index)}
                         className=" min-w-[50px] w-[50px] h-full object-cover cursor-pointer"
                         key={index}
-                        alt=""
+                        alt="img"
                     />
                 ))}
             </div>

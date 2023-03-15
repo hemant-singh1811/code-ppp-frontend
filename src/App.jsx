@@ -15,7 +15,7 @@ function App() {
     return <Error error={error} />;
   }
   return (
-    <div className='app text-white'>
+    <div className='app text-white bg-white'>
       {userInfo && <Sidebar data={data} />}
       <MainRouting />
     </div>

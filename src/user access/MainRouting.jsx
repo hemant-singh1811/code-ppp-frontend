@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router";
 import { useSelector } from "react-redux";
 import Login from "../screens/authentication/Login";
 import ProtectedRoute from "../screens/authentication/ProtectedRoute";
-import Dashboard from "../screens/dashboard/Dashboard";
+import Dashboard from "../components/dashboard/pages/Dashboard";
 import Schedule from "../screens/schedule/Schedule";
 import Master from "../screens/master/Master";
 import Trucks from "../screens/trucks/Trucks";
