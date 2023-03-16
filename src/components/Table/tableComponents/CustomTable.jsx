@@ -4,6 +4,7 @@ import { useDrag, useDrop } from "react-dnd";
 import { flexRender } from "@tanstack/react-table";
 import { TableContext } from "./TableComponents";
 import { ResizableSidebar } from "../tableUtilityBar/ResizableSidebar";
+import TableColumnAdd from "../tableUtilities/TableColumnAdd";
 
 const DraggableColumnHeader = ({ header, table, index }) => {
   const { setColumnOrder } = table;
@@ -120,6 +121,7 @@ export default function CustomTable() {
                     index={index}
                   />
                 ))}
+                <TableColumnAdd />
               </div>
             ))}
           </div>
