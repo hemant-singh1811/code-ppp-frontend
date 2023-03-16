@@ -16,7 +16,7 @@ export default function Table({ tableData, tableModel }) {
   // this is for checking is the side bar is opened ?
   const { toggle } = useSelector((state) => state.globalState.mainSideBar);
 
-  // const keysMap = new Map();
+  const keysMap = new Map();
 
   // for (let index = 0; index < tableData.length; index++) {
   //   const keys = Object.keys(tableData[index].data);
@@ -24,6 +24,7 @@ export default function Table({ tableData, tableModel }) {
   //     keysMap.set(ele);
   //   })
   // }
+
 
   // const dataKeys = [];
   // for (const [key] of keysMap) {
@@ -41,14 +42,23 @@ export default function Table({ tableData, tableModel }) {
   const defaultColumns = tableModel.map(({ id, data }) => {
     return ({
       accessorKey: data?.field_name,
-      id: id,
+      id: data?.field_name,
       header: data?.field_name,
       field_type: data?.field_type
     });
   })
 
+  console.log(defaultColumns)
+
   // console.log(defaultColumns)
 
+  // for (let index = 0; index < defaultColumns.length; index++) {
+  //   const keys = Object.keys(defaultColumns[index].field_type);
+  //   keys.map((ele) => {
+  //     keysMap.set(ele);
+  //   })
+  // }
+  // console.log(keysMap)
   const [tableDataModified, setTableDataModified] = React.useState(tableData.map(({ data }) => {
     const object = {}
     defaultColumns.map(({ header }) => {

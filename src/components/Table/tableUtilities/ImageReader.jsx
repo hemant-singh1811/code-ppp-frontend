@@ -1,18 +1,26 @@
-import React, { useState, useCallback } from "react"
+import React, { useState, useCallback, useContext } from "react"
 import ImageViewer from "react-simple-image-viewer";
+import { TableContext } from "../tableComponents/TableComponents";
 
 export default function ImageReader({ data }) {
     const [currentImage, setCurrentImage] = useState(0);
     const [isViewerOpen, setIsViewerOpen] = useState(false);
+    const { rowHeight } = useContext(TableContext);
 
     let images;
     let thumbnails;
     if (data) {
-        thumbnails = data?.map(({ thumbnails }) => thumbnails?.large?.url)
+        thumbnails = data?.map(({ thumbnails }) => thumbnails?.small)
         images = data?.map(({ url }) => url)
     }
 
-    console.log(data)
+    const activeHeight = rowHeight?.filter(({ isActive }) => {
+        return isActive
+    })[0]?.height
+
+
+
+    // console.log(activeHeight)
     // console.log(thumbnails)
 
     const openImageViewer = useCallback((index) => {
@@ -25,16 +33,34 @@ export default function ImageReader({ data }) {
         setIsViewerOpen(false);
     };
 
+
+    function checkImage(url) {
+        var image = new Image();
+        image.onload = function () {
+            if (this.width > 0) {
+                return true
+                console.log("image exists");
+            }
+        }
+        image.onerror = function () {
+            return false
+            console.log("image doesn't exist");
+        }
+        image.src = url;
+    }
+
+    // overflow-x-scroll overflow-y-hidden scrollbar-hidden
     return Array.isArray(images) && (
-        <div className=" h-full -mt-1 overflow-x-scroll overflow-y-hidden scrollbar-hidden">
-            <div className="flex gap-2  h-full m-1 p-1">
-                {thumbnails.map((src, index) => (
+        <div className="h-full overflow-x-scroll overflow-y-hidden scrollbar-hidden">
+            <div className="flex h-full gap-1">
+                {thumbnails.map((image, index) => (
                     <img
-                        src={src}
-                        onClick={() => openImageViewer(index)}
-                        className=" min-w-[50px] w-[50px] h-full object-cover cursor-pointer"
+                        src={image?.url}
+                        onClick={() => { console.log(image); openImageViewer(index) }}
+                        className={`border h-full rounded-sm  cursor-pointer object-fill `}
                         key={index}
-                        alt="img"
+                        style={{ minWidth: activeHeight - 10 + 'px' }}
+                        alt="i"
                     />
                 ))}
             </div>

@@ -159,6 +159,7 @@ export default function Chatting({ user_token, socket }) {
             // For instance, get the download URL: https://firebasestorage.googleapis.com/...
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
               // console.log('File available at', downloadURL);
+              // console.log(downloadURL)
               send("", user_token, downloadURL, fileType, file_name);
               dispatch(
                 updateMessage({

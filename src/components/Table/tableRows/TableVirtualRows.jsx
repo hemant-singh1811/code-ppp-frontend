@@ -36,7 +36,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
             {row.getVisibleCells().map((cell, index) => {
               return (
                 <div
-                  className={`td webkitLineClamp${activeNumberOfLines} `}
+                  className={`td webkitLineClamp${activeNumberOfLines} mx-auto my-auto text-center `}
                   key={cell.id}
                   {...{
                     style: {
@@ -83,9 +83,12 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                   ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
                     // Otherwise, just render the regular cell
                     <>
-                      {cell.column.columnDef.field_type === 'image' ? <>
-                        <ImageReader data={cell?.getValue()} />
-                      </> : cell.column.columnDef.field_type === 'widgets' ? 'widgets' : flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {
+                        cell.column.columnDef.field_type === 'image' ? <ImageReader data={cell?.getValue()} />
+                          : cell.column.columnDef.field_type === 'widgets' ? 'widgets'
+                            : cell.column.columnDef.field_type === 'application/pdf' ? "application/pdf"
+                              : flexRender(cell.column.columnDef.cell, cell.getContext())
+                      }
                     </>
                   )}
                 </div>

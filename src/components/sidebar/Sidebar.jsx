@@ -36,9 +36,8 @@ export default function Sidebar({ data }) {
 
   return (
     <div
-      className={`sidebar_container scrollbar-hidden select-none ${
-        toggle ? "closed" : "opened"
-      } `}
+      className={`sidebar_container scrollbar-hidden select-none ${toggle ? "closed" : "opened"
+        } `}
     >
       <div
         className="navLink menu"
@@ -48,8 +47,8 @@ export default function Sidebar({ data }) {
         <span className="material-symbols-rounded">menu</span>
       </div>
       <div className="image">
-        <div>
-          <img src="logo.webp" alt="logo" />
+        <div className="border-[.75px] p-2 border-black">
+          <img src="https://firebasestorage.googleapis.com/v0/b/alphadatabase-6609c.appspot.com/o/logo.webp?alt=media&token=18906e2b-0a8b-466e-9915-bead42dedbaf" alt="logo" />
         </div>
       </div>
       <ul className="">
@@ -71,9 +70,8 @@ export default function Sidebar({ data }) {
                 </div>
                 {menu.subMenu && (
                   <span
-                    className={`material-symbols-rounded arrow ${
-                      menu.isOpened && "rotate_arrow"
-                    }`}
+                    className={`material-symbols-rounded arrow ${menu.isOpened && "rotate_arrow"
+                      }`}
                   >
                     arrow_right
                   </span>
@@ -85,11 +83,10 @@ export default function Sidebar({ data }) {
                     return (
                       <div
                         key={menu.to}
-                        className={`${
-                          menu?.subMenu && menu.isOpened
-                            ? "bg-[#13142b] rounded-lg ml-8"
-                            : menu?.subMenu && "ml-8"
-                        }`}
+                        className={`${menu?.subMenu && menu.isOpened
+                          ? "bg-[#13142b] rounded-lg ml-8"
+                          : menu?.subMenu && "ml-8"
+                          }`}
                       >
                         {menu?.subMenu ? (
                           <NavLink
@@ -109,9 +106,8 @@ export default function Sidebar({ data }) {
                             </div>
                             {menu.subMenu && (
                               <span
-                                className={`material-symbols-rounded arrow ${
-                                  menu.isOpened && "rotate_arrow"
-                                }`}
+                                className={`material-symbols-rounded arrow ${menu.isOpened && "rotate_arrow"
+                                  }`}
                               >
                                 arrow_right
                               </span>
