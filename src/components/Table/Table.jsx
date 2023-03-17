@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { useGetSavedViewQuery } from "../../store/services/alphaTruckingApi";
 import Loading from "../utilities/Loading";
 import Error from "../utilities/Error";
+import UniqueCharacterGenerator from "../../utilities/UniqueCharacterGenerator";
 
 
 export default function Table({ tableData, tableModel }) {
@@ -41,10 +42,11 @@ export default function Table({ tableData, tableModel }) {
 
   console.log(tableModel)
 
+
   const defaultColumns = tableModel.map(({ id, data }) => {
     return ({
       accessorKey: data?.field_name,
-      id: data?.field_name,
+      id: UniqueCharacterGenerator(),
       header: data?.field_name,
       field_type: data?.field_type,
       created_at: data?.created_at,
