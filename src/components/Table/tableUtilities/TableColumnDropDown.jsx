@@ -1,24 +1,68 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { useDeleteTableColumnMutation } from '../../../store/services/alphaTruckingApi';
+import { TableContext } from '../tableComponents/TableComponents';
 
-export default function TableColumnDropDown() {
+export default function TableColumnDropDown({ columnDropdownRef, columnDef }) {
     // Create a ref that we add to the element for which we want to detect outside clicks
-    const columnDropdownRef = React.useRef();
+
     // Call hook passing in the ref and a function to call on outside click
     // const location = useLocation();
-    // const { columns, setColumns } = useContext(TableContext);
+    const { columns, setColumns } = useContext(TableContext);
 
+    const [addDeleteApi, { isLoading, error, data }] = useDeleteTableColumnMutation()
+    // const [addDeleteApitest] = useDeleteTableColumnMutation()
+
+    // console.log(addDeleteApitest)
     const [columnDropdownToggle, setColumnDropdownToggle] = React.useState(false);
-    return (
-        <div ref={columnDropdownRef} className="relative ref={addColumnRef}">
 
-            <div className="text-gray-400 -mr-2 cursor-pointer hover:text-blue-800 ">
-                <span className="material-symbols-rounded font-light" onClick={() => setColumnDropdownToggle(!columnDropdownToggle)}>
+    async function deleteColumn() {
+        setColumnDropdownToggle(!columnDropdownToggle);
+        addDeleteApi({
+            tableId: location.pathname.split('/')[2],
+            data: {
+                field_id: columnDef?.field_id
+            }
+        }
+        )
+
+    }
+
+
+
+
+    // if (isLoading) {
+
+    // }
+    // if (error) {
+
+    // }
+    // if (data) {
+    //     console.log(data)
+    // }
+
+    return (
+        <div className=" " ref={columnDropdownRef}>
+            <div className="text-gray-400 -mr-2 cursor-pointer hover:text-blue-800">
+                <span className="material-symbols-rounded font-light" onClick={() =>
+                    setColumnDropdownToggle(!columnDropdownToggle)}>
                     expand_more
                 </span>
             </div>
-
             {columnDropdownToggle && (
-                <div className="text-black absolute top-[30px] bg-white w-96 rounded-md right-2 p-4 border-gray-400 border-2 flex flex-col">hello</div>
+                <div className="text-black absolute top-[30px] z-20 w-56 rounded-md left-0 p-4 border-gray-400 border-[.5px] shadow-md flex flex-col bg-white">
+                    <div className='hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center '>
+                        <span className="material-symbols-rounded text-lg font-light mr-4">
+                            edit
+                        </span>
+                        Edit Field
+                    </div>
+                    <div className='hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center ' onClick={() => deleteColumn()}>
+                        <span className="material-symbols-rounded text-lg font-light mr-4">
+                            delete
+                        </span>
+                        Delete Field
+                    </div>
+                </div>
             )}
         </div>
     )

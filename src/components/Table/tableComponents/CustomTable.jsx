@@ -11,7 +11,7 @@ const DraggableColumnHeader = ({ header, table, index }) => {
   const { setColumnOrder } = table;
   const { columnOrder } = table.options.state;
   const { column } = header;
-
+  const columnDropdownRef = React.useRef();
   // const divRef = useRef(null);
 
   // const handleMouseDown = () => {
@@ -42,11 +42,12 @@ const DraggableColumnHeader = ({ header, table, index }) => {
     type: "column",
   });
 
+
   return (
     <div
       // onDragCapture={handleMouseDown}
       // onDropCapture={handleMouseUp}
-      className={`th bg-[#f5f5f5]   ${index === 0 && "fixed-column "}`}
+      className={`th bg-[#f5f5f5] relative ${index === 0 && "fixed-column "}`}
       {...{
         key: header.id,
         style: {
@@ -70,7 +71,7 @@ const DraggableColumnHeader = ({ header, table, index }) => {
             : flexRender(header.column.columnDef.header, header.getContext())}
         </div>
 
-        <TableColumnDropDown />
+        <TableColumnDropDown columnDropdownRef={columnDropdownRef} columnDef={header?.column?.columnDef} />
 
 
       </div>

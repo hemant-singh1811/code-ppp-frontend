@@ -77,10 +77,10 @@ export const alphaTruckingApi = createApi({
 export const {
   usePostViewsMutation,
   useAddTableColumnMutation,
+  useDeleteTableColumnMutation,
   useGetBasesQuery,
   useGetModelQuery,
   useGetTableDataQuery,
   useGetLoadQuery,
   useGetSavedViewQuery,
-  useDeleteTableColumnQuery,
 } = alphaTruckingApi;

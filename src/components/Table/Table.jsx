@@ -40,7 +40,7 @@ export default function Table({ tableData, tableModel }) {
   //   })
   // })
 
-  console.log(tableModel)
+  // console.log(tableModel)
 
 
   const defaultColumns = tableModel.map(({ id, data }) => {

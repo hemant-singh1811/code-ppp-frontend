@@ -19,13 +19,13 @@ body,
   position: relative;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  /* overflow: hidden; */
   background-color: white;
   /* background-color: #131b2d; */
 }
 
 .truncate-multiline {
-  overflow: hidden;
+  /* overflow: hidden; */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -140,7 +140,7 @@ body,
   font-weight: bold;
   text-align: center;
   height: 30px;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .tr {

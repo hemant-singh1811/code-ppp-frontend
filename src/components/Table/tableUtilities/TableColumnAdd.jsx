@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useAddTableColumnMutation } from "../../../store/services/alphaTruckingApi";
 import { useDetectOutsideClick } from "../../../utilities/customHooks/useDetectOutsideClick";
@@ -27,7 +27,7 @@ export default function TableColumnAdd() {
 
     const [selectedFieldType, setSelectedFieldType] = React.useState(undefined)
 
-    const [addColumnApi, result] = useAddTableColumnMutation()
+    const [addColumnApi, { isLoading, error, data }] = useAddTableColumnMutation()
 
     const existingColumns = new Map();
 
@@ -81,6 +81,28 @@ export default function TableColumnAdd() {
         existingColumns.set(columns[i]?.header.toLocaleLowerCase(), true)
     }
 
+
+    // useEffect(() => {
+    //     if (data) {
+    //         setColumns((prev) => {
+    //             prev.map((ele) => {
+    //                 if (data.field_name === ele.field_name) {
+    //                     ele.field_id = data.field_id;
+    //                 }
+    //                 return ele;
+    //             })
+    //         })
+    //     }
+    // }, [data])
+    // console.log(columns)
+
+    // if (isLoading) {
+    //     return <div>Loading</div>
+    // }
+    // if (error) {
+    // }
+
+
     return (
         <div className="relative ref={addColumnRef}">
             <div className={`th bg-[#f5f5f5] border-r-[1px] mr-2`}>
@@ -101,7 +123,6 @@ export default function TableColumnAdd() {
                         value={fieldNameInput}
                         onChange={(e) => {
                             setFieldNameInput(e.target.value);
-                            console.log(existingColumns.get(e.target.value))
                             existingColumns.get(e.target.value.toLocaleLowerCase()) ? setIsExistFieldNameInput(true) : setIsExistFieldNameInput(false)
                         }}
                     />
@@ -184,15 +205,8 @@ export default function TableColumnAdd() {
                             </div>
                             {
                                 selectedFieldType && <button disabled={!fieldNameInput || isExistFieldNameInput} onClick={async () => {
-                                    setColumns([...columns, {
-                                        field_description: fieldDescriptionInput,
-                                        field_name: fieldNameInput,
-                                        field_type: fieldsMap.get(selectedFieldType),
-                                        accessorKey: fieldNameInput,
-                                        id: fieldNameInput,
-                                        header: fieldNameInput,
-                                    }])
-                                    const res = await addColumnApi(
+
+                                    await addColumnApi(
                                         {
                                             tableId: location.pathname.split('/')[2],
                                             data:
@@ -204,9 +218,15 @@ export default function TableColumnAdd() {
                                         }
                                     )
 
+                                    setColumns([...columns, {
+                                        field_description: fieldDescriptionInput,
+                                        field_name: fieldNameInput,
+                                        field_type: fieldsMap.get(selectedFieldType),
+                                        accessorKey: fieldNameInput,
+                                        id: fieldNameInput,
+                                        header: fieldNameInput,
+                                    }])
 
-
-                                    console.log(result)
                                     setDescriptionToggle(false);
                                     setAddColumnToggle(!addColumnToggle);
                                     setSelectedFieldType(undefined);
