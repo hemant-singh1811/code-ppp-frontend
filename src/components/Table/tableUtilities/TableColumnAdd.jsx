@@ -1,16 +1,37 @@
-import React from "react";
+import React, { useContext } from "react";
+import { useLocation } from "react-router-dom";
+import { useAddTableColumnMutation } from "../../../store/services/alphaTruckingApi";
 import { useDetectOutsideClick } from "../../../utilities/customHooks/useDetectOutsideClick";
+import { TableContext } from "../tableComponents/TableComponents";
 
 export default function TableColumnAdd() {
     // Create a ref that we add to the element for which we want to detect outside clicks
     const addColumnRef = React.useRef();
     // Call hook passing in the ref and a function to call on outside click
+    const location = useLocation();
+    const { columns, setColumns } = useContext(TableContext);
 
     const [addColumnToggle, setAddColumnToggle] = React.useState(false);
 
     useDetectOutsideClick(addColumnRef, () => setAddColumnToggle(false));
 
     const [descriptionToggle, setDescriptionToggle] = React.useState(false);
+
+    const [fieldSearchInput, setFieldSearchInput] = React.useState("");
+
+    const [fieldNameInput, setFieldNameInput] = React.useState("");
+
+    const [isExistFieldNameInput, setIsExistFieldNameInput] = React.useState(false)
+
+    const [fieldDescriptionInput, setFieldDescriptionInput] = React.useState("");
+
+    const [selectedFieldType, setSelectedFieldType] = React.useState(undefined)
+
+    const [addColumnApi, result] = useAddTableColumnMutation()
+
+    const existingColumns = new Map();
+
+    const fieldsMap = new Map();
 
     let fieldsType = [
         "Link to another record",
@@ -52,12 +73,12 @@ export default function TableColumnAdd() {
         "string",
     ];
 
-    console.log("s : ", fieldsType.length);
+    for (let i = 0; i < correspondingType.length; i++) {
+        fieldsMap.set(fieldsType[i], correspondingType[i])
+    }
 
-    console.log("s : ", correspondingType.length);
-
-    for (var i = 0; i < correspondingType.length; i++) {
-        console.log("field : ", fieldsType[i], " -> type : ", correspondingType[i]);
+    for (let i = 0; i < columns.length; i++) {
+        existingColumns.set(columns[i]?.header.toLocaleLowerCase(), true)
     }
 
     return (
@@ -75,28 +96,54 @@ export default function TableColumnAdd() {
                 <div className="text-black absolute top-[30px] bg-white w-96 rounded-md right-2 p-4 border-gray-400 border-2 flex flex-col">
                     <input
                         type="text"
-                        placeholder="Field Name (Optional)"
+                        placeholder="Field Name (Mandatory)"
                         className="w-full p-1 px-2 border-2 rounded-md outline-blue-500 border-[#cccecf]"
+                        value={fieldNameInput}
+                        onChange={(e) => {
+                            setFieldNameInput(e.target.value);
+                            console.log(existingColumns.get(e.target.value))
+                            existingColumns.get(e.target.value.toLocaleLowerCase()) ? setIsExistFieldNameInput(true) : setIsExistFieldNameInput(false)
+                        }}
                     />
-
-                    <div className="h-60 mt-2 border-[#eaebed] border-2 rounded-md  overflow-hidden">
+                    {
+                        isExistFieldNameInput && <div className="text-red-700 text-sm m-1 ">Please enter a unique field name</div>
+                    }
+                    <div className=" mt-2 border-[#eaebed] border-2 rounded-md  overflow-hidden">
                         <input
                             type="search"
                             name=""
                             id=""
-                            className="bg-[#f0f1f3] w-full px-3 p-1.5  outline-none "
+                            className="bg-[#f0f1f3] w-full px-3 p-1.5  outline-none focus:bg-blue-50"
                             placeholder="Find a field type"
+                            value={fieldSearchInput}
+                            onChange={(e) => {
+                                setFieldSearchInput(e.target.value)
+                            }}
+                            onClick={() => {
+                                setSelectedFieldType(undefined);
+                                setFieldSearchInput("");
+                            }}
                         />
-                        <div className="h-52 overflow-scroll p-1 px-1.5">
-                            {fieldsType.map((field) => {
-                                return (
-                                    <div className="px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md">
-                                        {field}
-                                    </div>
-                                );
-                            })}
-                        </div>
+                        {
+                            !selectedFieldType &&
+                            <div className="h-52 overflow-scroll p-1 px-1.5">
+                                {fieldsType.filter((ele) => {
+                                    return ele.toLowerCase().includes(fieldSearchInput.toLowerCase())
+                                }).map((field, i) => {
+                                    return (
+                                        <div key={i} className="px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md" onClick={() => { setSelectedFieldType(field); setFieldSearchInput(field) }}>
+                                            {field}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        }
                     </div>
+
+                    {
+                        selectedFieldType &&
+                        <div className="m-1">A single line of text. You can optionally prefill each new cell with a default value:</div>
+                    }
 
                     {descriptionToggle && (
                         <div className="mt-4">
@@ -105,6 +152,8 @@ export default function TableColumnAdd() {
                                 type="text"
                                 className="px-2 p-1 w-full outline-gray-400  bg-[#f2f2f2] rounded-sm"
                                 placeholder="Describe this field (optional)"
+                                value={fieldDescriptionInput}
+                                onChange={(e) => setFieldDescriptionInput(e.target.value)}
                             />
                         </div>
                     )}
@@ -119,18 +168,58 @@ export default function TableColumnAdd() {
                                 Add description
                             </div>
                         </div>
-                        <div
-                            className="hover:bg-gray-200 p-1.5 rounded-md px-4 cursor-pointer"
-                            onClick={() => {
-                                setDescriptionToggle(false);
-                                setAddColumnToggle(!addColumnToggle);
-                            }}
-                        >
-                            cancel
+                        <div className="flex items-center gap-2">
+
+                            <div
+                                className="hover:bg-gray-200 p-1.5 rounded-md px-4 cursor-pointer"
+                                onClick={() => {
+                                    setDescriptionToggle(false);
+                                    setAddColumnToggle(!addColumnToggle);
+                                    setSelectedFieldType(undefined);
+                                    setFieldSearchInput("")
+                                    setFieldNameInput('')
+                                }}
+                            >
+                                cancel
+                            </div>
+                            {
+                                selectedFieldType && <button disabled={!fieldNameInput || isExistFieldNameInput} onClick={async () => {
+                                    setColumns([...columns, {
+                                        field_description: fieldDescriptionInput,
+                                        field_name: fieldNameInput,
+                                        field_type: fieldsMap.get(selectedFieldType),
+                                        accessorKey: fieldNameInput,
+                                        id: fieldNameInput,
+                                        header: fieldNameInput,
+                                    }])
+                                    const res = await addColumnApi(
+                                        {
+                                            tableId: location.pathname.split('/')[2],
+                                            data:
+                                            {
+                                                field_description: fieldDescriptionInput,
+                                                field_name: fieldNameInput,
+                                                field_type: fieldsMap.get(selectedFieldType),
+                                            }
+                                        }
+                                    )
+
+
+
+                                    console.log(result)
+                                    setDescriptionToggle(false);
+                                    setAddColumnToggle(!addColumnToggle);
+                                    setSelectedFieldType(undefined);
+                                    setFieldSearchInput("")
+                                    setFieldNameInput('')
+                                    setFieldDescriptionInput('')
+                                }} className="bg-blue-600 rounded-md p-1.5 px-4 text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400">Create Field</button>
+                            }
                         </div>
                     </div>
                 </div>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 }

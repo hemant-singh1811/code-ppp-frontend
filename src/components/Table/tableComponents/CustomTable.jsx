@@ -5,6 +5,7 @@ import { flexRender } from "@tanstack/react-table";
 import { TableContext } from "./TableComponents";
 import { ResizableSidebar } from "../tableUtilityBar/ResizableSidebar";
 import TableColumnAdd from "../tableUtilities/TableColumnAdd";
+import TableColumnDropDown from "../tableUtilities/TableColumnDropDown";
 
 const DraggableColumnHeader = ({ header, table, index }) => {
   const { setColumnOrder } = table;
@@ -61,11 +62,17 @@ const DraggableColumnHeader = ({ header, table, index }) => {
     >
       <div
         ref={dragRef}
-        className="capitalize text-left text-lg font-normal px-2 truncate "
+        className="capitalize text-lg font-normal px-2  flex justify-between item"
       >
-        {header.isPlaceholder
-          ? null
-          : flexRender(header.column.columnDef.header, header.getContext())}
+        <div className="truncate">
+          {header.isPlaceholder
+            ? null
+            : flexRender(header.column.columnDef.header, header.getContext())}
+        </div>
+
+        <TableColumnDropDown />
+
+
       </div>
       <div
         {...{

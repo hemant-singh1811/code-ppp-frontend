@@ -15,7 +15,7 @@ export default function Table({ tableData, tableModel }) {
 
   // this is for checking is the side bar is opened ?
   const { toggle } = useSelector((state) => state.globalState.mainSideBar);
-
+  // console.log(tableModel)
   const keysMap = new Map();
 
   // for (let index = 0; index < tableData.length; index++) {
@@ -39,16 +39,23 @@ export default function Table({ tableData, tableModel }) {
   //   })
   // })
 
+  console.log(tableModel)
+
   const defaultColumns = tableModel.map(({ id, data }) => {
     return ({
       accessorKey: data?.field_name,
       id: data?.field_name,
       header: data?.field_name,
-      field_type: data?.field_type
+      field_type: data?.field_type,
+      created_at: data?.created_at,
+      created_by: data?.created_by,
+      field_description: data?.field_description,
+      field_id: data?.field_id,
+      linked_rec: data?.linked_rec,
     });
   })
 
-  console.log(defaultColumns)
+  // console.log(defaultColumns)
 
   // console.log(defaultColumns)
 

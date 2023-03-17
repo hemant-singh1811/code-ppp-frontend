@@ -21,7 +21,7 @@ export default function TableComponents({
   setData,
   tableConditions
 }) {
-  const [columns] = useState(() => [...defaultColumns]);
+  const [columns, setColumns] = useState(() => [...defaultColumns]);
   const [globalFilter, setGlobalFilter] = useState(tableConditions?.model?.globalFilter || '');
   const [columnFilters, setColumnFilters] = useState([]);
   const [sorting, setSorting] = useState([]);
@@ -127,7 +127,20 @@ export default function TableComponents({
   }, [])
 
   return (
-    <TableContext.Provider value={{ table: table, rowHeight: rowHeight, setRowHeight: setRowHeight, globalFilter: globalFilter, setGlobalFilter: setGlobalFilter, toggle: toggle, activeRowHeight: activeRowHeight, activeNumberOfLines: activeNumberOfLines, viewsToggle: viewsToggle, setViewsToggle: setViewsToggle }}>
+    <TableContext.Provider value={{
+      table: table,
+      rowHeight: rowHeight,
+      setRowHeight: setRowHeight,
+      globalFilter: globalFilter,
+      setGlobalFilter: setGlobalFilter,
+      toggle: toggle,
+      activeRowHeight: activeRowHeight,
+      activeNumberOfLines: activeNumberOfLines,
+      viewsToggle: viewsToggle,
+      setViewsToggle: setViewsToggle,
+      setColumns: setColumns,
+      columns: columns
+    }}>
       <div className=' w-full  overflow-hidden h-screen text-white'>
         <TableUtilityBar />
         <CustomTable />

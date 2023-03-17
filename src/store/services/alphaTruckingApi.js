@@ -55,14 +55,32 @@ export const alphaTruckingApi = createApi({
         method: 'POST',
       }),
     }),
+
+    AddTableColumn: builder.mutation({
+      query: (payload) => ({
+        url: `API/V1/addcolumn/${payload.tableId}`,
+        body: payload.data,
+        method: 'PUT',
+      }),
+    }),
+
+    DeleteTableColumn: builder.mutation({
+      query: (payload) => ({
+        url: `API/V1/remcolumn/${payload.tableId}`,
+        body: payload.data, // field id is required to delete a column; like this:- {"field_id":"fldzmC9cdc4LgvYGI"}
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
 export const {
   usePostViewsMutation,
+  useAddTableColumnMutation,
   useGetBasesQuery,
   useGetModelQuery,
   useGetTableDataQuery,
   useGetLoadQuery,
   useGetSavedViewQuery,
+  useDeleteTableColumnQuery,
 } = alphaTruckingApi;
