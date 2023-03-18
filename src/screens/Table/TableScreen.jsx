@@ -23,6 +23,6 @@ export default function TableScreen() {
     }
 
     // console.log(modelResult.data)
-    // console.log(data)
+    console.log(data)
     return <Table tableData={data} tableModel={modelResult.data} />
 }

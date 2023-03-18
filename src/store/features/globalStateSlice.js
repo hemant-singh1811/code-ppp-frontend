@@ -43,6 +43,7 @@ const initialState = {
     toggle: false,
     width: 270,
   },
+  addTableToggle: false,
 };
 
 const globalStateSlice = createSlice({
@@ -81,6 +82,9 @@ const globalStateSlice = createSlice({
         state.mainSideBar.width = 270;
       }
     },
+    handleAddToggle: (state) => {
+      state.addTableToggle = !state.addTableToggle;
+    },
   },
 });
 
@@ -90,6 +94,7 @@ export const {
   handleSelectedScreen,
   handleScreenTabsToggle,
   handleToggleMainSideBar,
+  handleAddToggle,
 } = globalStateSlice.actions;
 
 export default globalStateSlice.reducer;

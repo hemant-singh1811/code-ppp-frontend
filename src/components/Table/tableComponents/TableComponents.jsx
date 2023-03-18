@@ -60,7 +60,7 @@ export default function TableComponents({
   let { activeRowHeight, activeNumberOfLines } = handleRowHeight(rowHeight);
   const [columnOrder, setColumnOrder] = useState(
     //must start out with populated columnOrder so we can splice
-    tableConditions?.model?.columnOrder || columns.map((column) => column.id)
+    tableConditions?.model?.columnOrder || columns?.map((column) => column.id)
   );
   const [columnPinning, setColumnPinning] = useState({});
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();

@@ -124,7 +124,7 @@ body,
 
 .divTable {
   height: 100vh;
-  overflow: scroll;
+  /* overflow: scroll; */
 }
 
 .th,
