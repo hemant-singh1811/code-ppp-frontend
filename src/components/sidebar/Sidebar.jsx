@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { handleAddToggle, handleToggleMainSideBar } from "../../store/features/globalStateSlice";
+import {
+  handleAddToggle,
+  handleToggleMainSideBar,
+} from "../../store/features/globalStateSlice";
 import "../../stylesheet/sidebar.scss";
 
 export default function Sidebar({ data }) {
   const { toggle } = useSelector((state) => state.globalState.mainSideBar);
 
   const dispatch = useDispatch();
-  let createMenusByBase = data.map((item) => {
+  let createMenusByBase = data?.map((item) => {
     return {
       title: item?.basemetadata?.name,
       icons: "contacts",
@@ -33,11 +36,11 @@ export default function Sidebar({ data }) {
 
   const [menus, setMenus] = useState(createMenusByBase || []);
 
-
   return (
     <div
-      className={`sidebar_container scrollbar-hidden select-none relative ${toggle ? "closed" : "opened"
-        } `}
+      className={`sidebar_container scrollbar-hidden select-none relative ${
+        toggle ? "closed" : "opened"
+      } `}
     >
       <div
         className="navLink menu"
@@ -48,7 +51,10 @@ export default function Sidebar({ data }) {
       </div>
       <div className="image">
         <div className="border-[.75px] p-2 border-black">
-          <img src="https://firebasestorage.googleapis.com/v0/b/alphadatabase-6609c.appspot.com/o/logo.webp?alt=media&token=18906e2b-0a8b-466e-9915-bead42dedbaf" alt="logo" />
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/alphadatabase-6609c.appspot.com/o/logo.webp?alt=media&token=18906e2b-0a8b-466e-9915-bead42dedbaf"
+            alt="logo"
+          />
         </div>
       </div>
       <ul className="">
@@ -70,8 +76,9 @@ export default function Sidebar({ data }) {
                 </div>
                 {item.subMenu && (
                   <span
-                    className={`material-symbols-rounded arrow ${item.isOpened && "rotate_arrow"
-                      }`}
+                    className={`material-symbols-rounded arrow ${
+                      item.isOpened && "rotate_arrow"
+                    }`}
                   >
                     arrow_right
                   </span>
@@ -83,14 +90,13 @@ export default function Sidebar({ data }) {
                     return (
                       <div
                         key={menu.to}
-                        className={`${menu?.subMenu && menu.isOpened
-                          ? "bg-[#13142b] rounded-lg ml-8"
-                          : menu?.subMenu && "ml-8"
-                          }`}
+                        className={`${
+                          menu?.subMenu && menu.isOpened
+                            ? "bg-[#13142b] rounded-lg ml-8"
+                            : menu?.subMenu && "ml-8"
+                        }`}
                       >
-                        <li
-                          className="submenu_item max-w-[170px]"
-                        >
+                        <li className="submenu_item max-w-[170px]">
                           <NavLink
                             to={menu.to}
                             className={({ isActive }) =>
@@ -102,30 +108,23 @@ export default function Sidebar({ data }) {
                             </span>
                           </NavLink>
                         </li>
-                        {
-                          item?.subMenu?.length === index + 1 && (
-                            <li
-
-                              className="submenu_item max-w-[170px]"
-                              onClick={() => dispatch(handleAddToggle())}
-                            >
-                              <NavLink
-                                className={"navLink"}
-
+                        {item?.subMenu?.length === index + 1 && (
+                          <li
+                            className="submenu_item max-w-[170px]"
+                            onClick={() => dispatch(handleAddToggle())}
+                          >
+                            <NavLink className={"navLink"}>
+                              <span
+                                className={`title truncate capitalize flex`}
                               >
-                                <span className={`title truncate capitalize flex`}>
-                                  <span className="material-symbols-rounded mr-4">
-                                    add
-                                  </span>
-                                  <div>
-                                    Create Table
-                                  </div>
+                                <span className="material-symbols-rounded mr-4">
+                                  add
                                 </span>
-                              </NavLink>
-                            </li>
-                          )
-                        }
-
+                                <div>Create Table</div>
+                              </span>
+                            </NavLink>
+                          </li>
+                        )}
                       </div>
                     );
                   })}
@@ -155,7 +154,6 @@ export default function Sidebar({ data }) {
           );
         })}
       </ul>
-
     </div>
   );
 }
@@ -178,8 +176,8 @@ function toggleMenu(setMenus, menu, depth) {
   });
 }
 
-
-{/* <div
+{
+  /* <div
   className={`sidebar_container scrollbar-hidden select-none ${toggle ? "closed" : "opened"
     } `}
 >
@@ -306,7 +304,8 @@ function toggleMenu(setMenus, menu, depth) {
             </ul>
           )}
 
-          {/* this is for displaying the menu list on hover in the closed drawer */}
+          {/* this is for displaying the menu list on hover in the closed drawer */
+}
 // {
 //   menu.subMenu && toggle && (
 //     <ul className="toggle_closed">
