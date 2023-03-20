@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import {
+  handleAddSidebarData,
   handleAddToggle,
   handleToggleMainSideBar,
 } from "../../store/features/globalStateSlice";
@@ -24,6 +25,10 @@ export default function Sidebar({ data }) {
       }),
     };
   });
+
+  useEffect(() => {
+    dispatch(handleAddSidebarData(data));
+  }, [data]);
 
   createMenusByBase.unshift(
     {
@@ -60,97 +65,103 @@ export default function Sidebar({ data }) {
       <ul className="">
         {menus.map((item, i) => {
           return (
-            <li className="menu_item" key={i}>
-              <NavLink
-                to={item?.to && item.to}
-                className={({ isActive }) =>
-                  isActive ? "navLink active" : "navLink"
-                }
-                onClick={() => {
-                  if (item.subMenu) toggleMenu(setMenus, item);
-                }}
-              >
-                <div>
-                  <span className="material-symbols-rounded">{item.icons}</span>
-                  <span className={`title`}>{item.title}</span>
-                </div>
-                {item.subMenu && (
-                  <span
-                    className={`material-symbols-rounded arrow ${
-                      item.isOpened && "rotate_arrow"
-                    }`}
-                  >
-                    arrow_right
-                  </span>
-                )}
-              </NavLink>
-              {item.isOpened && (
-                <ul>
-                  {item.subMenu.map((menu, index) => {
-                    return (
-                      <div
-                        key={menu.to}
-                        className={`${
-                          menu?.subMenu && menu.isOpened
-                            ? "bg-[#13142b] rounded-lg ml-8"
-                            : menu?.subMenu && "ml-8"
-                        }`}
-                      >
-                        <li className="submenu_item max-w-[170px]">
-                          <NavLink
-                            to={menu.to}
-                            className={({ isActive }) =>
-                              isActive ? "navLink active" : "navLink"
-                            }
+            item?.title && (
+              <li className="menu_item" key={i}>
+                <NavLink
+                  to={item?.to && item.to}
+                  className={({ isActive }) =>
+                    isActive ? "navLink active" : "navLink"
+                  }
+                  onClick={() => {
+                    if (item.subMenu) toggleMenu(setMenus, item);
+                  }}
+                >
+                  <div>
+                    <span className="material-symbols-rounded">
+                      {item.icons}
+                    </span>
+                    <span className={`title`}>{item.title}</span>
+                  </div>
+                  {item.subMenu && (
+                    <span
+                      className={`material-symbols-rounded arrow ${
+                        item.isOpened && "rotate_arrow"
+                      }`}
+                    >
+                      arrow_right
+                    </span>
+                  )}
+                </NavLink>
+                {item.isOpened && (
+                  <ul>
+                    {item.subMenu.map((menu, index) => {
+                      return (
+                        menu?.title && (
+                          <div
+                            key={menu.to}
+                            className={`${
+                              menu?.subMenu && menu.isOpened
+                                ? "bg-[#13142b] rounded-lg ml-8"
+                                : menu?.subMenu && "ml-8"
+                            }`}
                           >
-                            <span className={`title truncate capitalize `}>
-                              {menu.title}
-                            </span>
-                          </NavLink>
-                        </li>
-                        {item?.subMenu?.length === index + 1 && (
-                          <li
-                            className="submenu_item max-w-[170px]"
-                            onClick={() => dispatch(handleAddToggle())}
-                          >
-                            <NavLink className={"navLink"}>
-                              <span
-                                className={`title truncate capitalize flex`}
+                            <li className="submenu_item max-w-[170px]">
+                              <NavLink
+                                to={menu.to}
+                                className={({ isActive }) =>
+                                  isActive ? "navLink active" : "navLink"
+                                }
                               >
-                                <span className="material-symbols-rounded mr-4">
-                                  add
+                                <span className={`title truncate capitalize `}>
+                                  {menu.title}
                                 </span>
-                                <div>Create Table</div>
-                              </span>
-                            </NavLink>
-                          </li>
-                        )}
-                      </div>
-                    );
-                  })}
-                </ul>
-              )}
+                              </NavLink>
+                            </li>
+                            {item?.subMenu?.length === index + 1 && (
+                              <li
+                                className="submenu_item max-w-[170px]"
+                                onClick={() => dispatch(handleAddToggle())}
+                              >
+                                <NavLink className={"navLink"}>
+                                  <span
+                                    className={`title truncate capitalize flex`}
+                                  >
+                                    <span className="material-symbols-rounded mr-4">
+                                      add
+                                    </span>
+                                    <div>Create Table</div>
+                                  </span>
+                                </NavLink>
+                              </li>
+                            )}
+                          </div>
+                        )
+                      );
+                    })}
+                  </ul>
+                )}
 
-              {/* this is for displaying the menu list on hover in the closed drawer */}
-              {item.subMenu && toggle && (
-                <ul className="toggle_closed">
-                  {item.subMenu.map((menu, index) => (
-                    <li key={index} className="submenu_item">
-                      <NavLink
-                        to={menu.to}
-                        className={({ isActive }) =>
-                          isActive ? "navLink active" : "navLink"
-                        }
-                      >
-                        <span className={`title truncate capitalize`}>
-                          {menu.title}
-                        </span>
-                      </NavLink>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
+                {/* this is for displaying the menu list on hover in the closed drawer */}
+                {item.subMenu && toggle && (
+                  <ul className="toggle_closed">
+                    {item.subMenu.map((menu, index) => (
+                      <li key={index} className="submenu_item">
+                        <NavLink
+                          to={menu.to}
+                          className={({ isActive }) =>
+                            isActive ? "navLink active" : "navLink"
+                          }
+                        >
+                          <span className={`title truncate capitalize`}>
+                            {menu.title}
+                          </span>
+                        </NavLink>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            )
           );
         })}
       </ul>

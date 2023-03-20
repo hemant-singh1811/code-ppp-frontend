@@ -9,7 +9,7 @@ export default function AddTable() {
   // Call hook passing in the ref and a function to call on outside click
   const location = useLocation();
 
-  const [addTableToggle, setAddTableToggle] = React.useState(true);
+  const [addTableToggle, setAddTableToggle] = React.useState(false);
 
   useDetectOutsideClick(addColumnRef, () => setAddTableToggle(false));
 

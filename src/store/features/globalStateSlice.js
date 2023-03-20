@@ -1,40 +1,40 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  search: '',
+  search: "",
   filter: [
     {
-      name: 'Booked',
+      name: "Booked",
       isSelected: true,
     },
     {
-      name: 'In Transit',
+      name: "In Transit",
       isSelected: true,
     },
     {
-      name: 'Kent Yard',
+      name: "Kent Yard",
       isSelected: true,
     },
   ],
   selectedScreen: [
     {
-      name: 'Chats',
+      name: "Chats",
       isActive: true,
     },
     {
-      name: 'Chats',
+      name: "Chats",
       isActive: false,
     },
     {
-      name: 'Chats',
+      name: "Chats",
       isActive: false,
     },
     {
-      name: 'Chats',
+      name: "Chats",
       isActive: false,
     },
     {
-      name: 'Chats',
+      name: "Chats",
       isActive: false,
     },
   ],
@@ -44,10 +44,11 @@ const initialState = {
     width: 270,
   },
   addTableToggle: false,
+  sidebarData: [],
 };
 
 const globalStateSlice = createSlice({
-  name: 'globalState',
+  name: "globalState",
   initialState,
   reducers: {
     onChangeSearch: (state, { payload }) => {
@@ -85,6 +86,9 @@ const globalStateSlice = createSlice({
     handleAddToggle: (state) => {
       state.addTableToggle = !state.addTableToggle;
     },
+    handleAddSidebarData: (state, { payload }) => {
+      state.sidebarData = payload;
+    },
   },
 });
 
@@ -95,6 +99,7 @@ export const {
   handleScreenTabsToggle,
   handleToggleMainSideBar,
   handleAddToggle,
+  handleAddSidebarData,
 } = globalStateSlice.actions;
 
 export default globalStateSlice.reducer;

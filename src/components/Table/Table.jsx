@@ -7,12 +7,11 @@ import { useGetSavedViewQuery } from "../../store/services/alphaTruckingApi";
 import Loading from "../utilities/Loading";
 import Error from "../utilities/Error";
 import AddTable from "./tableUtilities/AddTable";
-
+import AddRowTable from "./tableUtilities/AddRowTable";
 
 export default function Table({ tableData, tableModel }) {
-  const { driver } = useSelector(state => state.views);
+  const { driver } = useSelector((state) => state.views);
   const { data, error, isFetching } = useGetSavedViewQuery();
-
 
   // this is for checking is the side bar is opened ?
   const { toggle } = useSelector((state) => state.globalState.mainSideBar);
@@ -25,7 +24,6 @@ export default function Table({ tableData, tableModel }) {
   //     keysMap.set(ele);
   //   })
   // }
-
 
   // const dataKeys = [];
   // for (const [key] of keysMap) {
@@ -42,9 +40,8 @@ export default function Table({ tableData, tableModel }) {
 
   // console.log(tableModel)
 
-
   const defaultColumns = tableModel.map(({ id, data }) => {
-    return ({
+    return {
       accessorKey: data?.field_name,
       id: data?.field_name,
       header: data?.field_name,
@@ -54,10 +51,10 @@ export default function Table({ tableData, tableModel }) {
       field_description: data?.field_description,
       field_id: data?.field_id,
       linked_rec: data?.linked_rec,
-    });
-  })
+    };
+  });
 
-  // console.log(defaultColumns)
+  // console.log(tableModel);
 
   // console.log(defaultColumns)
 
@@ -68,17 +65,18 @@ export default function Table({ tableData, tableModel }) {
   //   })
   // }
   // console.log(keysMap)
-  const [tableDataModified, setTableDataModified] = React.useState(tableData.map(({ data }) => {
-    const object = {}
-    defaultColumns.map(({ header }) => {
-      object[header] = data?.[header]
+  const [tableDataModified, setTableDataModified] = React.useState(
+    tableData.map(({ data }) => {
+      const object = {};
+      defaultColumns.map(({ header }) => {
+        object[header] = data?.[header];
+      });
+      // dataKeys.map((key) => {
+      //   console.log(key)
+      //   object[key] = data?.[key]
+      // })
+      return object;
     })
-    // dataKeys.map((key) => {
-    //   console.log(key)
-    //   object[key] = data?.[key]
-    // })
-    return object
-  })
   );
 
   // if (isFetching) {
@@ -89,19 +87,23 @@ export default function Table({ tableData, tableModel }) {
   //   return <Error />
   // }
 
-
   // console.log(data)
-
-
 
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="relative">
         <AddTable />
-        <TableComponents toggle={toggle} defaultColumns={defaultColumns} data={tableDataModified} setData={setTableDataModified} tableConditions={data} />
+        <TableComponents
+          toggle={toggle}
+          defaultColumns={defaultColumns}
+          data={tableDataModified}
+          setData={setTableDataModified}
+          tableConditions={data}
+        />
+        <AddRowTable tableModel={tableModel} />
       </div>
     </DndProvider>
   );
 }
 
-// <pre>{JSON.stringify(table.getState(), null, 2)}</pre> 
+// <pre>{JSON.stringify(table.getState(), null, 2)}</pre>

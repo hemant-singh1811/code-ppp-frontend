@@ -14,7 +14,10 @@ export default function MainRouting() {
 
   const routes = [
     { path: "/:tableId", component: <TableScreen /> },
-    { path: "/:baseId/:tableId", component: <TableScreen /> },
+    {
+      path: "/:baseId/:tableId",
+      component: <TableScreen />,
+    },
     { path: "/chats", component: <Chats /> },
     { path: "/about", component: <About /> },
   ];

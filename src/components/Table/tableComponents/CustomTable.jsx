@@ -42,7 +42,6 @@ const DraggableColumnHeader = ({ header, table, index }) => {
     type: "column",
   });
 
-
   return (
     <div
       // onDragCapture={handleMouseDown}
@@ -71,16 +70,18 @@ const DraggableColumnHeader = ({ header, table, index }) => {
             : flexRender(header.column.columnDef.header, header.getContext())}
         </div>
 
-        <TableColumnDropDown columnDropdownRef={columnDropdownRef} columnDef={header?.column?.columnDef} />
-
-
+        <TableColumnDropDown
+          columnDropdownRef={columnDropdownRef}
+          columnDef={header?.column?.columnDef}
+        />
       </div>
       <div
         {...{
           onMouseDown: header.getResizeHandler(),
           onTouchStart: header.getResizeHandler(),
-          className: `resizerHeader ${header.column.getIsResizing() ? "isResizingHeader" : ""
-            }`,
+          className: `resizerHeader ${
+            header.column.getIsResizing() ? "isResizingHeader" : ""
+          }`,
         }}
       />
     </div>
@@ -129,7 +130,7 @@ export default function CustomTable() {
                     index={index}
                   />
                 ))}
-                <TableColumnAdd />
+                <TableColumnAdd headers={headerGroup.headers} />
               </div>
             ))}
           </div>
