@@ -2,11 +2,11 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { handleAddToggle } from "../../../store/features/globalStateSlice";
-import { useAddTableColumnMutation } from "../../../store/services/alphaTruckingApi";
+import { useAddTableColumnMutation, useCreateTableMutation } from "../../../store/services/alphaTruckingApi";
 
 export default function AddTable() {
 
-  const { sidebarData } = useSelector(state => state.globalState)
+  const { sidebarData, createTableBaseId } = useSelector(state => state.globalState)
 
   const location = useLocation();
 
@@ -21,11 +21,12 @@ export default function AddTable() {
 
   const [fieldDescriptionInput, setFieldDescriptionInput] = React.useState("");
 
-  const [addColumnApi, { isLoading, error, data }] =
-    useAddTableColumnMutation();
+  const [createTableApi, { isLoading, error, data }] =
+    useCreateTableMutation();
 
   const existingTable = new Map();
 
+  // console.log(sidebarData)
 
   sidebarData[0]?.tablemetadata.map(({ table_name }) => {
     existingTable.set(table_name?.toLocaleLowerCase(), true)
@@ -92,14 +93,13 @@ export default function AddTable() {
                 <button
                   disabled={!fieldNameInput || isExistFieldNameInput}
                   onClick={async () => {
-                    await addColumnApi({
-                      tableId: location.pathname.split("/")[2],
+                    await createTableApi({
+                      tableId: createTableBaseId,
                       data: {
-                        field_description: fieldDescriptionInput,
-                        field_name: fieldNameInput,
+                        table_name: fieldNameInput,
                       },
                     });
-
+                    dispatch(handleAddToggle())
                     setFieldNameInput("");
                     setFieldDescriptionInput("");
                   }}

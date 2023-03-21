@@ -45,6 +45,7 @@ const initialState = {
   },
   addTableToggle: false,
   sidebarData: [],
+  createTableBaseId: undefined,
 };
 
 const globalStateSlice = createSlice({
@@ -89,6 +90,9 @@ const globalStateSlice = createSlice({
     handleAddSidebarData: (state, { payload }) => {
       state.sidebarData = payload;
     },
+    handleCreateTableBaseId: (state, { payload }) => {
+      state.createTableBaseId = payload;
+    },
   },
 });
 
@@ -100,6 +104,7 @@ export const {
   handleToggleMainSideBar,
   handleAddToggle,
   handleAddSidebarData,
+  handleCreateTableBaseId,
 } = globalStateSlice.actions;
 
 export default globalStateSlice.reducer;

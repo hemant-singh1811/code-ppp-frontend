@@ -56,6 +56,14 @@ export const alphaTruckingApi = createApi({
       }),
     }),
 
+    CreateTable: builder.mutation({
+      query: (payload) => ({
+        url: `API/V1/createtable/${payload.tableId}`,
+        body: payload.data,
+        method: 'PUT',
+      }),
+    }),
+
     AddTableColumn: builder.mutation({
       query: (payload) => ({
         url: `API/V1/addcolumn/${payload.tableId}`,
@@ -75,6 +83,7 @@ export const alphaTruckingApi = createApi({
 });
 
 export const {
+  useCreateTableMutation,
   usePostViewsMutation,
   useAddTableColumnMutation,
   useDeleteTableColumnMutation,

@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import {
   handleAddSidebarData,
   handleAddToggle,
+  handleCreateTableBaseId,
   handleToggleMainSideBar,
 } from "../../store/features/globalStateSlice";
 import "../../stylesheet/sidebar.scss";
@@ -16,15 +17,17 @@ export default function Sidebar({ data }) {
     return {
       title: item?.basemetadata?.name,
       icons: "contacts",
-      // to: item?.basemetadata?.name,
+      base_id: item?.baseid,
       subMenu: item?.tablemetadata?.map((ele, i) => {
         return {
           title: ele?.table_name,
           to: ele?.base_id + "/" + ele?.table_id,
+
         };
       }),
     };
   });
+  console.log(data)
 
   useEffect(() => {
     dispatch(handleAddSidebarData(data));
@@ -117,9 +120,12 @@ export default function Sidebar({ data }) {
                             {item?.subMenu?.length === index + 1 && (
                               <li
                                 className="submenu_item max-w-[170px]"
-                                onClick={() => dispatch(handleAddToggle(true))}
+                                onClick={() => {
+                                  dispatch(handleAddToggle(true))
+                                  dispatch(handleCreateTableBaseId(item?.base_id))
+                                }}
                               >
-                                <button className="navLink w-full" onClick={() => dispatch(handleAddToggle())}>
+                                <button className="navLink w-full" >
                                   <span
                                     className={`title truncate capitalize flex`}
                                   >
