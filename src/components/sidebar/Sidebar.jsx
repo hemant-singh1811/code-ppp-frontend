@@ -43,9 +43,8 @@ export default function Sidebar({ data }) {
 
   return (
     <div
-      className={`sidebar_container scrollbar-hidden select-none relative ${
-        toggle ? "closed" : "opened"
-      } `}
+      className={`sidebar_container scrollbar-hidden select-none relative ${toggle ? "closed" : "opened"
+        } `}
     >
       <div
         className="navLink menu"
@@ -84,9 +83,8 @@ export default function Sidebar({ data }) {
                   </div>
                   {item.subMenu && (
                     <span
-                      className={`material-symbols-rounded arrow ${
-                        item.isOpened && "rotate_arrow"
-                      }`}
+                      className={`material-symbols-rounded arrow ${item.isOpened && "rotate_arrow"
+                        }`}
                     >
                       arrow_right
                     </span>
@@ -99,11 +97,10 @@ export default function Sidebar({ data }) {
                         menu?.title && (
                           <div
                             key={menu.to}
-                            className={`${
-                              menu?.subMenu && menu.isOpened
-                                ? "bg-[#13142b] rounded-lg ml-8"
-                                : menu?.subMenu && "ml-8"
-                            }`}
+                            className={`${menu?.subMenu && menu.isOpened
+                              ? "bg-[#13142b] rounded-lg ml-8"
+                              : menu?.subMenu && "ml-8"
+                              }`}
                           >
                             <li className="submenu_item max-w-[170px]">
                               <NavLink
@@ -120,9 +117,9 @@ export default function Sidebar({ data }) {
                             {item?.subMenu?.length === index + 1 && (
                               <li
                                 className="submenu_item max-w-[170px]"
-                                onClick={() => dispatch(handleAddToggle())}
+                                onClick={() => dispatch(handleAddToggle(true))}
                               >
-                                <NavLink className={"navLink"}>
+                                <button className="navLink w-full" onClick={() => dispatch(handleAddToggle())}>
                                   <span
                                     className={`title truncate capitalize flex`}
                                   >
@@ -131,7 +128,7 @@ export default function Sidebar({ data }) {
                                     </span>
                                     <div>Create Table</div>
                                   </span>
-                                </NavLink>
+                                </button>
                               </li>
                             )}
                           </div>

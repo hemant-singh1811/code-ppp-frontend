@@ -45,7 +45,7 @@ function DashboardCard05() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCounter(counter + 1);
-    }, 500);
+    }, 2000);
     return () => clearInterval(interval)
   }, [counter]);
 

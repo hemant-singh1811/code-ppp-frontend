@@ -6,14 +6,13 @@ import { useDetectOutsideClick } from "../../../utilities/customHooks/useDetectO
 import { TableContext } from "../tableComponents/TableComponents";
 
 export default function TableColumnAdd({ headers }) {
-  const { addTableToggle } = useSelector((state) => state.globalState);
   // Create a ref that we add to the element for which we want to detect outside clicks
   const addColumnRef = React.useRef();
   // Call hook passing in the ref and a function to call on outside click
   const location = useLocation();
   const { columns, setColumns } = useContext(TableContext);
 
-  const [addColumnToggle, setAddColumnToggle] = React.useState(addTableToggle);
+  const [addColumnToggle, setAddColumnToggle] = React.useState(false);
 
   useDetectOutsideClick(addColumnRef, () => setAddColumnToggle(false));
 
@@ -115,9 +114,8 @@ export default function TableColumnAdd({ headers }) {
       </div>
       {addColumnToggle && (
         <div
-          className={`text-black absolute top-[30px] bg-white w-96 rounded-md p-4 border-gray-400 border-2 flex flex-col ${
-            headers.length < 3 ? "left-0" : "right-0"
-          }`}
+          className={`text-black absolute top-[30px] bg-white w-96 rounded-md p-4 border-gray-400 border-2 flex flex-col ${headers.length < 3 ? "left-0" : "right-0"
+            }`}
         >
           <input
             type="text"
@@ -200,9 +198,8 @@ export default function TableColumnAdd({ headers }) {
           <div className="flex  justify-between items-center mt-8">
             <div>
               <div
-                className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
-                  descriptionToggle && "hidden"
-                } `}
+                className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${descriptionToggle && "hidden"
+                  } `}
                 onClick={() => setDescriptionToggle(true)}
               >
                 <span className="material-symbols-rounded text-xl">add</span>{" "}

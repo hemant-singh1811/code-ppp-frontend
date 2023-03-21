@@ -16,7 +16,6 @@ function App() {
   if (error) {
     return <Error error={error} />;
   }
-
   return (
     <div className="app text-white bg-white">
       {userInfo && <Sidebar data={data} />}
