@@ -6,6 +6,7 @@ import { alphaTruckingApi } from '../services/alphaTruckingApi';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import authReducer from '../features/auth/authSlice';
 import viewsReducer from '../features/viewsSlice';
+import basesReducer from '../features/BasesStateSlice';
 
 const reducer = {
   [alphaTruckingApi.reducerPath]: alphaTruckingApi.reducer,
@@ -14,6 +15,7 @@ const reducer = {
   globalState: globalStateReducer,
   auth: authReducer,
   views: viewsReducer,
+  bases: basesReducer,
 };
 
 export const store = configureStore({

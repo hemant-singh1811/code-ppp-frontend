@@ -9,25 +9,28 @@ import {
 } from "../../store/features/globalStateSlice";
 import "../../stylesheet/sidebar.scss";
 
-export default function Sidebar({ data }) {
+export default function Sidebar() {
   const { toggle } = useSelector((state) => state.globalState.mainSideBar);
 
+  const { bases } = useSelector(state => state.bases);
+
+  let data = bases;
+  console.log(data)
   const dispatch = useDispatch();
   let createMenusByBase = data?.map((item) => {
     return {
-      title: item?.basemetadata?.name,
+      title: item?.basemetadata?.name || "Undefined Table",
       icons: "contacts",
-      base_id: item?.baseid,
+      baseId: item?.baseid || "baseId",
       subMenu: item?.tablemetadata?.map((ele, i) => {
         return {
           title: ele?.table_name,
           to: ele?.base_id + "/" + ele?.table_id,
-
+          tableId: ele?.table_id
         };
       }),
     };
   });
-  console.log(data)
 
   useEffect(() => {
     dispatch(handleAddSidebarData(data));
@@ -72,17 +75,17 @@ export default function Sidebar({ data }) {
                 <NavLink
                   to={item?.to && item.to}
                   className={({ isActive }) =>
-                    isActive ? "navLink active" : "navLink"
+                    isActive ? item?.subMenu ? "navLink" : "navLink active" : "navLink"
                   }
                   onClick={() => {
                     if (item.subMenu) toggleMenu(setMenus, item);
                   }}
                 >
-                  <div>
+                  <div className="flex justify-between truncate" title={item.title}>
                     <span className="material-symbols-rounded">
                       {item.icons}
                     </span>
-                    <span className={`title`}>{item.title}</span>
+                    <span className={`title truncate`}>{item.title || "table"}</span>
                   </div>
                   {item.subMenu && (
                     <span
@@ -111,9 +114,10 @@ export default function Sidebar({ data }) {
                                 className={({ isActive }) =>
                                   isActive ? "navLink active" : "navLink"
                                 }
+                                title={menu.title}
                               >
-                                <span className={`title truncate capitalize `}>
-                                  {menu.title}
+                                <span className={`title truncate capitalize `} >
+                                  {menu.title || "Title"}
                                 </span>
                               </NavLink>
                             </li>
@@ -122,10 +126,11 @@ export default function Sidebar({ data }) {
                                 className="submenu_item max-w-[170px]"
                                 onClick={() => {
                                   dispatch(handleAddToggle(true))
-                                  dispatch(handleCreateTableBaseId(item?.base_id))
+                                  dispatch(handleCreateTableBaseId(item?.baseId))
                                 }}
+
                               >
-                                <button className="navLink w-full" >
+                                <button className="navLink w-full">
                                   <span
                                     className={`title truncate capitalize flex`}
                                   >
@@ -172,23 +177,25 @@ export default function Sidebar({ data }) {
   );
 }
 
-function toggleMenu(setMenus, menu, depth) {
+function toggleMenu(setMenus, menu) {
   setMenus((prev) => {
     return prev.map((prevMenu) => {
-      if (menu.to === prevMenu.to) {
+      if (menu.baseId === prevMenu.baseId) {
         prevMenu.isOpened = !prevMenu.isOpened;
-      }
-      if (depth === 1 && prevMenu.subMenu) {
-        prevMenu.subMenu.map((item) => {
-          if (menu.to === item.to) {
-            item.isOpened = !item.isOpened;
-          }
-        });
       }
       return prevMenu;
     });
   });
 }
+
+
+// if (depth === 1 && prevMenu.subMenu) {
+//   prevMenu.subMenu.map((item) => {
+//     if (menu.to === item.to) {
+//       item.isOpened = !item.isOpened;
+//     }
+//   });
+// }
 
 {
   /* <div

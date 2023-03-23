@@ -1,14 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { handelUpdateBases } from "../../../store/features/BasesStateSlice";
 import { handleAddToggle } from "../../../store/features/globalStateSlice";
-import { useAddTableColumnMutation, useCreateTableMutation } from "../../../store/services/alphaTruckingApi";
+import { useCreateTableMutation } from "../../../store/services/alphaTruckingApi";
 
 export default function AddTable() {
 
   const { sidebarData, createTableBaseId } = useSelector(state => state.globalState)
-
-  const location = useLocation();
 
   const dispatch = useDispatch()
 
@@ -21,17 +19,27 @@ export default function AddTable() {
 
   const [fieldDescriptionInput, setFieldDescriptionInput] = React.useState("");
 
-  const [createTableApi, { isLoading, error, data }] =
+  const [createTableApi, responseCreateTable] =
     useCreateTableMutation();
 
   const existingTable = new Map();
 
-  // console.log(sidebarData)
-
   sidebarData[0]?.tablemetadata.map(({ table_name }) => {
     existingTable.set(table_name?.toLocaleLowerCase(), true)
-
   })
+  console.log(createTableBaseId)
+
+  useEffect(() => {
+    console.log(
+      responseCreateTable?.data,
+    )
+
+    if (responseCreateTable?.data) {
+      dispatch(handelUpdateBases({ baseId: createTableBaseId, data: responseCreateTable?.data }))
+    }
+
+  }, [responseCreateTable.isSuccess])
+
 
 
   return (

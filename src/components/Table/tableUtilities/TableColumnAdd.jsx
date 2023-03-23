@@ -29,9 +29,10 @@ export default function TableColumnAdd({ headers }) {
 
   const [selectedFieldType, setSelectedFieldType] = React.useState(undefined);
 
-  const [addColumnApi, { isLoading, error, data }] =
+  const [addColumnApi, { isSuccess, data }] =
     useAddTableColumnMutation();
 
+  // console.log(req)
   const existingColumns = new Map();
 
   const fieldsMap = new Map();
@@ -84,23 +85,13 @@ export default function TableColumnAdd({ headers }) {
     existingColumns.set(columns[i]?.header.toLocaleLowerCase(), true);
   }
 
-  // useEffect(() => {
-  //     setColumns((prev) => {
-  //         prev.map((ele) => {
-  //             console.log(ele)
-  //             if (data?.field_name === ele?.field_name) {
-  //                 ele.field_id = data?.field_id;
-  //             }
-  //             return ele;
-  //         })
-  //     })
-  // }, [data])
-
-  // if (isLoading) {
-  //     return <div>Loading</div>
-  // }
-  // if (error) {
-  // }
+  useEffect(() => {
+    if (data?.field_id) {
+      console.log(data?.field_id)
+      console.log("Added Column")
+      console.log(columns)
+    }
+  }, [isSuccess])
 
   return (
     <div className="relative ref={addColumnRef}">
@@ -223,7 +214,7 @@ export default function TableColumnAdd({ headers }) {
                 <button
                   disabled={!fieldNameInput || isExistFieldNameInput}
                   onClick={async () => {
-                    await addColumnApi({
+                    addColumnApi({
                       tableId: location.pathname.split("/")[2],
                       data: {
                         field_description: fieldDescriptionInput,
