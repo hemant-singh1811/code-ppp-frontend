@@ -20,6 +20,17 @@ export default function AddRowTable({ tableModel }) {
       return { table_id, table_name };
     });
   });
+
+  const fieldsMapTempTesting = new Map();
+
+  tableModel.map((ele) => {
+    fieldsMapTempTesting.set(ele?.data?.field_type, true);
+  });
+
+  // for (let [key, value] of fieldsMapTempTesting.entries()) {
+  //   console.log(key + " = " + value);
+  // }
+
   return (
     <div
       ref={addRowToggle}
@@ -54,30 +65,22 @@ export default function AddRowTable({ tableModel }) {
               return (
                 <div key={i} className="">
                   <div className="text-sm ml-1">{data?.field_name}</div>
-                  {data?.field_type === "string" && (
-                    <div className="">
-                      <input
-                        type="text"
-                        placeholder={data?.field_name}
-                        className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
-                      />
-                    </div>
-                  )}
+                  {data?.field_type === "string" ||
+                    (data?.field_type === "widgets" && (
+                      <div className="">
+                        <input
+                          type="text"
+                          placeholder={data?.field_name}
+                          className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
+                        />
+                      </div>
+                    ))}
                   {data?.field_type === "image" && (
                     <div className="">
                       <input
                         type="file"
                         placeholder={data?.field_name}
                         className="text-black w-full p-1.5 py-[2.5px] bg-white px-2 rounded-md shadow-md focus:outline-blue-500"
-                      />
-                    </div>
-                  )}
-                  {data?.field_type === "widgets" && (
-                    <div className="">
-                      <input
-                        type="text"
-                        placeholder={data?.field_name}
-                        className="text-black w-full p-1.5 px-2 rounded-md shadow-md focus:outline-blue-500"
                       />
                     </div>
                   )}
