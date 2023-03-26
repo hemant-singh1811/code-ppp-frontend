@@ -7,6 +7,7 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 import authReducer from '../features/auth/authSlice';
 import viewsReducer from '../features/viewsSlice';
 import basesReducer from '../features/BasesStateSlice';
+import sidebarReducer from '../features/SideBarStateSlice';
 
 const reducer = {
   [alphaTruckingApi.reducerPath]: alphaTruckingApi.reducer,
@@ -16,6 +17,7 @@ const reducer = {
   auth: authReducer,
   views: viewsReducer,
   bases: basesReducer,
+  sidebar: sidebarReducer,
 };
 
 export const store = configureStore({

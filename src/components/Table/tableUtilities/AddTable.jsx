@@ -1,35 +1,38 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, redirect } from "react-router-dom";
 import { handelUpdateBases } from "../../../store/features/BasesStateSlice";
 import { handleAddToggle } from "../../../store/features/globalStateSlice";
+import { handelAddSideBarField } from "../../../store/features/SideBarStateSlice";
 import { useCreateTableMutation } from "../../../store/services/alphaTruckingApi";
 
 export default function AddTable() {
-  const { sidebarData, createTableBaseId } = useSelector(
+  const { createTableBaseId } = useSelector(
     (state) => state.globalState
   );
   const { bases } = useSelector((state) => state.bases);
-
-  const dispatch = useDispatch();
-
   const { addTableToggle } = useSelector((state) => state.globalState);
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+
 
   const [tableNameInput, setTableNameInput] = React.useState("");
-
   const [isExistTableNameInput, setIsExistTableNameInput] =
     React.useState(false);
-
   const [TableDescriptionInput, setTableDescriptionInput] = React.useState("");
 
   const [createTableApi, responseCreateTable] = useCreateTableMutation();
 
-  const existingTable = new Map();
 
-  sidebarData[0]?.tablemetadata.map(({ table_name }) => {
-    existingTable.set(table_name?.toLocaleLowerCase(), true);
+  // save all the table names and later check if the name is already present or not
+  const existingTable = new Map();
+  bases.map(({ baseid, tablemetadata }) => {
+    if (baseid === createTableBaseId) {
+      tablemetadata?.forEach(({ table_name }) => {
+        existingTable.set(table_name?.toLocaleLowerCase(), true);
+      })
+    }
   });
-  // console.log(createTableBaseId);
-  console.log(bases);
 
   useEffect(() => {
     if (responseCreateTable?.data) {
@@ -39,9 +42,16 @@ export default function AddTable() {
           data: responseCreateTable?.data,
         })
       );
+      dispatch(
+        handelAddSideBarField({
+          baseId: createTableBaseId,
+          data: { title: responseCreateTable?.data?.table_name, tableId: responseCreateTable?.data?.table_id, to: `${createTableBaseId}/${responseCreateTable?.data?.table_id}` },
+        })
+      );
+
+      navigate(`/${createTableBaseId}/${responseCreateTable?.data?.table_id}`)
     }
   }, [responseCreateTable.isSuccess]);
-
   return (
     <div className="">
       {addTableToggle && (
@@ -79,9 +89,8 @@ export default function AddTable() {
           <div className="flex justify-between items-center mt-8">
             <div>
               <div
-                className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
-                  addTableToggle && "hidden"
-                } `}
+                className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${addTableToggle && "hidden"
+                  } `}
                 onClick={() => dispatch(handleAddToggle(false))}
               >
                 <span className="material-symbols-rounded text-xl">add</span>
@@ -102,22 +111,12 @@ export default function AddTable() {
                 <button
                   disabled={!tableNameInput || isExistTableNameInput}
                   onClick={async () => {
-                    // await createTableApi({
-                    //   tableId: createTableBaseId,
-                    //   data: {
-                    //     table_name: tableNameInput,
-                    //   },
-                    // });
-                    dispatch(
-                      handelUpdateBases({
-                        baseId: createTableBaseId,
-                        data: {
-                          base_id: "app16x5q6jE2uqjB9",
-                          table_id: "tblQGdG3fr66ieXgk",
-                          table_name: tableNameInput,
-                        },
-                      })
-                    );
+                    await createTableApi({
+                      tableId: createTableBaseId,
+                      data: {
+                        table_name: tableNameInput,
+                      },
+                    });
                     dispatch(handleAddToggle());
                     setTableNameInput("");
                     setTableDescriptionInput("");

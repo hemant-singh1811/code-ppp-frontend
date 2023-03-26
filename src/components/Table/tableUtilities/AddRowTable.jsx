@@ -13,13 +13,13 @@ export default function AddRowTable({ tableModel }) {
 
   useDetectOutsideClick(addRowToggle, () => setOpenAddRowToggle(false));
 
-  const { sidebarData } = useSelector((state) => state.globalState);
+  // const { sidebarData } = useSelector((state) => state.globalState);
 
-  let tableNamesWithId = sidebarData.map((ele) => {
-    return ele.tablemetadata.map(({ table_id, table_name }) => {
-      return { table_id, table_name };
-    });
-  });
+  // let tableNamesWithId = sidebarData.map((ele) => {
+  //   return ele.tablemetadata.map(({ table_id, table_name }) => {
+  //     return { table_id, table_name };
+  //   });
+  // });
 
   const fieldsMapTempTesting = new Map();
 
@@ -47,7 +47,7 @@ export default function AddRowTable({ tableModel }) {
       {openAddRowToggle && (
         <div className="h-4/5 w-1/2 overflow-scroll max-h-[80vh] min-w-[500px] mr-auto mt-auto bg-orange-100 z-50 p-10 pt-4 flex flex-col rounded-tr-md shadow-md">
           <h1>
-            {tableNamesWithId.map((ele) => {
+            {/* {tableNamesWithId.map((ele) => {
               return ele.map(({ table_id, table_name }) => {
                 if (table_id == location.pathname.split("/")[2]) {
                   return (
@@ -57,7 +57,7 @@ export default function AddRowTable({ tableModel }) {
                   );
                 }
               });
-            })}
+            })} */}
           </h1>
 
           <div className="grid grid-cols-2 gap-y-4 gap-x-5 flex-1">

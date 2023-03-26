@@ -44,7 +44,6 @@ const initialState = {
     width: 270,
   },
   addTableToggle: false,
-  sidebarData: [],
   createTableBaseId: undefined,
 };
 
@@ -54,6 +53,7 @@ const globalStateSlice = createSlice({
   reducers: {
     onChangeSearch: (state, { payload }) => {
       state.search = payload;
+      console.log(state);
     },
     handleFilterChange: (state, { payload }) => {
       state.filter = state.filter.map((ele) => {
@@ -87,9 +87,6 @@ const globalStateSlice = createSlice({
     handleAddToggle: (state, { payload }) => {
       state.addTableToggle = payload;
     },
-    handleAddSidebarData: (state, { payload }) => {
-      state.sidebarData = payload;
-    },
     handleCreateTableBaseId: (state, { payload }) => {
       state.createTableBaseId = payload;
     },
@@ -103,7 +100,6 @@ export const {
   handleScreenTabsToggle,
   handleToggleMainSideBar,
   handleAddToggle,
-  handleAddSidebarData,
   handleCreateTableBaseId,
 } = globalStateSlice.actions;
 

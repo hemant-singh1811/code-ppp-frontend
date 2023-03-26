@@ -13,7 +13,6 @@ export default function MainRouting() {
   const { userInfo } = useSelector((state) => state.auth);
 
   const routes = [
-    { path: "/:tableId", component: <TableScreen /> },
     {
       path: "/:baseId/:tableId",
       component: <TableScreen />,

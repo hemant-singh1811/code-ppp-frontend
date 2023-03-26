@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useDeleteTableColumnMutation } from '../../../store/services/alphaTruckingApi';
 import { TableContext } from '../tableComponents/TableComponents';
 
@@ -9,7 +9,7 @@ export default function TableColumnDropDown({ columnDropdownRef, columnDef }) {
     // const location = useLocation();
     const { columns, setColumns } = useContext(TableContext);
 
-    const [addDeleteApi, { isLoading, error, data }] = useDeleteTableColumnMutation()
+    const [addDeleteApi, responseDeleteColumn] = useDeleteTableColumnMutation()
     // const [addDeleteApitest] = useDeleteTableColumnMutation()
 
     // console.log(addDeleteApitest)
@@ -24,21 +24,15 @@ export default function TableColumnDropDown({ columnDropdownRef, columnDef }) {
             }
         }
         )
-
     }
 
 
+    useEffect(() => {
+        if (responseDeleteColumn.data) {
+            setColumns((prev) => prev.filter((item) => item.field_id !== columnDef?.field_id));
+        }
+    }, [responseDeleteColumn.isSuccess])
 
-
-    // if (isLoading) {
-
-    // }
-    // if (error) {
-
-    // }
-    // if (data) {
-    //     console.log(data)
-    // }
 
     return (
         <div className=" " ref={columnDropdownRef}>

@@ -29,10 +29,9 @@ export default function TableColumnAdd({ headers }) {
 
   const [selectedFieldType, setSelectedFieldType] = React.useState(undefined);
 
-  const [addColumnApi, { isSuccess, data }] =
+  const [addColumnApi, responseCreateColumn] =
     useAddTableColumnMutation();
 
-  // console.log(req)
   const existingColumns = new Map();
 
   const fieldsMap = new Map();
@@ -86,12 +85,18 @@ export default function TableColumnAdd({ headers }) {
   }
 
   useEffect(() => {
-    if (data?.field_id) {
-      console.log(data?.field_id)
-      console.log("Added Column")
-      console.log(columns)
+    if (responseCreateColumn.data) {
+      setColumns([
+        ...columns,
+        {
+          ...responseCreateColumn.data,
+          accessorKey: responseCreateColumn.data.field_name,
+          id: responseCreateColumn.data.field_name,
+          header: responseCreateColumn.data.field_name,
+        },
+      ]);
     }
-  }, [isSuccess])
+  }, [responseCreateColumn.isSuccess])
 
   return (
     <div className="relative ref={addColumnRef}">
@@ -222,19 +227,6 @@ export default function TableColumnAdd({ headers }) {
                         field_type: selectedFieldType,
                       },
                     });
-
-                    setColumns([
-                      ...columns,
-                      {
-                        field_description: fieldDescriptionInput,
-                        field_name: fieldNameInput,
-                        field_type: selectedFieldType,
-                        accessorKey: fieldNameInput,
-                        id: fieldNameInput,
-                        header: fieldNameInput,
-                      },
-                    ]);
-
                     setDescriptionToggle(false);
                     setAddColumnToggle(!addColumnToggle);
                     setSelectedFieldType(undefined);

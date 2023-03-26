@@ -1,26 +1,24 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   bases: [],
 };
 
 const BasesStateSlice = createSlice({
-  name: "bases",
+  name: 'bases',
   initialState,
   reducers: {
     handelAddBases: (state, { payload }) => {
-      console.log(payload);
       state.bases = payload;
     },
     handelUpdateBases: (state, { payload }) => {
-      console.log(state.bases);
-      state.bases = state.bases.map((item) => {
-        if (payload.baseId === item.baseId) {
+      let updatedBases = state.bases.map((item) => {
+        if (payload.baseId === item.baseid) {
           item.tablemetadata.push(payload.data);
-          console.log(item.tablemetadata);
         }
         return item;
       });
+      state.bases = updatedBases;
     },
   },
 });
