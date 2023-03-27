@@ -28,7 +28,6 @@ export default function AddRowTable() {
 
   const tableNamesWithId = new Map();
   const fieldsMapTempTesting = new Map();
-
   let FieldsType = [
     "multipleRecordLinks",
     "singleLineText",
@@ -50,6 +49,7 @@ export default function AddRowTable() {
     "button",
   ];
 
+
   sidebar.map((ele) => {
     if (ele?.subMenu) {
       ele.subMenu.map(({ tableId, title }) => {
@@ -61,12 +61,13 @@ export default function AddRowTable() {
   tableModel?.map((ele) => {
     fieldsMapTempTesting.set(ele?.data?.field_type, true);
   });
-  console.log(data);
+  console.log(columns);
 
   useEffect(() => {
     if (responseCreateRow.data) {
       setData([...data, responseCreateRow.data?.data]);
       setOpenAddRowToggle(false);
+      console.log('response from server', responseCreateRow.data)
     }
   }, [responseCreateRow.isSuccess]);
 
@@ -77,11 +78,14 @@ export default function AddRowTable() {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
+    console.log("sending data to server", data);
     addRowApi({
       tableId: location.pathname.split("/")[2],
       data: data,
     });
   };
+
+  // console.log(watch('long Text'))
 
   return (
     <div
@@ -119,6 +123,27 @@ export default function AddRowTable() {
                         />
                       </div>
                     )}
+                    {data?.field_type === "multilineText" && (
+                      <div className="">
+                        <input
+                          // style={{ resize: 'none' }}
+                          {...register(data?.id)}
+                          placeholder={data?.id}
+                          className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
+                        // name="" id="" rows="3"
+                        />
+                      </div>
+                    )}
+                    {data?.field_type === "date" && (
+                      <div className="">
+                        <input
+                          type="date"
+                          {...register(data?.id)}
+                          placeholder={data?.id}
+                          className="text-black w-full p-1.5 px-2 rounded-md shadow-md focus:outline-blue-500"
+                        />
+                      </div>
+                    )}
                     {data?.field_type === "image" && (
                       <div className="">
                         <input
@@ -137,15 +162,7 @@ export default function AddRowTable() {
                         />
                       </div>
                     )}
-                    {data?.field_type === "date" && (
-                      <div className="">
-                        <input
-                          type="date"
-                          placeholder={data?.id}
-                          className="text-black w-full p-1.5 px-2 rounded-md shadow-md focus:outline-blue-500"
-                        />
-                      </div>
-                    )}
+
                     {data?.field_type === "number" && (
                       <div className="">
                         <input
