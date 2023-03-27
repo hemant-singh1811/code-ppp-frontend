@@ -100,7 +100,6 @@ export default function Table({ tableData, tableModel }) {
           setData={setTableDataModified}
           tableConditions={data}
         />
-        <AddRowTable tableModel={tableModel} />
       </div>
     </DndProvider>
   );

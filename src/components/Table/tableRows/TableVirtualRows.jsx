@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
-import { flexRender } from '@tanstack/react-table';
-import { useVirtual } from 'react-virtual';
-import { TableContext } from '../tableComponents/TableComponents';
-import ImageReader from '../tableUtilities/ImageReader';
+import React, { useContext } from "react";
+import { flexRender } from "@tanstack/react-table";
+import { useVirtual } from "react-virtual";
+import { TableContext } from "../tableComponents/TableComponents";
+import ImageReader from "../tableUtilities/ImageReader";
 
 export default function TableVirtualRows({ tableContainerRef, rows }) {
   const { activeRowHeight, activeNumberOfLines } = useContext(TableContext);
@@ -19,7 +19,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
       : 0;
 
   return (
-    <div className='tbody text-black'>
+    <div className="tbody text-black">
       {paddingTop > 0 && <div style={{ height: `${paddingTop}px` }}></div>}
       {virtualRows.map((virtualRow) => {
         const row = rows[virtualRow.index];
@@ -27,7 +27,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
           <div
             {...{
               key: row.id,
-              className: 'tr',
+              className: "tr",
               style: {
                 height: activeRowHeight,
               },
@@ -43,12 +43,12 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                       width: cell.column.getSize(),
                       height: activeRowHeight,
                       background: cell.getIsGrouped()
-                        ? '#0aff0082'
+                        ? "#0aff0082"
                         : cell.getIsAggregated()
-                          ? '#ffa50078'
-                          : cell.getIsPlaceholder()
-                            ? '#ff000042'
-                            : '',
+                        ? "#ffa50078"
+                        : cell.getIsPlaceholder()
+                        ? "#ff000042"
+                        : "",
                     },
                   }}
                 >
@@ -56,19 +56,19 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                     // If it's a grouped cell, add an expander and row count
                     <>
                       <button
-                        className='flex'
+                        className="flex"
                         {...{
                           onClick: row.getToggleExpandedHandler(),
                           style: {
-                            cursor: row.getCanExpand() ? 'pointer' : 'normal',
+                            cursor: row.getCanExpand() ? "pointer" : "normal",
                           },
                         }}
                       >
-                        <div>{row.getIsExpanded() ? '👇' : '👉'} </div>
+                        <div>{row.getIsExpanded() ? "👇" : "👉"} </div>
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
-                        )}{' '}
+                        )}{" "}
                         ({row.subRows.length})
                       </button>
                     </>
@@ -77,18 +77,26 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                     // renderer for cell
                     flexRender(
                       cell.column.columnDef.aggregatedCell ??
-                      cell.column.columnDef.cell,
+                        cell.column.columnDef.cell,
                       cell.getContext()
                     )
                   ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
                     // Otherwise, just render the regular cell
                     <>
-                      {
-                        cell.column.columnDef.field_type === 'image' ? <ImageReader data={cell?.getValue()} />
-                          : cell.column.columnDef.field_type === 'widgets' ? 'widgets'
-                            : cell.column.columnDef.field_type === 'application/pdf' ? "application/pdf"
-                              : flexRender(cell.column.columnDef.cell, cell.getContext())
-                      }
+                      {cell.column.columnDef.field_type ===
+                      "multipleAttachments" ? (
+                        <ImageReader data={cell?.getValue()} />
+                      ) : cell.column.columnDef.field_type === "button" ? (
+                        "Button"
+                      ) : cell.column.columnDef.field_type ===
+                        "application/pdf" ? (
+                        "application/pdf"
+                      ) : (
+                        flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )
+                      )}
                     </>
                   )}
                 </div>
@@ -100,7 +108,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
       {paddingBottom > 0 && (
         <div style={{ height: `${paddingBottom}px` }}></div>
       )}
-      <div className='h-20' />
+      <div className="h-20" />
     </div>
   );
 }

@@ -31,76 +31,25 @@ export default function TableColumnAdd({ headers }) {
 
   const fieldsMap = new Map();
 
-  // let frontEndFieldsType = [
-  //   "Link to another record",
-  //   "Single line text",
-  //   "Long text",
-  //   "Attachment",
-  //   // "Checkbox",
-  //   "Single Select",
-  //   "Multiple select",
-  //   // "User",
-  //   "Date",
-  //   // "Phone number",
-  //   "Email",
-  //   "URL",
-  //   // "Created time",
-  //   "Last modified time",
-  //   "Created by",
-  //   "Last modified by",
-  //   // "Autonumber",
-  //   // "button",
-  // ];
-
-  // let correspondingType = [
-  //   "Link to another record",
-  //   "string",
-  //   "paragraph",
-  //   "file",
-  //   // "boolean",
-  //   "string",
-  //   "array",
-  //   // "array",
-  //   "date",
-  //   // "number",
-  //   "string",
-  //   "string",
-  //   // "time",
-  //   "time",
-  //   "user",
-  //   "user",
-  //   // "number",
-  //   // "string",
-  // ];
-
   let frontEndFieldsType = [
     "Link to another record",
     "Single line text",
     "Long text",
     "Attachment",
+    "Checkbox",
     "Single Select",
     "Multiple select",
+    // "User",
     "Date",
+    "Phone number",
     "Email",
     "URL",
+    "Created time",
     "Last modified time",
     "Created by",
     "Last modified by",
-  ];
-
-  let FieldsType = [
-    "multipleRecordLinks",
-    "singleLineText",
-    "multilineText",
-    "multipleAttachments",
-    "singleSelect",
-    "multipleSelects",
-    "date",
-    "email",
-    "url",
-    "lastModifiedTime",
-    "createdBy",
-    "lastModifiedBy",
+    "Autonumber",
+    "button",
   ];
 
   let correspondingType = [
@@ -108,14 +57,41 @@ export default function TableColumnAdd({ headers }) {
     "string",
     "paragraph",
     "file",
+    "boolean",
     "string",
     "array",
+    // "array",
     "date",
+    "number",
     "string",
     "string",
     "time",
+    "time",
     "user",
     "user",
+    "number",
+    "string",
+  ];
+
+  let FieldsType = [
+    "multipleRecordLinks",
+    "singleLineText",
+    "multilineText",
+    "multipleAttachments",
+    "checkbox",
+    "singleSelect",
+    "multipleSelects",
+    // "",
+    "date",
+    "phoneNumber",
+    "email",
+    "url",
+    "createdTime",
+    "lastModifiedTime",
+    "createdBy",
+    "lastModifiedBy",
+    "autoNumber",
+    "button",
   ];
 
   for (let i = 0; i < correspondingType?.length; i++) {
@@ -140,7 +116,7 @@ export default function TableColumnAdd({ headers }) {
       ]);
     }
   }, [responseCreateColumn.isSuccess]);
-  console.log(columns);
+
   return (
     <div className="relative ref={addColumnRef}">
       <div className={`th bg-[#f5f5f5] border-r-[1px] mr-2`}>

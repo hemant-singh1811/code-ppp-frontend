@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { rankItem } from '@tanstack/match-sorter-utils';
-import TableUtilityBar from '../tableUtilityBar/TableUtilityBar';
-import CustomTable from './CustomTable';
+import React, { useContext, useEffect, useState } from "react";
+import { rankItem } from "@tanstack/match-sorter-utils";
+import TableUtilityBar from "../tableUtilityBar/TableUtilityBar";
+import CustomTable from "./CustomTable";
 import {
   useReactTable,
   getCoreRowModel,
@@ -9,34 +9,36 @@ import {
   getSortedRowModel,
   getGroupedRowModel,
   getExpandedRowModel,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
+import AddRowTable from "../tableUtilities/AddRowTable";
 
 export const TableContext = React.createContext();
-
 
 export default function TableComponents({
   defaultColumns,
   data,
   toggle,
   setData,
-  tableConditions
+  tableConditions,
 }) {
   const [columns, setColumns] = useState(() => [...defaultColumns]);
-  const [globalFilter, setGlobalFilter] = useState(tableConditions?.model?.globalFilter || '');
+  const [globalFilter, setGlobalFilter] = useState(
+    tableConditions?.model?.globalFilter || ""
+  );
   const [columnFilters, setColumnFilters] = useState([]);
   const [sorting, setSorting] = useState([]);
   const [rowHeight, setRowHeight] = useState([
     {
-      name: 'small',
+      name: "small",
       isActive: true,
-      icon: 'density_small',
+      icon: "density_small",
       height: 30,
       numberOfLines: 1,
     },
     {
-      name: 'medium',
+      name: "medium",
       isActive: false,
-      icon: 'density_medium',
+      icon: "density_medium",
       height: 50,
       numberOfLines: 2,
     },
@@ -56,7 +58,7 @@ export default function TableComponents({
     // },
   ]);
   const [grouping, setGrouping] = useState([]);
-  const [viewsToggle, setViewsToggle] = useState(false)
+  const [viewsToggle, setViewsToggle] = useState(false);
   let { activeRowHeight, activeNumberOfLines } = handleRowHeight(rowHeight);
   const [columnOrder, setColumnOrder] = useState(
     //must start out with populated columnOrder so we can splice
@@ -65,7 +67,7 @@ export default function TableComponents({
   const [columnPinning, setColumnPinning] = useState({});
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
   const table = useReactTable({
-    columnResizeMode: 'onChange',
+    columnResizeMode: "onChange",
     state: {
       columnOrder,
       globalFilter,
@@ -119,31 +121,35 @@ export default function TableComponents({
   useEffect(() => {
     // let conditions = tableConditions
     // delete conditions['pagination']
-
-
     // console.log(tableConditions)
-
     // table.setState(tableConditions?.model)
-  }, [])
+  }, []);
+
+  // console.log(table);
 
   return (
-    <TableContext.Provider value={{
-      table: table,
-      rowHeight: rowHeight,
-      setRowHeight: setRowHeight,
-      globalFilter: globalFilter,
-      setGlobalFilter: setGlobalFilter,
-      toggle: toggle,
-      activeRowHeight: activeRowHeight,
-      activeNumberOfLines: activeNumberOfLines,
-      viewsToggle: viewsToggle,
-      setViewsToggle: setViewsToggle,
-      setColumns: setColumns,
-      columns: columns
-    }}>
-      <div className=' w-full  overflow-hidden h-screen text-white'>
+    <TableContext.Provider
+      value={{
+        table: table,
+        rowHeight: rowHeight,
+        setRowHeight: setRowHeight,
+        globalFilter: globalFilter,
+        setGlobalFilter: setGlobalFilter,
+        toggle: toggle,
+        activeRowHeight: activeRowHeight,
+        activeNumberOfLines: activeNumberOfLines,
+        viewsToggle: viewsToggle,
+        setViewsToggle: setViewsToggle,
+        setColumns: setColumns,
+        columns: columns,
+        setData: setData,
+        data: data,
+      }}
+    >
+      <div className=" w-full  overflow-hidden h-screen text-white">
         <TableUtilityBar />
         <CustomTable />
+        <AddRowTable />
       </div>
     </TableContext.Provider>
   );
@@ -189,6 +195,5 @@ function useSkipper() {
 
   return [shouldSkip, skip];
 }
-
 
 // {/* <pre>{JSON.stringify(table.getState(), null, 2)}</pre> */ }
