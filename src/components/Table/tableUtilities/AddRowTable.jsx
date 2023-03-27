@@ -13,23 +13,37 @@ export default function AddRowTable({ tableModel }) {
 
   useDetectOutsideClick(addRowToggle, () => setOpenAddRowToggle(false));
 
-  // const { sidebarData } = useSelector((state) => state.globalState);
+  const { sidebar } = useSelector((state) => state.sidebar);
 
-  // let tableNamesWithId = sidebarData.map((ele) => {
-  //   return ele.tablemetadata.map(({ table_id, table_name }) => {
-  //     return { table_id, table_name };
-  //   });
-  // });
-
+  const tableNamesWithId = new Map();
   const fieldsMapTempTesting = new Map();
+
+  let FieldsType = [
+    "multipleRecordLinks",
+    "singleLineText",
+    "multilineText",
+    "multipleAttachments",
+    "singleSelect",
+    "multipleSelects",
+    "date",
+    "email",
+    "url",
+    "lastModifiedTime",
+    "createdBy",
+    "lastModifiedBy",
+  ];
+
+  sidebar.map((ele) => {
+    if (ele?.subMenu) {
+      ele.subMenu.map(({ tableId, title }) => {
+        tableNamesWithId.set(tableId, title);
+      });
+    }
+  });
 
   tableModel.map((ele) => {
     fieldsMapTempTesting.set(ele?.data?.field_type, true);
   });
-
-  // for (let [key, value] of fieldsMapTempTesting.entries()) {
-  //   console.log(key + " = " + value);
-  // }
 
   return (
     <div
@@ -47,19 +61,10 @@ export default function AddRowTable({ tableModel }) {
       {openAddRowToggle && (
         <div className="h-4/5 w-1/2 overflow-scroll max-h-[80vh] min-w-[500px] mr-auto mt-auto bg-orange-100 z-50 p-10 pt-4 flex flex-col rounded-tr-md shadow-md">
           <h1>
-            {/* {tableNamesWithId.map((ele) => {
-              return ele.map(({ table_id, table_name }) => {
-                if (table_id == location.pathname.split("/")[2]) {
-                  return (
-                    <div className=" text-center font-semibold text-2xl mb-5">
-                      {table_name} Add Rows
-                    </div>
-                  );
-                }
-              });
-            })} */}
+            <div className=" text-center font-semibold text-2xl mb-5">
+              {tableNamesWithId.get(location.pathname.split("/")[2])} Add Rows
+            </div>
           </h1>
-
           <div className="grid grid-cols-2 gap-y-4 gap-x-5 flex-1">
             {tableModel.map(({ data }, i) => {
               return (

@@ -12,48 +12,95 @@ export default function TableColumnAdd({ headers }) {
   const location = useLocation();
   const { columns, setColumns } = useContext(TableContext);
 
-  const [addColumnToggle, setAddColumnToggle] = React.useState(false);
-
   useDetectOutsideClick(addColumnRef, () => setAddColumnToggle(false));
 
+  const [addColumnToggle, setAddColumnToggle] = React.useState(false);
   const [descriptionToggle, setDescriptionToggle] = React.useState(false);
-
-  const [fieldSearchInput, setFieldSearchInput] = React.useState("");
-
   const [fieldNameInput, setFieldNameInput] = React.useState("");
-
+  const [fieldSearchInput, setFieldSearchInput] = React.useState("");
   const [isExistFieldNameInput, setIsExistFieldNameInput] =
     React.useState(false);
-
   const [fieldDescriptionInput, setFieldDescriptionInput] = React.useState("");
-
   const [selectedFieldType, setSelectedFieldType] = React.useState(undefined);
 
-  const [addColumnApi, responseCreateColumn] =
-    useAddTableColumnMutation();
+  const [addColumnApi, responseCreateColumn] = useAddTableColumnMutation();
 
   const existingColumns = new Map();
 
+  const frontEndFieldsMap = new Map();
+
   const fieldsMap = new Map();
 
-  let fieldsType = [
+  // let frontEndFieldsType = [
+  //   "Link to another record",
+  //   "Single line text",
+  //   "Long text",
+  //   "Attachment",
+  //   // "Checkbox",
+  //   "Single Select",
+  //   "Multiple select",
+  //   // "User",
+  //   "Date",
+  //   // "Phone number",
+  //   "Email",
+  //   "URL",
+  //   // "Created time",
+  //   "Last modified time",
+  //   "Created by",
+  //   "Last modified by",
+  //   // "Autonumber",
+  //   // "button",
+  // ];
+
+  // let correspondingType = [
+  //   "Link to another record",
+  //   "string",
+  //   "paragraph",
+  //   "file",
+  //   // "boolean",
+  //   "string",
+  //   "array",
+  //   // "array",
+  //   "date",
+  //   // "number",
+  //   "string",
+  //   "string",
+  //   // "time",
+  //   "time",
+  //   "user",
+  //   "user",
+  //   // "number",
+  //   // "string",
+  // ];
+
+  let frontEndFieldsType = [
     "Link to another record",
     "Single line text",
     "Long text",
     "Attachment",
-    "Checkbox",
+    "Single Select",
     "Multiple select",
-    "User",
     "Date",
-    "Phone number",
     "Email",
     "URL",
-    "Created time",
     "Last modified time",
     "Created by",
     "Last modified by",
-    "Autonumber",
-    "button",
+  ];
+
+  let FieldsType = [
+    "multipleRecordLinks",
+    "singleLineText",
+    "multilineText",
+    "multipleAttachments",
+    "singleSelect",
+    "multipleSelects",
+    "date",
+    "email",
+    "url",
+    "lastModifiedTime",
+    "createdBy",
+    "lastModifiedBy",
   ];
 
   let correspondingType = [
@@ -61,23 +108,19 @@ export default function TableColumnAdd({ headers }) {
     "string",
     "paragraph",
     "file",
-    "boolean",
-    "array",
+    "string",
     "array",
     "date",
-    "number",
     "string",
     "string",
     "time",
-    "time",
     "user",
     "user",
-    "number",
-    "string",
   ];
 
   for (let i = 0; i < correspondingType?.length; i++) {
-    fieldsMap.set(fieldsType[i], correspondingType[i]);
+    frontEndFieldsMap.set(frontEndFieldsType[i], correspondingType[i]);
+    fieldsMap.set(frontEndFieldsType[i], FieldsType[i]);
   }
 
   for (let i = 0; i < columns?.length; i++) {
@@ -96,8 +139,8 @@ export default function TableColumnAdd({ headers }) {
         },
       ]);
     }
-  }, [responseCreateColumn.isSuccess])
-
+  }, [responseCreateColumn.isSuccess]);
+  console.log(columns);
   return (
     <div className="relative ref={addColumnRef}">
       <div className={`th bg-[#f5f5f5] border-r-[1px] mr-2`}>
@@ -110,8 +153,9 @@ export default function TableColumnAdd({ headers }) {
       </div>
       {addColumnToggle && (
         <div
-          className={`text-black absolute top-[30px] bg-white w-96 rounded-md p-4 border-gray-400 border-2 flex flex-col ${headers.length < 3 ? "left-0" : "right-0"
-            }`}
+          className={`text-black absolute top-[30px] bg-white w-96 rounded-md p-4 border-gray-400 border-2 flex flex-col ${
+            headers.length < 3 ? "left-0" : "right-0"
+          }`}
         >
           <input
             type="text"
@@ -148,7 +192,7 @@ export default function TableColumnAdd({ headers }) {
             />
             {!selectedFieldType && (
               <div className="h-52 overflow-scroll p-1 px-1.5">
-                {fieldsType
+                {frontEndFieldsType
                   .filter((ele) => {
                     return ele
                       .toLowerCase()
@@ -194,8 +238,9 @@ export default function TableColumnAdd({ headers }) {
           <div className="flex  justify-between items-center mt-8">
             <div>
               <div
-                className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${descriptionToggle && "hidden"
-                  } `}
+                className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
+                  descriptionToggle && "hidden"
+                } `}
                 onClick={() => setDescriptionToggle(true)}
               >
                 <span className="material-symbols-rounded text-xl">add</span>{" "}
@@ -224,7 +269,9 @@ export default function TableColumnAdd({ headers }) {
                       data: {
                         field_description: fieldDescriptionInput,
                         field_name: fieldNameInput,
-                        field_type: selectedFieldType,
+                        field_type: fieldsMap.get(selectedFieldType),
+                        json_field_type:
+                          frontEndFieldsMap.get(selectedFieldType),
                       },
                     });
                     setDescriptionToggle(false);
