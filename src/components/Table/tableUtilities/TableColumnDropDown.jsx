@@ -26,13 +26,11 @@ export default function TableColumnDropDown({ columnDropdownRef, columnDef }) {
         )
     }
 
-
     useEffect(() => {
         if (responseDeleteColumn.data) {
             setColumns((prev) => prev.filter((item) => item.field_id !== columnDef?.field_id));
         }
     }, [responseDeleteColumn.isSuccess])
-
 
     return (
         <div className=" " ref={columnDropdownRef}>

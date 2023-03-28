@@ -3,7 +3,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import TableComponents from "./tableComponents/TableComponents";
 import { useSelector } from "react-redux";
-import { useGetSavedViewQuery } from "../../store/services/alphaTruckingApi";
+// import { useGetSavedViewQuery } from "../../store/services/alphaTruckingApi";
 import Loading from "../utilities/Loading";
 import Error from "../utilities/Error";
 import AddTable from "./tableUtilities/AddTable";
@@ -11,7 +11,7 @@ import AddRowTable from "./tableUtilities/AddRowTable";
 
 export default function Table({ tableData, tableModel }) {
   const { driver } = useSelector((state) => state.views);
-  const { data, error, isFetching } = useGetSavedViewQuery();
+  // const { data, error, isFetching } = useGetSavedViewQuery();
 
   // this is for checking is the side bar is opened ?
   const { toggle } = useSelector((state) => state.globalState.mainSideBar);
@@ -39,6 +39,8 @@ export default function Table({ tableData, tableModel }) {
   // })
 
   // console.log(tableModel)
+
+  // console.log(tableData)
 
   const defaultColumns = tableModel.map(({ id, data }) => {
     return {
@@ -71,6 +73,7 @@ export default function Table({ tableData, tableModel }) {
       defaultColumns.map(({ header }) => {
         object[header] = data?.[header];
       });
+      // console.log(object)
       // dataKeys.map((key) => {
       //   console.log(key)
       //   object[key] = data?.[key]
@@ -87,7 +90,7 @@ export default function Table({ tableData, tableModel }) {
   //   return <Error />
   // }
 
-  // console.log(data)
+  // console.log(tableModel)
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -98,7 +101,7 @@ export default function Table({ tableData, tableModel }) {
           defaultColumns={defaultColumns}
           data={tableDataModified}
           setData={setTableDataModified}
-          tableConditions={data}
+        // tableConditions={data}
         />
       </div>
     </DndProvider>

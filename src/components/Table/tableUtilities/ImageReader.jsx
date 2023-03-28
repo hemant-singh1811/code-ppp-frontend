@@ -9,7 +9,7 @@ export default function ImageReader({ data }) {
 
     let images;
     let thumbnails;
-    if (data) {
+    if (Array.isArray(data)) {
         thumbnails = data?.map(({ thumbnails }) => thumbnails?.small)
         images = data?.map(({ url }) => url)
     }

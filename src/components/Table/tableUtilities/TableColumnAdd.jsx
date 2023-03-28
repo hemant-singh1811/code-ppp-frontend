@@ -31,6 +31,27 @@ export default function TableColumnAdd({ headers }) {
 
   const fieldsMap = new Map();
 
+  const selectedOptionDescription = {
+    "Link to another record": 'Link to records in the Company table.',
+    "Single line text": 'Enter text, or prefill each new cell with a default value.',
+    "Long text": 'Enter multiple lines of text.',
+    'Attachment': 'Add images, documents, or other files to be viewed or downloaded.',
+    'Checkbox': 'Check or uncheck to indicate status.',
+    "Single Select": 'Select one predefined option from a list.',
+    "Multiple select": 'Select one or more predefined options in a list.',
+    'User': 'Add an Software user to a record.',
+    "Date": 'Enter a date (e.g. 11/12/2023) or choose one from a calendar.',
+    "Phone number": 'Enter a telephone number (e.g. (415) 555-9876).',
+    'Email': 'Enter an email address (e.g. andrew@example.com).',
+    'URL': 'Enter a URL (e.g. demo.com or https://demo.com/universe).',
+    "Created time": 'See the date and time each record was created.',
+    "Last modified time": 'See the date and time of the most recent edit to some or all fields in a record.',
+    "Created by": 'See which user created the record.',
+    "Last modified by": 'See which user made the most recent edit to some or all fields in a record.',
+    "Autonumber": 'Automatically generate unique incremental numbers for each record.',
+    "button": 'Trigger a customized action.',
+  }
+
   let frontEndFieldsType = [
     "Link to another record",
     "Single line text",
@@ -129,9 +150,8 @@ export default function TableColumnAdd({ headers }) {
       </div>
       {addColumnToggle && (
         <div
-          className={`text-black absolute top-[30px] bg-white w-96 rounded-md p-4 border-gray-400 border-2 flex flex-col ${
-            headers.length < 3 ? "left-0" : "right-0"
-          }`}
+          className={`text-black absolute top-[30px] bg-white w-96 rounded-md p-4 border-gray-400 border-2 flex flex-col ${headers.length < 3 ? "left-0" : "right-0"
+            }`}
         >
           <input
             type="text"
@@ -167,7 +187,7 @@ export default function TableColumnAdd({ headers }) {
               }}
             />
             {!selectedFieldType && (
-              <div className="h-52 overflow-scroll p-1 px-1.5">
+              <div className="h-4/5 overflow-scroll p-1 px-1.5">
                 {frontEndFieldsType
                   .filter((ele) => {
                     return ele
@@ -193,10 +213,9 @@ export default function TableColumnAdd({ headers }) {
           </div>
 
           {selectedFieldType && (
-            <div className="m-1">
-              A single line of text. You can optionally prefill each new cell
-              with a default value:
-            </div>
+            <div className="m-1 text-sm">
+              {selectedOptionDescription[selectedFieldType]}
+            </div >
           )}
 
           {descriptionToggle && (
@@ -214,9 +233,8 @@ export default function TableColumnAdd({ headers }) {
           <div className="flex  justify-between items-center mt-8">
             <div>
               <div
-                className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
-                  descriptionToggle && "hidden"
-                } `}
+                className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${descriptionToggle && "hidden"
+                  } `}
                 onClick={() => setDescriptionToggle(true)}
               >
                 <span className="material-symbols-rounded text-xl">add</span>{" "}

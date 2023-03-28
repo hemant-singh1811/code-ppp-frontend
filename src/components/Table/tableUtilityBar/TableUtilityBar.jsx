@@ -8,20 +8,20 @@ import TableUtilitySearching from "./TableUtilitySearch";
 import TableUtilitySort from "./TableUtilitySort";
 import { TableContext } from "../tableComponents/TableComponents";
 import TableUtilityViews from "./tableViews/TableUtilityViews";
-import { usePostViewsMutation } from "../../../store/services/alphaTruckingApi";
+// import { usePostViewsMutation } from "../../../store/services/alphaTruckingApi";
 export default function TableUtilityBar() {
   const { table } = useContext(TableContext);
   const dispatch = useDispatch();
   // const [tableStates, setTableStates] = useState();
-  const [updatePost, result] = usePostViewsMutation()
+  // const [updatePost, result] = usePostViewsMutation()
 
   // let tabledata = table.options.state
   useEffect(() => {
-    let data = table.options.state
+    // let data = table.options.state
     // console.log(data)
 
     // setTableStates(table.options.state)
-    updatePost({ model: table.options.state })
+    // updatePost({ model: table.options.state })
     // dispatch(handleAddViews({ view: "driver", data: tableStates }))
   }, [table.options.state])
 

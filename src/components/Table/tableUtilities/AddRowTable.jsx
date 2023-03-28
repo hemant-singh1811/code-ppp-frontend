@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
@@ -7,6 +7,8 @@ import { useLocation } from "react-router-dom";
 import { useAddTableRowMutation } from "../../../store/services/alphaTruckingApi";
 import { useDetectOutsideClick } from "../../../utilities/customHooks/useDetectOutsideClick";
 import { TableContext } from "../tableComponents/TableComponents";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { storage } from "../../../firebase";
 
 export default function AddRowTable() {
   const location = useLocation();
@@ -14,9 +16,9 @@ export default function AddRowTable() {
   let tableModel = [];
 
   // Create a ref that we add to the element for which we want to detect outside clicks
-  const addRowToggle = React.useRef();
+  const addRowToggle = useRef();
   // Call hook passing in the ref and a function to call on outside click
-  const [openAddRowToggle, setOpenAddRowToggle] = React.useState(false);
+  const [openAddRowToggle, setOpenAddRowToggle] = useState(false);
 
   useDetectOutsideClick(addRowToggle, () => setOpenAddRowToggle(false));
 
@@ -27,27 +29,10 @@ export default function AddRowTable() {
   const [addRowApi, responseCreateRow] = useAddTableRowMutation();
 
   const tableNamesWithId = new Map();
-  const fieldsMapTempTesting = new Map();
-  let FieldsType = [
-    "multipleRecordLinks",
-    "singleLineText",
-    "multilineText",
-    "multipleAttachments",
-    "checkbox",
-    "singleSelect",
-    "multipleSelects",
-    // "",
-    "date",
-    "phoneNumber",
-    "email",
-    "url",
-    "createdTime",
-    "lastModifiedTime",
-    "createdBy",
-    "lastModifiedBy",
-    "autoNumber",
-    "button",
-  ];
+  const fieldsMapTempTesting = new Set();
+
+  const [progress, setProgress] = useState(0);
+  const [file, setFile] = useState(null);
 
 
   sidebar.map((ele) => {
@@ -58,10 +43,18 @@ export default function AddRowTable() {
     }
   });
 
-  tableModel?.map((ele) => {
-    fieldsMapTempTesting.set(ele?.data?.field_type, true);
+  columns?.map((ele) => {
+    // console.log(ele?.field_type)
+    fieldsMapTempTesting.add(ele?.field_type);
   });
-  console.log(columns);
+
+  // for (let [key] of fieldsMapTempTesting) {
+  //   console.log(key);
+  // }
+
+  // for (const element of fieldsMapTempTesting) {
+  //   // console.log(element);
+  // }
 
   useEffect(() => {
     if (responseCreateRow.data) {
@@ -71,6 +64,36 @@ export default function AddRowTable() {
     }
   }, [responseCreateRow.isSuccess]);
 
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+  console.log(storage)
+
+  // const handleUpload = () => {
+  //   const uploadTask = storage.ref(`files/${file.name}`).put(file);
+  //   uploadTask.on(
+  //     "state_changed",
+  //     (snapshot) => {
+  //       const progress = Math.round(
+  //         (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+  //       );
+  //       setProgress(progress);
+  //     },
+  //     (error) => {
+  //       console.log(error);
+  //     },
+  //     () => {
+  //       storage
+  //         .ref("files")
+  //         .child(file.name)
+  //         .getDownloadURL()
+  //         .then((url) => {
+  //           console.log(url);
+  //         });
+  //     }
+  //   );
+  // };
+
   const {
     register,
     handleSubmit,
@@ -79,10 +102,10 @@ export default function AddRowTable() {
   } = useForm();
   const onSubmit = (data) => {
     console.log("sending data to server", data);
-    addRowApi({
-      tableId: location.pathname.split("/")[2],
-      data: data,
-    });
+    // addRowApi({
+    //   tableId: location.pathname.split("/")[2],
+    //   data: data,
+    // });
   };
 
   // console.log(watch('long Text'))
@@ -110,70 +133,133 @@ export default function AddRowTable() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-2 gap-y-4 gap-x-5 flex-1">
               {columns?.map((data, i) => {
-                return (
-                  <div key={i} className="">
-                    <div className="text-sm ml-1 mb-1">{data?.id}</div>
-                    {data?.field_type === "singleLineText" && (
-                      <div className="">
-                        <input
-                          {...register(data?.id)}
-                          type="text"
-                          placeholder={data?.id}
-                          className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
-                        />
+                let FieldsType = [
+                  "multipleRecordLinks",
+                  // "singleLineText",
+                  // "multilineText",
+                  // "multipleAttachments",
+                  "checkbox",
+                  "singleSelect",
+                  "multipleSelects",
+                  // "",
+                  // "date",
+                  // "phoneNumber",
+                  // "email",
+                  "url",
+                  "createdTime",
+                  "lastModifiedTime",
+                  "createdBy",
+                  "lastModifiedBy",
+                  "autoNumber",
+                  "button",
+                ];
+                switch (data?.field_type) {
+                  case "singleLineText":
+                    return (
+                      <div key={i} className="">
+                        <div className="text-sm ml-1 mb-1">{data?.id}</div>
+                        <div className="">
+                          <input
+                            {...register(data?.id)}
+                            type="text"
+                            placeholder={data?.id}
+                            className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
+                          />
+                        </div>
                       </div>
-                    )}
-                    {data?.field_type === "multilineText" && (
-                      <div className="">
-                        <input
-                          // style={{ resize: 'none' }}
-                          {...register(data?.id)}
-                          placeholder={data?.id}
-                          className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
-                        // name="" id="" rows="3"
-                        />
+                    )
+                  case "multilineText":
+                    return (
+                      <div key={i} className="">
+                        <div className="text-sm ml-1 mb-1">{data?.id}</div>
+                        <div className="">
+                          <input
+                            // style={{ resize: 'none' }}
+                            {...register(data?.id)}
+                            placeholder={data?.id}
+                            className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
+                          // name="" id="" rows="3"
+                          />
+                        </div>
                       </div>
-                    )}
-                    {data?.field_type === "date" && (
-                      <div className="">
-                        <input
-                          type="date"
-                          {...register(data?.id)}
-                          placeholder={data?.id}
-                          className="text-black w-full p-1.5 px-2 rounded-md shadow-md focus:outline-blue-500"
-                        />
+                    )
+                  case "phoneNumber":
+                    return (
+                      <div key={i} className="">
+                        <div className="text-sm ml-1 mb-1">{data?.id}</div>
+                        <div className="">
+                          <input
+                            {...register(data?.id)}
+                            placeholder={data?.id}
+                            type='number'
+                            className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
+                          />
+                        </div>
                       </div>
-                    )}
-                    {data?.field_type === "image" && (
-                      <div className="">
-                        <input
-                          type="file"
-                          placeholder={data?.id}
-                          className="text-black w-full p-1.5 py-[2.5px] bg-white px-2 rounded-md shadow-md focus:outline-blue-500"
-                        />
+                    )
+                  case "date":
+                    return (
+                      <div key={i} className="">
+                        <div className="text-sm ml-1 mb-1">{data?.id}</div>
+                        <div className="">
+                          <input
+                            {...register(data?.id)}
+                            placeholder={data?.id}
+                            type='date'
+                            className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
+                          />
+                        </div>
                       </div>
-                    )}
-                    {data?.field_type === "array" && (
-                      <div className="">
-                        <input
-                          type="email"
-                          placeholder={data?.id}
-                          className="text-black w-full p-1.5 px-2 rounded-md shadow-md focus:outline-blue-500"
-                        />
+                    )
+                  case "multipleAttachments":
+                    return (
+                      <div key={i} className="">
+                        <div className="text-sm ml-1 mb-1">{data?.id}</div>
+                        <div className="">
+                          <input
+                            type="file"
+                            {...register(data?.id)}
+                            placeholder={data?.id}
+                            className="text-black w-full p-1.5 py-[2.5px] bg-white px-2 rounded-md shadow-md focus:outline-blue-500"
+                          />
+                        </div>
+                        {/* <input type="file" onChange={handleFileChange} />
+                        <button onClick={handleUpload}>Upload</button>
+                        {progress > 0 && <progress value={progress} max="100" />} */}
                       </div>
-                    )}
+                    )
+                  case "url":
+                    return (
+                      <div key={i} className="">
+                        <div className="text-sm ml-1 mb-1">{data?.id}</div>
+                        <div className="">
+                          <input
+                            type="url"
+                            {...register(data?.id)}
+                            placeholder={data?.id}
+                            className="text-black w-full p-1.5 py-[2.5px] bg-white px-2 rounded-md shadow-md focus:outline-blue-500"
+                          />
+                        </div>
+                      </div>
+                    )
 
-                    {data?.field_type === "number" && (
-                      <div className="">
-                        <input
-                          type="number"
-                          placeholder={data?.id}
-                          className="text-black w-full p-1.5 px-2 rounded-md shadow-md focus:outline-blue-500"
-                        />
+                  default:
+                    // console.log(data)
+                    return (
+                      <div key={i} className="">
+                        <div className="text-sm ml-1 mb-1">{data?.id}</div>
+                        <div className="">
+                          <input
+                            {...register(data?.id)}
+                            placeholder={data?.field_type}
+                            className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
+                          />
+                        </div>
                       </div>
-                    )}
-                  </div>
-                );
+                    )
+                }
+
+
               })}
             </div>
             <div className="flex gap-2 justify-between text-white text-xl mt-8">
@@ -191,8 +277,9 @@ export default function AddRowTable() {
               </button>
             </div>
           </form>
-        </div>
-      )}
-    </div>
+        </div >
+      )
+      }
+    </div >
   );
 }

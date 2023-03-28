@@ -79,9 +79,8 @@ const DraggableColumnHeader = ({ header, table, index }) => {
         {...{
           onMouseDown: header.getResizeHandler(),
           onTouchStart: header.getResizeHandler(),
-          className: `resizerHeader ${
-            header.column.getIsResizing() ? "isResizingHeader" : ""
-          }`,
+          className: `resizerHeader ${header.column.getIsResizing() ? "isResizingHeader" : ""
+            }`,
         }}
       />
     </div>

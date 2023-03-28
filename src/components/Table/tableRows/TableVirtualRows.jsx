@@ -45,10 +45,10 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                       background: cell.getIsGrouped()
                         ? "#0aff0082"
                         : cell.getIsAggregated()
-                        ? "#ffa50078"
-                        : cell.getIsPlaceholder()
-                        ? "#ff000042"
-                        : "",
+                          ? "#ffa50078"
+                          : cell.getIsPlaceholder()
+                            ? "#ff000042"
+                            : "",
                     },
                   }}
                 >
@@ -68,7 +68,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
-                        )}{" "}
+                        )}
                         ({row.subRows.length})
                       </button>
                     </>
@@ -77,17 +77,15 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                     // renderer for cell
                     flexRender(
                       cell.column.columnDef.aggregatedCell ??
-                        cell.column.columnDef.cell,
+                      cell.column.columnDef.cell,
                       cell.getContext()
                     )
                   ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
                     // Otherwise, just render the regular cell
                     <>
                       {cell.column.columnDef.field_type ===
-                      "multipleAttachments" ? (
+                        "multipleAttachments" ? (
                         <ImageReader data={cell?.getValue()} />
-                      ) : cell.column.columnDef.field_type === "button" ? (
-                        "Button"
                       ) : cell.column.columnDef.field_type ===
                         "application/pdf" ? (
                         "application/pdf"
