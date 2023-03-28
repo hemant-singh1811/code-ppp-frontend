@@ -31,8 +31,7 @@ export default function AddRowTable() {
   const tableNamesWithId = new Map();
   const fieldsMapTempTesting = new Set();
 
-  const [progress, setProgress] = useState(0);
-  const [file, setFile] = useState(null);
+  const handlePickUpFileClick = useRef(null);
 
 
   sidebar.map((ele) => {
@@ -56,6 +55,95 @@ export default function AddRowTable() {
   //   // console.log(element);
   // }
 
+  function uploader(e) {
+    // const message_id = UniqueCharacterGenerator();
+    const file = e.target.files[0];
+    let file_name = file.name;
+    const reader = new FileReader();
+    let parts = file_name.split(".");
+    let fileType = parts[parts.length - 1];
+    file_name = file_name.slice(0, file_name.length - fileType.length - 1);
+    file_name = `${file_name}.${fileType}`;
+    handlePickUpFileClick.current.value = null;
+    reader.readAsDataURL(file);
+
+    reader.addEventListener("load", async (e) => {
+      // let handleUploading = async () => {
+      const storageRef = ref(storage, file_name);
+      // 'file' comes from the Blob or File API
+      try {
+
+        // const uploadTask = await uploadBytes(storageRef, file);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        // Register three observers:
+        // 1. 'state_changed' observer, called any time the state changes
+        // 2. Error observer, called on failure
+        // 3. Completion observer, called on successful completion
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            // Observe state change events such as progress, pause, and resume
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            const progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(0);
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+              case 'paused':
+                console.log('Upload is paused');
+                break;
+              case 'running':
+                console.log('Upload is running');
+                break;
+            }
+          },
+          (error) => {
+            // Handle unsuccessful uploads
+          },
+          () => {
+            // Handle successful uploads on complete
+            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              // console.log('File available at', downloadURL);
+              console.log(downloadURL)
+
+            });
+          }
+        );
+
+        // const starsRef = ref(storage, file_name);
+        //   getDownloadURL(starsRef)
+        //     .then((url) => {
+        //       send("", user_token, url, fileType, file_name);
+        //     })
+        //     .catch((error) => {
+        //       // A full list of error codes is available at
+        //       // https://firebase.google.com/docs/storage/web/handle-errors
+        //       switch (error.code) {
+        //         case "storage/object-not-found":
+        //           console.log("File doesn't exist");
+        //           // File doesn't exist
+        //           break;
+        //         case "storage/unauthorized":
+        //           console.log(
+        //             "User doesn't have permission to access the object"
+        //           );
+        //           // User doesn't have permission to access the object
+        //           break;
+        //         case "storage/canceled":
+        //           console.log("User canceled the upload");
+        //           // User canceled the upload
+        //           break;
+        //         case "storage/unknown":
+        //           // Unknown error occurred, inspect the server response
+        //           break;
+        //       }
+        //     });
+        // }
+      } catch (e) {
+        console.log(e);
+      }
+    });
+  }
+
   useEffect(() => {
     if (responseCreateRow.data) {
       setData([...data, responseCreateRow.data?.data]);
@@ -67,32 +155,6 @@ export default function AddRowTable() {
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
-  console.log(storage)
-
-  // const handleUpload = () => {
-  //   const uploadTask = storage.ref(`files/${file.name}`).put(file);
-  //   uploadTask.on(
-  //     "state_changed",
-  //     (snapshot) => {
-  //       const progress = Math.round(
-  //         (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-  //       );
-  //       setProgress(progress);
-  //     },
-  //     (error) => {
-  //       console.log(error);
-  //     },
-  //     () => {
-  //       storage
-  //         .ref("files")
-  //         .child(file.name)
-  //         .getDownloadURL()
-  //         .then((url) => {
-  //           console.log(url);
-  //         });
-  //     }
-  //   );
-  // };
 
   const {
     register,
@@ -102,10 +164,10 @@ export default function AddRowTable() {
   } = useForm();
   const onSubmit = (data) => {
     console.log("sending data to server", data);
-    // addRowApi({
-    //   tableId: location.pathname.split("/")[2],
-    //   data: data,
-    // });
+    addRowApi({
+      tableId: location.pathname.split("/")[2],
+      data: data,
+    });
   };
 
   // console.log(watch('long Text'))
@@ -215,11 +277,25 @@ export default function AddRowTable() {
                     return (
                       <div key={i} className="">
                         <div className="text-sm ml-1 mb-1">{data?.id}</div>
-                        <div className="">
+                        {/* <div className="">
                           <input
                             type="file"
                             {...register(data?.id)}
                             placeholder={data?.id}
+                            className="text-black w-full p-1.5 py-[2.5px] bg-white px-2 rounded-md shadow-md focus:outline-blue-500"
+                          />
+                        </div> */}
+
+                        <div onClick={() => handlePickUpFileClick.current.click()}>
+                          <input
+                            {...register(data?.id)}
+                            accept="image/*"
+                            type='file'
+                            id='file'
+                            ref={handlePickUpFileClick}
+                            onChange={(e) => {
+                              if (e.target.files[0]) uploader(e);
+                            }}
                             className="text-black w-full p-1.5 py-[2.5px] bg-white px-2 rounded-md shadow-md focus:outline-blue-500"
                           />
                         </div>
