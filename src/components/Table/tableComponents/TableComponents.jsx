@@ -13,9 +13,9 @@ import {
 import AddRowTable from "../tableUtilities/AddRowTable";
 import { io } from "socket.io-client";
 import { useLocation } from "react-router-dom";
-const socket = io("http://192.168.1.44/webdata")
+const socket = io(import.meta.env.VITE_SERVER_URL + "webdata")
 
-
+// console.log(import.meta.env.VITE_SERVER_URL)
 
 export const TableContext = React.createContext();
 
@@ -30,8 +30,20 @@ const defaultColumn = {
     const [value, setValue] = React.useState(initialValue)
     // console.log(id)
     // When the input is blurred, we'll call our table meta's updateData function
-    const onBlur = () => {
+    const onBlur = (e) => {
       table.options.meta?.updateData(index, id, value)
+
+      let rowCopy = original;
+      rowCopy[id] = e.target.value;
+      let obj = {
+        base_id: '',
+        table_id: location.pathname.split('/')[2],
+        record_id: rowCopy.id52148213343234567,
+        updated_data: rowCopy
+      }
+      socket.emit("updatedata", obj, (response) => {
+        console.log("res : ", response);
+      });
     }
 
     // If the initialValue is changed external, sync it up with our state
@@ -51,23 +63,7 @@ const defaultColumn = {
       <input
         value={value}
         onChange={(e) => {
-
           setValue(e.target.value);
-          let rowCopy = original;
-          rowCopy[id] = e.target.value;
-
-          let obj = {
-            base_id: '',
-            table_id: location.pathname.split('/')[2],
-            record_id: rowCopy.id52148213343234567,
-            updated_data: rowCopy
-          }
-
-          socket.emit("updatedata", obj, (response) => {
-            console.log("res : ", response);
-          });
-
-
         }}
 
 
