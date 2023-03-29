@@ -21,18 +21,17 @@ export const TableContext = React.createContext();
 
 // Give our default column cell renderer editing superpowers!
 const defaultColumn = {
-  cell: ({ getValue, row: { original, index }, column: { id }, table }) => {
+  cell: ({ getValue, row: { original, index }, column: { id }, table, row }) => {
     const initialValue = getValue()
     const location = useLocation()
 
-
+    // console.log(row._valuesCache)
     // We need to keep and update the state of the cell normally
     const [value, setValue] = React.useState(initialValue)
     // console.log(id)
     // When the input is blurred, we'll call our table meta's updateData function
     const onBlur = (e) => {
       table.options.meta?.updateData(index, id, value)
-
       let rowCopy = original;
       rowCopy[id] = e.target.value;
       let obj = {
@@ -41,9 +40,12 @@ const defaultColumn = {
         record_id: rowCopy.id52148213343234567,
         updated_data: rowCopy
       }
-      socket.emit("updatedata", obj, (response) => {
-        console.log("res : ", response);
-      });
+      console.log(rowCopy)
+      if (rowCopy.id !== original.id) {
+        socket.emit("updatedata", obj, (response) => {
+          console.log("res : ", response);
+        });
+      }
     }
 
     // If the initialValue is changed external, sync it up with our state
@@ -51,23 +53,21 @@ const defaultColumn = {
       setValue(initialValue)
     }, [initialValue])
 
-    // let data = {
-    //   'single line text 2': 'Suraj Sharma',
-    //   'single line text field': 'Hemant',
-    //   'single line text 3': 'Hemant'
-    // }
-
-
     // console.log(location.pathname.split('/')[2])
     return (
+      // <div contentEditable="true"
+      //   value={value}
+      //   onChange={(e) => {
+      //     setValue(e.target.value);
+      //   }}
+      //   onBlur={onBlur}>
+      // </div>
+
       <input
         value={value}
         onChange={(e) => {
           setValue(e.target.value);
         }}
-
-
-
         onBlur={onBlur}
       />
     )

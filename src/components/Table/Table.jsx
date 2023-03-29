@@ -7,8 +7,7 @@ import AddTable from "./tableUtilities/AddTable";
 // import { useGetSavedViewQuery } from "../../store/services/alphaTruckingApi";
 // import Loading from "../utilities/Loading";
 // import Error from "../utilities/Error";
-// import AddRowTable from "./tableUtilities/AddRowTable";
-
+// import AddRowTable from "./tableUtilities/AddRowTable";  
 export default function Table({ tableData, tableModel }) {
   const { driver } = useSelector((state) => state.views);
   // const { data, error, isFetching } = useGetSavedViewQuery();
