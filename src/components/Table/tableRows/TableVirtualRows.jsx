@@ -1,11 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { flexRender } from "@tanstack/react-table";
 import { useVirtual } from "react-virtual";
 import { TableContext } from "../tableComponents/TableComponents";
 import ImageReader from "../tableUtilities/ImageReader";
 
+
+
+
 export default function TableVirtualRows({ tableContainerRef, rows }) {
-  const { activeRowHeight, activeNumberOfLines } = useContext(TableContext);
+  // const [onDoubleClick, setonDoubleClick] = useState(false)
+  const { activeRowHeight, activeNumberOfLines, table } = useContext(TableContext);
   const rowVirtualizer = useVirtual({
     parentRef: tableContainerRef,
     size: rows.length,
@@ -32,7 +36,13 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                 height: activeRowHeight,
               },
             }}
+            onChange={() => {
+              // row.getVisibleCells().map((cell, index) => {
+              //   console.log(cell.getValue(cell.id))
+              // })
+            }}
           >
+            {/* {console.log(table.getRowModel())} */}
             {row.getVisibleCells().map((cell, index) => {
               return (
                 <div
@@ -83,12 +93,10 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                   ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
                     // Otherwise, just render the regular cell
                     <>
+
                       {cell.column.columnDef.field_type ===
                         "multipleAttachments" ? (
                         <ImageReader data={cell?.getValue()} />
-                      ) : cell.column.columnDef.field_type ===
-                        "application/pdf" ? (
-                        "application/pdf"
                       ) : (
                         flexRender(
                           cell.column.columnDef.cell,
@@ -98,15 +106,17 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                     </>
                   )}
                 </div>
-              );
+              )
             })}
           </div>
         );
       })}
-      {paddingBottom > 0 && (
-        <div style={{ height: `${paddingBottom}px` }}></div>
-      )}
+      {
+        paddingBottom > 0 && (
+          <div style={{ height: `${paddingBottom}px` }}></div>
+        )
+      }
       <div className="h-20" />
-    </div>
+    </div >
   );
 }

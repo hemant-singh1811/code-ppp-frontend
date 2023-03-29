@@ -28,11 +28,13 @@ export default function AddRowTable() {
 
   const [addRowApi, responseCreateRow] = useAddTableRowMutation();
 
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  const [fileUploadHandle, setFileUploadHandle] = useState('');
+
+
   const tableNamesWithId = new Map();
   const fieldsMapTempTesting = new Set();
-
-  const handlePickUpFileClick = useRef(null);
-
 
   sidebar.map((ele) => {
     if (ele?.subMenu) {
@@ -43,7 +45,6 @@ export default function AddRowTable() {
   });
 
   columns?.map((ele) => {
-    // console.log(ele?.field_type)
     fieldsMapTempTesting.add(ele?.field_type);
   });
 
@@ -55,6 +56,33 @@ export default function AddRowTable() {
   //   // console.log(element);
   // }
 
+  // {
+  //   filename: "Scan.jpeg",
+  //     id: "attpfWjTu2RvtJCPD",
+  //       size: 2495707,
+  //         type: "image/jpeg",
+  //     thumbnails: {
+  //     small: {
+  //       width: 25,
+  //         url: 'https://v5.airtableusercontent.com/v1/15/15/1679918400000/XAB1QG6k2kYW4YVW6G3Xlw/hgbGXXX9XLillhOrMlHGHqGV3AqRDPuFdgPF7KcI4uIusuN4PF5oBpduf6cCeZLDt-UPrrBOo2DvSihh8HBqBg/oYHuK3_TBcuIi0hbMS1wUED6YmKqoAkLoH7SCWKbBE8',
+  //           height: 36
+  //     },
+  //     large: {
+  //       width: 512,
+  //         url: 'https://v5.airtableusercontent.com/v1/15/15/1679918400000/UGQshLIBvGyEUb4br3XarA/Jlm3HhCE_kxYu2zqvno8MkzJP0M2kVn6QMCq5UEoNiR67Ukc7yvDAlVtEyqanBrlQ-6M9sQBFiS8n9mypMjEQA/wGY8fsl-Es8X9ndIb8MoTMRLWQSKDKj4UkI8BjxSpIg',
+  //           height: 725
+  //     },
+  //     full: {
+  //       width: 3000,
+  //         url: 'https://v5.airtableusercontent.com/v1/15/15/1679918400000/Bi8dbzZZZsorUvKqoS5Mlg/9Ddm3x7bYuLahM6GoGMkVyyFZ8R2esU8U1n3vLRxfGRtmVslhdO8h4bdSzajfZ9u2AZ5IaNF29GCzPJAvlUR6A/Bc0kzm4ri9vuyU7KDbbf9TSXBKUsYZ-cP4-KdujJZCQ',
+  //           height: 3000
+  //     }
+  //   },
+  //   url: "https://v5.airtableusercontent.com/v1/15/15/1679918400000/OQw6kppoxtGVh0hRMF3ggQ/91aDuYibnUQJnE-br7oIPLeXGIdtz-UGUrKwtQ3bP77Q0ycYbrulD__2XXY-8J3DCm9Z4ocTmIzj_m5SYBe0wPTlxf_P6EyszAGfyl1B55A/FTYMpwiSjvXhbETxBbX7FCPTYnAtn7JKIOJy-dfTAv4",
+  //     width: 3305,
+  //       height: 4676,
+  //   },
+
   function uploader(e) {
     // const message_id = UniqueCharacterGenerator();
     const file = e.target.files[0];
@@ -64,8 +92,9 @@ export default function AddRowTable() {
     let fileType = parts[parts.length - 1];
     file_name = file_name.slice(0, file_name.length - fileType.length - 1);
     file_name = `${file_name}.${fileType}`;
-    handlePickUpFileClick.current.value = null;
     reader.readAsDataURL(file);
+
+    console.log(file_name)
 
     reader.addEventListener("load", async (e) => {
       // let handleUploading = async () => {
@@ -86,6 +115,7 @@ export default function AddRowTable() {
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
             const progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(0);
             console.log('Upload is ' + progress + '% done');
+            setUploadProgress('Upload is ' + progress + '% done')
             switch (snapshot.state) {
               case 'paused':
                 console.log('Upload is paused');
@@ -152,9 +182,7 @@ export default function AddRowTable() {
     }
   }, [responseCreateRow.isSuccess]);
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+
 
   const {
     register,
@@ -163,6 +191,7 @@ export default function AddRowTable() {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
+    console.log(data)
     console.log("sending data to server", data);
     addRowApi({
       tableId: location.pathname.split("/")[2],
@@ -285,23 +314,21 @@ export default function AddRowTable() {
                             className="text-black w-full p-1.5 py-[2.5px] bg-white px-2 rounded-md shadow-md focus:outline-blue-500"
                           />
                         </div> */}
-
-                        <div onClick={() => handlePickUpFileClick.current.click()}>
+                        <div className="bg-white rounded-md">
                           <input
-                            {...register(data?.id)}
+                            // {...register(data?.id)}
                             accept="image/*"
                             type='file'
                             id='file'
-                            ref={handlePickUpFileClick}
                             onChange={(e) => {
                               if (e.target.files[0]) uploader(e);
                             }}
                             className="text-black w-full p-1.5 py-[2.5px] bg-white px-2 rounded-md shadow-md focus:outline-blue-500"
                           />
+                          <div className="m-1">
+                            {uploadProgress === 0 ? '' : uploadProgress}
+                          </div>
                         </div>
-                        {/* <input type="file" onChange={handleFileChange} />
-                        <button onClick={handleUpload}>Upload</button>
-                        {progress > 0 && <progress value={progress} max="100" />} */}
                       </div>
                     )
                   case "url":

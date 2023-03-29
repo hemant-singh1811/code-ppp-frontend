@@ -8,6 +8,7 @@ import About from "../screens/about/About";
 import Chats from "../components/chats/Chats";
 import PageNotFound from "../screens/PageNotFound";
 import TableScreen from "../screens/Table/TableScreen";
+import Testing from "../Testing/Testing";
 
 export default function MainRouting() {
   const { userInfo } = useSelector((state) => state.auth);
@@ -19,6 +20,7 @@ export default function MainRouting() {
     },
     { path: "/chats", component: <Chats /> },
     { path: "/about", component: <About /> },
+    { path: "/testing", component: <Testing /> },
   ];
 
   return (

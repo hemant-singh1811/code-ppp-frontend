@@ -3,11 +3,11 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import TableComponents from "./tableComponents/TableComponents";
 import { useSelector } from "react-redux";
-// import { useGetSavedViewQuery } from "../../store/services/alphaTruckingApi";
-import Loading from "../utilities/Loading";
-import Error from "../utilities/Error";
 import AddTable from "./tableUtilities/AddTable";
-import AddRowTable from "./tableUtilities/AddRowTable";
+// import { useGetSavedViewQuery } from "../../store/services/alphaTruckingApi";
+// import Loading from "../utilities/Loading";
+// import Error from "../utilities/Error";
+// import AddRowTable from "./tableUtilities/AddRowTable";
 
 export default function Table({ tableData, tableModel }) {
   const { driver } = useSelector((state) => state.views);
@@ -68,11 +68,12 @@ export default function Table({ tableData, tableModel }) {
   // }
   // console.log(keysMap)
   const [tableDataModified, setTableDataModified] = React.useState(
-    tableData.map(({ data }) => {
+    tableData.map(({ data, id }) => {
       const object = {};
       defaultColumns.map(({ header }) => {
-        object[header] = data?.[header];
+        object[header] = data?.[header] || '';
       });
+      object.id52148213343234567 = id;
       // console.log(object)
       // dataKeys.map((key) => {
       //   console.log(key)

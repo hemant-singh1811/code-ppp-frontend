@@ -48,7 +48,8 @@ export default function Sidebar() {
           icons: "home",
           to: "/",
         },
-        { title: "Chat", icons: "chat", to: "/chats" }
+        { title: "Chat", icons: "chat", to: "/chats" },
+        { title: "Testing", icons: "chat", to: "/testing" }
       );
       dispatch(handelAddSideBar(createMenusByBase));
     }
@@ -57,9 +58,8 @@ export default function Sidebar() {
   if (isFetching) {
     return (
       <div
-        className={`sidebar_container scrollbar-hidden select-none relative ${
-          toggle ? "closed" : "opened"
-        } `}
+        className={`sidebar_container scrollbar-hidden select-none relative ${toggle ? "closed" : "opened"
+          } `}
       >
         <Loading />;
       </div>
@@ -71,9 +71,8 @@ export default function Sidebar() {
 
   return (
     <div
-      className={`sidebar_container scrollbar-hidden select-none relative ${
-        toggle ? "closed" : "opened"
-      } `}
+      className={`sidebar_container scrollbar-hidden select-none relative ${toggle ? "closed" : "opened"
+        } `}
     >
       <div
         className="navLink menu"
@@ -123,9 +122,8 @@ export default function Sidebar() {
                     </div>
                     {item.subMenu && (
                       <span
-                        className={`material-symbols-rounded arrow ${
-                          item.isOpened && "rotate_arrow"
-                        }`}
+                        className={`material-symbols-rounded arrow ${item.isOpened && "rotate_arrow"
+                          }`}
                       >
                         arrow_right
                       </span>
@@ -138,11 +136,10 @@ export default function Sidebar() {
                           menu?.title && (
                             <div
                               key={menu.to}
-                              className={`${
-                                menu?.subMenu && menu.isOpened
-                                  ? "bg-[#13142b] rounded-lg ml-8"
-                                  : menu?.subMenu && "ml-8"
-                              }`}
+                              className={`${menu?.subMenu && menu.isOpened
+                                ? "bg-[#13142b] rounded-lg ml-8"
+                                : menu?.subMenu && "ml-8"
+                                }`}
                             >
                               <li className="submenu_item max-w-[170px]">
                                 <NavLink

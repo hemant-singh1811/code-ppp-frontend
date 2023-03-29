@@ -11,8 +11,72 @@ import {
   getExpandedRowModel,
 } from "@tanstack/react-table";
 import AddRowTable from "../tableUtilities/AddRowTable";
+import { io } from "socket.io-client";
+import { useLocation } from "react-router-dom";
+const socket = io("http://192.168.1.44/webdata")
+
+
 
 export const TableContext = React.createContext();
+
+// Give our default column cell renderer editing superpowers!
+const defaultColumn = {
+  cell: ({ getValue, row: { original, index }, column: { id }, table }) => {
+    const initialValue = getValue()
+    const location = useLocation()
+
+
+    // We need to keep and update the state of the cell normally
+    const [value, setValue] = React.useState(initialValue)
+    // console.log(id)
+    // When the input is blurred, we'll call our table meta's updateData function
+    const onBlur = () => {
+      table.options.meta?.updateData(index, id, value)
+    }
+
+    // If the initialValue is changed external, sync it up with our state
+    React.useEffect(() => {
+      setValue(initialValue)
+    }, [initialValue])
+
+    // let data = {
+    //   'single line text 2': 'Suraj Sharma',
+    //   'single line text field': 'Hemant',
+    //   'single line text 3': 'Hemant'
+    // }
+
+
+    // console.log(location.pathname.split('/')[2])
+    return (
+      <input
+        value={value}
+        onChange={(e) => {
+
+          setValue(e.target.value);
+          let rowCopy = original;
+          rowCopy[id] = e.target.value;
+
+          let obj = {
+            base_id: '',
+            table_id: location.pathname.split('/')[2],
+            record_id: rowCopy.id52148213343234567,
+            updated_data: rowCopy
+          }
+
+          socket.emit("updatedata", obj, (response) => {
+            console.log("res : ", response);
+          });
+
+
+        }}
+
+
+
+        onBlur={onBlur}
+      />
+    )
+  }
+}
 
 export default function TableComponents({
   defaultColumns,
@@ -81,6 +145,8 @@ export default function TableComponents({
     },
     data,
     columns,
+    defaultColumn,
+    getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     onGroupingChange: setGrouping,
     getExpandedRowModel: getExpandedRowModel(),
@@ -90,42 +156,35 @@ export default function TableComponents({
     globalFilterFn: fuzzyFilter,
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
-    getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onColumnPinningChange: setColumnPinning,
-    // autoResetPageIndex,
+
+    //new editable row code
+
+    autoResetPageIndex,
     // Provide our updateData function to our table meta
-    // meta: {
-    //   updateData: (rowIndex, columnId, value) => {
-    //     // Skip age index reset until after next rerender
-    //     skipAutoResetPageIndex();
-    //     // setData((old) =>
-    //       old.map((row, index) => {
-    //         if (index === rowIndex) {
-    //           return {
-    //             ...old[rowIndex],
-    //             [columnId]: value,
-    //           };
-    //         }
-    //         return row;
-    //       })
-    //     );
-    //   },
-    // },
+    meta: {
+      updateData: (rowIndex, columnId, value) => {
+        // Skip age index reset until after next rerender
+        skipAutoResetPageIndex()
+        setData(old =>
+          old.map((row, index) => {
+            if (index === rowIndex) {
+              return {
+                ...old[rowIndex],
+                [columnId]: value,
+              }
+            }
+            return row
+          })
+        )
+      },
+    },
     // debugTable: true,
     // debugHeaders: true,
     // debugColumns: true,
   });
-
-  useEffect(() => {
-    // let conditions = tableConditions
-    // delete conditions['pagination']
-    // console.log(tableConditions)
-    // table.setState(tableConditions?.model)
-  }, []);
-
-  // console.log(table);
 
   return (
     <TableContext.Provider
