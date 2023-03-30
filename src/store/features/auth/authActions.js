@@ -5,6 +5,8 @@ const backendURL = import.meta.env.DEV
   ? import.meta.env.VITE_LOCAL_SERVER_URL
   : import.meta.env.VITE_PRODUCTION_SERVER_URL;
 
+console.log(backendURL);
+
 export const registerUser = createAsyncThunk(
   'auth/register',
   async ({ firstName, email, password }, { rejectWithValue }) => {
