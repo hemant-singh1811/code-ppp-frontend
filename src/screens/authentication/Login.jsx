@@ -9,6 +9,7 @@ import { userLogin } from '../../store/features/auth/authActions';
 
 export default function Login() {
   const { loading, userInfo, error } = useSelector((state) => state.auth);
+  const [showPassword, setShowPassword] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
 
@@ -69,14 +70,18 @@ export default function Login() {
                           required
                         />
                       </div>
-                      <div className='mb-4'>
+                      <div className='mb-4 relative flex items-center'>
                         <input
-                          type='password'
+
+                          type={showPassword ? 'text' : 'password'}
                           className='form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none'
                           placeholder='Password'
                           {...register('password')}
                           required
                         />
+                        <span className="absolute material-symbols-rounded z-50 right-2 text-xl cursor-pointer select-none" onClick={() => setShowPassword(!showPassword)} title="toggle password visibility">
+                          {showPassword ? "visibility_off" : 'visibility'}
+                        </span>
                       </div>
                       <div className='text-center pt-1 mb-12 pb-1'>
                         <button

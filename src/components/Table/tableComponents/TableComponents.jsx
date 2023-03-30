@@ -39,12 +39,10 @@ const defaultColumn = {
         record_id: rowCopy.id52148213343234567,
         updated_data: rowCopy
       }
-      console.log(rowCopy)
-      if (rowCopy.id !== original.id) {
-        socket.emit("updatedata", obj, (response) => {
-          console.log("res : ", response);
-        });
-      }
+      socket.emit("updatedata", obj, (response) => {
+        console.log("res : ", response);
+      });
+
     }
 
     // If the initialValue is changed external, sync it up with our state
