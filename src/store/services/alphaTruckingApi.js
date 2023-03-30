@@ -1,16 +1,18 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const alphaTruckingApi = createApi({
-  reducerPath: "alphaTruckingApi",
+  reducerPath: 'alphaTruckingApi',
   baseQuery: fetchBaseQuery({
     // base url of backend API
-    baseUrl: import.meta.env.VITE_SERVER_URL,
+    baseUrl: import.meta.env.DEV
+      ? import.meta.env.VITE_LOCAL_SERVER_URL
+      : import.meta.env.VITE_PRODUCTION_SERVER_URL,
     // prepareHeaders is used to configure the header of every request and gives access to getState which we use to include the token from the store
     prepareHeaders: (headers, state) => {
       const token = state.getState().auth?.userInfo?.user_token;
       if (token) {
         // include token in req header
-        headers.set("authorization", `Bearer ${token}`);
+        headers.set('authorization', `Bearer ${token}`);
         // headers.set('method', 'POST');
         return headers;
       }
@@ -20,39 +22,39 @@ export const alphaTruckingApi = createApi({
   endpoints: (builder) => ({
     GetBases: builder.query({
       query: () => ({
-        url: "/API/V1/bases",
-        method: "POST",
+        url: '/API/V1/bases',
+        method: 'POST',
       }),
     }),
     GetModel: builder.query({
       query: (tableId) => ({
         url: `/API/V1/getmodel/${tableId}`,
-        method: "POST",
+        method: 'POST',
       }),
     }),
     GetTableData: builder.query({
       query: (tableId) => ({
         url: `/API/V1/getdata/${tableId}`,
-        method: "POST",
+        method: 'POST',
       }),
     }),
     PostViews: builder.mutation({
       query: (payload) => ({
-        url: "API/V1/changesaved",
+        url: 'API/V1/changesaved',
         body: { model: payload },
-        method: "POST",
+        method: 'POST',
       }),
     }),
     GetLoad: builder.query({
       query: () => ({
-        url: "/API/V1/getload",
-        method: "POST",
+        url: '/API/V1/getload',
+        method: 'POST',
       }),
     }),
     GetSavedView: builder.query({
       query: () => ({
-        url: "API/V1/getsavedviewmodel",
-        method: "POST",
+        url: 'API/V1/getsavedviewmodel',
+        method: 'POST',
       }),
     }),
 
@@ -60,7 +62,7 @@ export const alphaTruckingApi = createApi({
       query: (payload) => ({
         url: `API/V1/createtable/${payload.tableId}`,
         body: payload.data,
-        method: "PUT",
+        method: 'PUT',
       }),
     }),
 
@@ -68,7 +70,7 @@ export const alphaTruckingApi = createApi({
       query: (payload) => ({
         url: `API/V1/addcolumn/${payload.tableId}`,
         body: payload.data,
-        method: "PUT",
+        method: 'PUT',
       }),
     }),
 
@@ -76,14 +78,14 @@ export const alphaTruckingApi = createApi({
       query: (payload) => ({
         url: `API/V1/remcolumn/${payload.tableId}`,
         body: payload.data, // field id is required to delete a column; like this:- {"field_id":"fldzmC9cdc4LgvYGI"}
-        method: "DELETE",
+        method: 'DELETE',
       }),
     }),
     AddTableRow: builder.mutation({
       query: (payload) => ({
         url: `API/V1/adddata/${payload.tableId}`,
         body: payload.data, // field id is required to add a row; like this:- {"field_id":"fldzmC9cdc4LgvYGI"}
-        method: "PUT",
+        method: 'PUT',
       }),
     }),
   }),

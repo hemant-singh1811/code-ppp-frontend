@@ -4,7 +4,9 @@ import { io } from "socket.io-client";
 import ActiveScreen from "../../screens/chats/ActiveScreen";
 import { addMessage } from "../../store/features/messageSlice";
 import Aside from "../aside/Aside";
-const socket = io(import.meta.env.VITE_SERVER_URL);
+const socket = io(import.meta.env.DEV
+  ? import.meta.env.VITE_LOCAL_SERVER_URL
+  : import.meta.env.VITE_PRODUCTION_SERVER_URL);
 
 export default function Chats() {
   let user_token =

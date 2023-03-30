@@ -13,9 +13,10 @@ import {
 import AddRowTable from "../tableUtilities/AddRowTable";
 import { io } from "socket.io-client";
 import { useLocation } from "react-router-dom";
-const socket = io(import.meta.env.VITE_SERVER_URL + "webdata")
+const socket = io(import.meta.env.DEV
+  ? import.meta.env.VITE_LOCAL_SERVER_URL
+  : import.meta.env.VITE_PRODUCTION_SERVER_URL + "webdata")
 
-// console.log(import.meta.env.VITE_SERVER_URL)
 
 export const TableContext = React.createContext();
 
