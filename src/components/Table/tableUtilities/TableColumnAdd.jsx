@@ -150,7 +150,7 @@ export default function TableColumnAdd({ headers }) {
       </div>
       {addColumnToggle && (
         <div
-          className={`text-black absolute top-[30px] bg-white w-96 rounded-md p-4 border-gray-400 border-2 flex flex-col ${headers.length < 3 ? "left-0" : "right-0"
+          className={`text-black  absolute top-[30px] bg-white w-96 rounded-md p-4 border-gray-400 border-2 flex flex-col ${headers.length < 3 ? "left-0" : "right-0"
             }`}
         >
           <input

@@ -42,12 +42,12 @@ export default function TableColumnDropDown({ columnDropdownRef, columnDef }) {
             </div>
             {columnDropdownToggle && (
                 <div className="text-black absolute top-[30px] z-20 w-56 rounded-md left-0 p-4 border-gray-400 border-[.5px] shadow-md flex flex-col bg-white">
-                    <div className='hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center '>
+                    {/* <div className='hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center '>
                         <span className="material-symbols-rounded text-lg font-light mr-4">
                             edit
                         </span>
                         Edit Field
-                    </div>
+                    </div> */}
                     <div className='hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center ' onClick={() => deleteColumn()}>
                         <span className="material-symbols-rounded text-lg font-light mr-4">
                             delete

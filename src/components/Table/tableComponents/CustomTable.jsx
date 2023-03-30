@@ -46,7 +46,7 @@ const DraggableColumnHeader = ({ header, table, index }) => {
     <div
       // onDragCapture={handleMouseDown}
       // onDropCapture={handleMouseUp}
-      className={`th bg-[#f5f5f5] relative ${index === 0 && "fixed-column "}`}
+      className={`th  bg-[#f5f5f5] relative ${index === 0 && "fixed-column "}`}
       {...{
         key: header.id,
         style: {
@@ -118,7 +118,7 @@ export default function CustomTable() {
           }}
           className={`divTable scrollbar-hidden`}
         >
-          <div className="thead bg-[#f5f5f5] text-[#333333]">
+          <div className="thead bg-[#f5f5f5] text-[#333333] relative z-10">
             {table.getHeaderGroups().map((headerGroup) => (
               <div key={headerGroup.id} className="tr">
                 {headerGroup.headers.map((header, index) => (

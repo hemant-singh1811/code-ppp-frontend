@@ -53,7 +53,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                   return ( */}
                 <div
                   // key={virtualColumn.index}
-                  className='tr'
+                  className='tr z-0'
                   style={{
                     position: 'absolute',
                     top: 0,
