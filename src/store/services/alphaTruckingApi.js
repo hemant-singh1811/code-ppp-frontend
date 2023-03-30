@@ -4,9 +4,7 @@ export const alphaTruckingApi = createApi({
   reducerPath: 'alphaTruckingApi',
   baseQuery: fetchBaseQuery({
     // base url of backend API
-    baseUrl: import.meta.env.DEV
-      ? import.meta.env.VITE_LOCAL_SERVER_URL
-      : import.meta.env.VITE_PRODUCTION_SERVER_URL,
+    baseUrl: import.meta.env.VITE_SERVER_URL,
     // prepareHeaders is used to configure the header of every request and gives access to getState which we use to include the token from the store
     prepareHeaders: (headers, state) => {
       const token = state.getState().auth?.userInfo?.user_token;

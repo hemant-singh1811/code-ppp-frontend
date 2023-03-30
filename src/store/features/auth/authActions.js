@@ -1,11 +1,7 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-const backendURL = import.meta.env.DEV
-  ? import.meta.env.VITE_LOCAL_SERVER_URL
-  : import.meta.env.VITE_PRODUCTION_SERVER_URL;
-
-console.log(backendURL);
+const backendURL = import.meta.env.VITE_SERVER_URL;
 
 export const registerUser = createAsyncThunk(
   'auth/register',
@@ -47,6 +43,7 @@ export const userLogin = createAsyncThunk(
         { email, password },
         config
       );
+      console.log(email, password);
       // store user's token in local storage
       localStorage.setItem('userToken', JSON.stringify(data));
       return data;
