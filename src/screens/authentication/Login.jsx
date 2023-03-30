@@ -1,12 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Loading from '../../components/utilities/Loading';
 import { userLogin } from '../../store/features/auth/authActions';
+// import Modal from 'react-modal';
+// import './Modal.css'; // import your custom modal styles
 
 export default function Login() {
   const { loading, userInfo, error } = useSelector((state) => state.auth);
+  const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
 
   const submitForm = (data) => {
