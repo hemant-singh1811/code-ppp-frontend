@@ -16,35 +16,14 @@ const initialState = {
       isSelected: true,
     },
   ],
-  selectedScreen: [
-    {
-      name: 'Chats',
-      isActive: true,
-    },
-    {
-      name: 'Chats',
-      isActive: false,
-    },
-    {
-      name: 'Chats',
-      isActive: false,
-    },
-    {
-      name: 'Chats',
-      isActive: false,
-    },
-    {
-      name: 'Chats',
-      isActive: false,
-    },
-  ],
-  screenTabsToggle: false,
   mainSideBar: {
     toggle: false,
     width: 270,
   },
   addTableToggle: false,
   createTableBaseId: undefined,
+  selectedTableId: undefined,
+  selectedBaseId: undefined,
 };
 
 const globalStateSlice = createSlice({
@@ -53,7 +32,6 @@ const globalStateSlice = createSlice({
   reducers: {
     onChangeSearch: (state, { payload }) => {
       state.search = payload;
-      console.log(state);
     },
     handleFilterChange: (state, { payload }) => {
       state.filter = state.filter.map((ele) => {
@@ -62,19 +40,6 @@ const globalStateSlice = createSlice({
         }
         return ele;
       });
-    },
-    handleSelectedScreen: (state, { payload }) => {
-      state.selectedScreen = state.selectedScreen.map((ele) => {
-        if (ele.name === payload.name) {
-          ele.isActive = true;
-        } else {
-          ele.isActive = false;
-        }
-        return ele;
-      });
-    },
-    handleScreenTabsToggle: (state) => {
-      state.screenTabsToggle = !state.screenTabsToggle;
     },
     handleToggleMainSideBar: (state) => {
       state.mainSideBar.toggle = !state.mainSideBar.toggle;
@@ -96,8 +61,6 @@ const globalStateSlice = createSlice({
 export const {
   onChangeSearch,
   handleFilterChange,
-  handleSelectedScreen,
-  handleScreenTabsToggle,
   handleToggleMainSideBar,
   handleAddToggle,
   handleCreateTableBaseId,

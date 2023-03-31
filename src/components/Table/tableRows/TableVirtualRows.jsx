@@ -4,6 +4,7 @@ import { flexRender } from "@tanstack/react-table";
 import { TableContext } from "../tableComponents/TableComponents";
 import ImageReader from "../tableUtilities/ImageReader";
 import { useVirtualizer } from '@tanstack/react-virtual'
+import AwesomeImageReader from "../tableUtilities/AwesomeImageReader";
 
 
 export default function TableVirtualRows({ tableContainerRef, rows }) {
@@ -12,20 +13,28 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
   const columns = table.getAllColumns();
   const parentRef = React.useRef()
 
-  const rowVirtualizer = useVirtualizer({
+  let rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => parentRef.current,
     estimateSize: (i) => activeRowHeight,
     overscan: 10,
   })
 
-  const columnVirtualizer = useVirtualizer({
+  let columnVirtualizer = useVirtualizer({
     horizontal: true,
     count: columns.length,
     getScrollElement: () => parentRef.current,
     estimateSize: (i) => 150,
     overscan: 100,
   })
+
+  // useEffect(() => {
+  // }, [activeRowHeight])
+
+  // console.log(rowVirtualizer)
+
+
+  // console.log(activeRowHeight)
 
   return (
     <>
@@ -59,7 +68,8 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                     top: 0,
                     left: 0,
                     // width: `${columns[virtualRow.index]}px`,
-                    height: `${rows[virtualRow.index]}px`,
+                    height: `${activeRowHeight}px`,
+                    // height: `${rows[virtualRow.index]}px`,
                     transform: ` translateY(${virtualRow.start}px)`,
                   }}
                 >

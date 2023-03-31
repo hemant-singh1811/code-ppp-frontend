@@ -1,10 +1,13 @@
 import React, { useState, useCallback, useContext } from "react"
+import { useDispatch } from "react-redux";
 import ImageViewer from "react-simple-image-viewer";
+import { handelAddImage } from "../../../store/features/ImageViewerSlice";
 import { TableContext } from "../tableComponents/TableComponents";
+import CustomImageViewer from "./CustomImageViewer";
 
 export default function ImageReader({ data }) {
-    const [currentImage, setCurrentImage] = useState(0);
-    const [isViewerOpen, setIsViewerOpen] = useState(false);
+    const dispatch = useDispatch()
+
     const { rowHeight } = useContext(TableContext);
 
     let images;
@@ -19,10 +22,6 @@ export default function ImageReader({ data }) {
     })[0]?.height
 
 
-
-    // console.log(activeHeight)
-    // console.log(thumbnails)
-
     const openImageViewer = useCallback((index) => {
         setCurrentImage(index);
         setIsViewerOpen(true);
@@ -34,29 +33,16 @@ export default function ImageReader({ data }) {
     };
 
 
-    function checkImage(url) {
-        var image = new Image();
-        image.onload = function () {
-            if (this.width > 0) {
-                return true
-                console.log("image exists");
-            }
-        }
-        image.onerror = function () {
-            return false
-            console.log("image doesn't exist");
-        }
-        image.src = url;
-    }
-
-    // overflow-x-scroll overflow-y-hidden scrollbar-hidden
     return Array.isArray(images) && (
-        <div className="h-full overflow-x-scroll overflow-y-hidden scrollbar-hidden">
+        <div className="h-full  overflow-x-scroll overflow-y-hidden scrollbar-hidden">
             <div className="flex h-full gap-1">
                 {thumbnails.map((image, index) => (
                     <img
                         src={image?.url}
-                        onClick={() => { console.log(image); openImageViewer(index) }}
+                        onClick={() => {
+                            openImageViewer(index);
+                            dispatch(handelAddImage(images))
+                        }}
                         className={`border h-full rounded-sm  cursor-pointer object-fill `}
                         key={index}
                         style={{ minWidth: activeHeight - 10 + 'px' }}
@@ -65,18 +51,21 @@ export default function ImageReader({ data }) {
                 ))}
             </div>
 
-            {isViewerOpen && (
-                <ImageViewer
-                    src={images}
-                    currentIndex={currentImage}
-                    onClose={closeImageViewer}
-                    disableScroll={false}
-                    backgroundStyle={{
-                        backgroundColor: "rgba(0,0,0,0.9)"
-                    }}
-                    closeOnClickOutside={true}
-                />
-            )}
+            {/* <div >
+                {isViewerOpen && (
+                    <CustomImageViewer
+                    // src={images}
+                    // currentIndex={currentImage}
+                    // onClose={closeImageViewer}
+                    // disableScroll={false}
+                    // backgroundStyle={{
+                    //     backgroundColor: "rgba(0,0,0,0.2)"
+                    // }}
+                    // closeOnClickOutside={true}
+                    />
+                )}
+            </div> */}
+
         </div>
     );
 }

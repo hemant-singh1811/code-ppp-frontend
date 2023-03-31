@@ -3,6 +3,7 @@ import { useDetectOutsideClick } from '../../../../utilities/customHooks/useDete
 import { TableContext } from '../../tableComponents/TableComponents';
 import { useForm } from 'react-hook-form';
 import UniqueCharacterGenerator from '../../../../utilities/UniqueCharacterGenerator';
+import { useCreateNewViewMutation } from '../../../../store/services/alphaTruckingApi';
 
 export default function TableUtilityViews() {
 	const { viewsToggle, setViewsToggle } = useContext(TableContext);
@@ -26,35 +27,32 @@ export default function TableUtilityViews() {
 
 export const ViewsComponent = () => {
 	const initialState = {
-		// myView: {
-		// 	title: 'My Views', collapsed: false, data: [
-		// 		// {
-		// 		// 	title: "My Favorites", collapsed: false, data: [
-		// 		// 		{ title: "Forms", data: [] },
-		// 		// 		{ title: "Forms another", data: [] },
-		// 		// 	]
-		// 		// },
-		// 		{
-		// 			title: 'My Personal Views', collapsed: false, data: [
-		// 				{ title: "other Forms", data: [] },
-		// 				{ title: "Driver dsaD Sds Ds sD  dsAD", data: [] },
-		// 			]
-		// 		},
-		// 	]
-		// },
+		myView: {
+			title: 'My Views', collapsed: false, data: [
+				{
+					title: "My Favorites", collapsed: false, data: [
+						{ title: "Forms", data: [] },
+						{ title: "Forms another", data: [] },
+					]
+				},
+				{
+					title: 'My Personal Views', collapsed: false, data: [
+						{ title: "other Forms", data: [] },
+						{ title: "Driver dsaD Sds Ds sD  dsAD", data: [] },
+					]
+				},
+			]
+		},
 		allViews: {
 			title: 'All Views', collapsed: true, data: [
 				{
 					title: 'Others Views', collapsed: true, data: [
 						{ title: "Sleeper", data: [], id: 1 },
-						{ title: "Host", data: [], id: 2 },
 					]
 				},
 				{
 					title: 'Personal Views', collapsed: true, data: [
 						{ title: "other Forms", data: [], id: 3 },
-						{ title: "Driver dsaD Sds Ds sD  dsAD", data: [], id: 4 },
-						{ title: "view 2", data: [], id: 5 },
 					]
 				},
 			],
@@ -123,7 +121,6 @@ export const ViewsComponent = () => {
 	}
 	const [views, viewsDispatch] = useReducer(reducer, initialState);
 	const [createToggle, setCreateToggle] = useState(true)
-	// console.log(views)
 	return (
 		<div className='text-black bg-white h-full  border-[#c8c8c8] border-r-[1px] p-2 flex flex-col justify-between select-none transition-all'>
 			<div>
@@ -248,6 +245,8 @@ function TableViewsPopUpMenuToolkit({ viewsDispatch, title, viewName, id }) {
 }
 
 function TableViewsAddToolkit({ viewsDispatch, views }) {
+	const [createNewViewApi, responseCreateView] = useCreateNewViewMutation();
+
 	// Create a ref that we add to the element for which we want to detect outside clicks
 	const viewsMenu = React.useRef();
 	// Call hook passing in the ref and a function to call on outside click
@@ -260,6 +259,7 @@ function TableViewsAddToolkit({ viewsDispatch, views }) {
 			addView: `View ${views?.allViews?.data[1]?.data.length - 1}`,
 		}
 	});
+
 
 	// watch: UseFormWatch < TFieldValues >;
 	// getValues: UseFormGetValues < TFieldValues >;
@@ -284,6 +284,7 @@ function TableViewsAddToolkit({ viewsDispatch, views }) {
 			}
 		})
 		if (!errors.addView) {
+			// createNewViewApi({name:data.addView, })
 			viewsDispatch({ type: 'addView', targetState: 'allViews', title: 'Personal Views', viewTitle: data.addView })
 			setIsMenuToggle(!isMenuToggle)
 			setValue('addView', `View ${views.allViews.data[1].data.length}`)

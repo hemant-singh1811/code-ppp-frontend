@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './index.css'
 import { useVirtualizer } from '@tanstack/react-virtual'
 
@@ -22,26 +22,6 @@ export default function Testing() {
 
             <h3>Grid</h3>
             <GridVirtualizerVariable rows={rows} columns={columns} />
-
-
-            {/* <h3>Rows</h3>
-      <RowVirtualizerVariable rows={rows} />
-      <br />
-      <br />
-      <h3>Columns</h3>
-      <ColumnVirtualizerVariable columns={columns} />
-      <br />
-      <br /> */}
-            {/* <br />
-      <br />
-      <h3>Masonry (vertical)</h3>
-      <MasonryVerticalVirtualizerVariable rows={rows} />
-      <br />
-      <br />
-      <h3>Masonry (horizontal)</h3>
-      <MasonryHorizontalVirtualizerVariable rows={rows} />
-      <br />
-      <br /> */}
             {process.env.NODE_ENV === 'development' ? (
                 <p>
                     <strong>Notice:</strong> You are currently running React in
@@ -72,9 +52,6 @@ function GridVirtualizerVariable({ rows, columns }) {
         estimateSize: (i) => columns[i],
         overscan: 5,
     })
-
-    // console.log(rowVirtualizer.getTotalSize())
-    // console.log(columnVirtualizer.getTotalSize())
 
     return (
         <>

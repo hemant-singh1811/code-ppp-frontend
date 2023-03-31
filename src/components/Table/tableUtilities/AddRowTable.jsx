@@ -30,8 +30,9 @@ export default function AddRowTable() {
 
   const [uploadProgress, setUploadProgress] = useState(0);
 
-  const [fileUploadHandle, setFileUploadHandle] = useState('');
+  const [fileUploadHandle, setFileUploadHandle] = useState();
 
+  const [submitButton, setSubmitButton] = useState(false)
 
   const tableNamesWithId = new Map();
   const fieldsMapTempTesting = new Set();
@@ -56,34 +57,7 @@ export default function AddRowTable() {
   //   // console.log(element);
   // }
 
-  // {
-  //   filename: "Scan.jpeg",
-  //     id: "attpfWjTu2RvtJCPD",
-  //       size: 2495707,
-  //         type: "image/jpeg",
-  //     thumbnails: {
-  //     small: {
-  //       width: 25,
-  //         url: 'https://v5.airtableusercontent.com/v1/15/15/1679918400000/XAB1QG6k2kYW4YVW6G3Xlw/hgbGXXX9XLillhOrMlHGHqGV3AqRDPuFdgPF7KcI4uIusuN4PF5oBpduf6cCeZLDt-UPrrBOo2DvSihh8HBqBg/oYHuK3_TBcuIi0hbMS1wUED6YmKqoAkLoH7SCWKbBE8',
-  //           height: 36
-  //     },
-  //     large: {
-  //       width: 512,
-  //         url: 'https://v5.airtableusercontent.com/v1/15/15/1679918400000/UGQshLIBvGyEUb4br3XarA/Jlm3HhCE_kxYu2zqvno8MkzJP0M2kVn6QMCq5UEoNiR67Ukc7yvDAlVtEyqanBrlQ-6M9sQBFiS8n9mypMjEQA/wGY8fsl-Es8X9ndIb8MoTMRLWQSKDKj4UkI8BjxSpIg',
-  //           height: 725
-  //     },
-  //     full: {
-  //       width: 3000,
-  //         url: 'https://v5.airtableusercontent.com/v1/15/15/1679918400000/Bi8dbzZZZsorUvKqoS5Mlg/9Ddm3x7bYuLahM6GoGMkVyyFZ8R2esU8U1n3vLRxfGRtmVslhdO8h4bdSzajfZ9u2AZ5IaNF29GCzPJAvlUR6A/Bc0kzm4ri9vuyU7KDbbf9TSXBKUsYZ-cP4-KdujJZCQ',
-  //           height: 3000
-  //     }
-  //   },
-  //   url: "https://v5.airtableusercontent.com/v1/15/15/1679918400000/OQw6kppoxtGVh0hRMF3ggQ/91aDuYibnUQJnE-br7oIPLeXGIdtz-UGUrKwtQ3bP77Q0ycYbrulD__2XXY-8J3DCm9Z4ocTmIzj_m5SYBe0wPTlxf_P6EyszAGfyl1B55A/FTYMpwiSjvXhbETxBbX7FCPTYnAtn7JKIOJy-dfTAv4",
-  //     width: 3305,
-  //       height: 4676,
-  //   },
-
-  function uploader(e) {
+  function uploader(e, fieldName) {
     // const message_id = UniqueCharacterGenerator();
     const file = e.target.files[0];
     let file_name = file.name;
@@ -93,8 +67,8 @@ export default function AddRowTable() {
     file_name = file_name.slice(0, file_name.length - fileType.length - 1);
     file_name = `${file_name}.${fileType}`;
     reader.readAsDataURL(file);
+    setSubmitButton(true)
 
-    console.log(file_name)
 
     reader.addEventListener("load", async (e) => {
       // let handleUploading = async () => {
@@ -114,14 +88,14 @@ export default function AddRowTable() {
             // Observe state change events such as progress, pause, and resume
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
             const progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(0);
-            console.log('Upload is ' + progress + '% done');
+            // console.log('Upload is ' + progress + '% done');
             setUploadProgress('Upload is ' + progress + '% done')
             switch (snapshot.state) {
               case 'paused':
-                console.log('Upload is paused');
+                // console.log('Upload is paused');
                 break;
               case 'running':
-                console.log('Upload is running');
+                // console.log('Upload is running');
                 break;
             }
           },
@@ -134,7 +108,34 @@ export default function AddRowTable() {
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
               // console.log('File available at', downloadURL);
               console.log(downloadURL)
-
+              setSubmitButton(false)
+              setFileUploadHandle({
+                [fieldName]: [{
+                  filename: file.name,
+                  size: file.size,
+                  type: file.type,
+                  thumbnails: {
+                    small: {
+                      width: 25,
+                      height: 36,
+                      url: downloadURL,
+                    },
+                    large: {
+                      width: 512,
+                      height: 725,
+                      url: downloadURL,
+                    },
+                    full: {
+                      width: 3000,
+                      height: 3000,
+                      url: downloadURL,
+                    },
+                  },
+                  url: downloadURL,
+                  width: 3000,
+                  height: 4676,
+                }]
+              })
             });
           }
         );
@@ -183,7 +184,6 @@ export default function AddRowTable() {
   }, [responseCreateRow.isSuccess]);
 
 
-
   const {
     register,
     handleSubmit,
@@ -191,11 +191,14 @@ export default function AddRowTable() {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    console.log(data)
-    console.log("sending data to server", data);
+    // console.log(data)
+    // console.log(fileUploadHandle)
+    const updatedData = { ...data, ...fileUploadHandle }
+    // console.log(updatedData)
+    console.log("sending data to server", updatedData);
     addRowApi({
       tableId: location.pathname.split("/")[2],
-      data: data,
+      data: updatedData,
     });
   };
 
@@ -321,7 +324,7 @@ export default function AddRowTable() {
                             type='file'
                             id='file'
                             onChange={(e) => {
-                              if (e.target.files[0]) uploader(e);
+                              if (e.target.files[0]) uploader(e, data?.id);
                             }}
                             className="text-black w-full p-1.5 py-[2.5px] bg-white px-2 rounded-md shadow-md focus:outline-blue-500"
                           />
@@ -373,8 +376,9 @@ export default function AddRowTable() {
                 Cancel
               </button>
               <button
+                disabled={submitButton}
                 type="submit"
-                className="px-4 p-1 hover:bg-green-600 bg-green-400  rounded-md shadow-md"
+                className="px-4 p-1 hover:bg-green-600 bg-green-400  rounded-md shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 Submit
               </button>

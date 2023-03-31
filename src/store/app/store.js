@@ -1,13 +1,14 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-import messageReducer from '../features/messageSlice';
-import loadReducer from '../features/loadSlice';
-import globalStateReducer from '../features/globalStateSlice';
 import { alphaTruckingApi } from '../services/alphaTruckingApi';
 import { setupListeners } from '@reduxjs/toolkit/query';
+import globalStateReducer from '../features/globalStateSlice';
+import messageReducer from '../features/messageSlice';
+import loadReducer from '../features/loadSlice';
 import authReducer from '../features/auth/authSlice';
 import viewsReducer from '../features/viewsSlice';
 import basesReducer from '../features/BasesStateSlice';
 import sidebarReducer from '../features/SideBarStateSlice';
+import imagesViewerReducer from '../features/ImageViewerSlice';
 
 const reducer = {
   [alphaTruckingApi.reducerPath]: alphaTruckingApi.reducer,
@@ -18,6 +19,7 @@ const reducer = {
   views: viewsReducer,
   bases: basesReducer,
   sidebar: sidebarReducer,
+  imagesViewer: imagesViewerReducer,
 };
 
 export const store = configureStore({

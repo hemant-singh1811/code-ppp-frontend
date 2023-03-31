@@ -18,6 +18,39 @@ export const alphaTruckingApi = createApi({
   }),
 
   endpoints: (builder) => ({
+    GetLoad: builder.query({
+      query: () => ({
+        url: '/API/V1/getload',
+        method: 'POST',
+      }),
+    }),
+
+    PostViews: builder.mutation({
+      query: (payload) => ({
+        url: 'API/V1/changesaved',
+        body: { model: payload },
+        method: 'POST',
+      }),
+    }),
+
+    GetSavedView: builder.query({
+      query: () => ({
+        url: 'API/V1/getsavedviewmodel',
+        method: 'POST',
+      }),
+    }),
+
+    // views api
+    CreateNewView: builder.mutation({
+      query: (payload) => ({
+        url: `API/V1/createnewview`,
+        body: payload.data, // {name , model , table_id}
+        method: 'POST',
+      }),
+    }),
+
+    // table api
+
     GetBases: builder.query({
       query: () => ({
         url: '/API/V1/bases',
@@ -33,25 +66,6 @@ export const alphaTruckingApi = createApi({
     GetTableData: builder.query({
       query: (tableId) => ({
         url: `/API/V1/getdata/${tableId}`,
-        method: 'POST',
-      }),
-    }),
-    PostViews: builder.mutation({
-      query: (payload) => ({
-        url: 'API/V1/changesaved',
-        body: { model: payload },
-        method: 'POST',
-      }),
-    }),
-    GetLoad: builder.query({
-      query: () => ({
-        url: '/API/V1/getload',
-        method: 'POST',
-      }),
-    }),
-    GetSavedView: builder.query({
-      query: () => ({
-        url: 'API/V1/getsavedviewmodel',
         method: 'POST',
       }),
     }),
@@ -79,6 +93,7 @@ export const alphaTruckingApi = createApi({
         method: 'DELETE',
       }),
     }),
+
     AddTableRow: builder.mutation({
       query: (payload) => ({
         url: `API/V1/adddata/${payload.tableId}`,
@@ -91,6 +106,7 @@ export const alphaTruckingApi = createApi({
 
 export const {
   useCreateTableMutation,
+  useCreateNewViewMutation,
   usePostViewsMutation,
   useAddTableColumnMutation,
   useDeleteTableColumnMutation,
