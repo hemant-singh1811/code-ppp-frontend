@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { handelAddBases } from "../../store/features/BasesStateSlice";
 import {
+  handelSelectedTableId,
   handleAddToggle,
   handleCreateTableBaseId,
   handleToggleMainSideBar,
@@ -68,7 +69,6 @@ export default function Sidebar() {
   if (error) {
     return <Error error={error} />;
   }
-
   return (
     <div
       className={`sidebar_container scrollbar-hidden select-none relative ${toggle ? "closed" : "opened"
@@ -148,6 +148,7 @@ export default function Sidebar() {
                                     isActive ? "navLink active" : "navLink"
                                   }
                                   title={menu.title}
+                                  onClick={() => dispatch(handelSelectedTableId({ selectedTableId: menu?.tableId, selectedBaseId: item?.baseId }))}
                                 >
                                   <span
                                     className={`title truncate capitalize `}

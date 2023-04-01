@@ -43,7 +43,6 @@ export const userLogin = createAsyncThunk(
         { email, password },
         config
       );
-      console.log(email, password);
       // store user's token in local storage
       localStorage.setItem('userToken', JSON.stringify(data));
       return data;

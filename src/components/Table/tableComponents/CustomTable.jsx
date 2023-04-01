@@ -6,6 +6,7 @@ import { TableContext } from "./TableComponents";
 import { ResizableSidebar } from "../tableUtilityBar/ResizableSidebar";
 import TableColumnAdd from "../tableUtilities/TableColumnAdd";
 import TableColumnDropDown from "../tableUtilities/TableColumnDropDown";
+import AddRowTable from "../tableUtilities/AddRowTable";
 
 const DraggableColumnHeader = ({ header, table, index }) => {
   const { setColumnOrder } = table;
@@ -135,7 +136,9 @@ export default function CustomTable() {
           </div>
           <TableVirtualRows tableContainerRef={tableContainerRef} rows={rows} />
         </div>
+        <AddRowTable />
       </div>
+
     </div>
   );
 }

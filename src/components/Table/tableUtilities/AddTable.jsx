@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, redirect } from "react-router-dom";
 import { handelUpdateBases } from "../../../store/features/BasesStateSlice";
-import { handleAddToggle } from "../../../store/features/globalStateSlice";
+import { handelSelectedTableId, handleAddToggle } from "../../../store/features/globalStateSlice";
 import { handelAddSideBarField } from "../../../store/features/SideBarStateSlice";
 import { useCreateTableMutation } from "../../../store/services/alphaTruckingApi";
 
@@ -48,6 +48,9 @@ export default function AddTable() {
           data: { title: responseCreateTable?.data?.table_name, tableId: responseCreateTable?.data?.table_id, to: `${createTableBaseId}/${responseCreateTable?.data?.table_id}` },
         })
       );
+
+      dispatch(handelSelectedTableId({ selectedTableId: responseCreateTable?.data?.table_id }))
+
 
       navigate(`/${createTableBaseId}/${responseCreateTable?.data?.table_id}`)
     }

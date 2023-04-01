@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import Error from "../../components/utilities/Error";
 import Loading from "../../components/utilities/Loading";
 import {
@@ -7,18 +6,17 @@ import {
   useGetTableDataQuery,
 } from "../../store/services/alphaTruckingApi";
 import Table from "../../components/Table/Table";
+import { useSelector } from "react-redux";
 
 export default function TableScreen() {
-  const location = useLocation();
-  let { data, error, isFetching, refetch } = useGetTableDataQuery(
-    location.pathname.split("/")[2]
-  );
-  let modelResult = useGetModelQuery(location.pathname.split("/")[2]);
+  const { selectedTableId } = useSelector(state => state.globalState)
+  let { data, error, isFetching, refetch } = useGetTableDataQuery(selectedTableId);
+  let modelResult = useGetModelQuery(selectedTableId);
 
   useEffect(() => {
-    refetch(location.pathname.split("/")[2]);
-    modelResult.refetch(location.pathname.split("/")[2]);
-  }, [location.pathname.split("/")[2]]);
+    refetch(selectedTableId);
+    modelResult.refetch(selectedTableId);
+  }, [selectedTableId]);
 
   if (isFetching || modelResult?.isFetching) {
     return <Loading />;

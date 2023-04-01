@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
+// import { useLocation } from 'react-router-dom';
 
+// const location = useLocation();
 const initialState = {
   search: '',
   filter: [
@@ -22,8 +24,8 @@ const initialState = {
   },
   addTableToggle: false,
   createTableBaseId: undefined,
-  selectedTableId: undefined,
-  selectedBaseId: undefined,
+  selectedTableId: undefined || window.location.pathname.split('/')[2],
+  selectedBaseId: undefined || window.location.pathname.split('/')[1],
 };
 
 const globalStateSlice = createSlice({
@@ -55,6 +57,13 @@ const globalStateSlice = createSlice({
     handleCreateTableBaseId: (state, { payload }) => {
       state.createTableBaseId = payload;
     },
+    handelSelectedTableId: (state, { payload }) => {
+      if (payload?.selectedTableId)
+        state.selectedTableId = payload?.selectedTableId;
+
+      if (payload?.selectedBaseId)
+        state.selectedBaseId = payload?.selectedBaseId;
+    },
   },
 });
 
@@ -64,6 +73,7 @@ export const {
   handleToggleMainSideBar,
   handleAddToggle,
   handleCreateTableBaseId,
+  handelSelectedTableId,
 } = globalStateSlice.actions;
 
 export default globalStateSlice.reducer;

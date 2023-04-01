@@ -34,6 +34,8 @@ export default function AddRowTable() {
 
   const [submitButton, setSubmitButton] = useState(false)
 
+  const { selectedTableId } = useSelector(state => state.globalState)
+
   const tableNamesWithId = new Map();
   const fieldsMapTempTesting = new Set();
 
@@ -197,7 +199,7 @@ export default function AddRowTable() {
     // console.log(updatedData)
     console.log("sending data to server", updatedData);
     addRowApi({
-      tableId: location.pathname.split("/")[2],
+      tableId: selectedTableId,
       data: updatedData,
     });
   };
@@ -221,7 +223,7 @@ export default function AddRowTable() {
         <div className="h-4/5 w-1/2 overflow-scroll max-h-[80vh] min-w-[500px] max-w-[700px] mr-auto mt-auto bg-orange-100 z-50 p-10 pt-4 flex flex-col rounded-tr-md shadow-md">
           <h1>
             <div className=" text-center font-semibold text-2xl mb-5 capitalize border-b-2 border-black">
-              {tableNamesWithId.get(location.pathname.split("/")[2])} Add Rows
+              {tableNamesWithId.get(selectedTableId)} Add Rows
             </div>
           </h1>
           <form onSubmit={handleSubmit(onSubmit)}>

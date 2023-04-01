@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
 import { useAddTableColumnMutation } from "../../../store/services/alphaTruckingApi";
 import { useDetectOutsideClick } from "../../../utilities/customHooks/useDetectOutsideClick";
 import { TableContext } from "../tableComponents/TableComponents";
@@ -9,10 +8,11 @@ export default function TableColumnAdd({ headers }) {
   // Create a ref that we add to the element for which we want to detect outside clicks
   const addColumnRef = React.useRef();
   // Call hook passing in the ref and a function to call on outside click
-  const location = useLocation();
+
   const { columns, setColumns } = useContext(TableContext);
 
   useDetectOutsideClick(addColumnRef, () => setAddColumnToggle(false));
+  const { selectedTableId } = useSelector(state => state.globalState)
 
   const [addColumnToggle, setAddColumnToggle] = React.useState(false);
   const [descriptionToggle, setDescriptionToggle] = React.useState(false);
@@ -259,7 +259,7 @@ export default function TableColumnAdd({ headers }) {
                   disabled={!fieldNameInput || isExistFieldNameInput}
                   onClick={async () => {
                     addColumnApi({
-                      tableId: location.pathname.split("/")[2],
+                      tableId: selectedTableId,
                       data: {
                         field_description: fieldDescriptionInput,
                         field_name: fieldNameInput,

@@ -201,7 +201,7 @@ export default function TableComponents({
       <div className=" w-full  overflow-hidden h-screen text-white">
         <TableUtilityBar />
         <CustomTable />
-        <AddRowTable />
+
       </div>
     </TableContext.Provider>
   );

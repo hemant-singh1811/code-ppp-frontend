@@ -34,8 +34,9 @@ export const alphaTruckingApi = createApi({
     }),
 
     GetSavedView: builder.query({
-      query: () => ({
+      query: (payload) => ({
         url: 'API/V1/getsavedviewmodel',
+        body: payload.data, // {table_id}
         method: 'POST',
       }),
     }),
