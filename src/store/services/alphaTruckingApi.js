@@ -1,7 +1,7 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const alphaTruckingApi = createApi({
-  reducerPath: 'alphaTruckingApi',
+  reducerPath: "alphaTruckingApi",
   baseQuery: fetchBaseQuery({
     // base url of backend API
     baseUrl: import.meta.env.VITE_SERVER_URL,
@@ -10,7 +10,7 @@ export const alphaTruckingApi = createApi({
       const token = state.getState().auth?.userInfo?.user_token;
       if (token) {
         // include token in req header
-        headers.set('authorization', `Bearer ${token}`);
+        headers.set("authorization", `Bearer ${token}`);
         // headers.set('method', 'POST');
         return headers;
       }
@@ -20,33 +20,41 @@ export const alphaTruckingApi = createApi({
   endpoints: (builder) => ({
     GetLoad: builder.query({
       query: () => ({
-        url: '/API/V1/getload',
-        method: 'POST',
+        url: "/API/V1/getload",
+        method: "POST",
       }),
     }),
 
     PostViews: builder.mutation({
       query: (payload) => ({
-        url: 'API/V1/changesaved',
+        url: "API/V1/changesaved",
         body: { model: payload },
-        method: 'POST',
+        method: "POST",
       }),
     }),
 
     GetSavedView: builder.query({
       query: (payload) => ({
-        url: 'API/V1/getsavedviewmodel',
+        url: "API/V1/getsavedviewmodel",
         body: payload.data, // {table_id}
-        method: 'POST',
+        method: "POST",
       }),
     }),
 
     // views api
-    CreateNewView: builder.mutation({
+    CreateView: builder.mutation({
       query: (payload) => ({
         url: `API/V1/createnewview`,
-        body: payload.data, // {name , model , table_id}
-        method: 'POST',
+        body: payload, // {name , model , table_id}
+        method: "POST",
+      }),
+    }),
+
+    DeleteView: builder.mutation({
+      query: (payload) => ({
+        url: `API/V1/deleteview/${payload.tableId}`,
+        body: payload.viewId, // {view_id:''}
+        method: "POST",
       }),
     }),
 
@@ -54,20 +62,20 @@ export const alphaTruckingApi = createApi({
 
     GetBases: builder.query({
       query: () => ({
-        url: '/API/V1/bases',
-        method: 'POST',
+        url: "/API/V1/bases",
+        method: "POST",
       }),
     }),
     GetModel: builder.query({
       query: (tableId) => ({
         url: `/API/V1/getmodel/${tableId}`,
-        method: 'POST',
+        method: "POST",
       }),
     }),
     GetTableData: builder.query({
       query: (tableId) => ({
         url: `/API/V1/getdata/${tableId}`,
-        method: 'POST',
+        method: "POST",
       }),
     }),
 
@@ -75,7 +83,7 @@ export const alphaTruckingApi = createApi({
       query: (payload) => ({
         url: `API/V1/createtable/${payload.tableId}`,
         body: payload.data,
-        method: 'PUT',
+        method: "PUT",
       }),
     }),
 
@@ -83,7 +91,7 @@ export const alphaTruckingApi = createApi({
       query: (payload) => ({
         url: `API/V1/addcolumn/${payload.tableId}`,
         body: payload.data,
-        method: 'PUT',
+        method: "PUT",
       }),
     }),
 
@@ -91,7 +99,7 @@ export const alphaTruckingApi = createApi({
       query: (payload) => ({
         url: `API/V1/remcolumn/${payload.tableId}`,
         body: payload.data, // field id is required to delete a column; like this:- {"field_id":"fldzmC9cdc4LgvYGI"}
-        method: 'DELETE',
+        method: "DELETE",
       }),
     }),
 
@@ -99,7 +107,7 @@ export const alphaTruckingApi = createApi({
       query: (payload) => ({
         url: `API/V1/adddata/${payload.tableId}`,
         body: payload.data, // field id is required to add a row; like this:- {"field_id":"fldzmC9cdc4LgvYGI"}
-        method: 'PUT',
+        method: "PUT",
       }),
     }),
   }),
@@ -107,7 +115,8 @@ export const alphaTruckingApi = createApi({
 
 export const {
   useCreateTableMutation,
-  useCreateNewViewMutation,
+  useCreateViewMutation,
+  useDeleteViewMutation,
   usePostViewsMutation,
   useAddTableColumnMutation,
   useDeleteTableColumnMutation,
