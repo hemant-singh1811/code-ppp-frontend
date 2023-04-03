@@ -53,8 +53,8 @@ export const alphaTruckingApi = createApi({
     DeleteView: builder.mutation({
       query: (payload) => ({
         url: `API/V1/deleteview/${payload.tableId}`,
-        body: payload.viewId, // {view_id:''}
-        method: "POST",
+        body: { view_id: payload.viewId }, // {view_id:''}
+        method: "DELETE",
       }),
     }),
 

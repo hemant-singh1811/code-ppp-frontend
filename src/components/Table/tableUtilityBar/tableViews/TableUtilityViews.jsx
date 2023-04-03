@@ -6,14 +6,15 @@ import UniqueCharacterGenerator from "../../../../utilities/UniqueCharacterGener
 import {
   useCreateViewMutation,
   useDeleteViewMutation,
-  useGetSavedViewQuery,
 } from "../../../../store/services/alphaTruckingApi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../../utilities/Loading";
 import Error from "../../../utilities/Error";
+import { handleUpdateViews } from "../../../../store/features/viewsSlice";
 
 export default function TableUtilityViews() {
   const { viewsToggle, setViewsToggle } = useContext(TableContext);
+
   return (
     <div className="flex items-center hover:bg-black hover:bg-opacity-10 rounded-md text-[#4d4d4d] p-0.5 px-2 text-lg cursor-pointer relative ">
       <div
@@ -33,12 +34,7 @@ export default function TableUtilityViews() {
 // 	sharedView:[],
 // }
 
-export const ViewsComponent = () => {
-  const { selectedTableId } = useSelector((state) => state.globalState);
-  const { data, error, isFetching, isSuccess } = useGetSavedViewQuery({
-    data: { table_id: selectedTableId },
-  });
-
+export const ViewsComponent = ({ data, error, isFetching, isSuccess }) => {
   function reducer(state, { type, targetState, viewTitle, id, updatedState }) {
     switch (type) {
       case "setInitialState":
@@ -56,7 +52,7 @@ export const ViewsComponent = () => {
             prev.data.push({
               title: viewTitle,
               data: [],
-              id: UniqueCharacterGenerator(8),
+              id: id,
             });
           }
           return prev;
@@ -78,16 +74,15 @@ export const ViewsComponent = () => {
   }
 
   const [createToggle, setCreateToggle] = useState(true);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     if (data) {
-      console.log(data);
       viewsDispatch({
         updatedState: [
           {
             title: "Personal Views",
             collapsed: true,
-            data: data?.personalview?.map((ele) => {
+            data: data?.personalview?.map((ele, i) => {
               return {
                 title: ele?.metadata?.name,
                 data: ele?.model,
@@ -111,17 +106,13 @@ export const ViewsComponent = () => {
       });
     }
   }, [isSuccess]);
-
   const [views, viewsDispatch] = useReducer(reducer, []);
-
   if (isFetching) {
     return <Loading />;
   }
   if (error) {
     return <Error error={error} />;
   }
-
-  //   console.log(views);
 
   // const initialState = [
   // 	{
@@ -138,7 +129,6 @@ export const ViewsComponent = () => {
   // 			{ title: "Sleeper", data: [], id: 134 },
   // 		]
   // 	},
-
   // ]
 
   return (
@@ -161,9 +151,9 @@ export const ViewsComponent = () => {
                 <div key={title}>
                   <div
                     className="flex justify-between items-center p-2 rounded cursor-pointer hover:bg-slate-100"
-                    onClick={() =>
-                      viewsDispatch({ type: "toggleView", targetState: title })
-                    }
+                    onClick={() => {
+                      viewsDispatch({ type: "toggleView", targetState: title });
+                    }}
                   >
                     <div className="font-medium text-lg">{title}</div>
                     <div className="flex items-center gap-1">
@@ -182,6 +172,7 @@ export const ViewsComponent = () => {
                             title={ele.title}
                             viewName={title}
                             id={ele.id}
+                            model={ele.data}
                           />
                         </div>
                       );
@@ -233,36 +224,56 @@ export const ViewsComponent = () => {
   );
 };
 
-function TableViewsPopUpMenuToolkit({ viewsDispatch, title, viewName, id }) {
+function TableViewsPopUpMenuToolkit({
+  viewsDispatch,
+  title,
+  viewName,
+  id,
+  model,
+}) {
+  const selectedView = useSelector((state) => state.views);
   // console.log(title, viewName, id)
   // Create a ref that we add to the element for which we want to detect outside clicks
   const viewsMenu = React.useRef();
   // Call hook passing in the ref and a function to call on outside click
   const [isMenuToggle, setIsMenuToggle] = React.useState(false);
 
+  const dispatch = useDispatch();
+
   useDetectOutsideClick(viewsMenu, () => setIsMenuToggle(false));
 
-  //   useDeleteViewMutation();
+  const [deleteViewApi, responseDeleteView] = useDeleteViewMutation();
+
+  const { selectedTableId } = useSelector((state) => state.globalState);
+
+  useEffect(() => {
+    if (responseDeleteView?.data) {
+      viewsDispatch({
+        type: "removeView",
+        targetState: viewName,
+        id: id,
+        viewTitle: title,
+      });
+    }
+  }, [responseDeleteView.isSuccess]);
 
   return (
     <div
+      onClick={() => {
+        dispatch(
+          handleUpdateViews({
+            name: title,
+            id: id,
+            model: model,
+          })
+        );
+      }}
       ref={viewsMenu}
-      className="flex items-center justify-between p-2 rounded cursor-pointer hover:bg-slate-100 relative"
+      className={`flex items-center justify-between p-2 rounded cursor-pointer hover:bg-slate-100 relative ${
+        selectedView.id === id && "bg-purple-300 hover:bg-purple-400"
+      }`}
     >
-      <div
-        className="font-medium ml-7 text-base truncate"
-        onClick={(e) => {
-          function rightClick() {
-            var rightClick;
-            var e = window.event;
-            if (e.which) rightClick = e.which == 3;
-            else if (e.button) rightClick = e.button == 2;
-            alert(rightClick); // true or false, you can trap right click here by if comparison
-          }
-        }}
-      >
-        {title}
-      </div>
+      <div className="font-medium ml-7 text-base truncate">{title}</div>
       <span
         className="material-symbols-rounded font-extralight text-base mx-1"
         onClick={() => setIsMenuToggle(!isMenuToggle)}
@@ -283,14 +294,10 @@ function TableViewsPopUpMenuToolkit({ viewsDispatch, title, viewName, id }) {
             className="flex items-center p-2 rounded cursor-pointer hover:bg-slate-100"
             onClick={() => {
               setIsMenuToggle(!isMenuToggle);
-              viewsDispatch({
-                type: "removeView",
-                targetState: viewName,
-                id: id,
-                viewTitle: title,
-              });
+              deleteViewApi({ tableId: selectedTableId, viewId: id });
             }}
           >
+            {console.log(id)}
             <span className="material-symbols-rounded font-extralight">
               delete
             </span>
@@ -306,7 +313,7 @@ function TableViewsPopUpMenuToolkit({ viewsDispatch, title, viewName, id }) {
 
 function TableViewsAddToolkit({ viewsDispatch, views }) {
   const { table } = useContext(TableContext);
-  const [createNewViewApi, responseCreateView] = useCreateViewMutation();
+  const [createViewApi, responseCreateView] = useCreateViewMutation();
   const { selectedTableId } = useSelector((state) => state.globalState);
   // Create a ref that we add to the element for which we want to detect outside clicks
   const viewsMenu = React.useRef();
@@ -328,10 +335,12 @@ function TableViewsAddToolkit({ viewsDispatch, views }) {
 
   useEffect(() => {
     if (responseCreateView?.data) {
+      console.log(responseCreateView?.data);
       viewsDispatch({
         type: "addView",
         targetState: "Personal Views",
-        viewTitle: getValues("addView"),
+        viewTitle: getValues("addView").trim(),
+        id: responseCreateView?.data?.viewid,
       });
       setValue("addView", "");
       setIsMenuToggle(!isMenuToggle);
@@ -348,8 +357,8 @@ function TableViewsAddToolkit({ viewsDispatch, views }) {
     //   }
     // });
     if (!errors.addView) {
-      createNewViewApi({
-        name: data?.addView,
+      createViewApi({
+        name: data?.addView.trim(),
         table_id: selectedTableId,
         model: table.options.state,
       });

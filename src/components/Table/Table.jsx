@@ -7,10 +7,11 @@ import AddTable from "./tableUtilities/AddTable";
 // import { useGetSavedViewQuery } from "../../store/services/alphaTruckingApi";
 // import Loading from "../utilities/Loading";
 // import Error from "../utilities/Error";
-// import AddRowTable from "./tableUtilities/AddRowTable";  
+// import AddRowTable from "./tableUtilities/AddRowTable";
 export default function Table({ tableData, tableModel }) {
   const { driver } = useSelector((state) => state.views);
   // const { data, error, isFetching } = useGetSavedViewQuery();
+  const { model } = useSelector((state) => state.views);
 
   // this is for checking is the side bar is opened ?
   const { toggle } = useSelector((state) => state.globalState.mainSideBar);
@@ -70,7 +71,7 @@ export default function Table({ tableData, tableModel }) {
     tableData.map(({ data, id }) => {
       const object = {};
       defaultColumns.map(({ header }) => {
-        object[header] = data?.[header] || '';
+        object[header] = data?.[header] || "";
       });
       object.id52148213343234567 = id;
       // console.log(object)
@@ -101,7 +102,7 @@ export default function Table({ tableData, tableModel }) {
           defaultColumns={defaultColumns}
           data={tableDataModified}
           setData={setTableDataModified}
-        // tableConditions={data}
+          tableConditions={model}
         />
       </div>
     </DndProvider>

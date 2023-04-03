@@ -12,43 +12,47 @@ import {
 } from "@tanstack/react-table";
 import AddRowTable from "../tableUtilities/AddRowTable";
 import { io } from "socket.io-client";
+const socket = io(import.meta.env.VITE_SERVER_URL + "webdata");
 import { useLocation } from "react-router-dom";
-const socket = io(import.meta.env.VITE_SERVER_URL + "webdata")
-
 
 export const TableContext = React.createContext();
 
 // Give our default column cell renderer editing superpowers!
 const defaultColumn = {
-  cell: ({ getValue, row: { original, index }, column: { id }, table, row }) => {
-    const initialValue = getValue()
-    const location = useLocation()
+  cell: ({
+    getValue,
+    row: { original, index },
+    column: { id },
+    table,
+    row,
+  }) => {
+    const initialValue = getValue();
+    const location = useLocation();
 
     // console.log(row._valuesCache)
     // We need to keep and update the state of the cell normally
-    const [value, setValue] = React.useState(initialValue)
+    const [value, setValue] = React.useState(initialValue);
     // console.log(id)
     // When the input is blurred, we'll call our table meta's updateData function
     const onBlur = (e) => {
-      table.options.meta?.updateData(index, id, value)
+      table.options.meta?.updateData(index, id, value);
       let rowCopy = original;
       rowCopy[id] = e.target.value;
       let obj = {
-        base_id: '',
-        table_id: location.pathname.split('/')[2],
+        base_id: "",
+        table_id: location.pathname.split("/")[2],
         record_id: rowCopy.id52148213343234567,
-        updated_data: rowCopy
-      }
+        updated_data: rowCopy,
+      };
       socket.emit("updatedata", obj, (response) => {
         console.log("res : ", response);
       });
-
-    }
+    };
 
     // If the initialValue is changed external, sync it up with our state
     React.useEffect(() => {
-      setValue(initialValue)
-    }, [initialValue])
+      setValue(initialValue);
+    }, [initialValue]);
 
     // console.log(location.pathname.split('/')[2])
     return (
@@ -67,9 +71,9 @@ const defaultColumn = {
         }}
         onBlur={onBlur}
       />
-    )
-  }
-}
+    );
+  },
+};
 
 export default function TableComponents({
   defaultColumns,
@@ -160,18 +164,18 @@ export default function TableComponents({
     meta: {
       updateData: (rowIndex, columnId, value) => {
         // Skip age index reset until after next rerender
-        skipAutoResetPageIndex()
-        setData(old =>
+        skipAutoResetPageIndex();
+        setData((old) =>
           old.map((row, index) => {
             if (index === rowIndex) {
               return {
                 ...old[rowIndex],
                 [columnId]: value,
-              }
+              };
             }
-            return row
+            return row;
           })
-        )
+        );
       },
     },
     // debugTable: true,
@@ -201,7 +205,6 @@ export default function TableComponents({
       <div className=" w-full  overflow-hidden h-screen text-white">
         <TableUtilityBar />
         <CustomTable />
-
       </div>
     </TableContext.Provider>
   );

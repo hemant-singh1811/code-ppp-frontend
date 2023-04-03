@@ -9,8 +9,9 @@ import Table from "../../components/Table/Table";
 import { useSelector } from "react-redux";
 
 export default function TableScreen() {
-  const { selectedTableId } = useSelector(state => state.globalState)
-  let { data, error, isFetching, refetch } = useGetTableDataQuery(selectedTableId);
+  const { selectedTableId } = useSelector((state) => state.globalState);
+  let { data, error, isFetching, refetch } =
+    useGetTableDataQuery(selectedTableId);
   let modelResult = useGetModelQuery(selectedTableId);
 
   useEffect(() => {

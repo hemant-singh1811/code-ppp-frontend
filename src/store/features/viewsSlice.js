@@ -1,21 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  driver: {},
-  trucks: {},
-  trailers: {},
+  name: "",
+  id: "",
+  model: [],
 };
 
 const viewsSlice = createSlice({
-  name: 'views',
+  name: "views",
   initialState,
   reducers: {
-    handleAddViews: (state, { payload }) => {
-      state[payload.view] = payload.data;
+    handleUpdateViews: (state, { payload }) => {
+      state.name = payload.name;
+      state.id = payload.id;
+      state.model = payload.model;
     },
   },
 });
 
-export const { handleAddViews } = viewsSlice.actions;
+export const { handleUpdateViews } = viewsSlice.actions;
 
 export default viewsSlice.reducer;

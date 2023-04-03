@@ -7,6 +7,10 @@ import { ResizableSidebar } from "../tableUtilityBar/ResizableSidebar";
 import TableColumnAdd from "../tableUtilities/TableColumnAdd";
 import TableColumnDropDown from "../tableUtilities/TableColumnDropDown";
 import AddRowTable from "../tableUtilities/AddRowTable";
+import { useGetSavedViewQuery } from "../../../store/services/alphaTruckingApi";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { handleUpdateViews } from "../../../store/features/viewsSlice";
 
 const DraggableColumnHeader = ({ header, table, index }) => {
   const { setColumnOrder } = table;
@@ -80,8 +84,9 @@ const DraggableColumnHeader = ({ header, table, index }) => {
         {...{
           onMouseDown: header.getResizeHandler(),
           onTouchStart: header.getResizeHandler(),
-          className: `resizerHeader ${header.column.getIsResizing() ? "isResizingHeader" : ""
-            }`,
+          className: `resizerHeader ${
+            header.column.getIsResizing() ? "isResizingHeader" : ""
+          }`,
         }}
       />
     </div>
@@ -99,12 +104,41 @@ const reorderColumn = (draggedColumnId, targetColumnId, columnOrder) => {
 };
 
 export default function CustomTable() {
+  const { selectedTableId } = useSelector((state) => state.globalState);
+  const { data, error, isFetching, isSuccess } = useGetSavedViewQuery({
+    data: { table_id: selectedTableId },
+  });
   const { toggle, table, viewsToggle } = useContext(TableContext);
   const tableContainerRef = React.useRef(null);
   const { rows } = table.getRowModel();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (data) {
+      data?.personalview?.map((ele, i) => {
+        if (i === 0) {
+          dispatch(
+            handleUpdateViews({
+              name: ele?.metadata?.name,
+              id: ele?.metadata?.views_id,
+              model: ele?.model,
+            })
+          );
+        }
+      });
+    }
+  }, [isSuccess]);
+
   return (
     <div className="grid grid-cols-[auto_1fr] gri">
-      {viewsToggle && <ResizableSidebar />}
+      {viewsToggle && (
+        <ResizableSidebar
+          data={data}
+          error={error}
+          isFetching={isFetching}
+          isSuccess={isSuccess}
+        />
+      )}
       <div
         className={`overflow-scroll scrollbar-hidden pr-64 
        ${toggle ? "w-[calc(100vw_-_80px)]" : `w-[calc(100vw_-_220px)] `}
@@ -138,7 +172,6 @@ export default function CustomTable() {
         </div>
         <AddRowTable />
       </div>
-
     </div>
   );
 }
