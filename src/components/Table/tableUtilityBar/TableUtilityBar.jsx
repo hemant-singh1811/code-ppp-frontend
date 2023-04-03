@@ -41,7 +41,7 @@ export default function TableUtilityBar() {
       console.log("socket response: " + JSON.stringify(response));
       console.log("res : ", response);
     });
-    console.log("socket called");
+    // console.log("socket called");
     // console.log(obj);
     // let data = table.options.state
     // console.log(data)

@@ -14,6 +14,7 @@ import AddRowTable from "../tableUtilities/AddRowTable";
 import { io } from "socket.io-client";
 const socket = io(import.meta.env.VITE_SERVER_URL + "webdata");
 import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export const TableContext = React.createContext();
 
@@ -182,6 +183,13 @@ export default function TableComponents({
     // debugHeaders: true,
     // debugColumns: true,
   });
+  const { model } = useSelector(state => state.views)
+
+  useEffect(() => {
+    // table.setState(model)
+    // console.log("model updated", model)
+  }, [model])
+
 
   return (
     <TableContext.Provider

@@ -3,7 +3,7 @@ import MainRouting from "./user access/MainRouting";
 import { useSelector } from "react-redux";
 import Sidebar from "./components/sidebar/Sidebar";
 import Testing from "./Testing/Testing";
-import CustomImageViewer from "./components/Table/tableUtilities/CustomImageViewer";
+import OpenOptionOnClick from "./components/sidebar/OpenOptionOnClick";
 
 function App() {
   const { images } = useSelector(state => state.imagesViewer)
@@ -25,6 +25,7 @@ function App() {
     <div className="flex w-screen h-screen">
       {userInfo && <Sidebar />}
       <MainRouting />
+      {/* <OpenOptionOnClick /> */}
       {/* 
       {isViewerOpen && (
         <ImageViewer

@@ -84,9 +84,8 @@ const DraggableColumnHeader = ({ header, table, index }) => {
         {...{
           onMouseDown: header.getResizeHandler(),
           onTouchStart: header.getResizeHandler(),
-          className: `resizerHeader ${
-            header.column.getIsResizing() ? "isResizingHeader" : ""
-          }`,
+          className: `resizerHeader ${header.column.getIsResizing() ? "isResizingHeader" : ""
+            }`,
         }}
       />
     </div>
@@ -130,7 +129,7 @@ export default function CustomTable() {
   }, [isSuccess]);
 
   return (
-    <div className="grid grid-cols-[auto_1fr] gri">
+    <div className="flex overflow-hidden">
       {viewsToggle && (
         <ResizableSidebar
           data={data}
@@ -140,7 +139,7 @@ export default function CustomTable() {
         />
       )}
       <div
-        className={`overflow-scroll scrollbar-hidden pr-64 
+        className={`overflow-scroll scrollbar-hidden 
        ${toggle ? "w-[calc(100vw_-_80px)]" : `w-[calc(100vw_-_220px)] `}
         `}
       >

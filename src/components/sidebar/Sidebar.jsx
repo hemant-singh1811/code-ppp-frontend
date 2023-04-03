@@ -27,6 +27,7 @@ export default function Sidebar() {
 
   useEffect(() => {
     if (data) {
+      // console.log(data)
       dispatch(handelAddBases(data));
       createMenusByBase =
         data?.map((item) => {
@@ -50,11 +51,26 @@ export default function Sidebar() {
           to: "/",
         },
         { title: "Chat", icons: "chat", to: "/chats" },
+        { title: "Group Chat", icons: "chat", to: "/group-chat" },
         { title: "Testing", icons: "chat", to: "/testing" }
       );
       dispatch(handelAddSideBar(createMenusByBase));
     }
+
   }, [isSuccess]);
+
+  const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+
+  const handleContextMenu = (event) => {
+    event.preventDefault();
+    setIsContextMenuOpen(true);
+    setContextMenuPosition({ x: event.clientX, y: event.clientY });
+  };
+
+  const handleCloseContextMenu = () => {
+    setIsContextMenuOpen(false);
+  };
 
   if (isFetching) {
     return (
@@ -71,7 +87,8 @@ export default function Sidebar() {
   }
   return (
     <div
-      className={`sidebar_container scrollbar-hidden select-none relative ${toggle ? "closed" : "opened"
+
+      className={`sidebar_container select-none relative ${toggle ? "closed" : "opened"
         } `}
     >
       <div
@@ -141,8 +158,9 @@ export default function Sidebar() {
                                 : menu?.subMenu && "ml-8"
                                 }`}
                             >
-                              <li className="submenu_item max-w-[170px]">
+                              <li className="submenu_item max-w-[170px] relative">
                                 <NavLink
+                                  onContextMenu={handleContextMenu}
                                   to={menu.to}
                                   className={({ isActive }) =>
                                     isActive ? "navLink active" : "navLink"
@@ -151,17 +169,26 @@ export default function Sidebar() {
                                   onClick={() => dispatch(handelSelectedTableId({ selectedTableId: menu?.tableId, selectedBaseId: item?.baseId }))}
                                 >
                                   <span
-                                    className={`title truncate capitalize `}
+                                    className={`title truncate capitalize`}
                                   >
                                     {menu.title || "Title"}
                                   </span>
                                 </NavLink>
+
+                                {/* {isContextMenuOpen && (
+                                  <></>
+                                  // <div className="absolute bg-red-300 -right-3">
+                                  //   Hello
+                                  // </div>
+                                  // <ContextMenu onClose={handleCloseContextMenu} x={contextMenuPosition.x} y={contextMenuPosition.y}>
+                                  //   <MenuItem label="Open" onClick={() => console.log('Open clicked')} />
+                                  // </ContextMenu>
+                                )} */}
                               </li>
                             </div>
                           )
                         );
                       })}
-                      {/* {item?.subMenu?.length === index + 1 && ( */}
                       <li
                         className="submenu_item max-w-[170px]"
                         onClick={() => {
@@ -178,7 +205,6 @@ export default function Sidebar() {
                           </span>
                         </button>
                       </li>
-                      {/* )} */}
                     </ul>
                   )}
 
@@ -206,6 +232,41 @@ export default function Sidebar() {
             );
           })}
       </ul>
+    </div>
+  );
+}
+
+
+
+function ContextMenu({ children, onClose, x, y }) {
+  const [menuWidth, setMenuWidth] = useState(0);
+  const [menuHeight, setMenuHeight] = useState(0);
+  const [menuLeft, setMenuLeft] = useState(0);
+  const [menuTop, setMenuTop] = useState(0);
+
+  const handleRef = (node) => {
+    if (node !== null) {
+      setMenuWidth(node.offsetWidth);
+      setMenuHeight(node.offsetHeight);
+      setMenuLeft(Math.min(x, window.innerWidth - node.offsetWidth));
+      setMenuTop(Math.min(y, window.innerHeight - node.offsetHeight));
+    }
+  };
+
+  return (
+    <>
+      <div className="fixed inset-0" onClick={onClose} />
+      <div ref={handleRef} className="fixed bg-white p-2 rounded shadow" style={{ left: menuLeft, top: menuTop }}>
+        {children}
+      </div>
+    </>
+  );
+}
+
+function MenuItem({ label, onClick }) {
+  return (
+    <div className="px-2 py-1 cursor-pointer hover:bg-gray-200" onClick={onClick}>
+      {label}
     </div>
   );
 }

@@ -95,14 +95,14 @@ export default function Table({ tableData, tableModel }) {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="relative">
+      <div className="relative overflow-hidden">
         <AddTable />
         <TableComponents
           toggle={toggle}
           defaultColumns={defaultColumns}
           data={tableDataModified}
           setData={setTableDataModified}
-          tableConditions={model}
+        // tableConditions={model}
         />
       </div>
     </DndProvider>

@@ -14,7 +14,6 @@ import { handleUpdateViews } from "../../../../store/features/viewsSlice";
 
 export default function TableUtilityViews() {
   const { viewsToggle, setViewsToggle } = useContext(TableContext);
-
   return (
     <div className="flex items-center hover:bg-black hover:bg-opacity-10 rounded-md text-[#4d4d4d] p-0.5 px-2 text-lg cursor-pointer relative ">
       <div
@@ -29,10 +28,6 @@ export default function TableUtilityViews() {
     </div>
   );
 }
-// {
-// 	personalView:[],
-// 	sharedView:[],
-// }
 
 export const ViewsComponent = ({ data, error, isFetching, isSuccess }) => {
   function reducer(state, { type, targetState, viewTitle, id, updatedState }) {
@@ -72,7 +67,7 @@ export const ViewsComponent = ({ data, error, isFetching, isSuccess }) => {
         throw new Error();
     }
   }
-
+  // console.log(data)
   const [createToggle, setCreateToggle] = useState(true);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -269,9 +264,8 @@ function TableViewsPopUpMenuToolkit({
         );
       }}
       ref={viewsMenu}
-      className={`flex items-center justify-between p-2 rounded cursor-pointer hover:bg-slate-100 relative ${
-        selectedView.id === id && "bg-purple-300 hover:bg-purple-400"
-      }`}
+      className={`flex items-center justify-between p-2 rounded cursor-pointer my-1 hover:bg-slate-100 relative ${selectedView.id === id && "bg-blue-300 hover:bg-blue-400"
+        }`}
     >
       <div className="font-medium ml-7 text-base truncate">{title}</div>
       <span
@@ -365,7 +359,7 @@ function TableViewsAddToolkit({ viewsDispatch, views }) {
     }
   };
   return (
-    <div ref={viewsMenu} className="relative flex items-center">
+    <div ref={viewsMenu} className="relative flex items-center ">
       <span
         className="material-symbols-rounded font-extralight hover:bg-[#f4f4f4]"
         onClick={() => setIsMenuToggle(!isMenuToggle)}
@@ -414,19 +408,3 @@ function TableViewsAddToolkit({ viewsDispatch, views }) {
     </div>
   );
 }
-
-// watch: UseFormWatch < TFieldValues >;
-// getValues: UseFormGetValues < TFieldValues >;
-// getFieldState: UseFormGetFieldState < TFieldValues >;
-// setError: UseFormSetError < TFieldValues >;
-// clearErrors: UseFormClearErrors < TFieldValues >;
-// setValue: UseFormSetValue < TFieldValues >;
-// trigger: UseFormTrigger < TFieldValues >;
-// formState: FormState < TFieldValues >;
-// resetField: UseFormResetField < TFieldValues >;
-// reset: UseFormReset < TFieldValues >;
-// handleSubmit: UseFormHandleSubmit < TFieldValues >;
-// unregister: UseFormUnregister < TFieldValues >;
-// control: Control < TFieldValues, TContext >;
-// register: UseFormRegister < TFieldValues >;
-// setFocus: UseFormSetFocus < TFieldValues >;

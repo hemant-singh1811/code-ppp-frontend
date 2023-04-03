@@ -1,9 +1,7 @@
 import React, { useRef, useEffect } from "react";
-import { useGetSavedViewQuery } from "../../../store/services/alphaTruckingApi";
 import { ViewsComponent } from "./tableViews/TableUtilityViews";
 
 export const ResizableSidebar = ({
-  children,
   data,
   error,
   isFetching,
@@ -53,7 +51,7 @@ export const ResizableSidebar = ({
   return (
     <div
       ref={ref}
-      className="relative w-[100px] h-[calc(100vh_-_40px)] min-w-[250px] max-w-[600px]"
+      className="relative w-[100px] h-[calc(100vh_-_40px)] min-w-[250px] max-w-[600px] "
     >
       <ViewsComponent
         data={data}

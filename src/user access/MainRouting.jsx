@@ -19,6 +19,7 @@ export default function MainRouting() {
       component: <TableScreen />,
     },
     { path: "/chats", component: <Chats /> },
+    { path: "/group-chat", component: <Chats /> },
     { path: "/about", component: <About /> },
     { path: "/testing", component: <Testing /> },
   ];
