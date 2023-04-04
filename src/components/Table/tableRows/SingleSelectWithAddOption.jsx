@@ -1,7 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useDetectOutsideClick } from "../../../utilities/customHooks/useDetectOutsideClick";
+import { io } from "socket.io-client";
+const socket = io(import.meta.env.VITE_SERVER_URL + "updatemetadata");
+
 
 function SingleSelectWithAddOption() {
+  //   socket end points: updatemetadata
+
+  //   {
+  //     type: "singleSelect"
+  //     table_id: '',
+  //       record_id: '',
+  //         options: [],
+  // }
+
+  //  socket.emit("changesaved", obj, (response) => {
+  //   console.log("socket response: " + JSON.stringify(response));
+  //   // console.log("res from server : ", response.message);
+  // });
+
+
   // Create a ref that we add to the element for which we want to detect outside clicks
   const singleSelectRef = React.useRef();
   // Call hook passing in the ref and a function to call on outside click
@@ -17,14 +35,15 @@ function SingleSelectWithAddOption() {
   // Generates random color for select
   const getRandomColor = () => {
     const colors = [
-      "red",
-      "blue",
-      "green",
-      "yellow",
-      "purple",
-      "pink",
-      "orange",
-      "teal",
+      "pink"
+      // "red",
+      // "blue",
+      // "green",
+      // "yellow",
+      // "purple",
+      // "pink",
+      // "orange",
+      // "teal",
     ];
     const randomIndex = Math.floor(Math.random() * colors.length);
     return colors[randomIndex];
@@ -69,7 +88,7 @@ function SingleSelectWithAddOption() {
       </div>
       {SingleSelectToggle && (
         <div
-          className="absolute left-0 top-10 w-full max-h-[300px] overflow-x-hidden bg-white rounded-md shadow-lg "
+          className="absolute left-0 top-10 w-full max-h-[300px] bg-white rounded-md shadow-lg min-w-[200px]"
           style={{ zIndex: 1000 }}
         >
           <input
@@ -117,39 +136,38 @@ function SingleSelectWithAddOption() {
               })}
             {options.filter(({ name }) => name?.includes(searchTerm)).length ===
               0 && (
-              <div
-                onClick={() => {
-                  setOptions((prev) => {
-                    let newdata = prev.map((prevMap) => {
-                      prevMap.isSelected = false;
-                      return prevMap;
+                <div
+                  onClick={() => {
+                    setOptions((prev) => {
+                      let newdata = prev.map((prevMap) => {
+                        prevMap.isSelected = false;
+                        return prevMap;
+                      });
+
+                      newdata.push({
+                        name: searchTerm,
+                        isSelected: true,
+                        color: randomColor,
+                      });
+                      return newdata;
                     });
 
-                    newdata.push({
-                      name: searchTerm,
-                      isSelected: true,
-                      color: randomColor,
-                    });
-
-                    return newdata;
-                  });
-
-                  setSearchTerm("");
-                  setSingleSelectToggle(!SingleSelectToggle);
-                }}
-                className="p-2 hover:bg-blue-100 flex truncate"
-              >
-                <div className="truncate">
-                  Add New Option:
-                  <span
-                    style={{ background: randomColor }}
-                    className={`rounded-xl px-2 ml-1 truncate`}
-                  >
-                    {searchTerm}
-                  </span>
+                    setSearchTerm("");
+                    setSingleSelectToggle(!SingleSelectToggle);
+                  }}
+                  className="p-2 hover:bg-blue-100 flex truncate"
+                >
+                  <div className="truncate flex">
+                    Add New Option:
+                    <span
+                      style={{ background: randomColor }}
+                      className={`rounded-xl px-2 ml-1 truncate`}
+                    >
+                      {searchTerm}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         </div>
       )}

@@ -94,7 +94,7 @@ export default function Table({ tableData, tableModel }) {
 
   // console.log(tableModel)
 
-  console.log(defaultColumns, model)
+  // console.log(defaultColumns, model)
 
   return (
     <DndProvider backend={HTML5Backend}>
