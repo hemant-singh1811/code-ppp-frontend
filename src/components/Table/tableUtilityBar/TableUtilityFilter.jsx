@@ -57,7 +57,9 @@ export default function TableUtilityFilter({ table }) {
   return (
     <div
       ref={filterRef}
-      className={`flex items-center hover:bg-black hover:bg-opacity-10 rounded-md text-[#4d4d4d] p-0.5 px-2 text-lg cursor-pointer relative ${filterConditions.length !== 0 && 'bg-[#e1d5f9]'}`}
+      className={`flex items-center hover:bg-black hover:bg-opacity-10 rounded-md text-[#4d4d4d] p-0.5 px-2 text-lg cursor-pointer relative ${
+        filterConditions.length !== 0 && "bg-[#e1d5f9]"
+      }`}
     >
       <div
         className="flex items-center font-medium"
@@ -69,7 +71,7 @@ export default function TableUtilityFilter({ table }) {
         Filter
       </div>
       {filterToggle && (
-        <div className="absolute top-10 left-0 z-50 bg-white p-2 rounded-md w-[600px]  max-h-96 overflow-y-scroll border-[#c8c8c8] border-2">
+        <div className="absolute top-10 left-0 z-50 bg-white p-2 rounded-md w-[600px] max-h-96 overflow-y-scroll border-[#c8c8c8] border-2">
           Filter:
           <div className="h-[.5px] mb-2 mt-1 w-full bg-white" />
           <div className="max-h-[700px] overflow-scroll scrollbar-hidden">

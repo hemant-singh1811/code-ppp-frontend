@@ -3,23 +3,23 @@ import { flexRender } from "@tanstack/react-table";
 // import { useVirtual } from "react-virtual";
 import { TableContext } from "../tableComponents/TableComponents";
 import ImageReader from "../tableUtilities/ImageReader";
-import { useVirtualizer } from '@tanstack/react-virtual'
+import { useVirtualizer } from "@tanstack/react-virtual";
 import AwesomeImageReader from "../tableUtilities/AwesomeImageReader";
 import SingleSelectWithAddOption from "./SingleSelectWithAddOption";
 
-
 export default function TableVirtualRows({ tableContainerRef, rows }) {
-  const { activeRowHeight, activeNumberOfLines, table } = useContext(TableContext);
+  const { activeRowHeight, activeNumberOfLines, table } =
+    useContext(TableContext);
 
   const columns = table.getAllColumns();
-  const parentRef = React.useRef()
+  const parentRef = React.useRef();
 
   let rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => parentRef.current,
     estimateSize: (i) => activeRowHeight,
     overscan: 10,
-  })
+  });
 
   let columnVirtualizer = useVirtualizer({
     horizontal: true,
@@ -27,13 +27,12 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
     getScrollElement: () => parentRef.current,
     estimateSize: (i) => 150,
     overscan: 100,
-  })
+  });
 
   // useEffect(() => {
   // }, [activeRowHeight])
 
   // console.log(rowVirtualizer)
-
 
   // console.log(activeRowHeight)
 
@@ -44,15 +43,15 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
         className="list text-black scrollbar-hidden h-[calc(100vh_-_72px)]"
         style={{
           // height: `100vh`,
-          overflow: 'auto',
+          overflow: "auto",
         }}
       >
         <div
-          className='tbody scrollbar-hidden'
+          className="tbody scrollbar-hidden"
           style={{
             height: `${rowVirtualizer.getTotalSize()}px`,
             // width: `${columnVirtualizer.getTotalSize()}px`,
-            position: 'relative',
+            position: "relative",
           }}
         >
           {rowVirtualizer.getVirtualItems().map((virtualRow) => {
@@ -63,12 +62,12 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                   return ( */}
                 <div
                   // key={virtualColumn.index}
-                  className='tr z-0'
+                  className="tr z-0"
                   style={{
-                    position: 'absolute',
+                    position: "absolute",
                     top: 0,
                     left: 0,
-                    // width: `${columns[virtualRow.index]}px`,
+                    width: `${columns[virtualRow.index]}px`,
                     height: `${activeRowHeight}px`,
                     // height: `${rows[virtualRow.index]}px`,
                     transform: ` translateY(${virtualRow.start}px)`,
@@ -86,10 +85,10 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                             background: cell.getIsGrouped()
                               ? "#0aff0082"
                               : cell.getIsAggregated()
-                                ? "#ffa50078"
-                                : cell.getIsPlaceholder()
-                                  ? "#ff000042"
-                                  : "",
+                              ? "#ffa50078"
+                              : cell.getIsPlaceholder()
+                              ? "#ff000042"
+                              : "",
                           },
                         }}
                       >
@@ -101,7 +100,9 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                               {...{
                                 onClick: row.getToggleExpandedHandler(),
                                 style: {
-                                  cursor: row.getCanExpand() ? "pointer" : "normal",
+                                  cursor: row.getCanExpand()
+                                    ? "pointer"
+                                    : "normal",
                                 },
                               }}
                             >
@@ -118,41 +119,47 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                           // renderer for cell
                           flexRender(
                             cell.column.columnDef.aggregatedCell ??
-                            cell.column.columnDef.cell,
+                              cell.column.columnDef.cell,
                             cell.getContext()
                           )
                         ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
                           // Otherwise, just render the regular cell
                           <>
-                            {console.log(cell.column.columnDef.field_type)}
+                            {/* {console.log(cell.column.columnDef.field_type)} */}
 
                             {cell.column.columnDef.field_type ===
-                              "multipleAttachments" ? (
+                            "multipleAttachments" ? (
                               <ImageReader data={cell?.getValue()} />
-                            ) : cell.column.columnDef.field_type === "singleSelect" ? <></> :
-                              cell.column.columnDef.field_type === "multipleSelects" ? <>{console.log("MultiSelect", cell?.getValue())}</>
-                                : (
-                                  flexRender(
-                                    cell.column.columnDef.cell,
-                                    cell.getContext()
-                                  )
-                                )}
+                            ) : cell.column.columnDef.field_type ===
+                              "singleSelect" ? (
+                              <SingleSelectWithAddOption />
+                            ) : cell.column.columnDef.field_type ===
+                              "multipleSelects" ? (
+                              <>
+                                {console.log("MultiSelect", cell?.getValue())}
+                              </>
+                            ) : (
+                              flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              )
+                            )}
                           </>
                         )}
                       </div>
-                    )
+                    );
                   })}
                 </div>
                 {/* )
                 })
                 } */}
               </React.Fragment>
-            )
+            );
           })}
         </div>
       </div>
     </>
-  )
+  );
 
   // return (
   //   table.getRowModel().rows.map(row => {
@@ -326,5 +333,3 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
   //   </div >
   // );
 }
-
-

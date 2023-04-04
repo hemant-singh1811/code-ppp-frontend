@@ -5,9 +5,10 @@ import Sidebar from "./components/sidebar/Sidebar";
 import Testing from "./Testing/Testing";
 import OpenOptionOnClick from "./components/sidebar/OpenOptionOnClick";
 import { FileViewer } from "react-file-viewer";
+import SingleSelectWithAddOption from "./components/Table/tableRows/SingleSelectWithAddOption";
 
 function App() {
-  const { images } = useSelector(state => state.imagesViewer)
+  const { images } = useSelector((state) => state.imagesViewer);
   // const [currentImage, setCurrentImage] = useState(0);
   // const [isViewerOpen, setIsViewerOpen] = useState(false);
 
@@ -22,12 +23,13 @@ function App() {
   // };
 
   const { userInfo } = useSelector((state) => state.auth);
-  const file = 'http://example.com/image.png'
-  const type = 'png'
+  const file = "http://example.com/image.png";
+  const type = "png";
   return (
     <div className="flex w-screen h-screen">
       {userInfo && <Sidebar />}
       <MainRouting />
+      {/* <SingleSelectWithAddOption /> */}
       {/* <FileViewer
         fileType={type}
         filePath={file}
