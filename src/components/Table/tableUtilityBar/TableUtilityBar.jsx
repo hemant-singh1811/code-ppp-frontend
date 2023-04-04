@@ -41,16 +41,15 @@ export default function TableUtilityBar() {
       console.log("socket response: " + JSON.stringify(response));
       // console.log("res from server : ", response.message);
     });
-    console.log("socket called");
+    // console.log("socket called");
     // console.log(obj);
     // let data = table.options.state
     // console.log(data)
     // setTableStates(table.options.state)
     // updatePost({ model: table.options.state })
     // dispatch(handleAddViews({ view: "driver", data: tableStates }))
-  }, [activeRowHeight, globalFilter, columns, columnOrder]);
+  }, [activeRowHeight, globalFilter, columns]);
 
-  console.log(columnOrder)
   // console.log("tabledata", tabledata);
 
   // console.log(tableStates)x

@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import Sidebar from "./components/sidebar/Sidebar";
 import Testing from "./Testing/Testing";
 import OpenOptionOnClick from "./components/sidebar/OpenOptionOnClick";
+import { FileViewer } from "react-file-viewer";
 
 function App() {
   const { images } = useSelector(state => state.imagesViewer)
@@ -21,10 +22,18 @@ function App() {
   // };
 
   const { userInfo } = useSelector((state) => state.auth);
+  const file = 'http://example.com/image.png'
+  const type = 'png'
   return (
     <div className="flex w-screen h-screen">
       {userInfo && <Sidebar />}
       <MainRouting />
+      {/* <FileViewer
+        fileType={type}
+        filePath={file}
+      // errorComponent={CustomErrorComponent}
+      // onError={this.onError} 
+      /> */}
       {/* <OpenOptionOnClick /> */}
       {/* 
       {isViewerOpen && (

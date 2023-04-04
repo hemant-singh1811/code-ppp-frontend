@@ -4,6 +4,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import TableComponents from "./tableComponents/TableComponents";
 import { useSelector } from "react-redux";
 import AddTable from "./tableUtilities/AddTable";
+import SingleSelectWithAddOption from "./tableRows/SingleSelectWithAddOption";
 // import { useGetSavedViewQuery } from "../../store/services/alphaTruckingApi";
 // import Loading from "../utilities/Loading";
 // import Error from "../utilities/Error";
@@ -107,6 +108,7 @@ export default function Table({ tableData, tableModel }) {
         // tableConditions={model}
         />
       </div>
+      {/* <SingleSelectWithAddOption /> */}
     </DndProvider>
   );
 }

@@ -5,6 +5,7 @@ import { TableContext } from "../tableComponents/TableComponents";
 import ImageReader from "../tableUtilities/ImageReader";
 import { useVirtualizer } from '@tanstack/react-virtual'
 import AwesomeImageReader from "../tableUtilities/AwesomeImageReader";
+import SingleSelectWithAddOption from "./SingleSelectWithAddOption";
 
 
 export default function TableVirtualRows({ tableContainerRef, rows }) {
@@ -123,15 +124,19 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                         ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
                           // Otherwise, just render the regular cell
                           <>
+                            {console.log(cell.column.columnDef.field_type)}
+
                             {cell.column.columnDef.field_type ===
                               "multipleAttachments" ? (
                               <ImageReader data={cell?.getValue()} />
-                            ) : (
-                              flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext()
-                              )
-                            )}
+                            ) : cell.column.columnDef.field_type === "singleSelect" ? <></> :
+                              cell.column.columnDef.field_type === "multipleSelects" ? <>{console.log("MultiSelect", cell?.getValue())}</>
+                                : (
+                                  flexRender(
+                                    cell.column.columnDef.cell,
+                                    cell.getContext()
+                                  )
+                                )}
                           </>
                         )}
                       </div>
