@@ -92,14 +92,14 @@ const DraggableColumnHeader = ({ header, table, index }) => {
   );
 };
 const reorderColumn = (draggedColumnId, targetColumnId, columnOrder) => {
-  // console.log(columnOrder, draggedColumnId)
+  const columnOrderUpdated = Object.assign([], columnOrder);
   // debugger
-  columnOrder.splice(
-    columnOrder.indexOf(targetColumnId),
+  columnOrderUpdated.splice(
+    columnOrderUpdated.indexOf(targetColumnId),
     0,
-    columnOrder.splice(columnOrder.indexOf(draggedColumnId), 1)[0]
+    columnOrderUpdated.splice(columnOrderUpdated.indexOf(draggedColumnId), 1)[0]
   );
-  return [...columnOrder];
+  return [...columnOrderUpdated];
 };
 
 export default function CustomTable() {

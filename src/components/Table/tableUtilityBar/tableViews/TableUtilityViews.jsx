@@ -291,7 +291,7 @@ function TableViewsPopUpMenuToolkit({
               deleteViewApi({ tableId: selectedTableId, viewId: id });
             }}
           >
-            {console.log(id)}
+            {/* {console.log(id)} */}
             <span className="material-symbols-rounded font-extralight">
               delete
             </span>

@@ -14,7 +14,7 @@ import { io } from "socket.io-client";
 const socket = io(import.meta.env.VITE_SERVER_URL + "webdata");
 
 export default function TableUtilityBar() {
-  const { table, activeRowHeight, globalFilter, columns } =
+  const { table, activeRowHeight, globalFilter, columns, columnOrder } =
     useContext(TableContext);
   const dispatch = useDispatch();
   const [tableStates, setTableStates] = useState();
@@ -39,17 +39,18 @@ export default function TableUtilityBar() {
 
     socket.emit("changesaved", obj, (response) => {
       console.log("socket response: " + JSON.stringify(response));
-      console.log("res : ", response);
+      // console.log("res from server : ", response.message);
     });
-    // console.log("socket called");
+    console.log("socket called");
     // console.log(obj);
     // let data = table.options.state
     // console.log(data)
     // setTableStates(table.options.state)
     // updatePost({ model: table.options.state })
     // dispatch(handleAddViews({ view: "driver", data: tableStates }))
-  }, [activeRowHeight, globalFilter, columns]);
+  }, [activeRowHeight, globalFilter, columns, columnOrder]);
 
+  console.log(columnOrder)
   // console.log("tabledata", tabledata);
 
   // console.log(tableStates)x

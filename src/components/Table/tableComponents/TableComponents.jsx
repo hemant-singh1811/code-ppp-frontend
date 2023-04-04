@@ -18,6 +18,51 @@ import { useSelector } from "react-redux";
 
 export const TableContext = React.createContext();
 
+
+const fuzzyFilter = (row, columnId, value, addMeta) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value);
+
+  // Store the itemRank info
+  addMeta({
+    itemRank,
+  });
+
+  // Return if the item should be filtered in/out
+  return itemRank.passed;
+};
+
+function handleRowHeight(rowHeight) {
+  let activeRowHeight = 30;
+  let activeNumberOfLines = 1;
+  rowHeight.map((ele) => {
+    if (ele.isActive) {
+      activeRowHeight = ele.height;
+      activeNumberOfLines = ele.numberOfLines;
+    }
+  });
+  return { activeRowHeight, activeNumberOfLines };
+}
+
+function useSkipper() {
+  const shouldSkipRef = React.useRef(true);
+  const shouldSkip = shouldSkipRef.current;
+
+  // Wrap a function with this to skip a pagination reset temporarily
+  const skip = React.useCallback(() => {
+    shouldSkipRef.current = false;
+  }, []);
+
+  React.useEffect(() => {
+    shouldSkipRef.current = true;
+  });
+
+  return [shouldSkip, skip];
+}
+
+// {/* <pre>{JSON.stringify(table.getState(), null, 2)}</pre> */ }
+
+
 // Give our default column cell renderer editing superpowers!
 const defaultColumn = {
   cell: ({
@@ -217,46 +262,3 @@ export default function TableComponents({
     </TableContext.Provider>
   );
 }
-
-const fuzzyFilter = (row, columnId, value, addMeta) => {
-  // Rank the item
-  const itemRank = rankItem(row.getValue(columnId), value);
-
-  // Store the itemRank info
-  addMeta({
-    itemRank,
-  });
-
-  // Return if the item should be filtered in/out
-  return itemRank.passed;
-};
-
-function handleRowHeight(rowHeight) {
-  let activeRowHeight = 30;
-  let activeNumberOfLines = 1;
-  rowHeight.map((ele) => {
-    if (ele.isActive) {
-      activeRowHeight = ele.height;
-      activeNumberOfLines = ele.numberOfLines;
-    }
-  });
-  return { activeRowHeight, activeNumberOfLines };
-}
-
-function useSkipper() {
-  const shouldSkipRef = React.useRef(true);
-  const shouldSkip = shouldSkipRef.current;
-
-  // Wrap a function with this to skip a pagination reset temporarily
-  const skip = React.useCallback(() => {
-    shouldSkipRef.current = false;
-  }, []);
-
-  React.useEffect(() => {
-    shouldSkipRef.current = true;
-  });
-
-  return [shouldSkip, skip];
-}
-
-// {/* <pre>{JSON.stringify(table.getState(), null, 2)}</pre> */ }
