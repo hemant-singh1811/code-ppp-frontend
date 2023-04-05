@@ -10,13 +10,11 @@ import {
   getGroupedRowModel,
   getExpandedRowModel,
 } from "@tanstack/react-table";
-import AddRowTable from "../tableUtilities/AddRowTable";
-import { io } from "socket.io-client";
-const socket = io(import.meta.env.VITE_SERVER_URL + "webdata");
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 export const TableContext = React.createContext();
+
 
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
@@ -62,7 +60,6 @@ function useSkipper() {
 
 // {/* <pre>{JSON.stringify(table.getState(), null, 2)}</pre> */ }
 
-
 // Give our default column cell renderer editing superpowers!
 const defaultColumn = {
   cell: ({
@@ -74,6 +71,8 @@ const defaultColumn = {
   }) => {
     const initialValue = getValue();
     const location = useLocation();
+    const socket = useSelector(state => state.socketWebData.socket);
+
 
     // console.log(row._valuesCache)
     // We need to keep and update the state of the cell normally
@@ -84,11 +83,16 @@ const defaultColumn = {
       table.options.meta?.updateData(index, id, value);
       let rowCopy = original;
       rowCopy[id] = e.target.value;
+
+      let updatedRowKey = id
+      let updatedRowValue = row.original[id]
+      let newRowPart = { [updatedRowKey]: updatedRowValue }
+
       let obj = {
         base_id: "",
         table_id: location.pathname.split("/")[2],
         record_id: rowCopy.id52148213343234567,
-        updated_data: rowCopy,
+        updated_data: newRowPart,
       };
       socket.emit("updatedata", obj, (response) => {
         console.log("res : ", response);
@@ -128,6 +132,7 @@ export default function TableComponents({
   setData,
   tableConditions,
 }) {
+
   const [columns, setColumns] = useState(() => [...defaultColumns]);
   const [globalFilter, setGlobalFilter] = useState(
     tableConditions?.model?.globalFilter || ""
@@ -235,7 +240,7 @@ export default function TableComponents({
     // console.log("model updated", model)
   }, [model])
 
-
+  // console.log(table)
   return (
     <TableContext.Provider
       value={{

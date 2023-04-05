@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useDetectOutsideClick } from "../../../utilities/customHooks/useDetectOutsideClick";
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
-const socket = io(import.meta.env.VITE_SERVER_URL + "webdata");
+// const socket = io(import.meta.env.VITE_SERVER_URL + "webdata");
 
 export default function MultiselectWithAddOption({ columnData, rowData }) {
     // const { columns } = useContext(TableContext);

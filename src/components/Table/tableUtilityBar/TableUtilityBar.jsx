@@ -10,8 +10,8 @@ import { TableContext } from "../tableComponents/TableComponents";
 import TableUtilityViews from "./tableViews/TableUtilityViews";
 import { usePostViewsMutation } from "../../../store/services/alphaTruckingApi";
 import { handleUpdateViews } from "../../../store/features/viewsSlice";
-import { io } from "socket.io-client";
-const socket = io(import.meta.env.VITE_SERVER_URL + "webdata");
+// import { io } from "socket.io-client";
+// const socket = io(import.meta.env.VITE_SERVER_URL + "webdata");
 
 export default function TableUtilityBar() {
   const { table, activeRowHeight, globalFilter, columns, columnOrder } =

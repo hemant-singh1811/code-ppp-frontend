@@ -137,7 +137,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                               "singleSelect" ? (
                               <>
                                 {/* {console.log(cell?.getValue())} */}
-                                <SingleSelectWithAddOption columnData={cell.column.columnDef} rowData={cell?.getValue()} />
+                                <SingleSelectWithAddOption columnData={cell.column.columnDef} cell={cell} rowData={cell?.getValue()} />
                               </>
                             ) : cell.column.columnDef.field_type ===
                               "multipleSelects" ? (

@@ -9,6 +9,7 @@ import viewsReducer from '../features/viewsSlice';
 import basesReducer from '../features/BasesStateSlice';
 import sidebarReducer from '../features/SideBarStateSlice';
 import imagesViewerReducer from '../features/ImageViewerSlice';
+import socketWebDataReducer from '../features/sockets/SocketWebDataSlice';
 
 const reducer = {
   [alphaTruckingApi.reducerPath]: alphaTruckingApi.reducer,
@@ -20,6 +21,7 @@ const reducer = {
   bases: basesReducer,
   sidebar: sidebarReducer,
   imagesViewer: imagesViewerReducer,
+  socketWebData: socketWebDataReducer,
 };
 
 export const store = configureStore({
@@ -29,6 +31,8 @@ export const store = configureStore({
       ? true
       : false,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(alphaTruckingApi.middleware),
+    getDefaultMiddleware({ serializableCheck: false }).concat(
+      alphaTruckingApi.middleware
+    ),
 });
 setupListeners(store.dispatch);

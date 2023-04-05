@@ -1,17 +1,35 @@
 export default function DateGenerator() {
   // 2023-01-17 20:37:05
   let currentdate = new Date();
+
+  let month = mode("" + (currentdate.getMonth() + 1));
+  let date = mode("" + currentdate.getDate());
+
+  let hour = mode("" + currentdate.getHours());
+  let minute = mode("" + currentdate.getMinutes());
+  let second = mode("" + currentdate.getSeconds());
+
   let datetime =
     currentdate.getFullYear() +
     "-" +
-    (currentdate.getMonth() + 1) +
+    month +
     "-" +
-    currentdate.getDate() +
+    date +
     " " +
-    currentdate.getHours() +
+    hour +
     ":" +
-    currentdate.getMinutes() +
+    minute +
     ":" +
-    currentdate.getSeconds();
+    second;
+
+  console.log("datetime: " + datetime);
+
   return datetime;
+}
+
+function mode(obj) {
+  if (obj.length == 1) {
+    obj = "0" + obj;
+  }
+  return obj;
 }

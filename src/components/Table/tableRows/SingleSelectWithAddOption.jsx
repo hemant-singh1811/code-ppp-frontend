@@ -1,55 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useDetectOutsideClick } from "../../../utilities/customHooks/useDetectOutsideClick";
-import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
 import { TableContext } from "../tableComponents/TableComponents";
-const socket = io(import.meta.env.VITE_SERVER_URL + "webdata");
 
-function SingleSelectWithAddOption({ columnData, rowData }) {
-  const { columns, setColumns } =
-    useContext(TableContext);
-  // const { columns } = useContext(TableContext);
-  const { selectedTableId } = useSelector(state => state.globalState)
+function SingleSelectWithAddOption({ columnData, rowData, cell }) {
+  const { columns, setColumns } = useContext(TableContext);
+  const socket = useSelector(state => state.socketWebData.socket);
   // Create a ref that we add to the element for which we want to detect outside clicks
   const singleSelectRef = React.useRef();
   // Call hook passing in the ref and a function to call on outside click
-  const [SingleSelectToggle, setSingleSelectToggle] = React.useState(false);
   useDetectOutsideClick(singleSelectRef, () => setSingleSelectToggle(false));
-  let newOptions;
+
+  let newOptions = [{ name: '', }];
   if (Array.isArray(columnData?.options)) {
     newOptions = columnData?.options
   }
-  // console.log(newOptions)
 
+  const { selectedTableId } = useSelector(state => state.globalState)
+  const [SingleSelectToggle, setSingleSelectToggle] = React.useState(false);
+  const [selectedOption, setSelectedOption] = React.useState(rowData);
   const [options, setOptions] = useState(newOptions);
-
-  let obj = {
-    type: columnData?.field_type,
-    field_id: columnData?.field_id,
-    table_id: selectedTableId,
-    obj: {
-      field_id: columnData?.field_id,
-      field_description: columnData?.field_description,
-      json_field_type: columnData?.json_field_type,
-      created_at: columnData?.created_at,
-      field_type: columnData?.field_type,
-      created_by: columnData?.created_by,
-      field_name: columnData?.field_name,
-      options: options
-    }
-  }
-  // columnData.options = options
-
-  useEffect(() => {
-    // console.log(columnData)
-    // socket.emit("updatemetadata", obj, (response) => {
-    //   console.log("socket response: " + JSON.stringify(response));
-    //   // console.log("res from server : ", response.message);
-    // });
-    // setColumns(...columns, columnData);
-    // console.log("object", obj)
-  }, [])
-
   const [searchTerm, setSearchTerm] = useState("")
   const [bgColor, setBgColor] = useState(getRandomColor());
   const [textColor, setTextColor] = useState(getContrastColor(bgColor));
@@ -66,34 +36,110 @@ function SingleSelectWithAddOption({ columnData, rowData }) {
     const yiq = (r * 299 + g * 587 + b * 114) / 1000;
     return yiq >= 128 ? "#000000" : "#ffffff";
   }
+  let rowCopy = cell.row.original;
 
-  function handleClick() {
-    const newBgColor = getRandomColor();
-    setBgColor(newBgColor);
-    setTextColor(getContrastColor(newBgColor));
-    // options: [{ value: "open", color: "" }, { value: "das", color: "" }, { value: "dasd", color: "" }]
+
+  function addNewOption() {
+    let obj = {
+      type: columnData?.field_type,
+      field_id: columnData?.field_id,
+      table_id: selectedTableId,
+      obj: {
+        field_id: columnData?.field_id,
+        field_description: columnData?.field_description,
+        json_field_type: columnData?.json_field_type,
+        created_at: columnData?.created_at,
+        field_type: columnData?.field_type,
+        created_by: columnData?.created_by,
+        field_name: columnData?.field_name,
+        options: [...options, { name: searchTerm, bgcolor: bgColor, color: textColor }]
+      }
+    }
+    setOptions([...options, { name: searchTerm, bgcolor: bgColor, color: textColor }]);
     setColumns((prev) => {
       return prev.map((data) => {
-        data.options = options
+        if (data.field_id === columnData.field_id) {
+          data.options = [...options, { name: searchTerm, bgcolor: bgColor, color: textColor }]
+        }
         return data
       })
     })
+
+    rowData = [searchTerm]
+    setSelectedOption([searchTerm])
+    setSearchTerm("");
+    setSingleSelectToggle(!SingleSelectToggle);
+    rowCopy[cell.column.id] = rowData
+
+    let updatedRowKey = cell.column.id
+    let updatedRowValue = cell.row.original[updatedRowKey]
+    let newRowPart = { [updatedRowKey]: updatedRowValue }
+
+
+
+    let rowObj = {
+      base_id: "",
+      table_id: location.pathname.split("/")[2],
+      record_id: rowCopy.id52148213343234567,
+      updated_data: newRowPart,
+    };
+
+    socket.emit("updatemetadata", obj, (response) => {
+      console.log("socket response: " + JSON.stringify(response));
+    });
+
+
+
+    console.log(rowObj)
+    socket.emit("updatedata", rowObj, (response) => {
+      console.log("res : ", response);
+    });
+
+    const newBgColor = getRandomColor();
+    setBgColor(newBgColor)
+    setTextColor(getContrastColor(newBgColor))
   }
 
+  function updateOption(name) {
+    rowData = [name]
+    setSelectedOption([name])
+    let updatedRowKey = cell.column.id
+    let updatedRowValue = cell.row.original[updatedRowKey]
+    let newRowPart = { [updatedRowKey]: updatedRowValue }
+
+    console.log(cell)
+    let rowObj = {
+      base_id: "",
+      table_id: location.pathname.split("/")[2],
+      record_id: rowCopy.id52148213343234567,
+      updated_data: newRowPart,
+    };
+    rowCopy[cell.column.id] = rowData
+
+    console.log(rowObj)
+    socket.emit("updatedata", rowObj, (response) => {
+      console.log("res : ", response);
+    });
+    setSingleSelectToggle(!SingleSelectToggle);
+  }
+
+  useEffect(() => {
+
+  }, [columns])
 
 
+  console.log(columns)
   return (
     <div
       className="relative select-none h-full w-full z-0"
       ref={singleSelectRef}
-
     >
       <div
         onClick={() => { setSingleSelectToggle(!SingleSelectToggle); setSearchTerm("") }}
         className="bg-white w-full rounded-md cursor-pointer flex items-center px-2 justify-between "
       >
-        {options.map(({ name, color, isSelected, bgcolor }, i) => {
-          if (isSelected)
+        {options.map(({ name, color, bgcolor }, i) => {
+          if (selectedOption?.includes(name))
             return (
               <div
                 key={i}
@@ -111,7 +157,7 @@ function SingleSelectWithAddOption({ columnData, rowData }) {
       </div>
       {SingleSelectToggle && (
         <div
-          className="absolute -right-1 top-8 w-full max-h-[300px] bg-white rounded-md shadow-lg min-w-[200px] border  overflow-x-hidden overflow-y-auto"
+          className="absolute -left-1 top-8 w-full max-h-[300px] bg-white rounded-md shadow-lg min-w-[200px] border  overflow-x-hidden overflow-y-auto"
           style={{ zIndex: 100 }}
         >
           <input
@@ -131,19 +177,7 @@ function SingleSelectWithAddOption({ columnData, rowData }) {
               .map(({ color, name, bgcolor }, i) => {
                 return (
                   <div
-                    onClick={() => {
-                      setOptions((prev) => {
-                        return prev.map((prevMap) => {
-                          if (name === prevMap.name) {
-                            prevMap.isSelected = true;
-                          } else {
-                            prevMap.isSelected = false;
-                          }
-                          return prevMap;
-                        });
-                      });
-                      setSingleSelectToggle(!SingleSelectToggle);
-                    }}
+                    onClick={() => updateOption(name)}
                     key={i}
                     className="p-2 hover:bg-blue-100 flex min-h-[30px] w-full"
                   >
@@ -163,26 +197,10 @@ function SingleSelectWithAddOption({ columnData, rowData }) {
             {options.filter(({ name }) => name?.includes(searchTerm)).length ===
               0 && (
                 <div
-                  onClick={() => {
-                    setOptions((prev) => {
-                      let newdata = prev.map((prevMap) => {
-                        prevMap.isSelected = false;
-                        return prevMap;
-                      });
-                      newdata.push({
-                        name: searchTerm,
-                        isSelected: true,
-                        bgcolor: bgColor,
-                        color: textColor
-                      });
-                      return newdata;
-                    });
-                    setSearchTerm("");
-                    setSingleSelectToggle(!SingleSelectToggle);
-                  }}
+                  onClick={addNewOption}
                   className="p-2 hover:bg-blue-100 flex truncate"
                 >
-                  <div onClick={handleClick} className="truncate flex">
+                  <div className="truncate flex">
                     Add New Option:
                     {
                       searchTerm &&
@@ -203,5 +221,6 @@ function SingleSelectWithAddOption({ columnData, rowData }) {
     </div >
   );
 }
+
 
 export default SingleSelectWithAddOption;
