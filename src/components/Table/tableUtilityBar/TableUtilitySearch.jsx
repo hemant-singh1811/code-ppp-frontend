@@ -10,7 +10,7 @@ export default function TableUtilitySearching() {
         search
       </span>
       {
-        isOpen && <div className='absolute right-[-3px] w-[300px] top-[37px]  flex items-center border-2 border-t-0 border-[#e8e8e8]  bg-white overflow-hidden rounded-br rounded-bl z-10
+        isOpen && <div style={{ zIndex: 100 }} className='absolute right-[-3px] w-[300px] top-[37px]  flex items-center border-2 border-t-0 border-[#e8e8e8]  bg-white overflow-hidden rounded-br rounded-bl z-10
         '>
           <DebouncedInput
             id='default-search'

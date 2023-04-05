@@ -26,7 +26,7 @@ export default function TableScreen() {
     return <Error error={error} />;
   }
 
-  console.log(modelResult.data)
+
 
   return <Table tableData={data} tableModel={modelResult.data} />;
 }

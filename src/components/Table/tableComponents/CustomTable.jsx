@@ -152,7 +152,7 @@ export default function CustomTable() {
           }}
           className={`divTable scrollbar-hidden`}
         >
-          <div className="thead bg-[#f5f5f5] text-[#333333] relative z-10">
+          <div className="thead bg-[#f5f5f5] text-[#333333] relative z-10" >
             {table.getHeaderGroups().map((headerGroup) => (
               <div key={headerGroup.id} className="tr">
                 {headerGroup.headers.map((header, index) => (

@@ -48,16 +48,11 @@ export default function Table({ tableData, tableModel }) {
       accessorKey: data?.field_name,
       id: data?.field_name,
       header: data?.field_name,
-      field_type: data?.field_type,
-      created_at: data?.created_at,
-      created_by: data?.created_by,
-      field_description: data?.field_description,
-      field_id: data?.field_id,
-      linked_rec: data?.linked_rec,
+      ...data
     };
   });
 
-  // console.log(tableModel);
+
 
   // console.log(defaultColumns)
 

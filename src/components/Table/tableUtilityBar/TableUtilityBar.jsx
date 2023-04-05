@@ -37,10 +37,10 @@ export default function TableUtilityBar() {
       view_id: selectedView.id,
     };
 
-    socket.emit("changesaved", obj, (response) => {
-      console.log("socket response: " + JSON.stringify(response));
-      // console.log("res from server : ", response.message);
-    });
+    // socket.emit("changesaved", obj, (response) => {
+    //   console.log("socket response: " + JSON.stringify(response));
+    //   // console.log("res from server : ", response.message);
+    // });
     // console.log("socket called");
     // console.log(obj);
     // let data = table.options.state

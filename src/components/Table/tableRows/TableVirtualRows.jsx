@@ -6,6 +6,7 @@ import ImageReader from "../tableUtilities/ImageReader";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import AwesomeImageReader from "../tableUtilities/AwesomeImageReader";
 import SingleSelectWithAddOption from "./SingleSelectWithAddOption";
+import MultiselectWithAddOption from "./MultiselectWithAddOption";
 
 export default function TableVirtualRows({ tableContainerRef, rows }) {
   const { activeRowHeight, activeNumberOfLines, table } =
@@ -40,7 +41,12 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
     <>
       <div
         ref={parentRef}
-        className="list text-black scrollbar-hidden h-[calc(100vh_-_72px)]"
+        className="list text-black scrollbar-hidden h-[calc(100vh_-_72px)] overflow-x-visible"
+        // style={{ overflowY: 'auto' }}//do not remove overflow auto if you remove it table virtual row will break
+        style={{
+          overflowX: "auto",
+          overflowY: "visible",
+        }}
       >
         <div
           className="tbody scrollbar-hidden"
@@ -130,14 +136,12 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                             ) : cell.column.columnDef.field_type ===
                               "singleSelect" ? (
                               <>
-                                {console.log(cell?.getValue())}
-                                <SingleSelectWithAddOption />
+                                {/* {console.log(cell?.getValue())} */}
+                                <SingleSelectWithAddOption columnData={cell.column.columnDef} rowData={cell?.getValue()} />
                               </>
                             ) : cell.column.columnDef.field_type ===
                               "multipleSelects" ? (
-                              <>
-                                {/* {console.log("MultiSelect", cell?.getValue())} */}
-                              </>
+                              <MultiselectWithAddOption columnData={cell.column.columnDef} rowData={cell?.getValue()} />
                             ) : (
                               flexRender(
                                 cell.column.columnDef.cell,
