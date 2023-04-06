@@ -5,22 +5,22 @@ import { TableContext } from "../tableComponents/TableComponents";
 
 function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   const { columns, setColumns } = useContext(TableContext);
-  const socket = useSelector(state => state.socketWebData.socket);
+  const socket = useSelector((state) => state.socketWebData.socket);
   // Create a ref that we add to the element for which we want to detect outside clicks
   const singleSelectRef = React.useRef();
   // Call hook passing in the ref and a function to call on outside click
   useDetectOutsideClick(singleSelectRef, () => setSingleSelectToggle(false));
 
-  let newOptions = [{ name: '', }];
+  let newOptions = [{ name: "" }];
   if (Array.isArray(columnData?.options)) {
-    newOptions = columnData?.options
+    newOptions = columnData?.options;
   }
 
-  const { selectedTableId } = useSelector(state => state.globalState)
+  const { selectedTableId } = useSelector((state) => state.globalState);
   const [SingleSelectToggle, setSingleSelectToggle] = React.useState(false);
   const [selectedOption, setSelectedOption] = React.useState(rowData);
   const [options, setOptions] = useState(newOptions);
-  const [searchTerm, setSearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState("");
   const [bgColor, setBgColor] = useState(getRandomColor());
   const [textColor, setTextColor] = useState(getContrastColor(bgColor));
 
@@ -38,7 +38,6 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   }
   let rowCopy = cell?.row?.original;
 
-
   function addNewOption() {
     let obj = {
       type: columnData?.field_type,
@@ -52,44 +51,38 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
         field_type: columnData?.field_type,
         created_by: columnData?.created_by,
         field_name: columnData?.field_name,
-        options: [...options, { name: searchTerm, bgcolor: bgColor, color: textColor }]
-      }
-    }
-    setOptions([...options, { name: searchTerm, bgcolor: bgColor, color: textColor }]);
-    // setColumns((prev) => {
-    //   return prev.map((data) => {
-    //     if (data.field_id === columnData.field_id) {
-    //       data.options.push({ name: searchTerm, bgcolor: bgColor, color: textColor })
-    //       // data.options.push( [...options, { name: searchTerm, bgcolor: bgColor, color: textColor }]
-    //       // console.log(data.options)
-    //     }
-    //     return data
-    //   })
-    // })
-
-
-
+        options: [
+          ...options,
+          { name: searchTerm, bgcolor: bgColor, color: textColor },
+        ],
+      },
+    };
 
     setColumns((prev) => {
-      console.log(prev)
       return prev.map((data) => {
         if (data.field_id === columnData.field_id) {
-          data.options = [...options, { name: searchTerm, bgcolor: bgColor, color: textColor }]
+          data.options = [
+            ...options,
+            { name: searchTerm, bgcolor: bgColor, color: textColor },
+          ];
         }
-        return data
-      })
-    })
+        return data;
+      });
+    });
 
-    rowData = [searchTerm]
-    setSelectedOption([searchTerm])
+    setOptions([
+      ...options,
+      { name: searchTerm, bgcolor: bgColor, color: textColor },
+    ]);
+
+    rowData = [searchTerm];
+    setSelectedOption([searchTerm]);
     setSearchTerm("");
     setSingleSelectToggle(!SingleSelectToggle);
-    rowCopy[cell?.column.id] = rowData
+    rowCopy[cell?.column.id] = rowData;
 
-    let updatedRowKey = cell?.column.id
-    let newRowPart = { [updatedRowKey]: searchTerm }
-
-
+    let updatedRowKey = cell?.column.id;
+    let newRowPart = { [updatedRowKey]: searchTerm };
 
     let rowObj = {
       base_id: "",
@@ -102,32 +95,29 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
       console.log("socket response: " + JSON.stringify(response));
     });
 
-
-
-    // console.log(rowObj)
     socket.emit("updatedata", rowObj, (response) => {
       console.log("res : ", response);
     });
 
     const newBgColor = getRandomColor();
-    setBgColor(newBgColor)
-    setTextColor(getContrastColor(newBgColor))
+    setBgColor(newBgColor);
+    setTextColor(getContrastColor(newBgColor));
   }
 
   function updateOption(name) {
-    rowData = [name]
-    setSelectedOption([name])
-    let updatedRowKey = cell?.column.id
-    let newRowPart = { [updatedRowKey]: name }
+    rowData = [name];
+    setSelectedOption([name]);
+    let updatedRowKey = cell?.column.id;
+    let newRowPart = { [updatedRowKey]: name };
 
-    console.log(cell)
+    console.log(cell);
     let rowObj = {
       base_id: "",
       table_id: location.pathname.split("/")[2],
       record_id: rowCopy.id52148213343234567,
       updated_data: newRowPart,
     };
-    rowCopy[cell?.column.id] = rowData
+    rowCopy[cell?.column.id] = rowData;
 
     // console.log(rowObj)
     socket.emit("updatedata", rowObj, (response) => {
@@ -136,6 +126,69 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     setSingleSelectToggle(!SingleSelectToggle);
   }
 
+  function removeOption(name) {
+    rowData = [name];
+    setSelectedOption([name]);
+    let updatedRowKey = cell?.column.id;
+    let newRowPart = { [updatedRowKey]: name };
+
+    console.log(cell);
+    let rowObj = {
+      base_id: "",
+      table_id: location.pathname.split("/")[2],
+      record_id: rowCopy.id52148213343234567,
+      updated_data: newRowPart,
+    };
+    rowCopy[cell?.column.id] = rowData;
+
+    // console.log(rowObj)
+    socket.emit("updatedata", rowObj, (response) => {
+      console.log("res : ", response);
+    });
+  }
+
+  function deleteOption(name) {
+    // let obj = {
+    //   type: columnData?.field_type,
+    //   field_id: columnData?.field_id,
+    //   table_id: selectedTableId,
+    //   obj: {
+    //     field_id: columnData?.field_id,
+    //     field_description: columnData?.field_description,
+    //     json_field_type: columnData?.json_field_type,
+    //     created_at: columnData?.created_at,
+    //     field_type: columnData?.field_type,
+    //     created_by: columnData?.created_by,
+    //     field_name: columnData?.field_name,
+    //     options: [
+    //       ...options,
+    //       { name: searchTerm, bgcolor: bgColor, color: textColor },
+    //     ],
+    //   },
+    // };
+    // setColumns((prev) => {
+    //   return prev.map((data) => {
+    //     if (data.field_id === columnData.field_id) {
+    //       data.options = [
+    //         ...options,
+    //         { name: searchTerm, bgcolor: bgColor, color: textColor },
+    //       ];
+    //     }
+    //     return data;
+    //   });
+    // });
+    // setOptions([
+    //   ...options,
+    //   { name: searchTerm, bgcolor: bgColor, color: textColor },
+    // ]);
+    // socket.emit("updatemetadata", obj, (response) => {
+    //   console.log("socket response: " + JSON.stringify(response));
+    // });
+  }
+
+  useEffect(() => {
+    setOptions(columnData?.options);
+  }, [columns]);
 
   return (
     <div
@@ -143,7 +196,10 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
       ref={singleSelectRef}
     >
       <div
-        onClick={() => { setSingleSelectToggle(!SingleSelectToggle); setSearchTerm("") }}
+        onClick={() => {
+          setSingleSelectToggle(!SingleSelectToggle);
+          setSearchTerm("");
+        }}
         className="bg-white w-full rounded-md cursor-pointer flex items-center px-2 justify-between "
       >
         {options.map(({ name, color, bgcolor }, i) => {
@@ -151,10 +207,16 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
             return (
               <div
                 key={i}
-                className={`rounded-3xl px-2 truncate `}
+                className={`rounded-3xl px-2 truncate w-fit`}
                 style={{ background: bgcolor, color: color }}
               >
                 {name}
+                {/* <span
+                  className="material-symbols-rounded text-base ml-1"
+                  onClick={() => removeOption(name)}
+                >
+                  cancel
+                </span> */}
               </div>
             );
         })}
@@ -190,45 +252,49 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
                     className="p-2 hover:bg-blue-100 flex min-h-[30px] w-full"
                   >
                     {name && (
-                      <div
-                        onClick={() => setSearchTerm("")}
-                        style={{ background: bgcolor, color: color }}
-                        className={`rounded-xl px-2 border-black border-[0.1px] truncate`}
-                      >
-                        {name}
+                      <div className="flex w-full justify-between">
+                        <div
+                          onClick={() => setSearchTerm("")}
+                          style={{ background: bgcolor, color: color }}
+                          className={`rounded-xl px-2 border-black border-[0.1px] truncate`}
+                        >
+                          {name}
+                        </div>
+                        <span
+                          className="material-symbols-rounded text-lg mr-1 cursor-pointer"
+                          onClick={() => deleteOption(name)}
+                        >
+                          cancel
+                        </span>
                       </div>
-                    )
-                    }
+                    )}
                   </div>
                 );
               })}
             {options.filter(({ name }) => name?.includes(searchTerm)).length ===
               0 && (
-                <div
-                  onClick={addNewOption}
-                  className="p-2 hover:bg-blue-100 flex truncate"
-                >
-                  <div className="truncate flex">
-                    Add New Option:
-                    {
-                      searchTerm &&
-                      <span
-                        style={{ background: bgColor, color: textColor }}
-                        className={`rounded-xl px-2 ml-1 truncate`}
-                      >
-                        {searchTerm}
-                      </span>
-                    }
-                  </div>
+              <div
+                onClick={addNewOption}
+                className="p-2 hover:bg-blue-100 flex truncate"
+              >
+                <div className="truncate flex">
+                  Add New Option:
+                  {searchTerm && (
+                    <span
+                      style={{ background: bgColor, color: textColor }}
+                      className={`rounded-xl px-2 ml-1 truncate`}
+                    >
+                      {searchTerm}
+                    </span>
+                  )}
                 </div>
-              )}
+              </div>
+            )}
           </div>
         </div>
-      )
-      }
-    </div >
+      )}
+    </div>
   );
 }
-
 
 export default SingleSelectWithAddOption;
