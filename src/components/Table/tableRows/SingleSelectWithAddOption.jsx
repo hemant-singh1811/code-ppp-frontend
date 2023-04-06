@@ -126,66 +126,6 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     setSingleSelectToggle(!SingleSelectToggle);
   }
 
-  function removeOption(name) {
-    rowData = [name];
-    setSelectedOption([name]);
-    let updatedRowKey = cell?.column.id;
-    let newRowPart = { [updatedRowKey]: name };
-
-    console.log(cell);
-    let rowObj = {
-      base_id: "",
-      table_id: location.pathname.split("/")[2],
-      record_id: rowCopy.id52148213343234567,
-      updated_data: newRowPart,
-    };
-    rowCopy[cell?.column.id] = rowData;
-
-    // console.log(rowObj)
-    socket.emit("updatedata", rowObj, (response) => {
-      console.log("res : ", response);
-    });
-  }
-
-  function deleteOption(name) {
-    // let obj = {
-    //   type: columnData?.field_type,
-    //   field_id: columnData?.field_id,
-    //   table_id: selectedTableId,
-    //   obj: {
-    //     field_id: columnData?.field_id,
-    //     field_description: columnData?.field_description,
-    //     json_field_type: columnData?.json_field_type,
-    //     created_at: columnData?.created_at,
-    //     field_type: columnData?.field_type,
-    //     created_by: columnData?.created_by,
-    //     field_name: columnData?.field_name,
-    //     options: [
-    //       ...options,
-    //       { name: searchTerm, bgcolor: bgColor, color: textColor },
-    //     ],
-    //   },
-    // };
-    // setColumns((prev) => {
-    //   return prev.map((data) => {
-    //     if (data.field_id === columnData.field_id) {
-    //       data.options = [
-    //         ...options,
-    //         { name: searchTerm, bgcolor: bgColor, color: textColor },
-    //       ];
-    //     }
-    //     return data;
-    //   });
-    // });
-    // setOptions([
-    //   ...options,
-    //   { name: searchTerm, bgcolor: bgColor, color: textColor },
-    // ]);
-    // socket.emit("updatemetadata", obj, (response) => {
-    //   console.log("socket response: " + JSON.stringify(response));
-    // });
-  }
-
   useEffect(() => {
     setOptions(columnData?.options);
   }, [columns]);
@@ -202,7 +142,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
         }}
         className="bg-white w-full rounded-md cursor-pointer flex items-center px-2 justify-between "
       >
-        {options.map(({ name, color, bgcolor }, i) => {
+        {options?.map(({ name, color, bgcolor }, i) => {
           if (selectedOption?.includes(name) && name !== "")
             return (
               <div
@@ -211,12 +151,6 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
                 style={{ background: bgcolor, color: color }}
               >
                 {name}
-                {/* <span
-                  className="material-symbols-rounded text-base ml-1"
-                  onClick={() => removeOption(name)}
-                >
-                  cancel
-                </span> */}
               </div>
             );
         })}
@@ -260,10 +194,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
                         >
                           {name}
                         </div>
-                        <span
-                          className="material-symbols-rounded text-lg mr-1 cursor-pointer"
-                          onClick={() => deleteOption(name)}
-                        >
+                        <span className="material-symbols-rounded text-lg mr-1 cursor-pointer">
                           cancel
                         </span>
                       </div>
