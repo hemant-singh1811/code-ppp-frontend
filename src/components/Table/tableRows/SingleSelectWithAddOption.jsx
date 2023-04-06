@@ -59,7 +59,9 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     setColumns((prev) => {
       return prev.map((data) => {
         if (data.field_id === columnData.field_id) {
-          data.options = [...options, { name: searchTerm, bgcolor: bgColor, color: textColor }]
+          data.options.push({ name: searchTerm, bgcolor: bgColor, color: textColor })
+          // data.options.push( [...options, { name: searchTerm, bgcolor: bgColor, color: textColor }]
+          console.log(data.options)
         }
         return data
       })
@@ -72,8 +74,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     rowCopy[cell.column.id] = rowData
 
     let updatedRowKey = cell.column.id
-    let updatedRowValue = cell.row.original[updatedRowKey]
-    let newRowPart = { [updatedRowKey]: updatedRowValue }
+    let newRowPart = { [updatedRowKey]: searchTerm }
 
 
 
@@ -90,7 +91,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
 
 
 
-    console.log(rowObj)
+    // console.log(rowObj)
     socket.emit("updatedata", rowObj, (response) => {
       console.log("res : ", response);
     });
@@ -104,8 +105,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     rowData = [name]
     setSelectedOption([name])
     let updatedRowKey = cell.column.id
-    let updatedRowValue = cell.row.original[updatedRowKey]
-    let newRowPart = { [updatedRowKey]: updatedRowValue }
+    let newRowPart = { [updatedRowKey]: name }
 
     console.log(cell)
     let rowObj = {
@@ -116,7 +116,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     };
     rowCopy[cell.column.id] = rowData
 
-    console.log(rowObj)
+    // console.log(rowObj)
     socket.emit("updatedata", rowObj, (response) => {
       console.log("res : ", response);
     });
@@ -124,11 +124,11 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   }
 
   useEffect(() => {
-
+    console.log("object")
   }, [columns])
 
 
-  console.log(columns)
+  // console.log(columns)
   return (
     <div
       className="relative select-none h-full w-full z-0"
@@ -139,7 +139,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
         className="bg-white w-full rounded-md cursor-pointer flex items-center px-2 justify-between "
       >
         {options.map(({ name, color, bgcolor }, i) => {
-          if (selectedOption?.includes(name))
+          if (selectedOption?.includes(name) && name !== "")
             return (
               <div
                 key={i}

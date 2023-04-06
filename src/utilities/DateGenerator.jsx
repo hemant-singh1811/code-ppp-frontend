@@ -22,8 +22,6 @@ export default function DateGenerator() {
     ":" +
     second;
 
-  console.log("datetime: " + datetime);
-
   return datetime;
 }
 
