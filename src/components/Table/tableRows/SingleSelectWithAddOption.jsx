@@ -82,7 +82,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     rowCopy[cell?.column.id] = rowData;
 
     let updatedRowKey = cell?.column.id;
-    let newRowPart = { [updatedRowKey]: searchTerm };
+    let newRowPart = { [updatedRowKey]: [searchTerm] };
 
     let rowObj = {
       base_id: "",
@@ -95,6 +95,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
       console.log("socket response: " + JSON.stringify(response));
     });
 
+    console.log(newRowPart)
     socket.emit("updatedata", rowObj, (response) => {
       console.log("res : ", response);
     });
@@ -108,9 +109,8 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     rowData = [name];
     setSelectedOption([name]);
     let updatedRowKey = cell?.column.id;
-    let newRowPart = { [updatedRowKey]: name };
-
-    console.log(cell);
+    let newRowPart = { [updatedRowKey]: [name] };
+    console.log(newRowPart)
     let rowObj = {
       base_id: "",
       table_id: location.pathname.split("/")[2],
@@ -186,17 +186,12 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
                     className="p-2 hover:bg-blue-100 flex min-h-[30px] w-full"
                   >
                     {name && (
-                      <div className="flex w-full justify-between">
-                        <div
-                          onClick={() => setSearchTerm("")}
-                          style={{ background: bgcolor, color: color }}
-                          className={`rounded-xl px-2 border-black border-[0.1px] truncate`}
-                        >
-                          {name}
-                        </div>
-                        <span className="material-symbols-rounded text-lg mr-1 cursor-pointer">
-                          cancel
-                        </span>
+                      <div
+                        onClick={() => setSearchTerm("")}
+                        style={{ background: bgcolor, color: color }}
+                        className={`rounded-xl px-2 border-black border-[0.1px] truncate`}
+                      >
+                        {name}
                       </div>
                     )}
                   </div>
@@ -204,23 +199,23 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
               })}
             {options.filter(({ name }) => name?.includes(searchTerm)).length ===
               0 && (
-              <div
-                onClick={addNewOption}
-                className="p-2 hover:bg-blue-100 flex truncate"
-              >
-                <div className="truncate flex">
-                  Add New Option:
-                  {searchTerm && (
-                    <span
-                      style={{ background: bgColor, color: textColor }}
-                      className={`rounded-xl px-2 ml-1 truncate`}
-                    >
-                      {searchTerm}
-                    </span>
-                  )}
+                <div
+                  onClick={addNewOption}
+                  className="p-2 hover:bg-blue-100 flex truncate"
+                >
+                  <div className="truncate flex">
+                    Add New Option:
+                    {searchTerm && (
+                      <span
+                        style={{ background: bgColor, color: textColor }}
+                        className={`rounded-xl px-2 ml-1 truncate`}
+                      >
+                        {searchTerm}
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         </div>
       )}

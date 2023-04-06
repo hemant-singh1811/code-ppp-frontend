@@ -132,18 +132,15 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
 
                             {cell.column.columnDef.field_type ===
                               "multipleAttachments" ? (
+                              // <></>
                               <ImageReader data={cell?.getValue()} />
                             ) : cell.column.columnDef.field_type ===
                               "singleSelect" ? (
-                              <>
-                                {/* {console.log(cell?.getValue())} */}
-                                <SingleSelectWithAddOption columnData={cell.column.columnDef} cell={cell} rowData={cell?.getValue()} />
-                              </>
+
+                              <SingleSelectWithAddOption columnData={cell.column.columnDef} cell={cell} rowData={cell?.getValue()} />
+
                             ) : cell.column.columnDef.field_type ===
-                              "multipleSelects" ? (
-                              <></>
-                              // <MultiselectWithAddOption columnData={cell.column.columnDef} rowData={cell?.getValue()} />
-                            ) : (
+                              "multipleSelects" ? (<MultiselectWithAddOption columnData={cell.column.columnDef} cell={cell} rowData={cell?.getValue()} />) : (
                               flexRender(
                                 cell.column.columnDef.cell,
                                 cell.getContext()
@@ -165,176 +162,4 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
       </div>
     </>
   );
-
-  // return (
-  //   table.getRowModel().rows.map(row => {
-  //     return <div
-  //       {...{
-  //         key: row.id,
-  //         className: "tr text-black",
-  //         style: {
-  //           height: activeRowHeight,
-  //         },
-  //       }}
-  //     >
-  //       {/* {console.log(table.getRowModel())} */}
-  //       {row.getVisibleCells().map((cell, index) => {
-  //         return (
-  //           <div
-  //             className={`td webkitLineClamp${activeNumberOfLines} mx-auto my-auto text-center `}
-  //             key={cell.id}
-  //             {...{
-  //               style: {
-  //                 width: cell.column.getSize(),
-  //                 height: activeRowHeight,
-  //                 background: cell.getIsGrouped()
-  //                   ? "#0aff0082"
-  //                   : cell.getIsAggregated()
-  //                     ? "#ffa50078"
-  //                     : cell.getIsPlaceholder()
-  //                       ? "#ff000042"
-  //                       : "",
-  //               },
-  //             }}
-  //           >
-  //             {cell.getIsGrouped() ? (
-  //               // If it's a grouped cell, add an expander and row count
-  //               <>
-  //                 <button
-  //                   className="flex"
-  //                   {...{
-  //                     onClick: row.getToggleExpandedHandler(),
-  //                     style: {
-  //                       cursor: row.getCanExpand() ? "pointer" : "normal",
-  //                     },
-  //                   }}
-  //                 >
-  //                   <div>{row.getIsExpanded() ? "👇" : "👉"} </div>
-  //                   {flexRender(
-  //                     cell.column.columnDef.cell,
-  //                     cell.getContext()
-  //                   )}
-  //                   ({row.subRows.length})
-  //                 </button>
-  //               </>
-  //             ) : cell.getIsAggregated() ? (
-  //               // If the cell is aggregated, use the Aggregated
-  //               // renderer for cell
-  //               flexRender(
-  //                 cell.column.columnDef.aggregatedCell ??
-  //                 cell.column.columnDef.cell,
-  //                 cell.getContext()
-  //               )
-  //             ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
-  //               // Otherwise, just render the regular cell
-  //               <>
-  //                 {cell.column.columnDef.field_type ===
-  //                   "multipleAttachments" ? (
-  //                   <ImageReader data={cell?.getValue()} />
-  //                 ) : (
-  //                   flexRender(
-  //                     cell.column.columnDef.cell,
-  //                     cell.getContext()
-  //                   )
-  //                 )}
-  //               </>
-  //             )}
-  //           </div>
-  //         )
-  //       })}
-  //     </div>
-  //   }
-  //   ))
-
-  // return (
-  //   <div className="tbody text-black">
-  //     {paddingTop > 0 && <div style={{ height: `${paddingTop}px` }}></div>}
-  //     {virtualRows.map((virtualRow) => {
-  //       const row = rows[virtualRow.index];
-  //       return (
-  //         <div
-  //           {...{
-  //             key: row.id,
-  //             className: "tr",
-  //             style: {
-  //               height: activeRowHeight,
-  //             },
-  //           }}
-  //         >
-  //           {/* {console.log(table.getRowModel())} */}
-  //           {row.getVisibleCells().map((cell, index) => {
-  //             return (
-  //               <div
-  //                 className={`td webkitLineClamp${activeNumberOfLines} mx-auto my-auto text-center `}
-  //                 key={cell.id}
-  //                 {...{
-  //                   style: {
-  //                     width: cell.column.getSize(),
-  //                     height: activeRowHeight,
-  //                     background: cell.getIsGrouped()
-  //                       ? "#0aff0082"
-  //                       : cell.getIsAggregated()
-  //                         ? "#ffa50078"
-  //                         : cell.getIsPlaceholder()
-  //                           ? "#ff000042"
-  //                           : "",
-  //                   },
-  //                 }}
-  //               >
-  //                 {cell.getIsGrouped() ? (
-  //                   // If it's a grouped cell, add an expander and row count
-  //                   <>
-  //                     <button
-  //                       className="flex"
-  //                       {...{
-  //                         onClick: row.getToggleExpandedHandler(),
-  //                         style: {
-  //                           cursor: row.getCanExpand() ? "pointer" : "normal",
-  //                         },
-  //                       }}
-  //                     >
-  //                       <div>{row.getIsExpanded() ? "👇" : "👉"} </div>
-  //                       {flexRender(
-  //                         cell.column.columnDef.cell,
-  //                         cell.getContext()
-  //                       )}
-  //                       ({row.subRows.length})
-  //                     </button>
-  //                   </>
-  //                 ) : cell.getIsAggregated() ? (
-  //                   // If the cell is aggregated, use the Aggregated
-  //                   // renderer for cell
-  //                   flexRender(
-  //                     cell.column.columnDef.aggregatedCell ??
-  //                     cell.column.columnDef.cell,
-  //                     cell.getContext()
-  //                   )
-  //                 ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
-  //                   // Otherwise, just render the regular cell
-  //                   <>
-  //                     {cell.column.columnDef.field_type ===
-  //                       "multipleAttachments" ? (
-  //                       <ImageReader data={cell?.getValue()} />
-  //                     ) : (
-  //                       flexRender(
-  //                         cell.column.columnDef.cell,
-  //                         cell.getContext()
-  //                       )
-  //                     )}
-  //                   </>
-  //                 )}
-  //               </div>
-  //             )
-  //           })}
-  //         </div>
-  //       );
-  //     })}
-  //     {
-  //       paddingBottom > 0 && (
-  //         <div style={{ height: `${paddingBottom}px` }}></div>
-  //       )
-  //     }
-  //     <div className="h-20" />
-  //   </div >
-  // );
 }
