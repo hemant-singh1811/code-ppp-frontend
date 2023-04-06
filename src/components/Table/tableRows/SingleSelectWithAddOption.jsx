@@ -36,7 +36,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     const yiq = (r * 299 + g * 587 + b * 114) / 1000;
     return yiq >= 128 ? "#000000" : "#ffffff";
   }
-  let rowCopy = cell.row.original;
+  let rowCopy = cell?.row?.original;
 
 
   function addNewOption() {
@@ -56,12 +56,25 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
       }
     }
     setOptions([...options, { name: searchTerm, bgcolor: bgColor, color: textColor }]);
+    // setColumns((prev) => {
+    //   return prev.map((data) => {
+    //     if (data.field_id === columnData.field_id) {
+    //       data.options.push({ name: searchTerm, bgcolor: bgColor, color: textColor })
+    //       // data.options.push( [...options, { name: searchTerm, bgcolor: bgColor, color: textColor }]
+    //       // console.log(data.options)
+    //     }
+    //     return data
+    //   })
+    // })
+
+
+
+
     setColumns((prev) => {
+      console.log(prev)
       return prev.map((data) => {
         if (data.field_id === columnData.field_id) {
-          data.options.push({ name: searchTerm, bgcolor: bgColor, color: textColor })
-          // data.options.push( [...options, { name: searchTerm, bgcolor: bgColor, color: textColor }]
-          console.log(data.options)
+          data.options = [...options, { name: searchTerm, bgcolor: bgColor, color: textColor }]
         }
         return data
       })
@@ -71,9 +84,9 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     setSelectedOption([searchTerm])
     setSearchTerm("");
     setSingleSelectToggle(!SingleSelectToggle);
-    rowCopy[cell.column.id] = rowData
+    rowCopy[cell?.column.id] = rowData
 
-    let updatedRowKey = cell.column.id
+    let updatedRowKey = cell?.column.id
     let newRowPart = { [updatedRowKey]: searchTerm }
 
 
@@ -104,7 +117,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   function updateOption(name) {
     rowData = [name]
     setSelectedOption([name])
-    let updatedRowKey = cell.column.id
+    let updatedRowKey = cell?.column.id
     let newRowPart = { [updatedRowKey]: name }
 
     console.log(cell)
@@ -114,7 +127,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
       record_id: rowCopy.id52148213343234567,
       updated_data: newRowPart,
     };
-    rowCopy[cell.column.id] = rowData
+    rowCopy[cell?.column.id] = rowData
 
     // console.log(rowObj)
     socket.emit("updatedata", rowObj, (response) => {
@@ -123,12 +136,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     setSingleSelectToggle(!SingleSelectToggle);
   }
 
-  useEffect(() => {
-    console.log("object")
-  }, [columns])
 
-
-  // console.log(columns)
   return (
     <div
       className="relative select-none h-full w-full z-0"

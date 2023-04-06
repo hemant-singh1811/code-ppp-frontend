@@ -240,7 +240,7 @@ export default function TableComponents({
     // console.log("model updated", model)
   }, [model])
 
-  // console.log(table)
+  console.log(table)
   return (
     <TableContext.Provider
       value={{

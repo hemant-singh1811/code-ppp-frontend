@@ -18,6 +18,7 @@ export const initSocket = () => (dispatch) => {
 
   socket.on('connect', () => {
     dispatch(setSocket(socket));
+    console.log('connecting to server by socket', socket.id);
   });
 
   socket.on('disconnect', () => {

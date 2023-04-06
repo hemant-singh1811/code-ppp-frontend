@@ -14,6 +14,7 @@ export default function Chats() {
     try {
       socket.on("newconnect", (data) => {
         // console.log("data received: " + JSON.stringify(data));
+        console.log("socket connected", socket.id)
       });
 
       let room = () => {

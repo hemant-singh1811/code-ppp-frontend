@@ -141,7 +141,8 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                               </>
                             ) : cell.column.columnDef.field_type ===
                               "multipleSelects" ? (
-                              <MultiselectWithAddOption columnData={cell.column.columnDef} rowData={cell?.getValue()} />
+                              <></>
+                              // <MultiselectWithAddOption columnData={cell.column.columnDef} rowData={cell?.getValue()} />
                             ) : (
                               flexRender(
                                 cell.column.columnDef.cell,
