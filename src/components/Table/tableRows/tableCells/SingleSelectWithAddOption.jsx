@@ -26,7 +26,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
 
   function getRandomColor() {
     const color = Math.floor(Math.random() * 16777215).toString(16);
-    return "#" + "0".repeat(6 - color.length) + color;
+    return "#66" + "0".repeat(6 - color.length) + color;
   }
 
   function getContrastColor(hexColor) {
@@ -146,7 +146,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
             return (
               <div
                 key={i}
-                className={`rounded-3xl px-2 truncate w-fit`}
+                className={`rounded-3xl px-2 truncate w-fit bg-opacity-20`}
                 style={{ background: bgcolor, color: color }}
               >
                 {name}
