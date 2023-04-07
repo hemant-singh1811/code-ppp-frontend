@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useDetectOutsideClick } from "../../../utilities/customHooks/useDetectOutsideClick";
+import { useDetectOutsideClick } from "../../../../utilities/customHooks/useDetectOutsideClick";
 import { useSelector } from "react-redux";
-import { TableContext } from "../tableComponents/TableComponents";
+import { TableContext } from "../../tableComponents/TableComponents";
 
 function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   const { columns, setColumns } = useContext(TableContext);
@@ -95,7 +95,6 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
       console.log("socket response: " + JSON.stringify(response));
     });
 
-    console.log(newRowPart)
     socket.emit("updatedata", rowObj, (response) => {
       console.log("res : ", response);
     });
@@ -132,7 +131,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
 
   return (
     <div
-      className="relative select-none h-full w-full z-0"
+      className={`relative select-none h-full w-full z-0 flex items-center  border-transparent border rounded-sm ${SingleSelectToggle && "border-blue-500"}`}
       ref={singleSelectRef}
     >
       <div

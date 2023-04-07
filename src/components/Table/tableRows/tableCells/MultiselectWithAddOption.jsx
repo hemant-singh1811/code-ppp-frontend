@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useDetectOutsideClick } from "../../../utilities/customHooks/useDetectOutsideClick";
+import { useDetectOutsideClick } from "../../../../utilities/customHooks/useDetectOutsideClick";
 import { useSelector } from "react-redux";
-import { TableContext } from "../tableComponents/TableComponents";
+import { TableContext } from "../../tableComponents/TableComponents";
 
 function MultiselectWithAddOption({ columnData, rowData, cell }) {
     const { columns, setColumns } = useContext(TableContext);
@@ -123,7 +123,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
         };
         rowCopy[cell?.column.id] = rowData;
 
-        // console.log(rowObj)
+
         socket.emit("updatedata", rowObj, (response) => {
             console.log("res : ", response);
         });
@@ -141,7 +141,6 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
             updatedSelectedData = prev.filter((ele) => {
                 return ele !== name;
             })
-            console.log(updatedSelectedData)
             return updatedSelectedData;
         });
 
@@ -155,8 +154,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
             updated_data: newRowPart,
         };
         rowCopy[cell?.column.id] = rowData;
-        console.log(updatedSelectedData)
-        console.log(rowObj)
+
         socket.emit("updatedata", rowObj, (response) => {
             console.log("res : ", response);
         });
@@ -217,8 +215,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
                         autoFocus
                     />
                     <div>
-                        {options
-                            .filter(({ name }) => name?.includes(searchTerm))
+                        {options?.filter(({ name }) => name?.includes(searchTerm))
                             .map(({ color, name, bgcolor }, i) => {
                                 return (
                                     <div
@@ -238,7 +235,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
                                     </div>
                                 );
                             })}
-                        {options.filter(({ name }) => name?.includes(searchTerm)).length ===
+                        {options?.filter(({ name }) => name?.includes(searchTerm)).length ===
                             0 && (
                                 <div
                                     onClick={addNewOption}

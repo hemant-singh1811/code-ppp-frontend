@@ -9,7 +9,7 @@ import { useDetectOutsideClick } from "../../../utilities/customHooks/useDetectO
 import { TableContext } from "../tableComponents/TableComponents";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../../firebase";
-import SingleSelectWithAddOption from "../tableRows/SingleSelectWithAddOption";
+import SingleSelectWithAddOption from "../tableRows/tableCells/SingleSelectWithAddOption";
 
 export default function AddRowTable() {
   const location = useLocation();

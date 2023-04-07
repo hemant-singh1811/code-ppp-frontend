@@ -2,11 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { flexRender } from "@tanstack/react-table";
 // import { useVirtual } from "react-virtual";
 import { TableContext } from "../tableComponents/TableComponents";
-import ImageReader from "../tableUtilities/ImageReader";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import AwesomeImageReader from "../tableUtilities/AwesomeImageReader";
-import SingleSelectWithAddOption from "./SingleSelectWithAddOption";
-import MultiselectWithAddOption from "./MultiselectWithAddOption";
+import CellByFieldType from "./tableCells/CellByFieldType";
 
 export default function TableVirtualRows({ tableContainerRef, rows }) {
   const { activeRowHeight, activeNumberOfLines, table } =
@@ -128,24 +125,8 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                         ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
                           // Otherwise, just render the regular cell
                           <>
+                            <CellByFieldType cell={cell} field_type={cell.column.columnDef.field_type} />
                             {/* {console.log(cell.column.columnDef.field_type)} */}
-
-                            {cell.column.columnDef.field_type ===
-                              "multipleAttachments" ? (
-                              // <></>
-                              <ImageReader data={cell?.getValue()} />
-                            ) : cell.column.columnDef.field_type ===
-                              "singleSelect" ? (
-
-                              <SingleSelectWithAddOption columnData={cell.column.columnDef} cell={cell} rowData={cell?.getValue()} />
-
-                            ) : cell.column.columnDef.field_type ===
-                              "multipleSelects" ? (<MultiselectWithAddOption columnData={cell.column.columnDef} cell={cell} rowData={cell?.getValue()} />) : (
-                              flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext()
-                              )
-                            )}
                           </>
                         )}
                       </div>

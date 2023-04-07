@@ -147,13 +147,13 @@ export default function TableComponents({
       height: 30,
       numberOfLines: 1,
     },
-    {
-      name: "medium",
-      isActive: false,
-      icon: "density_medium",
-      height: 50,
-      numberOfLines: 2,
-    },
+    // {
+    //   name: "medium",
+    //   isActive: false,
+    //   icon: "density_medium",
+    //   height: 50,
+    //   numberOfLines: 2,
+    // },
     // {
     //   name: "large",
     //   isActive: false,
