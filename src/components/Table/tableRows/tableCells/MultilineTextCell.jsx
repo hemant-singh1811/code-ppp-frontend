@@ -15,7 +15,9 @@ export default function MultilineTextCell({ cell }) {
     function handleBlur(event) {
         setIsEditMode(false);
 
-        // setValue(event.target.innerText);
+        let div = document.getElementById("MultilineTextCell");
+
+        div.scrollTop = 0;
 
         if (cell.getValue() !== event.target.innerText) {
 
@@ -39,12 +41,12 @@ export default function MultilineTextCell({ cell }) {
 
 
     return <div
-
+        id='MultilineTextCell'
         autoFocus={true}
         contentEditable="plaintext-only"
         role='textbox'
         aria-multiline="true"
-        // suppressContentEditableWarning={true}
+        suppressContentEditableWarning={true}
         onClick={handleDoubleClick}
         onBlur={handleBlur}
         tabIndex={0}
