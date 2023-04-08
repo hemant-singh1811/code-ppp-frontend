@@ -27,7 +27,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
 
     function getRandomColor() {
         const color = Math.floor(Math.random() * 16777215).toString(16);
-        return "#" + "0".repeat(6 - color.length) + color;
+        return "#66" + "0".repeat(6 - color.length) + color;
     }
 
     function getContrastColor(hexColor) {
@@ -166,7 +166,8 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
 
     return (
         <div
-            className="relative select-none h-full w-full z-0"
+            className={`relative select-none h-full w-full z-0 flex items-center  border-transparent border rounded-sm ${SingleSelectToggle && "border-blue-500"}`}
+            // className="relative select-none h-full w-full z-0"
             ref={singleSelectRef}
         >
             <div

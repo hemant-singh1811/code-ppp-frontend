@@ -4,7 +4,7 @@ import { TableContext } from '../../tableComponents/TableComponents';
 
 export default function SingleLineTextCell({ cell }) {
     const socket = useSelector((state) => state.socketWebData.socket);
-    const [value, setValue] = useState(cell?.getValue());
+    const [value, setValue] = useState(cell?.getValue() || '');
     const [isEditMode, setIsEditMode] = useState(false);
     const { table } = useContext(TableContext);
 

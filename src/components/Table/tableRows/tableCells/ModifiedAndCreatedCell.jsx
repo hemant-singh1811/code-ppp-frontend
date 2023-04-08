@@ -15,5 +15,8 @@ export default function ModifiedAndCreatedCell({ cell, type }) {
       break;
   }
 
-  return <div>{type}</div>;
+  return <div>
+    {/* {JSON.stringify(cell?.getValue())} */}
+    {type}
+  </div>;
 }

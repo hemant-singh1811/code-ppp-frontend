@@ -34,6 +34,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
 
   // console.log(activeRowHeight)
 
+  // let totalSize = undefined
   return (
     <>
       <div
@@ -55,6 +56,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
         >
           {rowVirtualizer.getVirtualItems().map((virtualRow, i) => {
             const row = rows[virtualRow.index];
+
             return (
               <React.Fragment key={virtualRow.index}>
                 {/* {columnVirtualizer.getVirtualItems().map((virtualColumn) => {
@@ -69,8 +71,8 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                     width: `${columns[virtualRow.index]}px`,
                     height: `${activeRowHeight}px`,
                     zIndex: rowVirtualizer.getVirtualItems().length - i,
+                    transform: `translateY(${virtualRow.start}px)`,
                     // height: `${rows[virtualRow.index]}px`,
-                    transform: ` translateY(${virtualRow.start}px)`,
                   }}
                 >
                   {row.getVisibleCells().map((cell, index) => {
@@ -132,13 +134,32 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                       </div>
                     );
                   })}
+
+
                 </div>
-                {/* )
-                })
-                } */}
               </React.Fragment>
             );
           })}
+          <div className="w-full border flex items-center"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              // width: `${columns[virtualRow.index]}px`,
+              height: `${activeRowHeight}px`,
+              // zIndex: rowVirtualizer.getVirtualItems().length - i,
+              transform: `translateY(${rowVirtualizer.getTotalSize()}px)`,
+              // height: `${rows[virtualRow.index]}px`,
+            }}>
+            <div className="hover:bg-gray-100 px-1 cursor-pointer h-full item-center flex"
+              onClick={() => {
+                console.log(table._features[1])
+              }}>
+              <span className="material-symbols-rounded font-thin ">
+                add
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </>

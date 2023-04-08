@@ -5,10 +5,10 @@ import { useEffect } from "react";
 
 export default function MultilineTextCell({ cell }) {
   const socket = useSelector((state) => state.socketWebData.socket);
-  const [value, setValue] = useState(cell?.getValue());
+  const [value, setValue] = useState(cell?.getValue() || '');
   const [isEditMode, setIsEditMode] = useState(false);
   const { table } = useContext(TableContext);
-  //   let div = document.getElementById("MultilineTextCell");
+
 
   const multiLineTextRef = useRef(null);
 
@@ -21,7 +21,7 @@ export default function MultilineTextCell({ cell }) {
 
     multiLineTextRef.current.scrollTop = 0;
     multiLineTextRef.current.innerHTML = event.target.innerText;
-    setValue(event.target.innerText);
+    // setValue(event.target.innerText);
 
     if (cell.getValue() !== event.target.innerText) {
       table.options.meta?.updateData(
@@ -46,7 +46,7 @@ export default function MultilineTextCell({ cell }) {
     }
   }
   useEffect(() => {
-    multiLineTextRef.current.innerHTML = cell?.getValue();
+    multiLineTextRef.current.innerHTML = cell?.getValue() || '';
   }, []);
 
   return (
@@ -60,11 +60,10 @@ export default function MultilineTextCell({ cell }) {
       onClick={handleDoubleClick}
       onBlur={handleBlur}
       tabIndex={0}
-      className={`${
-        isEditMode
-          ? "w-full px-2 p-1 h-[120px] bg-white z-[1000] relative text-left overflow-auto border border-black"
-          : "text-left w-full h-full truncate px-2 p-1"
-      } select-none`}
+      className={`${isEditMode
+        ? "w-full px-2 p-1 h-[120px] bg-white z-[1000] relative text-left overflow-auto border border-black"
+        : "text-left w-full h-full truncate px-2 p-1"
+        } select-none`}
     ></div>
   );
 }

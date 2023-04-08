@@ -88,7 +88,7 @@ export default function CellByFieldType({ field_type, cell }) {
       return <ButtonCell cell={cell} />;
 
     default:
-      console.log(field_type);
+      // console.log(field_type);
       return flexRender(cell.column.columnDef.cell, cell.getContext());
   }
 }

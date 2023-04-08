@@ -9,7 +9,7 @@ export default function TableColumnAdd({ headers }) {
   const addColumnRef = React.useRef();
   // Call hook passing in the ref and a function to call on outside click
 
-  const { columns, setColumns } = useContext(TableContext);
+  const { columns, setColumns, table } = useContext(TableContext);
 
   useDetectOutsideClick(addColumnRef, () => setAddColumnToggle(false));
   const { selectedTableId } = useSelector(state => state.globalState)
@@ -123,6 +123,8 @@ export default function TableColumnAdd({ headers }) {
   for (let i = 0; i < columns?.length; i++) {
     existingColumns.set(columns[i]?.header.toLocaleLowerCase(), true);
   }
+
+  console.log(table)
 
   useEffect(() => {
     if (responseCreateColumn.data) {
