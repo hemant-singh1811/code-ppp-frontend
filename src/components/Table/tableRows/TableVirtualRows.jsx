@@ -4,6 +4,7 @@ import { flexRender } from "@tanstack/react-table";
 import { TableContext } from "../tableComponents/TableComponents";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import CellByFieldType from "./tableCells/CellByFieldType";
+import CreateRow from "./CreateRow";
 
 export default function TableVirtualRows({ tableContainerRef, rows }) {
   const { activeRowHeight, activeNumberOfLines, table } =
@@ -39,7 +40,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
     <>
       <div
         ref={parentRef}
-        className="list text-black scrollbar-hidden h-[calc(100vh_-_72px)] overflow-x-visible"
+        className="list text-black scrollbar-hidden h-[calc(100vh_-_72px)] overflow-x-visible z-[1] relative"
         // style={{ overflowY: 'auto' }}//do not remove overflow auto if you remove it table virtual row will break
         style={{
           overflowX: "auto",
@@ -87,10 +88,10 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                             background: cell.getIsGrouped()
                               ? "#0aff0082"
                               : cell.getIsAggregated()
-                                ? "#ffa50078"
-                                : cell.getIsPlaceholder()
-                                  ? "#ff000042"
-                                  : "",
+                              ? "#ffa50078"
+                              : cell.getIsPlaceholder()
+                              ? "#ff000042"
+                              : "",
                           },
                         }}
                       >
@@ -121,26 +122,28 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                           // renderer for cell
                           flexRender(
                             cell.column.columnDef.aggregatedCell ??
-                            cell.column.columnDef.cell,
+                              cell.column.columnDef.cell,
                             cell.getContext()
                           )
                         ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
                           // Otherwise, just render the regular cell
                           <>
-                            <CellByFieldType cell={cell} field_type={cell.column.columnDef.field_type} />
+                            <CellByFieldType
+                              cell={cell}
+                              field_type={cell.column.columnDef.field_type}
+                            />
                             {/* {console.log(cell.column.columnDef.field_type)} */}
                           </>
                         )}
                       </div>
                     );
                   })}
-
-
                 </div>
               </React.Fragment>
             );
           })}
-          <div className="w-full border flex items-center"
+          <div
+            className="w-full border flex items-center"
             style={{
               position: "absolute",
               top: 0,
@@ -150,15 +153,9 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
               // zIndex: rowVirtualizer.getVirtualItems().length - i,
               transform: `translateY(${rowVirtualizer.getTotalSize()}px)`,
               // height: `${rows[virtualRow.index]}px`,
-            }}>
-            <div className="hover:bg-gray-100 px-1 cursor-pointer h-full item-center flex"
-              onClick={() => {
-                console.log(table._features[1])
-              }}>
-              <span className="material-symbols-rounded font-thin ">
-                add
-              </span>
-            </div>
+            }}
+          >
+            <CreateRow />
           </div>
         </div>
       </div>

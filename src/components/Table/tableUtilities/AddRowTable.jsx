@@ -33,9 +33,9 @@ export default function AddRowTable() {
 
   const [fileUploadHandle, setFileUploadHandle] = useState();
 
-  const [submitButton, setSubmitButton] = useState(false)
+  const [submitButton, setSubmitButton] = useState(false);
 
-  const { selectedTableId } = useSelector(state => state.globalState)
+  const { selectedTableId } = useSelector((state) => state.globalState);
 
   const tableNamesWithId = new Map();
   const fieldsMapTempTesting = new Set();
@@ -70,15 +70,13 @@ export default function AddRowTable() {
     file_name = file_name.slice(0, file_name.length - fileType.length - 1);
     file_name = `${file_name}.${fileType}`;
     reader.readAsDataURL(file);
-    setSubmitButton(true)
-
+    setSubmitButton(true);
 
     reader.addEventListener("load", async (e) => {
       // let handleUploading = async () => {
       const storageRef = ref(storage, file_name);
       // 'file' comes from the Blob or File API
       try {
-
         // const uploadTask = await uploadBytes(storageRef, file);
         const uploadTask = uploadBytesResumable(storageRef, file);
         // Register three observers:
@@ -90,14 +88,17 @@ export default function AddRowTable() {
           (snapshot) => {
             // Observe state change events such as progress, pause, and resume
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-            const progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(0);
+            const progress = (
+              (snapshot.bytesTransferred / snapshot.totalBytes) *
+              100
+            ).toFixed(0);
             // console.log('Upload is ' + progress + '% done');
-            setUploadProgress('Upload is ' + progress + '% done')
+            setUploadProgress("Upload is " + progress + "% done");
             switch (snapshot.state) {
-              case 'paused':
+              case "paused":
                 // console.log('Upload is paused');
                 break;
-              case 'running':
+              case "running":
                 // console.log('Upload is running');
                 break;
             }
@@ -110,35 +111,37 @@ export default function AddRowTable() {
             // For instance, get the download URL: https://firebasestorage.googleapis.com/...
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
               // console.log('File available at', downloadURL);
-              console.log(downloadURL)
-              setSubmitButton(false)
+              console.log(downloadURL);
+              setSubmitButton(false);
               setFileUploadHandle({
-                [fieldName]: [{
-                  filename: file.name,
-                  size: file.size,
-                  type: file.type,
-                  thumbnails: {
-                    small: {
-                      width: 25,
-                      height: 36,
-                      url: downloadURL,
+                [fieldName]: [
+                  {
+                    filename: file.name,
+                    size: file.size,
+                    type: file.type,
+                    thumbnails: {
+                      small: {
+                        width: 25,
+                        height: 36,
+                        url: downloadURL,
+                      },
+                      large: {
+                        width: 512,
+                        height: 725,
+                        url: downloadURL,
+                      },
+                      full: {
+                        width: 3000,
+                        height: 3000,
+                        url: downloadURL,
+                      },
                     },
-                    large: {
-                      width: 512,
-                      height: 725,
-                      url: downloadURL,
-                    },
-                    full: {
-                      width: 3000,
-                      height: 3000,
-                      url: downloadURL,
-                    },
+                    url: downloadURL,
+                    width: 3000,
+                    height: 4676,
                   },
-                  url: downloadURL,
-                  width: 3000,
-                  height: 4676,
-                }]
-              })
+                ],
+              });
             });
           }
         );
@@ -182,10 +185,9 @@ export default function AddRowTable() {
     if (responseCreateRow.data) {
       setData([...data, responseCreateRow.data?.data]);
       setOpenAddRowToggle(false);
-      console.log('response from server', responseCreateRow.data)
+      console.log("response from server", responseCreateRow.data);
     }
   }, [responseCreateRow.isSuccess]);
-
 
   const {
     register,
@@ -196,7 +198,7 @@ export default function AddRowTable() {
   const onSubmit = (data) => {
     // console.log(data)
     // console.log(fileUploadHandle)
-    const updatedData = { ...data, ...fileUploadHandle }
+    const updatedData = { ...data, ...fileUploadHandle };
     // console.log(updatedData)
     console.log("sending data to server", updatedData);
     addRowApi({
@@ -210,7 +212,7 @@ export default function AddRowTable() {
   return (
     <div
       ref={addRowToggle}
-      className="absolute  flex items-center w-full bottom-0 rounded-md text-[#4d4d4d]  text-lg "
+      className="absolute z-[1] flex items-center w-full bottom-0 rounded-md text-[#4d4d4d]  text-lg "
     >
       <div
         onClick={() => {
@@ -264,7 +266,7 @@ export default function AddRowTable() {
                           />
                         </div>
                       </div>
-                    )
+                    );
                   case "multilineText":
                     return (
                       <div key={i} className="">
@@ -275,11 +277,11 @@ export default function AddRowTable() {
                             {...register(data?.id)}
                             placeholder={data?.id}
                             className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
-                          // name="" id="" rows="3"
+                            // name="" id="" rows="3"
                           />
                         </div>
                       </div>
-                    )
+                    );
                   case "phoneNumber":
                     return (
                       <div key={i} className="">
@@ -288,12 +290,12 @@ export default function AddRowTable() {
                           <input
                             {...register(data?.id)}
                             placeholder={data?.id}
-                            type='number'
+                            type="number"
                             className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
                           />
                         </div>
                       </div>
-                    )
+                    );
                   case "date":
                     return (
                       <div key={i} className="">
@@ -302,12 +304,12 @@ export default function AddRowTable() {
                           <input
                             {...register(data?.id)}
                             placeholder={data?.id}
-                            type='date'
+                            type="date"
                             className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
                           />
                         </div>
                       </div>
-                    )
+                    );
                   case "multipleAttachments":
                     return (
                       <div key={i} className="">
@@ -324,19 +326,19 @@ export default function AddRowTable() {
                           <input
                             // {...register(data?.id)}
                             accept="image/*"
-                            type='file'
-                            id='file'
+                            type="file"
+                            id="file"
                             onChange={(e) => {
                               if (e.target.files[0]) uploader(e, data?.id);
                             }}
                             className="text-black w-full p-1.5 py-[2.5px] bg-white px-2 rounded-md shadow-md focus:outline-blue-500"
                           />
                           <div className="m-1">
-                            {uploadProgress === 0 ? '' : uploadProgress}
+                            {uploadProgress === 0 ? "" : uploadProgress}
                           </div>
                         </div>
                       </div>
-                    )
+                    );
                   case "url":
                     return (
                       <div key={i} className="">
@@ -350,13 +352,13 @@ export default function AddRowTable() {
                           />
                         </div>
                       </div>
-                    )
+                    );
                   case "singleSelect":
                     return (
                       <div key={i} className="">
                         <SingleSelectWithAddOption />
                       </div>
-                    )
+                    );
 
                   default:
                     // console.log(data)
@@ -371,10 +373,8 @@ export default function AddRowTable() {
                           />
                         </div>
                       </div>
-                    )
+                    );
                 }
-
-
               })}
             </div>
             <div className="flex gap-2 justify-between text-white text-xl mt-8">
@@ -393,9 +393,8 @@ export default function AddRowTable() {
               </button>
             </div>
           </form>
-        </div >
-      )
-      }
-    </div >
+        </div>
+      )}
+    </div>
   );
 }

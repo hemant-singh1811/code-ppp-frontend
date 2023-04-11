@@ -16,7 +16,7 @@ import ButtonCell from "./ButtonCell";
 
 export default function CellByFieldType({ field_type, cell }) {
   switch (field_type) {
-    case "singleSelect":
+    case "singleSelect": //array
       return (
         <SingleSelectWithAddOption
           columnData={cell.column.columnDef}
@@ -25,7 +25,7 @@ export default function CellByFieldType({ field_type, cell }) {
         />
       );
 
-    case "multipleSelects":
+    case "multipleSelects": //array
       return (
         <MultiselectWithAddOption
           columnData={cell.column.columnDef}
@@ -34,33 +34,35 @@ export default function CellByFieldType({ field_type, cell }) {
         />
       );
 
-    case "phoneNumber":
+    case "phoneNumber": //string
       return <SingleLineTextCell cell={cell} />;
       return <PhoneNumberTableCell cell={cell} />;
 
-    case "email":
+    case "email": //string
       return <SingleLineTextCell cell={cell} />;
       return <EmailTableCell cell={cell} />;
 
-    case "url":
+    case "url": //string
       return <SingleLineTextCell cell={cell} />;
       return <UrlTableCell cell={cell} />;
 
-    case "singleLineText":
+    // single line text cell and multi line text cell causing problems
+
+    case "singleLineText": //string
       return <SingleLineTextCell cell={cell} />;
 
-    case "multilineText":
+    case "multilineText": //string
       return <MultilineTextCell cell={cell} />;
 
-    case "autoNumber":
+    case "autoNumber": //string
       return <AutoNumberCell cell={cell} />;
 
     // pending components
 
-    case "multipleAttachments":
+    case "multipleAttachments": //array
       return <ImageReader data={cell?.getValue()} />;
 
-    case "checkbox":
+    case "checkbox": //boolean
       return (
         <CheckBox
           columnData={cell.column.columnDef}
@@ -69,26 +71,30 @@ export default function CellByFieldType({ field_type, cell }) {
         />
       );
 
-    case "date":
+    case "date": //string
       return <DateTableCell cell={cell} />;
 
-    case "lastModifiedTime":
+    case "lastModifiedTime": //string
       return <ModifiedAndCreatedCell type={"lastModifiedTime"} cell={cell} />;
 
-    case "lastModifiedBy":
+    case "lastModifiedBy": //string
       return <ModifiedAndCreatedCell type={"lastModifiedBy"} cell={cell} />;
 
-    case "createdTime":
+    case "createdTime": //string
       return <ModifiedAndCreatedCell type={"createdTime"} cell={cell} />;
 
-    case "createdBy":
+    case "createdBy": //string
       return <ModifiedAndCreatedCell type={"createdBy"} cell={cell} />;
 
-    case "button":
+    case "button": //string
       return <ButtonCell cell={cell} />;
 
     default:
       // console.log(field_type);
-      return flexRender(cell.column.columnDef.cell, cell.getContext());
+      return (
+        <div className="w-full h-full overflow-hidden">
+          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+        </div>
+      );
   }
 }

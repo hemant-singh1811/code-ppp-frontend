@@ -49,8 +49,6 @@ const DraggableColumnHeader = ({ header, table, index }) => {
 
   return (
     <div
-      // onDragCapture={handleMouseDown}
-      // onDropCapture={handleMouseUp}
       className={`th  bg-[#f5f5f5] relative ${index === 0 && "fixed-column "}`}
       {...{
         key: header.id,
@@ -84,8 +82,9 @@ const DraggableColumnHeader = ({ header, table, index }) => {
         {...{
           onMouseDown: header.getResizeHandler(),
           onTouchStart: header.getResizeHandler(),
-          className: `resizerHeader ${header.column.getIsResizing() ? "isResizingHeader" : ""
-            }`,
+          className: `resizerHeader ${
+            header.column.getIsResizing() ? "isResizingHeader" : ""
+          }`,
         }}
       />
     </div>
@@ -147,12 +146,12 @@ export default function CustomTable() {
           ref={tableContainerRef}
           {...{
             style: {
-              width: table.getTotalSize(),
+              width: table.getTotalSize() + 120,
             },
           }}
           className={`divTable scrollbar-hidden`}
         >
-          <div className="thead bg-[#f5f5f5] text-[#333333] relative z-10" >
+          <div className="thead bg-[#f5f5f5] text-[#333333] relative z-[2]">
             {table.getHeaderGroups().map((headerGroup) => (
               <div key={headerGroup.id} className="tr">
                 {headerGroup.headers.map((header, index) => (

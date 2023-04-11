@@ -16,6 +16,8 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     newOptions = columnData?.options;
   }
 
+  // console.log(rowData);
+
   const { selectedTableId } = useSelector((state) => state.globalState);
   const [SingleSelectToggle, setSingleSelectToggle] = React.useState(false);
   const [selectedOption, setSelectedOption] = React.useState(rowData);
@@ -75,6 +77,8 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
       { name: searchTerm, bgcolor: bgColor, color: textColor },
     ]);
 
+    Object.isFrozen(rowData);
+
     rowData = [searchTerm];
     setSelectedOption([searchTerm]);
     setSearchTerm("");
@@ -109,7 +113,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     setSelectedOption([name]);
     let updatedRowKey = cell?.column.id;
     let newRowPart = { [updatedRowKey]: [name] };
-    console.log(newRowPart)
+
     let rowObj = {
       base_id: "",
       table_id: location.pathname.split("/")[2],
@@ -131,7 +135,9 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
 
   return (
     <div
-      className={`relative select-none h-full w-full z-0 flex items-center  border-transparent border rounded-sm ${SingleSelectToggle && "border-blue-500"}`}
+      className={`relative select-none h-full w-full z-0 flex items-center  border-transparent border rounded-sm ${
+        SingleSelectToggle && "border-blue-500"
+      }`}
       ref={singleSelectRef}
     >
       <div
@@ -198,23 +204,23 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
               })}
             {options.filter(({ name }) => name?.includes(searchTerm)).length ===
               0 && (
-                <div
-                  onClick={addNewOption}
-                  className="p-2 hover:bg-blue-100 flex truncate"
-                >
-                  <div className="truncate flex">
-                    Add New Option:
-                    {searchTerm && (
-                      <span
-                        style={{ background: bgColor, color: textColor }}
-                        className={`rounded-xl px-2 ml-1 truncate`}
-                      >
-                        {searchTerm}
-                      </span>
-                    )}
-                  </div>
+              <div
+                onClick={addNewOption}
+                className="p-2 hover:bg-blue-100 flex truncate"
+              >
+                <div className="truncate flex">
+                  Add New Option:
+                  {searchTerm && (
+                    <span
+                      style={{ background: bgColor, color: textColor }}
+                      className={`rounded-xl px-2 ml-1 truncate`}
+                    >
+                      {searchTerm}
+                    </span>
+                  )}
                 </div>
-              )}
+              </div>
+            )}
           </div>
         </div>
       )}

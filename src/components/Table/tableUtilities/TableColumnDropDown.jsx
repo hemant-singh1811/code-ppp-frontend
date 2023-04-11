@@ -1,61 +1,76 @@
-import React, { useContext, useEffect } from 'react'
-import { useDeleteTableColumnMutation } from '../../../store/services/alphaTruckingApi';
-import { TableContext } from '../tableComponents/TableComponents';
+import React, { useContext, useEffect } from "react";
+import { useDeleteTableColumnMutation } from "../../../store/services/alphaTruckingApi";
+import { TableContext } from "../tableComponents/TableComponents";
+import { Popover, Transition } from "@headlessui/react";
+import { Fragment } from "react";
 
 export default function TableColumnDropDown({ columnDropdownRef, columnDef }) {
-    // Create a ref that we add to the element for which we want to detect outside clicks
+  const { columns, setColumns } = useContext(TableContext);
 
-    // Call hook passing in the ref and a function to call on outside click
-    // const location = useLocation();
-    const { columns, setColumns } = useContext(TableContext);
+  const [addDeleteApi, responseDeleteColumn] = useDeleteTableColumnMutation();
 
-    const [addDeleteApi, responseDeleteColumn] = useDeleteTableColumnMutation()
-    // const [addDeleteApitest] = useDeleteTableColumnMutation()
+  async function deleteColumn() {
+    addDeleteApi({
+      tableId: location.pathname.split("/")[2],
+      data: {
+        field_id: columnDef?.field_id,
+      },
+    });
+  }
 
-    // console.log(addDeleteApitest)
-    const [columnDropdownToggle, setColumnDropdownToggle] = React.useState(false);
-
-    async function deleteColumn() {
-        setColumnDropdownToggle(!columnDropdownToggle);
-        addDeleteApi({
-            tableId: location.pathname.split('/')[2],
-            data: {
-                field_id: columnDef?.field_id
-            }
-        }
-        )
+  useEffect(() => {
+    if (responseDeleteColumn.data) {
+      console.log(responseDeleteColumn.data);
+      setColumns((prev) =>
+        prev.filter((item) => item.field_id !== columnDef?.field_id)
+      );
     }
+  }, [responseDeleteColumn.isSuccess]);
 
-    useEffect(() => {
-        if (responseDeleteColumn.data) {
-            setColumns((prev) => prev.filter((item) => item.field_id !== columnDef?.field_id));
-        }
-    }, [responseDeleteColumn.isSuccess])
-
-    return (
-        <div className=" " ref={columnDropdownRef}>
+  return (
+    <Popover className="relative">
+      {({ open, close }) => (
+        <>
+          <Popover.Button className="border-none outline-none">
             <div className="text-gray-400 -mr-2 cursor-pointer hover:text-blue-800">
-                <span className="material-symbols-rounded font-light" onClick={() =>
-                    setColumnDropdownToggle(!columnDropdownToggle)}>
-                    expand_more
-                </span>
+              <span className="material-symbols-rounded font-light">
+                expand_more
+              </span>
             </div>
-            {columnDropdownToggle && (
-                <div className="text-black absolute top-[30px] z-20 w-56 rounded-md left-0 p-4 border-gray-400 border-[.5px] shadow-md flex flex-col bg-white">
-                    {/* <div className='hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center '>
-                        <span className="material-symbols-rounded text-lg font-light mr-4">
-                            edit
-                        </span>
-                        Edit Field
-                    </div> */}
-                    <div className='hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center ' onClick={() => deleteColumn()}>
-                        <span className="material-symbols-rounded text-lg font-light mr-4">
-                            delete
-                        </span>
-                        Delete Field
-                    </div>
-                </div>
-            )}
-        </div>
-    )
+          </Popover.Button>
+          <Transition
+            className="bg-white"
+            as={Fragment}
+            enter="transition ease-out duration-200"
+            enterFrom="opacity-0 translate-y-1"
+            enterTo="opacity-100 translate-y-0"
+            leave="transition ease-in duration-150"
+            leaveFrom="opacity-100 translate-y-0"
+            leaveTo="opacity-0 translate-y-1"
+          >
+            <Popover.Panel className="text-black absolute top-[28px] z-20 w-56 rounded-md left-0 p-2 border-gray-400 border-[.5px] shadow-md flex flex-col bg-white">
+              {/* <div className="hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center ">
+                <span className="material-symbols-rounded text-lg font-light mr-4">
+                  edit
+                </span>
+                Edit Field
+              </div> */}
+              <div
+                className="hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center "
+                onClick={() => {
+                  deleteColumn();
+                  close();
+                }}
+              >
+                <span className="material-symbols-rounded text-lg font-light mr-4">
+                  delete
+                </span>
+                Delete Field
+              </div>
+            </Popover.Panel>
+          </Transition>
+        </>
+      )}
+    </Popover>
+  );
 }

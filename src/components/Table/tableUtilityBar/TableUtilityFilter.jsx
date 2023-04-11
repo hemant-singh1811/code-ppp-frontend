@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDetectOutsideClick } from "../../../utilities/customHooks/useDetectOutsideClick";
 import CustomFilterInput from "./CustomFilterInput";
+import { Popover, Transition } from "@headlessui/react";
+import { Fragment } from "react";
 
 export default function TableUtilityFilter({ table }) {
   const [filterConditions, setFilterConditions] = useState([]);
@@ -52,56 +54,63 @@ export default function TableUtilityFilter({ table }) {
     table.setColumnFilters(updatedFilters);
   }, [filterConditions]);
 
-  // console.log(object)
-
   return (
-    <div
-      ref={filterRef}
+    <Popover
       className={`flex items-center hover:bg-black hover:bg-opacity-10 rounded-md text-[#4d4d4d] p-0.5 px-2 text-lg cursor-pointer relative ${
         filterConditions.length !== 0 && "bg-[#e1d5f9]"
       }`}
     >
-      <div
-        className="flex items-center font-medium"
-        onClick={() => setFilterToggle(!filterToggle)}
-      >
-        <span className="material-symbols-rounded text-lg pr-1">
-          filter_list
-        </span>
-        Filter
-      </div>
-      {filterToggle && (
-        <div className="absolute top-10 left-0 z-50 bg-white p-2 rounded-md w-[600px] max-h-96 overflow-y-scroll border-[#c8c8c8] border-2">
-          Filter:
-          <div className="h-[.5px] mb-2 mt-1 w-full bg-white" />
-          <div className="max-h-[700px] overflow-scroll scrollbar-hidden">
-            {filterConditions?.length < 1 ? (
-              <div className="text-gray-400 m-4">
-                No filter conditions are applied to this view
-              </div>
-            ) : (
-              filterConditions.map((ele, i) => (
-                <CustomFilterInput
-                  key={i}
-                  table={table}
-                  type={ele.type}
-                  operator={ele.operator}
-                  value={ele.value}
-                  id={ele.id}
-                  removeCondition={removeCondition}
-                  setFilterConditions={setFilterConditions}
-                />
-              ))
-            )}
-          </div>
-          <div
-            className="text-blue-500 hover:text-blue-700 m-2 mb-0 inline-block"
-            onClick={() => addConditions()}
+      {({ open, close }) => (
+        <>
+          <Popover.Button className="flex items-center font-medium outline-none">
+            <span className="material-symbols-rounded text-lg pr-1">
+              filter_list
+            </span>
+            Filter
+          </Popover.Button>
+          <Transition
+            className="bg-white"
+            as={Fragment}
+            enter="transition ease-out duration-200"
+            enterFrom="opacity-0 translate-y-1"
+            enterTo="opacity-100 translate-y-0"
+            leave="transition ease-in duration-150"
+            leaveFrom="opacity-100 translate-y-0"
+            leaveTo="opacity-0 translate-y-1"
           >
-            + Add Condition
-          </div>
-        </div>
+            <Popover.Panel className="absolute top-10 left-0 z-[3] bg-white p-2 rounded-md w-[600px] max-h-96 overflow-y-scroll border-[#c8c8c8] border-2">
+              Filter:
+              <div className="h-[.5px] mb-2 mt-1 w-full bg-white" />
+              <div className="max-h-[700px] overflow-scroll scrollbar-hidden">
+                {filterConditions?.length < 1 ? (
+                  <div className="text-gray-400 m-4">
+                    No filter conditions are applied to this view
+                  </div>
+                ) : (
+                  filterConditions.map((ele, i) => (
+                    <CustomFilterInput
+                      key={i}
+                      table={table}
+                      type={ele.type}
+                      operator={ele.operator}
+                      value={ele.value}
+                      id={ele.id}
+                      removeCondition={removeCondition}
+                      setFilterConditions={setFilterConditions}
+                    />
+                  ))
+                )}
+              </div>
+              <div
+                className="text-blue-500 hover:text-blue-700 m-2 mb-0 inline-block"
+                onClick={() => addConditions()}
+              >
+                + Add Condition
+              </div>
+            </Popover.Panel>
+          </Transition>
+        </>
       )}
-    </div>
+    </Popover>
   );
 }

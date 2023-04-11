@@ -48,11 +48,9 @@ export default function Table({ tableData, tableModel }) {
       accessorKey: data?.field_name,
       id: data?.field_name,
       header: data?.field_name,
-      ...data
+      ...data,
     };
   });
-
-
 
   // console.log(defaultColumns)
 
@@ -100,7 +98,7 @@ export default function Table({ tableData, tableModel }) {
           defaultColumns={defaultColumns}
           data={tableDataModified}
           setData={setTableDataModified}
-        // tableConditions={model}
+          // tableConditions={model}
         />
       </div>
     </DndProvider>
