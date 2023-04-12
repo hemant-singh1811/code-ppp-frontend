@@ -13,18 +13,10 @@ export default function TableColumnAdd({ headers }) {
   const [descriptionToggle, setDescriptionToggle] = React.useState(false);
   const [fieldNameInput, setFieldNameInput] = React.useState("");
   const [fieldSearchInput, setFieldSearchInput] = React.useState("");
-  const [selectedFieldTypeLinkedRecord, setSelectedFieldTypeLinkedRecord] =
-    React.useState(undefined);
-  const [fieldSearchInputLinkedRecord, setFieldSearchInputLinkedRecord] =
-    React.useState("");
-  const { bases } = useSelector((state) => state.bases);
-  const { selectedBaseId } = useSelector((state) => state.globalState);
   const [isExistFieldNameInput, setIsExistFieldNameInput] =
     React.useState(false);
   const [fieldDescriptionInput, setFieldDescriptionInput] = React.useState("");
   const [selectedFieldType, setSelectedFieldType] = React.useState(undefined);
-
-
 
   const existingColumns = new Map();
 
@@ -33,7 +25,6 @@ export default function TableColumnAdd({ headers }) {
   const fieldsMap = new Map();
 
   const selectedOptionDescription = {
-    "Link to another record": "Link to records in the Company table.",
     "Single line text":
       "Enter text, or prefill each new cell with a default value.",
     "Long text": "Enter multiple lines of text.",
@@ -164,8 +155,9 @@ export default function TableColumnAdd({ headers }) {
             leaveTo="opacity-0 translate-y-1"
           >
             <Popover.Panel
-              className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4 border-gray-400 border-2 flex flex-col ${headers.length < 3 ? "left-0" : "right-0"
-                }`}
+              className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4 border-gray-400 border-2 flex flex-col ${
+                headers.length < 3 ? "left-0" : "right-0"
+              }`}
             >
               <div className="h-full w-full ">
                 <input
@@ -182,82 +174,12 @@ export default function TableColumnAdd({ headers }) {
                 />
 
                 {fieldSearchInput === "Link to another record" && (
-                  <div className=" mt-2 border-[#eaebed] border-2 rounded-md  overflow-hidden">
-                    <div className="flex justify-center items-center">
-                      <div
-                        onClick={() => {
-                          setFieldSearchInput("");
-                          setFieldNameInput("")
-                          setSelectedFieldTypeLinkedRecord(undefined)
-                          setFieldSearchInputLinkedRecord("")
-                          setIsExistFieldNameInput(false)
-                          setSelectedFieldType(undefined)
-                        }}
-                        className="flex items-center px-2 rounded-lg overflow-hidden cursor-pointer opacity-80 hover:opacity-100  "
-                      >
-                        <svg
-                          className="font-thin fill-blue-500 "
-                          xmlns="http://www.w3.org/2000/svg"
-                          height="20"
-                          viewBox="0 96 960 960"
-                          width="20"
-                        >
-                          <path d="M372 948 21 597q-5-5-7-10t-2-11q0-6 2-11t7-10l351-351q11-11 28-11t28 11q12 12 12 28.5T428 261L113 576l315 315q12 12 11.5 28.5T428 947q-12 12-28.5 12T372 948Z" />
-                        </svg>
-                        back
-                      </div>
-                      <input
-                        type="search"
-                        name=""
-                        id=""
-                        className="bg-[#f0f1f3] w-full px-3 p-1.5  outline-none focus:bg-blue-50 focus:border-transparent"
-                        placeholder="Find a field type"
-                        value={fieldSearchInputLinkedRecord}
-                        onChange={(e) => {
-                          setFieldSearchInputLinkedRecord(e.target.value);
-                        }}
-                        onClick={() => {
-                          setSelectedFieldTypeLinkedRecord(undefined);
-                          setFieldSearchInputLinkedRecord("");
-                        }}
-                      />
-                    </div>
-
-                    {!selectedFieldTypeLinkedRecord && (
-                      <div className="h-4/5 overflow-scroll p-1 px-1.5">
-                        {bases.map(({ baseid, tablemetadata }) => {
-                          if (baseid === selectedBaseId) {
-                            return tablemetadata
-                              .filter(({ table_name }) => {
-                                return table_name
-                                  ?.toLowerCase()
-                                  ?.includes(
-                                    fieldSearchInputLinkedRecord.toLowerCase()
-                                  );
-                              })
-                              .map(({ table_name }, i) => {
-                                return (
-                                  <div
-                                    key={i}
-                                    className="px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md"
-                                    onClick={() => {
-                                      setSelectedFieldTypeLinkedRecord(
-                                        table_name
-                                      );
-                                      setFieldSearchInputLinkedRecord(
-                                        table_name
-                                      );
-                                    }}
-                                  >
-                                    {table_name}
-                                  </div>
-                                );
-                              });
-                          }
-                        })}
-                      </div>
-                    )}
-                  </div>
+                  <LinkedToAnotherRecordOptions
+                    setFieldSearchInput={setFieldSearchInput}
+                    setFieldNameInput={setFieldNameInput}
+                    setIsExistFieldNameInput={setIsExistFieldNameInput}
+                    setSelectedFieldType={setSelectedFieldType}
+                  />
                 )}
 
                 {isExistFieldNameInput && (
@@ -265,6 +187,7 @@ export default function TableColumnAdd({ headers }) {
                     Please enter a unique field name
                   </div>
                 )}
+
                 {fieldSearchInput !== "Link to another record" && (
                   <div className=" mt-2 border-[#eaebed] border-2 rounded-md  overflow-hidden">
                     <input
@@ -327,11 +250,13 @@ export default function TableColumnAdd({ headers }) {
                     />
                   </div>
                 )}
+
                 <div className="flex  justify-between items-center mt-8">
                   <div>
                     <div
-                      className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${descriptionToggle && "hidden"
-                        } `}
+                      className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
+                        descriptionToggle && "hidden"
+                      } `}
                       onClick={() => setDescriptionToggle(true)}
                     >
                       <span className="material-symbols-rounded text-xl">
@@ -357,29 +282,43 @@ export default function TableColumnAdd({ headers }) {
                       <button
                         disabled={!fieldNameInput || isExistFieldNameInput}
                         onClick={async () => {
-                          addColumnApi({
-                            tableId: selectedTableId,
-                            data: {
-                              field_description: fieldDescriptionInput,
-                              field_name: fieldNameInput,
-                              field_type: fieldsMap.get(selectedFieldType),
-                              json_field_type:
-                                frontEndFieldsMap.get(selectedFieldType),
-                            },
-                          });
-                          //       {
-                          //         field_name: 'Entered Field name',
-                          //           // field_id: '',
-                          //           field_type: 'multipleRecordLinks',
-                          // json_field_type: 'array',
-                          // field_description: '',
-                          // linked_rec: {
-                          //   baseid: 'selected base id',
-                          // tableid: 'table id',
-                          // field_id: 'field id',
-                          // field_name: 'default selected field name',
-                          //           }
-                          //       },
+                          if (fieldSearchInput === "Link to another record") {
+                            addColumnApi({
+                              tableId: selectedTableId,
+                              data: {
+                                field_description: fieldDescriptionInput,
+                                field_name: fieldNameInput,
+                                field_type: fieldsMap.get(selectedFieldType),
+                                json_field_type:
+                                  frontEndFieldsMap.get(selectedFieldType),
+                              },
+                            });
+                            //           {
+                            //         field_name: 'Entered Field name',
+                            //           // field_id: '',
+                            //           field_type: 'multipleRecordLinks',
+                            // json_field_type: 'array',
+                            // field_description: '',
+                            // linked_rec: {
+                            //   baseid: 'selected base id',
+                            // tableid: 'table id',
+                            // field_id: 'field id',
+                            // field_name: 'default selected field name',
+                            //           }
+                            //       },
+                          } else {
+                            addColumnApi({
+                              tableId: selectedTableId,
+                              data: {
+                                field_description: fieldDescriptionInput,
+                                field_name: fieldNameInput,
+                                field_type: fieldsMap.get(selectedFieldType),
+                                json_field_type:
+                                  frontEndFieldsMap.get(selectedFieldType),
+                              },
+                            });
+                          }
+
                           close();
                           setDescriptionToggle(false);
                           setSelectedFieldType(undefined);
@@ -398,8 +337,109 @@ export default function TableColumnAdd({ headers }) {
             </Popover.Panel>
           </Transition>
         </>
-      )
-      }
-    </Popover >
+      )}
+    </Popover>
+  );
+}
+
+function LinkedToAnotherRecordOptions({
+  setFieldSearchInput,
+  setFieldNameInput,
+  setIsExistFieldNameInput,
+  setSelectedFieldType,
+}) {
+  const [selectedFieldTypeLinkedRecord, setSelectedFieldTypeLinkedRecord] =
+    React.useState(undefined);
+  const [fieldSearchInputLinkedRecord, setFieldSearchInputLinkedRecord] =
+    React.useState("");
+  const { bases } = useSelector((state) => state.bases);
+  const { selectedBaseId, selectedTableId } = useSelector(
+    (state) => state.globalState
+  );
+
+  return (
+    <>
+      <div className=" mt-2 border-[#eaebed] border-2 rounded-md  overflow-hidden">
+        <div className="flex justify-center items-center">
+          <div
+            onClick={() => {
+              setFieldSearchInput("");
+              setFieldNameInput("");
+              setSelectedFieldTypeLinkedRecord(undefined);
+              setFieldSearchInputLinkedRecord("");
+              setIsExistFieldNameInput(false);
+              setSelectedFieldType(undefined);
+            }}
+            className="flex items-center px-2 rounded-lg overflow-hidden cursor-pointer opacity-80 hover:opacity-100  "
+          >
+            <svg
+              className="font-thin fill-blue-500 "
+              xmlns="http://www.w3.org/2000/svg"
+              height="20"
+              viewBox="0 96 960 960"
+              width="20"
+            >
+              <path d="M372 948 21 597q-5-5-7-10t-2-11q0-6 2-11t7-10l351-351q11-11 28-11t28 11q12 12 12 28.5T428 261L113 576l315 315q12 12 11.5 28.5T428 947q-12 12-28.5 12T372 948Z" />
+            </svg>
+            back
+          </div>
+          <input
+            type="search"
+            name=""
+            id=""
+            className="bg-[#f0f1f3] w-full px-3 p-1.5  outline-none focus:bg-blue-50 focus:border-transparent"
+            placeholder="Find a field type"
+            value={fieldSearchInputLinkedRecord}
+            onChange={(e) => {
+              setFieldSearchInputLinkedRecord(e.target.value);
+            }}
+            onClick={() => {
+              setSelectedFieldTypeLinkedRecord(undefined);
+              setFieldSearchInputLinkedRecord("");
+            }}
+          />
+        </div>
+
+        {!selectedFieldTypeLinkedRecord && (
+          <div className="h-4/5 overflow-scroll p-1 px-1.5">
+            {bases.map(({ baseid, tablemetadata }) => {
+              if (baseid === selectedBaseId) {
+                return tablemetadata
+                  .filter(({ table_name, table_id }) => {
+                    return (
+                      table_name
+                        ?.toLowerCase()
+                        ?.includes(
+                          fieldSearchInputLinkedRecord.toLowerCase()
+                        ) && table_id !== selectedTableId
+                    );
+                  })
+                  .map(({ table_name }, i) => {
+                    return (
+                      <div
+                        key={i}
+                        className="px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md"
+                        onClick={() => {
+                          setSelectedFieldTypeLinkedRecord(table_name);
+                          setFieldSearchInputLinkedRecord(
+                            "Link to " + table_name
+                          );
+                        }}
+                      >
+                        {table_name}
+                      </div>
+                    );
+                  });
+              }
+            })}
+          </div>
+        )}
+      </div>
+      {fieldSearchInputLinkedRecord && (
+        <div className="mt-3">
+          Link to records in the {fieldSearchInputLinkedRecord} table.
+        </div>
+      )}
+    </>
   );
 }
