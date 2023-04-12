@@ -16,7 +16,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
     newOptions = columnData?.options;
   }
 
-  //   console.log(rowData);
+  // console.log(rowData);
 
   const { selectedTableId } = useSelector((state) => state.globalState);
   const [SingleSelectToggle, setSingleSelectToggle] = React.useState(false);
@@ -165,9 +165,8 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
 
   return (
     <div
-      className={`relative select-none h-full w-full z-0 flex items-center  border-transparent border rounded-sm ${
-        SingleSelectToggle && "border-blue-500"
-      }`}
+      className={`relative select-none h-full w-full z-0 flex items-center  border-transparent border rounded-sm ${SingleSelectToggle && "border-blue-500"
+        }`}
       // className="relative select-none h-full w-full z-0"
       ref={singleSelectRef}
     >
@@ -242,23 +241,23 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
               })}
             {options?.filter(({ name }) => name?.includes(searchTerm))
               .length === 0 && (
-              <div
-                onClick={addNewOption}
-                className="p-2 hover:bg-blue-100 flex truncate"
-              >
-                <div className="truncate flex">
-                  Add New Option:
-                  {searchTerm && (
-                    <span
-                      style={{ background: bgColor, color: textColor }}
-                      className={`rounded-xl px-2 ml-1 truncate`}
-                    >
-                      {searchTerm}
-                    </span>
-                  )}
+                <div
+                  onClick={addNewOption}
+                  className="p-2 hover:bg-blue-100 flex truncate"
+                >
+                  <div className="truncate flex">
+                    Add New Option:
+                    {searchTerm && (
+                      <span
+                        style={{ background: bgColor, color: textColor }}
+                        className={`rounded-xl px-2 ml-1 truncate`}
+                      >
+                        {searchTerm}
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         </div>
       )}

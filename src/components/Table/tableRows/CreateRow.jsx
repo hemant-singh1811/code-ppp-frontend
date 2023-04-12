@@ -12,18 +12,17 @@ export default function CreateRow() {
 
   useEffect(() => {
     if (responseCreateRow.data) {
+      console.log("response from server", responseCreateRow.data);
       let newData = {
         ...responseCreateRow.data?.data,
         id52148213343234567: responseCreateRow.data?.metadata?.record_id,
       };
-      console.log(newData);
       setData([...data, newData]);
-      console.log("response from server", responseCreateRow.data);
+
     }
   }, [responseCreateRow.isSuccess]);
 
   function createRow() {
-    console.log(data);
 
     let updatedData = {};
     columns.forEach(({ field_type, field_name }) => {
@@ -46,7 +45,6 @@ export default function CreateRow() {
           break;
       }
     });
-    console.log(updatedData);
     addRowApi({
       tableId: selectedTableId,
       data: updatedData,

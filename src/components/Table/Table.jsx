@@ -10,6 +10,7 @@ import AddTable from "./tableUtilities/AddTable";
 // import Error from "../utilities/Error";
 // import AddRowTable from "./tableUtilities/AddRowTable";
 export default function Table({ tableData, tableModel }) {
+  // const  useGetTableRecordsQuery()
   const { driver } = useSelector((state) => state.views);
   // const { data, error, isFetching } = useGetSavedViewQuery();
   const { model } = useSelector((state) => state.views);
@@ -98,7 +99,7 @@ export default function Table({ tableData, tableModel }) {
           defaultColumns={defaultColumns}
           data={tableDataModified}
           setData={setTableDataModified}
-          // tableConditions={model}
+        // tableConditions={model}
         />
       </div>
     </DndProvider>

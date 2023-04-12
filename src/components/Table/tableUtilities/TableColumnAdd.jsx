@@ -8,6 +8,8 @@ import { Fragment } from "react";
 export default function TableColumnAdd({ headers }) {
   const { columns, setColumns, table } = useContext(TableContext);
   const { selectedTableId } = useSelector((state) => state.globalState);
+  const [addColumnApi, responseCreateColumn] = useAddTableColumnMutation();
+
   const [descriptionToggle, setDescriptionToggle] = React.useState(false);
   const [fieldNameInput, setFieldNameInput] = React.useState("");
   const [fieldSearchInput, setFieldSearchInput] = React.useState("");
@@ -22,7 +24,7 @@ export default function TableColumnAdd({ headers }) {
   const [fieldDescriptionInput, setFieldDescriptionInput] = React.useState("");
   const [selectedFieldType, setSelectedFieldType] = React.useState(undefined);
 
-  const [addColumnApi, responseCreateColumn] = useAddTableColumnMutation();
+
 
   const existingColumns = new Map();
 
@@ -162,9 +164,8 @@ export default function TableColumnAdd({ headers }) {
             leaveTo="opacity-0 translate-y-1"
           >
             <Popover.Panel
-              className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4 border-gray-400 border-2 flex flex-col ${
-                headers.length < 3 ? "left-0" : "right-0"
-              }`}
+              className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4 border-gray-400 border-2 flex flex-col ${headers.length < 3 ? "left-0" : "right-0"
+                }`}
             >
               <div className="h-full w-full ">
                 <input
@@ -182,10 +183,15 @@ export default function TableColumnAdd({ headers }) {
 
                 {fieldSearchInput === "Link to another record" && (
                   <div className=" mt-2 border-[#eaebed] border-2 rounded-md  overflow-hidden">
-                    <div className="flex justify-center items-center border-b-2 border-b-[#eaebed]">
+                    <div className="flex justify-center items-center">
                       <div
                         onClick={() => {
                           setFieldSearchInput("");
+                          setFieldNameInput("")
+                          setSelectedFieldTypeLinkedRecord(undefined)
+                          setFieldSearchInputLinkedRecord("")
+                          setIsExistFieldNameInput(false)
+                          setSelectedFieldType(undefined)
                         }}
                         className="flex items-center px-2 rounded-lg overflow-hidden cursor-pointer opacity-80 hover:opacity-100  "
                       >
@@ -324,9 +330,8 @@ export default function TableColumnAdd({ headers }) {
                 <div className="flex  justify-between items-center mt-8">
                   <div>
                     <div
-                      className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
-                        descriptionToggle && "hidden"
-                      } `}
+                      className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${descriptionToggle && "hidden"
+                        } `}
                       onClick={() => setDescriptionToggle(true)}
                     >
                       <span className="material-symbols-rounded text-xl">
@@ -362,6 +367,19 @@ export default function TableColumnAdd({ headers }) {
                                 frontEndFieldsMap.get(selectedFieldType),
                             },
                           });
+                          //       {
+                          //         field_name: 'Entered Field name',
+                          //           // field_id: '',
+                          //           field_type: 'multipleRecordLinks',
+                          // json_field_type: 'array',
+                          // field_description: '',
+                          // linked_rec: {
+                          //   baseid: 'selected base id',
+                          // tableid: 'table id',
+                          // field_id: 'field id',
+                          // field_name: 'default selected field name',
+                          //           }
+                          //       },
                           close();
                           setDescriptionToggle(false);
                           setSelectedFieldType(undefined);
@@ -380,7 +398,8 @@ export default function TableColumnAdd({ headers }) {
             </Popover.Panel>
           </Transition>
         </>
-      )}
-    </Popover>
+      )
+      }
+    </Popover >
   );
 }

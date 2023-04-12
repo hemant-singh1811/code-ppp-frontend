@@ -4,6 +4,7 @@ import Loading from "../../components/utilities/Loading";
 import {
   useGetModelQuery,
   useGetTableDataQuery,
+  useGetTableRecordsQuery,
 } from "../../store/services/alphaTruckingApi";
 import Table from "../../components/Table/Table";
 import { useSelector } from "react-redux";
@@ -26,8 +27,65 @@ export default function TableScreen() {
     return <Error error={error} />;
   }
 
-  // console.log(modelResult.data);
+
+
+  const multipleRecordLinksMap = new Map();
+
+  modelResult.data.map(({ data }) => {
+    if (data.field_type === "multipleRecordLinks") {
+      // console.log(data)
+      multipleRecordLinksMap.set(data?.linked_rec?.tableid, data)
+    }
+  })
+
+  // modelResult.data.map(({ data }) => {
+  //   if (data.field_type === "multipleLookupValues") {
+  //     // multipleRecordLinksMap.set(data.linked_rec.tableid, data.linked_rec)
+  //     console.log(data)
+  //   }
+  // })
+
+  let i = 0
+
+  for (let [key, value] of multipleRecordLinksMap.entries()) {
+    // multipleRecordLinksMap.set(key, {
+    //   ...multipleRecordLinksMap.get(key), data: data.map(({ data }) => {
+    //     return data[value?.field_name]
+    //   })
+    // })
+
+    let newArray = data.map(({ data }) => {
+      // console.log(value?.field_name)
+      let updatedArray = []
+      if (Array.isArray(data[value?.field_name])) {
+        updatedArray = [...data[value?.field_name]]
+      }
+      return data[value?.field_name]
+    })
+
+    // console.log(newArray)
+  }
+
+  // for (let [key, value] of multipleRecordLinksMap.entries()) {
+  //   console.log(key + ' = ', value);
+  // }
+
+  // console.log(tableData)
+
+  // let valuesArray = Array.from(multipleRecordLinksMap.values());
+  // console.log(valuesArray);
   // console.log(data);
 
   return <Table tableData={data} tableModel={modelResult.data} />;
+}
+
+function getTableRecords() {
+
+  const data = useGetTableRecordsQuery()
+
+
+
+  return data;
+
+
 }
