@@ -15,7 +15,7 @@ export default function MultilineTextCell({ cell }) {
   function handleDoubleClick() {
     setIsEditMode(true);
   }
-
+  // console.log("object")
   function handleBlur(event) {
     setIsEditMode(false);
 

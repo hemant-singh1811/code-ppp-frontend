@@ -16,6 +16,8 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     newOptions = columnData?.options;
   }
 
+  // console.log(newOptions)
+
   // console.log(rowData);
 
   const { selectedTableId } = useSelector((state) => state.globalState);
@@ -181,7 +183,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
           />
           <div>
             {options
-              .filter(({ name }) => name?.includes(searchTerm))
+              ?.filter(({ name }) => name?.includes(searchTerm))
               .map(({ color, name, bgcolor }, i) => {
                 return (
                   <div
@@ -201,7 +203,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
                   </div>
                 );
               })}
-            {options.filter(({ name }) => name?.includes(searchTerm)).length ===
+            {options?.filter(({ name }) => name?.includes(searchTerm)).length ===
               0 && (
                 <div
                   onClick={addNewOption}

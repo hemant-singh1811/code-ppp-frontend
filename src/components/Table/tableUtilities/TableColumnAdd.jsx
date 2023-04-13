@@ -7,7 +7,8 @@ import { Fragment } from "react";
 
 export default function TableColumnAdd({ headers }) {
   const { columns, setColumns, table } = useContext(TableContext);
-  const { selectedTableId } = useSelector((state) => state.globalState);
+  const { selectedTableId, selectedBaseId } = useSelector((state) => state.globalState);
+  const { bases } = useSelector((state) => state.bases);
   const [addColumnApi, responseCreateColumn] = useAddTableColumnMutation();
 
   const [descriptionToggle, setDescriptionToggle] = React.useState(false);
@@ -17,6 +18,10 @@ export default function TableColumnAdd({ headers }) {
     React.useState(false);
   const [fieldDescriptionInput, setFieldDescriptionInput] = React.useState("");
   const [selectedFieldType, setSelectedFieldType] = React.useState(undefined);
+  const [selectedFieldTypeLinkedRecord, setSelectedFieldTypeLinkedRecord] =
+    React.useState(undefined);
+
+  const tableIdMap = new Map();
 
   const existingColumns = new Map();
 
@@ -71,7 +76,7 @@ export default function TableColumnAdd({ headers }) {
   ];
 
   let correspondingType = [
-    "Link to another record",
+    "array",
     "string",
     "paragraph",
     "file",
@@ -121,6 +126,15 @@ export default function TableColumnAdd({ headers }) {
     existingColumns.set(columns[i]?.header.toLocaleLowerCase(), true);
   }
 
+  bases.forEach(ele => {
+    if (ele?.baseid === selectedBaseId) {
+      ele?.tablemetadata.forEach(({ table_id, table_name }) => {
+        tableIdMap.set(table_name, table_id)
+      })
+    }
+  });
+
+
   useEffect(() => {
     if (responseCreateColumn.data) {
       setColumns([
@@ -132,6 +146,7 @@ export default function TableColumnAdd({ headers }) {
           header: responseCreateColumn.data.field_name,
         },
       ]);
+      console.log(responseCreateColumn.data)
     }
   }, [responseCreateColumn.isSuccess]);
 
@@ -155,9 +170,8 @@ export default function TableColumnAdd({ headers }) {
             leaveTo="opacity-0 translate-y-1"
           >
             <Popover.Panel
-              className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4 border-gray-400 border-2 flex flex-col ${
-                headers.length < 3 ? "left-0" : "right-0"
-              }`}
+              className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4 border-gray-400 border-2 flex flex-col ${headers.length < 3 ? "left-0" : "right-0"
+                }`}
             >
               <div className="h-full w-full ">
                 <input
@@ -179,6 +193,8 @@ export default function TableColumnAdd({ headers }) {
                     setFieldNameInput={setFieldNameInput}
                     setIsExistFieldNameInput={setIsExistFieldNameInput}
                     setSelectedFieldType={setSelectedFieldType}
+                    selectedFieldTypeLinkedRecord={selectedFieldTypeLinkedRecord}
+                    setSelectedFieldTypeLinkedRecord={setSelectedFieldTypeLinkedRecord}
                   />
                 )}
 
@@ -254,9 +270,8 @@ export default function TableColumnAdd({ headers }) {
                 <div className="flex  justify-between items-center mt-8">
                   <div>
                     <div
-                      className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
-                        descriptionToggle && "hidden"
-                      } `}
+                      className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${descriptionToggle && "hidden"
+                        } `}
                       onClick={() => setDescriptionToggle(true)}
                     >
                       <span className="material-symbols-rounded text-xl">
@@ -284,35 +299,32 @@ export default function TableColumnAdd({ headers }) {
                         onClick={async () => {
                           if (fieldSearchInput === "Link to another record") {
                             addColumnApi({
-                              tableId: selectedTableId,
+                              base_id: selectedBaseId,
                               data: {
+                                base_id: selectedBaseId,
                                 field_description: fieldDescriptionInput,
                                 field_name: fieldNameInput,
                                 field_type: fieldsMap.get(selectedFieldType),
-                                json_field_type:
-                                  frontEndFieldsMap.get(selectedFieldType),
+                                table_id: selectedTableId,
+                                json_field_type: frontEndFieldsMap.get(selectedFieldType),
+                                linked_rec: {
+                                  baseid: selectedBaseId,
+                                  tableid: tableIdMap.get(selectedFieldTypeLinkedRecord),
+                                  field_id: 'field id',
+                                  field_name: 'Name',
+                                }
                               },
                             });
-                            //           {
-                            //         field_name: 'Entered Field name',
-                            //           // field_id: '',
-                            //           field_type: 'multipleRecordLinks',
-                            // json_field_type: 'array',
-                            // field_description: '',
-                            // linked_rec: {
-                            //   baseid: 'selected base id',
-                            // tableid: 'table id',
-                            // field_id: 'field id',
-                            // field_name: 'default selected field name',
-                            //           }
-                            //       },
                           } else {
+                            console.log("called")
                             addColumnApi({
-                              tableId: selectedTableId,
+                              base_id: selectedBaseId,
                               data: {
+                                table_id: selectedTableId,
                                 field_description: fieldDescriptionInput,
                                 field_name: fieldNameInput,
                                 field_type: fieldsMap.get(selectedFieldType),
+                                base_id: selectedBaseId,
                                 json_field_type:
                                   frontEndFieldsMap.get(selectedFieldType),
                               },
@@ -347,9 +359,10 @@ function LinkedToAnotherRecordOptions({
   setFieldNameInput,
   setIsExistFieldNameInput,
   setSelectedFieldType,
+  setSelectedFieldTypeLinkedRecord,
+  selectedFieldTypeLinkedRecord
 }) {
-  const [selectedFieldTypeLinkedRecord, setSelectedFieldTypeLinkedRecord] =
-    React.useState(undefined);
+
   const [fieldSearchInputLinkedRecord, setFieldSearchInputLinkedRecord] =
     React.useState("");
   const { bases } = useSelector((state) => state.bases);

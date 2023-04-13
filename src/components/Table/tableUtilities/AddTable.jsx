@@ -36,6 +36,7 @@ export default function AddTable() {
 
   useEffect(() => {
     if (responseCreateTable?.data) {
+      console.log(responseCreateTable?.data)
       dispatch(
         handelUpdateBases({
           baseId: createTableBaseId,
@@ -66,7 +67,7 @@ export default function AddTable() {
             value={tableNameInput}
             onChange={(e) => {
               setTableNameInput(e.target.value);
-              existingTable.get(e.target.value.toLocaleLowerCase())
+              existingTable.get(e.target.value.toLocaleLowerCase().trim())
                 ? setIsExistTableNameInput(true)
                 : setIsExistTableNameInput(false);
             }}

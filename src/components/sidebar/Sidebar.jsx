@@ -125,9 +125,8 @@ export default function Sidebar() {
   if (isFetching) {
     return (
       <div
-        className={`sidebar_container scrollbar-hidden select-none relative ${
-          toggle ? "closed" : "opened"
-        } `}
+        className={`sidebar_container scrollbar-hidden select-none relative ${toggle ? "closed" : "opened"
+          } `}
       >
         <Loading />;
       </div>
@@ -138,9 +137,8 @@ export default function Sidebar() {
   }
   return (
     <div
-      className={`sidebar_container select-none relative ${
-        toggle ? "closed" : "opened"
-      } `}
+      className={`sidebar_container select-none relative ${toggle ? "closed" : "opened"
+        } `}
     >
       <div
         className="navLink menu"
@@ -207,11 +205,10 @@ export default function Sidebar() {
                           menu?.title && (
                             <div
                               key={menu.to}
-                              className={`${
-                                menu?.subMenu && menu.isOpened
+                              className={`${menu?.subMenu && menu.isOpened
                                   ? "bg-[#13142b] rounded-lg ml-8"
                                   : menu?.subMenu && "ml-8"
-                              }`}
+                                }`}
                             >
                               <li className="submenu_item max-w-[170px] relative">
                                 <NavLink
@@ -230,7 +227,7 @@ export default function Sidebar() {
                                     )
                                   }
                                 >
-                                  <span className={`title truncate capitalize`}>
+                                  <span className={`title truncate `}>
                                     {menu.title || "Title"}
                                   </span>
                                 </NavLink>
@@ -257,7 +254,7 @@ export default function Sidebar() {
                         }}
                       >
                         <button className="navLink w-full">
-                          <span className={`title truncate capitalize flex`}>
+                          <span className={`title truncate  flex`}>
                             <svg
                               className="mr-4"
                               xmlns="http://www.w3.org/2000/svg"
@@ -285,7 +282,7 @@ export default function Sidebar() {
                               isActive ? "navLink active" : "navLink"
                             }
                           >
-                            <span className={`title truncate capitalize`}>
+                            <span className={`title truncate `}>
                               {menu.title}
                             </span>
                           </NavLink>

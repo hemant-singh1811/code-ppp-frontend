@@ -16,7 +16,7 @@ export default function SingleLineTextCell({ cell }) {
     setValue(event.target.value);
   }
 
-  console.log(cell.getValue(), cell.row.original);
+  // console.log(cell.getValue(), cell.row.original);
 
   function handleBlur() {
     setIsEditMode(false);

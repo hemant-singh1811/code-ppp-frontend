@@ -79,6 +79,20 @@ export const alphaTruckingApi = createApi({
       }),
     }),
 
+    GetModelData: builder.mutation({
+      query: (tableId) => ({
+        url: `/API/V1/getmodel/${tableId}`,
+        method: 'POST',
+      }),
+    }),
+
+    GetTableDataPart: builder.mutation({
+      query: (tableId) => ({
+        url: `/API/V1/getdata/${tableId}`,
+        method: 'POST',
+      }),
+    }),
+
     CreateTable: builder.mutation({
       query: (payload) => ({
         url: `API/V1/createtable/${payload.tableId}`,
@@ -89,7 +103,7 @@ export const alphaTruckingApi = createApi({
 
     AddTableColumn: builder.mutation({
       query: (payload) => ({
-        url: `API/V1/addcolumn/${payload.tableId}`,
+        url: `API/V1/addcolumn/${payload.base_id}`,
         body: payload.data,
         method: 'PUT',
       }),
@@ -147,6 +161,9 @@ export const {
   useAddTableColumnMutation,
   useDeleteTableColumnMutation,
   useAddTableRowMutation,
+  useGetModelDataMutation,
+  useGetTableDataPartMutation,
+
   useGetBasesQuery,
   useGetModelQuery,
   useGetTableDataQuery,

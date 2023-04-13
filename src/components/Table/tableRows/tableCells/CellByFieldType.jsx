@@ -13,25 +13,40 @@ import MultilineTextCell from "./MultilineTextCell";
 import AutoNumberCell from "./AutoNumberCell";
 import ModifiedAndCreatedCell from "./ModifiedAndCreatedCell";
 import ButtonCell from "./ButtonCell";
+import MultipleRecordLinksCell from "./MultipleRecordLinksCell";
 
 export default function CellByFieldType({ field_type, cell }) {
   switch (field_type) {
     case "singleSelect": //array
       return (
-        <SingleSelectWithAddOption
-          columnData={cell.column.columnDef}
-          cell={cell}
-          rowData={cell?.getValue()}
-        />
+        Array.isArray(cell?.getValue()) || cell?.getValue() === "" ?
+          <SingleSelectWithAddOption
+            columnData={cell.column.columnDef}
+            cell={cell}
+            rowData={cell?.getValue()}
+          />
+          : (
+            <div className="w-full h-full overflow-hidden">
+              {console.log("not getting array in single select", typeof (cell?.getValue()))}
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </div>
+          )
       );
 
     case "multipleSelects": //array
       return (
-        <MultiselectWithAddOption
-          columnData={cell.column.columnDef}
-          cell={cell}
-          rowData={cell?.getValue()}
-        />
+        Array.isArray(cell?.getValue()) || cell?.getValue() === "" ?
+          <MultiselectWithAddOption
+            columnData={cell.column.columnDef}
+            cell={cell}
+            rowData={cell?.getValue()}
+          />
+          : (
+            <div className="w-full h-full overflow-hidden">
+              {console.warn("not getting array in single select", cell?.getValue())}
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </div>
+          )
       );
 
     case "phoneNumber": //string
@@ -88,6 +103,9 @@ export default function CellByFieldType({ field_type, cell }) {
 
     case "button": //string
       return <ButtonCell cell={cell} />;
+
+    case "multipleRecordLinks": //string
+      return <MultipleRecordLinksCell cell={cell} />;
 
     default:
       // console.log(field_type);
