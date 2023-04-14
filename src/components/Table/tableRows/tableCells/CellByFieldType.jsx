@@ -105,7 +105,7 @@ export default function CellByFieldType({ field_type, cell }) {
       return <ButtonCell cell={cell} />;
 
     case "multipleRecordLinks": //string
-      return <MultipleRecordLinksCell cell={cell} />;
+      return <MultipleRecordLinksCell cell={cell} rowData={cell?.getValue()} />;
 
     default:
       // console.log(field_type);

@@ -101,6 +101,14 @@ export const alphaTruckingApi = createApi({
       }),
     }),
 
+    DeleteTable: builder.mutation({
+      query: (payload) => ({
+        url: `API/V1/deletetable/${payload.baseid}`,
+        body: payload.data, //table_id
+        method: 'PUT',
+      }),
+    }),
+
     AddTableColumn: builder.mutation({
       query: (payload) => ({
         url: `API/V1/addcolumn/${payload.base_id}`,
@@ -155,6 +163,7 @@ export const alphaTruckingApi = createApi({
 
 export const {
   useCreateTableMutation,
+  useDeleteTableMutation,
   useCreateViewMutation,
   useDeleteViewMutation,
   usePostViewsMutation,

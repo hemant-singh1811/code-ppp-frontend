@@ -4,44 +4,48 @@ import { Fragment, useState } from 'react'
 import { TableContext } from '../../tableComponents/TableComponents';
 import { useGetModelDataMutation, useGetTableDataPartMutation } from '../../../../store/services/alphaTruckingApi';
 import Loading from '../../../utilities/Loading';
+import { useSelector } from 'react-redux';
 
 
-export default function MultipleRecordLinksCell({ cell }) {
+let fetchedTableId = undefined;
+let linkedRecord = undefined;
+let fetchedTableColumnsTemp = [];
+
+export default function MultipleRecordLinksCell({ cell, rowData }) {
+
     const { columns, setColumns } = useContext(TableContext);
-    let [isOpen, setIsOpen] = useState(false)
-    let selectedTableId = undefined;
+
     columns.forEach(element => {
         if (element.field_name === cell?.column?.id) {
-            selectedTableId = element.linked_rec.tableid
+            fetchedTableId = element.linked_rec.tableid
+            linkedRecord = element.linked_rec
         }
     });
-    // let primaryData = "";
-    let columnArrayTemp = [];
 
-    const [getTableDataApi, responseGetTableData] = useGetTableDataPartMutation(selectedTableId);
-    const [getModelDataApi, responseGetModelData] = useGetModelDataMutation(selectedTableId);
+    const socket = useSelector((state) => state.socketWebData.socket);
+
+    const [getTableDataApi, responseGetTableData] = useGetTableDataPartMutation(fetchedTableId);
+    const [getModelDataApi, responseGetModelData] = useGetModelDataMutation(fetchedTableId);
+    const { selectedTableId, selectedBaseId } = useSelector((state) => state.globalState);
+
+    const [isOpen, setIsOpen] = useState(false)
     const [isDataFetched, setIsDataFetched] = useState(false)
     const [primaryData, setPrimaryData] = useState('')
-    const [columnArray, setColumnArray] = useState([])
+    const [fetchedTableColumns, setFetchedTableColumns] = useState([])
+    const [selectedRowData, setSelectedRowData] = React.useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [isChildVisible, setIsChildVisible] = useState(false);
+    const [rowsDataMap, setRowsDataMap] = useState(new Map());
 
-    useEffect(() => {
-        if (responseGetTableData.data && responseGetModelData.data) {
-            console.log(responseGetModelData.data)
-            responseGetModelData?.data.forEach(({ data }) => {
-                if (data?.is_primary) {
-                    // primaryData = data.field_name;
-                    setPrimaryData(data.field_name)
-                    // console.log(data.field_name)
-                } else {
-                    columnArrayTemp.push(data.field_name);
-                }
-            })
-            setColumnArray(columnArrayTemp)
-            setIsDataFetched(true);
-            // console.log("response from server", responseGetModelData.data, responseGetTableData.data);
-        }
-    }, [responseGetTableData.isSuccess, responseGetModelData.isSuccess]);
+    let rowCopy = cell?.row?.original;
 
+    const handleFocus = () => {
+        setIsChildVisible(true);
+    };
+
+    const handleBlur = () => {
+        setIsChildVisible(false);
+    }
 
     function closeModal() {
         setIsOpen(false)
@@ -51,20 +55,113 @@ export default function MultipleRecordLinksCell({ cell }) {
         setIsOpen(true)
     }
 
+    function addSelectedRow(ele) {
+
+        setSelectedRowData([...selectedRowData, ele.id])
+
+        // rowData = [ele];
+
+        let updatedRowKey = cell?.column.id;
+        let newRowPart = { [updatedRowKey]: [...selectedRowData, ele.id] };
+
+        let rowObj = {
+            base_id: selectedBaseId,
+            table_id: selectedTableId,
+            record_id: rowCopy.id52148213343234567,
+            updated_data: newRowPart,
+            linked_rec: linkedRecord
+        };
+        console.log(rowObj)
+        // rowCopy[cell?.column.id] = rowData;
+
+        // // console.log(rowObj)
+        // socket.emit("updatedata", rowObj, (response) => {
+        //     console.log("res : ", response);
+        // });
+    }
+
+    function removeSelectedRow(ele) {
+
+        let updatedSelectedRowData = selectedRowData.filter((id) => id !== ele)
+
+        setSelectedRowData((prev) => prev.filter((id) => id !== ele))
+
+        let updatedRowKey = cell?.column.id;
+
+        let newRowPart = { [updatedRowKey]: updatedSelectedRowData };
+
+        let rowObj = {
+            base_id: selectedBaseId,
+            table_id: selectedTableId,
+            record_id: rowCopy.id52148213343234567,
+            linked_table_id: fetchedTableId,
+            updated_data: newRowPart,
+            linked_rec: linkedRecord
+        };
+        console.log(rowObj)
+
+        // // console.log(rowObj)
+        // socket.emit("updatedata", rowObj, (response) => {
+        //     console.log("res : ", response);
+        // });
+    }
+
+
+    useEffect(() => {
+        if (responseGetTableData.data && responseGetModelData.data) {
+            responseGetModelData?.data.forEach(({ data }) => {
+                if (data?.is_primary) {
+                    setPrimaryData(data.field_name)
+                } else {
+                    fetchedTableColumnsTemp.push(data.field_name);
+                }
+            })
+
+            const newMap = new Map(rowsDataMap);
+
+            responseGetTableData?.data?.map((ele) => {
+                newMap.set(ele.id, ele.data);
+            })
+
+            setRowsDataMap(newMap);
+
+            setFetchedTableColumns(fetchedTableColumnsTemp)
+            setIsDataFetched(true);
+        }
+    }, [responseGetTableData.isSuccess, responseGetModelData.isSuccess]);
+
     return (
-        <>
-            <div className=" inset-0 flex p-0.5 px-1">
-                <button
-                    type="button"
-                    onClick={() => {
-                        openModal();
-                        getTableDataApi(selectedTableId);
-                        getModelDataApi(selectedTableId)
-                    }}
-                    className="rounded-md bg-black bg-opacity-10  text-sm font-medium text-white hover:bg-opacity-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" className=' fill-gray-700' height="24" viewBox="0 96 960 960" width="24"><path d="M479.973 836q-8.512 0-14.242-5.75Q460 824.5 460 816V596H240q-8.5 0-14.25-5.758T220 575.973q0-8.512 5.75-14.242Q231.5 556 240 556h220V336q0-8.5 5.758-14.25 5.757-5.75 14.269-5.75t14.242 5.75Q500 327.5 500 336v220h220q8.5 0 14.25 5.758t5.75 14.269q0 8.512-5.75 14.242Q728.5 596 720 596H500v220q0 8.5-5.758 14.25-5.757 5.75-14.269 5.75Z" /></svg>
-                </button>
+        <div className='h-full overflow-hidden select-none'>
+            <div className="flex h-full w-full items-center  px-1 gap-1" onFocus={() => handleFocus()} onBlur={() => handleBlur()} tabIndex="1">
+
+                {
+                    selectedRowData.map((ele, i) => {
+                        return (
+                            <div key={i} className='flex bg-purple-100 rounded-md items-center cursor-pointer px-1'>
+                                <div className='h-full w-max'>{rowsDataMap.get(ele) && rowsDataMap.get(ele)[primaryData]}</div>
+                                {isChildVisible && <svg onClick={() => removeSelectedRow(ele)} xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M480 604.308 270.154 814.154q-5.615 5.615-13.769 6-8.154.385-14.539-6T235.461 800q0-7.769 6.385-14.154L451.692 576 241.846 366.154q-5.615-5.615-6-13.769-.385-8.154 6-14.539T256 331.461q7.769 0 14.154 6.385L480 547.692l209.846-209.846q5.615-5.615 13.769-6 8.154-.385 14.539 6T724.539 352q0 7.769-6.385 14.154L508.308 576l209.846 209.846q5.615 5.615 6 13.769.385 8.154-6 14.539T704 820.539q-7.769 0-14.154-6.385L480 604.308Z" /></svg>}
+                            </div>
+                        )
+                    })
+                }
+
+
+                {/* //add new record */}
+                {
+                    isChildVisible && <div
+                        // type="button"
+                        onClick={() => {
+                            openModal();
+                            getTableDataApi(fetchedTableId);
+                            getModelDataApi(fetchedTableId);
+
+                        }}
+                        className="rounded-md bg-black bg-opacity-10  text-sm font-medium text-white hover:bg-opacity-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className=' fill-gray-700' height="24" viewBox="0 96 960 960" width="24"><path d="M479.973 836q-8.512 0-14.242-5.75Q460 824.5 460 816V596H240q-8.5 0-14.25-5.758T220 575.973q0-8.512 5.75-14.242Q231.5 556 240 556h220V336q0-8.5 5.758-14.25 5.757-5.75 14.269-5.75t14.242 5.75Q500 327.5 500 336v220h220q8.5 0 14.25 5.758t5.75 14.269q0 8.512-5.75 14.242Q728.5 596 720 596H500v220q0 8.5-5.758 14.25-5.757 5.75-14.269 5.75Z" /></svg>
+                    </div>
+                }
+
             </div>
 
             <Transition appear show={isOpen} as={Fragment}>
@@ -82,7 +179,7 @@ export default function MultipleRecordLinksCell({ cell }) {
                     </Transition.Child>
 
                     <div className="fixed inset-0 overflow-y-auto">
-                        <div className="flex min-h-full items-center justify-center p-4 text-center">
+                        <div className="flex min-h-full items-center justify-center p-4 text-center ">
                             <Transition.Child
                                 as={Fragment}
                                 enter="ease-out duration-300"
@@ -98,15 +195,19 @@ export default function MultipleRecordLinksCell({ cell }) {
                                         <input type="text" className='p-4 pl-7 border-b-2 border-b-gray-300  focus:border-transparent focus:border-b-blue-500 focus:outline-none' name="" id="" autoFocus placeholder='Find an existing record' />
                                         <svg onClick={closeModal} xmlns="http://www.w3.org/2000/svg" className='cursor-pointer hover:fill-blue-500 absolute right-0 top-0 bottom-0 my-auto font-thin fill-gray-400' height="24" viewBox="0 96 960 960" width="24"><path d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z" /></svg>
                                     </div>
-                                    <div className="h-[500px]">
+                                    <div className="h-[500px] overflow-y-auto">
                                         {
                                             isDataFetched ? (
-                                                responseGetTableData?.data?.map((ele, i) => {
-                                                    // console.log(primaryData, columnArray)
-
+                                                responseGetTableData?.data?.filter((ele) => {
+                                                    return !selectedRowData.includes(ele.id)
+                                                }).map((ele, i) => {
+                                                    // console.log(primaryData, fetchedTableColumns)
                                                     // console.log(responseGetModelData.isSuccess, responseGetTableData.isSuccess)
                                                     // console.log("response from server", responseGetModelData.data, responseGetTableData.data);
-                                                    return <div tabIndex={-1} className='h-[80px] hover:border-gray-400 border-gray-300 border-2 focus:border-blue-500 my-2 rounded-lg text-xl px-2 p-1' key={ele.id}>
+                                                    return <div onClick={() => {
+                                                        closeModal()
+                                                        addSelectedRow(ele)
+                                                    }} tabIndex={-1} className='h-[80px] hover:border-gray-400 border-gray-300 border-2 focus:border-blue-500 my-2 rounded-lg text-xl px-2 p-1' key={ele.id}>
                                                         <div className='font-medium truncate'>{ele.data[primaryData]}</div>
                                                     </div>
                                                 })
@@ -121,6 +222,6 @@ export default function MultipleRecordLinksCell({ cell }) {
                     </div>
                 </Dialog>
             </Transition>
-        </>
+        </div>
     )
 }
