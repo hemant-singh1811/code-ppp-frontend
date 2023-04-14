@@ -13,7 +13,7 @@ export default function TableUtilitySearching() {
       {({ open, close }) => (
         <>
           <Popover.Button className='relative flex items-center'>
-            <span onClick={() => toggleIsOpen(isOpen, setIsOpen)} className={`material-symbols-rounded font-light cursor-pointer text-[#7e7e7e] p-1 rounded ${isOpen && "#4d4d4d"} ${globalFilter && 'bg-[#e1d5f9]'}`}>
+            <span className={`material-symbols-rounded font-light cursor-pointer text-[#7e7e7e] p-1 rounded ${isOpen && "#4d4d4d"} ${globalFilter && 'bg-[#e1d5f9]'}`}>
               search
             </span>
           </Popover.Button>

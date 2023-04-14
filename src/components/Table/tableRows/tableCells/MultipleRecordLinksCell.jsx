@@ -39,6 +39,8 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
 
     let rowCopy = cell?.row?.original;
 
+
+
     const handleFocus = () => {
         setIsChildVisible(true);
     };
@@ -79,6 +81,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
         //     console.log("res : ", response);
         // });
     }
+
 
     function removeSelectedRow(ele) {
 

@@ -7,7 +7,7 @@ import { useContext } from "react";
 
 export default function CreateRow() {
   const [addRowApi, responseCreateRow] = useAddTableRowMutation();
-  const { selectedTableId } = useSelector((state) => state.globalState);
+  const { selectedTableId, selectedBaseId } = useSelector((state) => state.globalState);
   const { columns, setData, data } = useContext(TableContext);
 
   useEffect(() => {
@@ -46,8 +46,11 @@ export default function CreateRow() {
       }
     });
     addRowApi({
-      tableId: selectedTableId,
-      data: updatedData,
+      baseId: selectedBaseId,
+      data: {
+        table_id: selectedTableId,
+        data: updatedData,
+      }
     });
   }
 

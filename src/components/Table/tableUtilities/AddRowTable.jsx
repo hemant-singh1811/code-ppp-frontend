@@ -35,7 +35,7 @@ export default function AddRowTable() {
 
   const [submitButton, setSubmitButton] = useState(false);
 
-  const { selectedTableId } = useSelector((state) => state.globalState);
+  const { selectedTableId, selectedBaseId } = useSelector((state) => state.globalState);
 
   const tableNamesWithId = new Map();
   const fieldsMapTempTesting = new Set();
@@ -202,12 +202,14 @@ export default function AddRowTable() {
     // console.log(updatedData)
     console.log("sending data to server", updatedData);
     addRowApi({
-      tableId: selectedTableId,
-      data: updatedData,
+      baseId: selectedBaseId,
+      data: {
+        table_id: selectedTableId,
+        data: updatedData,
+      }
     });
   };
 
-  // console.log(watch('long Text'))
 
   return (
     <div
@@ -277,7 +279,7 @@ export default function AddRowTable() {
                             {...register(data?.id)}
                             placeholder={data?.id}
                             className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
-                            // name="" id="" rows="3"
+                          // name="" id="" rows="3"
                           />
                         </div>
                       </div>

@@ -25,6 +25,8 @@ export const alphaTruckingApi = createApi({
       }),
     }),
 
+    // views api
+
     PostViews: builder.mutation({
       query: (payload) => ({
         url: 'API/V1/changesaved',
@@ -41,7 +43,6 @@ export const alphaTruckingApi = createApi({
       }),
     }),
 
-    // views api
     CreateView: builder.mutation({
       query: (payload) => ({
         url: `API/V1/createnewview`,
@@ -58,7 +59,7 @@ export const alphaTruckingApi = createApi({
       }),
     }),
 
-    // table api
+    // get table data api
 
     GetBases: builder.query({
       query: () => ({
@@ -66,12 +67,14 @@ export const alphaTruckingApi = createApi({
         method: 'POST',
       }),
     }),
+
     GetModel: builder.query({
       query: (tableId) => ({
         url: `/API/V1/getmodel/${tableId}`,
         method: 'POST',
       }),
     }),
+
     GetTableData: builder.query({
       query: (tableId) => ({
         url: `/API/V1/getdata/${tableId}`,
@@ -90,46 +93,6 @@ export const alphaTruckingApi = createApi({
       query: (tableId) => ({
         url: `/API/V1/getdata/${tableId}`,
         method: 'POST',
-      }),
-    }),
-
-    CreateTable: builder.mutation({
-      query: (payload) => ({
-        url: `API/V1/createtable/${payload.tableId}`,
-        body: payload.data,
-        method: 'PUT',
-      }),
-    }),
-
-    DeleteTable: builder.mutation({
-      query: (payload) => ({
-        url: `API/V1/deletetable/${payload.baseid}`,
-        body: payload.data, //table_id
-        method: 'PUT',
-      }),
-    }),
-
-    AddTableColumn: builder.mutation({
-      query: (payload) => ({
-        url: `API/V1/addcolumn/${payload.base_id}`,
-        body: payload.data,
-        method: 'PUT',
-      }),
-    }),
-
-    DeleteTableColumn: builder.mutation({
-      query: (payload) => ({
-        url: `API/V1/remcolumn/${payload.tableId}`,
-        body: payload.data, // field id is required to delete a column; like this:- {"field_id":"fldzmC9cdc4LgvYGI"}
-        method: 'DELETE',
-      }),
-    }),
-
-    AddTableRow: builder.mutation({
-      query: (payload) => ({
-        url: `API/V1/adddata/${payload.tableId}`,
-        body: payload.data, // field id is required to add a row; like this:- {"field_id":"fldzmC9cdc4LgvYGI"}
-        method: 'PUT',
       }),
     }),
 
@@ -158,18 +121,76 @@ export const alphaTruckingApi = createApi({
         return data;
       },
     }),
+
+    // table api
+    CreateTable: builder.mutation({
+      query: (payload) => ({
+        url: `API/V1/createtable/${payload.tableId}`,
+        body: payload.data,
+        method: 'PUT',
+      }),
+    }),
+
+    DeleteTable: builder.mutation({
+      query: (payload) => ({
+        url: `API/V1/deletetable/${payload.baseId}`,
+        body: payload.data, //table_id
+        method: 'DELETE',
+      }),
+    }),
+
+    RenameTable: builder.mutation({
+      query: (payload) => ({
+        url: `API/V1/tablerename/${payload.baseId}`,
+        body: payload.data, //table_id
+        method: 'DELETE',
+      }),
+    }),
+    // {
+    // "table_id":"tbl2lFS8fwFz5pEjx",
+    // "table_name":"changed table nam1e"
+    // }
+
+    // rows api
+
+    AddTableRow: builder.mutation({
+      query: (payload) => ({
+        url: `API/V1/adddata/${payload.baseId}`,
+        body: payload.data, // field id is required to add a row; like this:- {"field_id":"fldzmC9cdc4LgvYGI"}
+        method: 'PUT',
+      }),
+    }),
+
+    // columns api
+
+    AddTableColumn: builder.mutation({
+      query: (payload) => ({
+        url: `API/V1/addcolumn/${payload.base_id}`,
+        body: payload.data,
+        method: 'PUT',
+      }),
+    }),
+
+    DeleteTableColumn: builder.mutation({
+      query: (payload) => ({
+        url: `API/V1/remcolumn/${payload.tableId}`,
+        body: payload.data, // field id is required to delete a column; like this:- {"field_id":"fldzmC9cdc4LgvYGI"}
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
 export const {
+  useAddTableColumnMutation,
   useCreateTableMutation,
-  useDeleteTableMutation,
   useCreateViewMutation,
+  useDeleteTableMutation,
   useDeleteViewMutation,
   usePostViewsMutation,
-  useAddTableColumnMutation,
   useDeleteTableColumnMutation,
   useAddTableRowMutation,
+  useRenameTableMutation,
   useGetModelDataMutation,
   useGetTableDataPartMutation,
 

@@ -57,7 +57,7 @@ const globalStateSlice = createSlice({
     handleCreateTableBaseId: (state, { payload }) => {
       state.createTableBaseId = payload;
     },
-    handelSelectedTableId: (state, { payload }) => {
+    handelSelectedTableAndBaseId: (state, { payload }) => {
       if (payload?.selectedTableId)
         state.selectedTableId = payload?.selectedTableId;
 
@@ -73,7 +73,7 @@ export const {
   handleToggleMainSideBar,
   handleAddToggle,
   handleCreateTableBaseId,
-  handelSelectedTableId,
+  handelSelectedTableAndBaseId,
 } = globalStateSlice.actions;
 
 export default globalStateSlice.reducer;

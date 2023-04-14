@@ -1,26 +1,31 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { handelAddBases } from "../../store/features/BasesStateSlice";
 import {
-  handelSelectedTableId,
+  handelSelectedTableAndBaseId,
   handleAddToggle,
   handleCreateTableBaseId,
   handleToggleMainSideBar,
 } from "../../store/features/globalStateSlice";
 import {
   handelAddSideBar,
+  handelRemoveSideBarField,
   handelToggleSideBar,
 } from "../../store/features/SideBarStateSlice";
-import { useGetBasesQuery } from "../../store/services/alphaTruckingApi";
+import { useDeleteTableColumnMutation, useDeleteTableMutation, useGetBasesQuery } from "../../store/services/alphaTruckingApi";
 import "../../stylesheet/sidebar.scss";
 import Error from "../utilities/Error";
 import Loading from "../utilities/Loading";
+import { Popover, Transition } from "@headlessui/react";
+import { Fragment } from "react";
 
 export default function Sidebar() {
   const { toggle } = useSelector((state) => state.globalState.mainSideBar);
   const { sidebar } = useSelector((state) => state.sidebar);
   const { data, error, isFetching, isSuccess } = useGetBasesQuery();
+  const [deleteTableApi, responseDeleteTable] = useDeleteTableMutation()
+
   // const [menus, setMenus] = useState(bases || [])
   let createMenusByBase;
   const dispatch = useDispatch();
@@ -40,6 +45,7 @@ export default function Sidebar() {
                 title: ele?.table_name,
                 to: ele?.base_id + "/" + ele?.table_id,
                 tableId: ele?.table_id,
+                baseId: item?.baseid || "baseId",
               };
             }),
           };
@@ -106,21 +112,12 @@ export default function Sidebar() {
     }
   }, [isSuccess]);
 
-  const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
-  const [contextMenuPosition, setContextMenuPosition] = useState({
-    x: 0,
-    y: 0,
-  });
+  useEffect(() => {
+    if (responseDeleteTable.data) {
 
-  const handleContextMenu = (event) => {
-    event.preventDefault();
-    setIsContextMenuOpen(true);
-    setContextMenuPosition({ x: event.clientX, y: event.clientY });
-  };
+    }
+  }, [responseDeleteTable.isSuccess])
 
-  const handleCloseContextMenu = () => {
-    setIsContextMenuOpen(false);
-  };
 
   if (isFetching) {
     return (
@@ -135,6 +132,17 @@ export default function Sidebar() {
   if (error) {
     return <Error error={error} />;
   }
+
+  function handleContextMenu(e) {
+    e.preventDefault();
+    console.log("object")
+    // setIsOpen(true);
+  }
+
+  function handleCloseMenu() {
+    // setIsOpen(false);
+  }
+
   return (
     <div
       className={`sidebar_container select-none relative ${toggle ? "closed" : "opened"
@@ -206,42 +214,48 @@ export default function Sidebar() {
                             <div
                               key={menu.to}
                               className={`${menu?.subMenu && menu.isOpened
-                                  ? "bg-[#13142b] rounded-lg ml-8"
-                                  : menu?.subMenu && "ml-8"
+                                ? "bg-[#13142b] rounded-lg ml-8"
+                                : menu?.subMenu && "ml-8"
                                 }`}
                             >
-                              <li className="submenu_item max-w-[170px] relative">
-                                <NavLink
-                                  onContextMenu={handleContextMenu}
-                                  to={menu.to}
-                                  className={({ isActive }) =>
-                                    isActive ? "navLink active" : "navLink"
-                                  }
-                                  title={menu.title}
-                                  onClick={() =>
-                                    dispatch(
-                                      handelSelectedTableId({
-                                        selectedTableId: menu?.tableId,
-                                        selectedBaseId: item?.baseId,
-                                      })
-                                    )
-                                  }
-                                >
-                                  <span className={`title truncate `}>
-                                    {menu.title || "Title"}
-                                  </span>
-                                </NavLink>
+                              <Popover className="relative mr-2">
+                                {({ open, close }) => (
+                                  <>
+                                    <li onContextMenu={handleContextMenu} className="submenu_item max-w-[170px] relative">
+                                      <NavLink
+                                        // onContextMenu={(e) => {
+                                        //   e.preventDefault();
+                                        // }}
+                                        to={menu.to}
+                                        className={({ isActive }) =>
+                                          isActive ? "navLink active" : "navLink"
+                                        }
+                                        title={menu.title}
+                                        onClick={() =>
+                                          dispatch(
+                                            handelSelectedTableAndBaseId({
+                                              selectedTableId: menu?.tableId,
+                                              selectedBaseId: item?.baseId,
+                                            })
+                                          )
+                                        }
+                                      >
+                                        <span className={`title truncate `}>
+                                          {menu.title || "Title"}
+                                        </span>
 
-                                {/* {isContextMenuOpen && (
-                                  <></>
-                                  // <div className="absolute bg-red-300 -right-3">
-                                  //   Hello
-                                  // </div>
-                                  // <ContextMenu onClose={handleCloseContextMenu} x={contextMenuPosition.x} y={contextMenuPosition.y}>
-                                  //   <MenuItem label="Open" onClick={() => console.log('Open clicked')} />
-                                  // </ContextMenu>
-                                )} */}
-                              </li>
+
+                                        <Popover.Button className="border-none outline-none">
+                                          <div className="text-gray-400 mr-1 cursor-pointer hover:text-blue-800">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M480 670.923q-5.692 0-12.038-2.615-6.347-2.616-12.577-8.846l-171.77-171.77q-7.384-7.384-6.769-16.538.615-9.154 7-15.539 8.385-8.384 16.154-7.884t15.154 7.884L480 621.461l165.077-165.076q7.384-7.385 15.038-7.77 7.654-.384 16.039 8 7.385 7.385 7.385 15.654 0 8.27-7.385 15.654L504.615 659.462q-6.23 6.23-12.192 8.846-5.961 2.615-12.423 2.615Z" /></svg>
+                                          </div>
+                                        </Popover.Button>
+                                        <Menu deleteTableApi={deleteTableApi} tableId={menu.tableId} baseId={menu.baseId} close={close} dispatch={dispatch} />
+                                      </NavLink>
+                                    </li>
+                                  </>
+                                )}
+                              </Popover>
                             </div>
                           )
                         );
@@ -250,7 +264,7 @@ export default function Sidebar() {
                         className="submenu_item max-w-[170px]"
                         onClick={() => {
                           dispatch(handleAddToggle(true));
-                          dispatch(handleCreateTableBaseId(item?.baseId));
+                          dispatch(handelSelectedTableAndBaseId({ selectedBaseId: item?.baseId }));
                         }}
                       >
                         <button className="navLink w-full">
@@ -299,42 +313,43 @@ export default function Sidebar() {
   );
 }
 
-function ContextMenu({ children, onClose, x, y }) {
-  const [menuWidth, setMenuWidth] = useState(0);
-  const [menuHeight, setMenuHeight] = useState(0);
-  const [menuLeft, setMenuLeft] = useState(0);
-  const [menuTop, setMenuTop] = useState(0);
-
-  const handleRef = (node) => {
-    if (node !== null) {
-      setMenuWidth(node.offsetWidth);
-      setMenuHeight(node.offsetHeight);
-      setMenuLeft(Math.min(x, window.innerWidth - node.offsetWidth));
-      setMenuTop(Math.min(y, window.innerHeight - node.offsetHeight));
-    }
-  };
-
+function Menu({ deleteTableApi, baseId, tableId, close, dispatch }) {
+  const navigate = useNavigate()
   return (
-    <>
-      <div className="fixed inset-0" onClick={onClose} />
-      <div
-        ref={handleRef}
-        className="fixed bg-white p-2 rounded shadow"
-        style={{ left: menuLeft, top: menuTop }}
-      >
-        {children}
-      </div>
-    </>
-  );
-}
-
-function MenuItem({ label, onClick }) {
-  return (
-    <div
-      className="px-2 py-1 cursor-pointer hover:bg-gray-200"
-      onClick={onClick}
+    <Transition
+      className="bg-white"
+      as={Fragment}
+      enter="transition ease-out duration-200"
+      enterFrom="opacity-0 translate-y-1"
+      enterTo="opacity-100 translate-y-0"
+      leave="transition ease-in duration-150"
+      leaveFrom="opacity-100 translate-y-0"
+      leaveTo="opacity-0 translate-y-1"
     >
-      {label}
-    </div>
-  );
+      <Popover.Panel onClick={(e) => {
+        // e.preventDefault();
+      }} className="text-black absolute top-[35px] z-20 w-full rounded-md left-0 p-2 border-gray-400 border-[.5px] shadow-md flex flex-col bg-white">
+        <div className=" hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 w-full ">
+          <span className="material-symbols-rounded text-lg font-light mr-4">
+            edit
+          </span>
+          Rename Table
+        </div>
+        <div
+          className="hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 w-full"
+          onClick={(e) => {
+            e.stopPropagation();
+            // deleteTableApi({ data: { table_id: tableId }, baseId: baseId })
+            dispatch(handelRemoveSideBarField({ baseId: baseId, tableId: tableId }))
+            // close()
+          }}
+        >
+          <span className="material-symbols-rounded text-lg font-light mr-4">
+            delete
+          </span>
+          Delete Table
+        </div>
+      </Popover.Panel>
+    </Transition>
+  )
 }

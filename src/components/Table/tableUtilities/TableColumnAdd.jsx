@@ -293,6 +293,7 @@ export default function TableColumnAdd({ headers }) {
                     >
                       cancel
                     </div>
+                    {console.log(fieldNameInput)}
                     {selectedFieldType && (
                       <button
                         disabled={!fieldNameInput || isExistFieldNameInput}
@@ -310,8 +311,8 @@ export default function TableColumnAdd({ headers }) {
                                 linked_rec: {
                                   baseid: selectedBaseId,
                                   tableid: tableIdMap.get(selectedFieldTypeLinkedRecord),
-                                  field_id: 'field id',
-                                  field_name: 'Name',
+                                  selected_field_id: 'field id',
+                                  selected_field_name: 'Name',
                                 }
                               },
                             });
@@ -401,7 +402,7 @@ function LinkedToAnotherRecordOptions({
             name=""
             id=""
             className="bg-[#f0f1f3] w-full px-3 p-1.5  outline-none focus:bg-blue-50 focus:border-transparent"
-            placeholder="Find a field type"
+            placeholder="Find a table to link"
             value={fieldSearchInputLinkedRecord}
             onChange={(e) => {
               setFieldSearchInputLinkedRecord(e.target.value);

@@ -2,12 +2,12 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, redirect } from "react-router-dom";
 import { handelUpdateBases } from "../../../store/features/BasesStateSlice";
-import { handelSelectedTableId, handleAddToggle } from "../../../store/features/globalStateSlice";
+import { handelSelectedTableAndBaseId, handleAddToggle } from "../../../store/features/globalStateSlice";
 import { handelAddSideBarField } from "../../../store/features/SideBarStateSlice";
 import { useCreateTableMutation } from "../../../store/services/alphaTruckingApi";
 
 export default function AddTable() {
-  const { createTableBaseId } = useSelector(
+  const { selectedBaseId } = useSelector(
     (state) => state.globalState
   );
   const { bases } = useSelector((state) => state.bases);
@@ -27,7 +27,7 @@ export default function AddTable() {
   // save all the table names and later check if the name is already present or not
   const existingTable = new Map();
   bases.map(({ baseid, tablemetadata }) => {
-    if (baseid === createTableBaseId) {
+    if (baseid === selectedBaseId) {
       tablemetadata?.forEach(({ table_name }) => {
         existingTable.set(table_name?.toLocaleLowerCase(), true);
       })
@@ -36,24 +36,20 @@ export default function AddTable() {
 
   useEffect(() => {
     if (responseCreateTable?.data) {
-      console.log(responseCreateTable?.data)
       dispatch(
         handelUpdateBases({
-          baseId: createTableBaseId,
+          baseId: selectedBaseId,
           data: responseCreateTable?.data,
         })
       );
       dispatch(
         handelAddSideBarField({
-          baseId: createTableBaseId,
-          data: { title: responseCreateTable?.data?.table_name, tableId: responseCreateTable?.data?.table_id, to: `${createTableBaseId}/${responseCreateTable?.data?.table_id}` },
+          baseId: selectedBaseId,
+          data: { title: responseCreateTable?.data?.table_name, tableId: responseCreateTable?.data?.table_id, to: `${selectedBaseId}/${responseCreateTable?.data?.table_id}`, 'baseId': selectedBaseId },
         })
       );
-
-      dispatch(handelSelectedTableId({ selectedTableId: responseCreateTable?.data?.table_id }))
-
-
-      navigate(`/${createTableBaseId}/${responseCreateTable?.data?.table_id}`)
+      dispatch(handelSelectedTableAndBaseId({ selectedTableId: responseCreateTable?.data?.table_id }))
+      navigate(`/${selectedBaseId}/${responseCreateTable?.data?.table_id}`)
     }
   }, [responseCreateTable.isSuccess]);
   return (
@@ -116,7 +112,7 @@ export default function AddTable() {
                   disabled={!tableNameInput || isExistTableNameInput}
                   onClick={async () => {
                     await createTableApi({
-                      tableId: createTableBaseId,
+                      tableId: selectedBaseId,
                       data: {
                         table_name: tableNameInput,
                       },
