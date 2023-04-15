@@ -338,7 +338,7 @@ function Menu({ deleteTableApi, baseId, tableId, close, dispatch }) {
         <div
           className="hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 w-full"
           onClick={(e) => {
-            e.stopPropagation();
+            // e.stopPropagation();
             // deleteTableApi({ data: { table_id: tableId }, baseId: baseId })
             dispatch(handelRemoveSideBarField({ baseId: baseId, tableId: tableId }))
             // close()

@@ -22,6 +22,8 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
         }
     });
 
+    console.log(rowData)
+
     const socket = useSelector((state) => state.socketWebData.socket);
 
     const [getTableDataApi, responseGetTableData] = useGetTableDataPartMutation(fetchedTableId);
@@ -32,7 +34,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
     const [isDataFetched, setIsDataFetched] = useState(false)
     const [primaryData, setPrimaryData] = useState('')
     const [fetchedTableColumns, setFetchedTableColumns] = useState([])
-    const [selectedRowData, setSelectedRowData] = React.useState([]);
+    const [selectedRowData, setSelectedRowData] = React.useState(rowData || []);
     const [searchTerm, setSearchTerm] = useState("");
     const [isChildVisible, setIsChildVisible] = useState(false);
     const [rowsDataMap, setRowsDataMap] = useState(new Map());
@@ -77,9 +79,9 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
         // rowCopy[cell?.column.id] = rowData;
 
         // // console.log(rowObj)
-        // socket.emit("updatedata", rowObj, (response) => {
-        //     console.log("res : ", response);
-        // });
+        socket.emit("updatedata", rowObj, (response) => {
+            console.log("res : ", response);
+        });
     }
 
 
@@ -104,9 +106,9 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
         console.log(rowObj)
 
         // // console.log(rowObj)
-        // socket.emit("updatedata", rowObj, (response) => {
-        //     console.log("res : ", response);
-        // });
+        socket.emit("updatedata", rowObj, (response) => {
+            console.log("res : ", response);
+        });
     }
 
 
@@ -141,7 +143,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
                     selectedRowData.map((ele, i) => {
                         return (
                             <div key={i} className='flex bg-purple-100 rounded-md items-center cursor-pointer px-1'>
-                                <div className='h-full w-max'>{rowsDataMap.get(ele) && rowsDataMap.get(ele)[primaryData]}</div>
+                                <div className='h-full w-max'>{rowsDataMap.get(ele) && rowsDataMap.get(ele)[primaryData]} {ele}</div>
                                 {isChildVisible && <svg onClick={() => removeSelectedRow(ele)} xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M480 604.308 270.154 814.154q-5.615 5.615-13.769 6-8.154.385-14.539-6T235.461 800q0-7.769 6.385-14.154L451.692 576 241.846 366.154q-5.615-5.615-6-13.769-.385-8.154 6-14.539T256 331.461q7.769 0 14.154 6.385L480 547.692l209.846-209.846q5.615-5.615 13.769-6 8.154-.385 14.539 6T724.539 352q0 7.769-6.385 14.154L508.308 576l209.846 209.846q5.615 5.615 6 13.769.385 8.154-6 14.539T704 820.539q-7.769 0-14.154-6.385L480 604.308Z" /></svg>}
                             </div>
                         )

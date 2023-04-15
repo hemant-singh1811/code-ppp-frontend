@@ -293,7 +293,7 @@ export default function TableColumnAdd({ headers }) {
                     >
                       cancel
                     </div>
-                    {console.log(fieldNameInput)}
+                    {/* {console.log(fieldNameInput)} */}
                     {selectedFieldType && (
                       <button
                         disabled={!fieldNameInput || isExistFieldNameInput}
@@ -317,7 +317,7 @@ export default function TableColumnAdd({ headers }) {
                               },
                             });
                           } else {
-                            console.log("called")
+                            // console.log("called")
                             addColumnApi({
                               base_id: selectedBaseId,
                               data: {
