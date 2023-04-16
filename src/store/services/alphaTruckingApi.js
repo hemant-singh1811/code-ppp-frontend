@@ -1,4 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+
+const dataAdapter = createEntityAdapter();
 
 export const alphaTruckingApi = createApi({
   reducerPath: 'alphaTruckingApi',
@@ -65,13 +68,16 @@ export const alphaTruckingApi = createApi({
       query: () => ({
         url: '/API/V1/bases',
         method: 'POST',
+        transformResponse: (response) => response.data,
       }),
     }),
 
+    // this is used to get columns and metadata
     GetModel: builder.query({
       query: (tableId) => ({
         url: `/API/V1/getmodel/${tableId}`,
         method: 'POST',
+        transformResponse: (response) => response.data,
       }),
     }),
 
@@ -79,6 +85,7 @@ export const alphaTruckingApi = createApi({
       query: (tableId) => ({
         url: `/API/V1/getdata/${tableId}`,
         method: 'POST',
+        transformResponse: (response) => response.data,
       }),
     }),
 
@@ -96,6 +103,14 @@ export const alphaTruckingApi = createApi({
       }),
     }),
 
+    GetTableRecords: builder.query({
+      query: (payload) => ({
+        url: `API/V1/getrecords`,
+        method: 'POST',
+        body: payload.data,
+      }),
+    }),
+
     // GetTableRecords: builder.query({
     //   query: (payload) => ({
     //     url: `API/V1/getrecords/${payload.tableId}`,
@@ -109,18 +124,18 @@ export const alphaTruckingApi = createApi({
     //   }),
     // }),
 
-    GetTableRecords: builder.query({
-      query: async (payload) => {
-        const response = await fetch(`API/V1/getrecords/${payload.tableId}`, {
-          body: payload.data,
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch user');
-        }
-        const data = await response.json();
-        return data;
-      },
-    }),
+    // GetTableRecords: builder.query({
+    //   query: async (payload) => {
+    //     const response = await fetch(`API/V1/getrecords/${payload.tableId}`, {
+    //       body: payload.data,
+    //     });
+    //     if (!response.ok) {
+    //       throw new Error('Failed to fetch user');
+    //     }
+    //     const data = await response.json();
+    //     return data;
+    //   },
+    // }),
 
     // table api
     CreateTable: builder.mutation({
@@ -166,7 +181,7 @@ export const alphaTruckingApi = createApi({
     AddTableColumn: builder.mutation({
       query: (payload) => ({
         url: `API/V1/addcolumn/${payload.base_id}`,
-        body: payload.data,
+        body: payload,
         method: 'PUT',
       }),
     }),
@@ -181,6 +196,87 @@ export const alphaTruckingApi = createApi({
   }),
 });
 
+const dataSlice = createSlice({
+  name: 'data',
+  initialState: dataAdapter.getInitialState(),
+  reducers: {},
+  // extraReducers: (builder) => {
+  //   builder
+  //     .addMatcher(
+  //       alphaTruckingApi.endpoints.GetBases.matchFulfilled,
+  //       (state, action) => {
+  //         dataAdapter.setAll(state, action.payload);
+  //         console.log(builder);
+  //       }
+  //     )
+  //     .addMatcher(
+  //       alphaTruckingApi.endpoints.GetModel.matchFulfilled,
+  //       (state, action) => {
+  //         dataAdapter.setAll(state, action.payload);
+  //         console.log(builder);
+  //       }
+  //     )
+  //     .addMatcher(
+  //       alphaTruckingApi.endpoints.GetTableData.matchFulfilled,
+  //       (state, action) => {
+  //         dataAdapter.setAll(state, action.payload);
+  //         console.log(builder);
+  //       }
+  //     )
+  //     .addMatcher(
+  //       alphaTruckingApi.endpoints.GetBases.matchPending,
+  //       (state, action) => {
+  //         // Set the `loading` flag to true while the request is in progress
+  //         state.loading = true;
+  //       }
+  //     )
+  //     .addMatcher(
+  //       alphaTruckingApi.endpoints.GetModel.matchPending,
+  //       (state, action) => {
+  //         // Set the `loading` flag to true while the request is in progress
+  //         state.loading = true;
+  //       }
+  //     )
+  //     .addMatcher(
+  //       alphaTruckingApi.endpoints.GetTableData.matchPending,
+  //       (state, action) => {
+  //         // Set the `loading` flag to true while the request is in progress
+  //         state.loading = true;
+  //       }
+  //     )
+  //     .addMatcher(
+  //       alphaTruckingApi.endpoints.GetBases.matchRejected,
+  //       (state, action) => {
+  //         // Set the `error` flag and clear the `loading` flag if the request fails
+  //         state.loading = false;
+  //         state.error = action.error.message;
+  //       }
+  //     )
+  //     .addMatcher(
+  //       alphaTruckingApi.endpoints.GetModel.matchRejected,
+  //       (state, action) => {
+  //         // Set the `error` flag and clear the `loading` flag if the request fails
+  //         state.loading = false;
+  //         state.error = action.error.message;
+  //       }
+  //     )
+  //     .addMatcher(
+  //       alphaTruckingApi.endpoints.GetTableData.matchRejected,
+  //       (state, action) => {
+  //         // Set the `error` flag and clear the `loading` flag if the request fails
+  //         state.loading = false;
+  //         state.error = action.error.message;
+  //       }
+  //     );
+  // },
+});
+
+export const selectDataLoading = (state) => state.data.loading;
+export const selectDataError = (state) => state.data.error;
+export const { selectAll: selectAllData } = dataAdapter.getSelectors(
+  (state) => state.data
+);
+
 export const {
   useAddTableColumnMutation,
   useCreateTableMutation,
@@ -194,10 +290,13 @@ export const {
   useGetModelDataMutation,
   useGetTableDataPartMutation,
 
+  useGetTableRecordsQuery,
   useGetBasesQuery,
   useGetModelQuery,
   useGetTableDataQuery,
   useGetLoadQuery,
   useGetSavedViewQuery,
-  useGetTableRecordsQuery,
+  // useGetTableRecordsQuery,
 } = alphaTruckingApi;
+
+export default dataSlice.reducer;

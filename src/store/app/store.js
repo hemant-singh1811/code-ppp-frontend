@@ -10,6 +10,7 @@ import basesReducer from '../features/BasesStateSlice';
 import sidebarReducer from '../features/SideBarStateSlice';
 import imagesViewerReducer from '../features/ImageViewerSlice';
 import socketWebDataReducer from '../features/sockets/SocketWebDataSlice';
+import dataSliceReducer from '../services/alphaTruckingApi';
 
 const reducer = {
   [alphaTruckingApi.reducerPath]: alphaTruckingApi.reducer,
@@ -22,6 +23,7 @@ const reducer = {
   sidebar: sidebarReducer,
   imagesViewer: imagesViewerReducer,
   socketWebData: socketWebDataReducer,
+  dataSlice: dataSliceReducer,
 };
 
 export const store = configureStore({

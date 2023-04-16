@@ -17,12 +17,14 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
 
     columns.forEach(element => {
         if (element.field_name === cell?.column?.id) {
-            fetchedTableId = element.linked_rec.tableid
-            linkedRecord = element.linked_rec
+            fetchedTableId = element?.linked_rec?.tableid
+            linkedRecord = element?.linked_rec
         }
     });
 
-    console.log(rowData)
+
+    // console.log(rowData)
+
 
     const socket = useSelector((state) => state.socketWebData.socket);
 
@@ -67,12 +69,14 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
 
         let updatedRowKey = cell?.column.id;
         let newRowPart = { [updatedRowKey]: [...selectedRowData, ele.id] };
+        let oldRowPart = { [updatedRowKey]: selectedRowData };
 
         let rowObj = {
             base_id: selectedBaseId,
             table_id: selectedTableId,
             record_id: rowCopy.id52148213343234567,
             updated_data: newRowPart,
+            old_data: oldRowPart,
             linked_rec: linkedRecord
         };
         console.log(rowObj)
@@ -87,13 +91,14 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
 
     function removeSelectedRow(ele) {
 
-        let updatedSelectedRowData = selectedRowData.filter((id) => id !== ele)
+        let updatedSelectedRowData = selectedRowData?.filter((id) => id !== ele)
 
         setSelectedRowData((prev) => prev.filter((id) => id !== ele))
 
         let updatedRowKey = cell?.column.id;
 
         let newRowPart = { [updatedRowKey]: updatedSelectedRowData };
+        let oldRowPart = { [updatedRowKey]: selectedRowData };
 
         let rowObj = {
             base_id: selectedBaseId,
@@ -101,6 +106,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
             record_id: rowCopy.id52148213343234567,
             linked_table_id: fetchedTableId,
             updated_data: newRowPart,
+            old_data: oldRowPart,
             linked_rec: linkedRecord
         };
         console.log(rowObj)
@@ -140,7 +146,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
             <div className="flex h-full w-full items-center  px-1 gap-1" onFocus={() => handleFocus()} onBlur={() => handleBlur()} tabIndex="1">
 
                 {
-                    selectedRowData.map((ele, i) => {
+                    selectedRowData?.map((ele, i) => {
                         return (
                             <div key={i} className='flex bg-purple-100 rounded-md items-center cursor-pointer px-1'>
                                 <div className='h-full w-max'>{rowsDataMap.get(ele) && rowsDataMap.get(ele)[primaryData]} {ele}</div>
@@ -204,7 +210,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
                                         {
                                             isDataFetched ? (
                                                 responseGetTableData?.data?.filter((ele) => {
-                                                    return !selectedRowData.includes(ele.id)
+                                                    return !selectedRowData?.includes(ele.id)
                                                 }).map((ele, i) => {
                                                     // console.log(primaryData, fetchedTableColumns)
                                                     // console.log(responseGetModelData.isSuccess, responseGetTableData.isSuccess)

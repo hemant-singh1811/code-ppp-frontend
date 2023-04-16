@@ -4,16 +4,45 @@ import Loading from "../../components/utilities/Loading";
 import {
   useGetModelQuery,
   useGetTableDataQuery,
-  useGetTableRecordsQuery,
 } from "../../store/services/alphaTruckingApi";
 import Table from "../../components/Table/Table";
 import { useSelector } from "react-redux";
 
+
+// async function fetchLinkedRecordData(tableId, data, token) {
+//   const postData = { record_ids: data };
+
+//   try {
+//     const response = await axios.post(
+//       `${import.meta.env.VITE_SERVER_URL}API/V1/getrecords/${tableId}`,
+//       postData,
+//       {
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'Authorization': `Bearer ${token}`
+//         }
+//       }
+//     );
+
+//     const userData = response.data;
+//     console.log(userData);
+//     return userData;
+
+//   } catch (error) {
+//     console.error(error);
+//     throw new Error(error);
+//   }
+// }
+
 export default function TableScreen() {
   const { selectedTableId } = useSelector((state) => state.globalState);
-  let { data, error, isFetching, refetch } =
-    useGetTableDataQuery(selectedTableId);
+  // const token = useSelector((state) => state.auth.userInfo.user_token);
+
+  let { data, error, isFetching, refetch } = useGetTableDataQuery(selectedTableId);
   let modelResult = useGetModelQuery(selectedTableId);
+
+  const multipleRecordLinksMap = new Map();
+  const RecordIdArrayWithTableIdMap = new Map(); // table id -> multiple record [] of a particular column
 
   useEffect(() => {
     refetch(selectedTableId);
@@ -27,16 +56,70 @@ export default function TableScreen() {
     return <Error error={error} />;
   }
 
-
-
-  const multipleRecordLinksMap = new Map();
-
   modelResult.data.map(({ data }) => {
     if (data.field_type === "multipleRecordLinks") {
-      // console.log(data)
       multipleRecordLinksMap.set(data?.linked_rec?.tableid, data)
     }
   })
+
+  for (let [key, value] of multipleRecordLinksMap.entries()) {
+
+    const uniqueRecordIdSet = new Set();
+
+
+    data.map(({ data }) => {
+      data[value?.field_name].map((item) => {
+        // console.log(item)
+        uniqueRecordIdSet.add(item)
+      })
+    })
+
+    let uniqueRecordIdArray = Array.from(uniqueRecordIdSet)
+
+    RecordIdArrayWithTableIdMap.set(key, uniqueRecordIdArray)
+
+  }
+
+  let modifiedArrayOfObject = []
+
+  for (let [key, value] of RecordIdArrayWithTableIdMap) {
+    modifiedArrayOfObject.push({
+      table_id: key,
+      record_ids: value
+    })
+  }
+
+  return <Table tableData={data} tableModel={modelResult.data} modifiedArrayOfObject={modifiedArrayOfObject} />;
+}
+
+// function getTableRecords() {
+
+//   const data = useGetTableRecordsQuery()
+
+
+
+//   return data;
+
+
+// }
+
+
+// // Example usage:
+// fetchUserData('octocat')
+//   .then(data => console.log(data))
+//   .catch(error => console.error(error));
+
+
+// function addDataToRow({ key, newArray }) {
+//   const val = useGetTableRecordsQuery({ tableId: key, data: newArray })
+//   console.log(val)
+
+
+// }
+
+
+
+  // console.log(modelResult.data)
 
   // modelResult.data.map(({ data }) => {
   //   if (data.field_type === "multipleLookupValues") {
@@ -44,27 +127,14 @@ export default function TableScreen() {
   //     console.log(data)
   //   }
   // })
-
-  let i = 0
-
-  for (let [key, value] of multipleRecordLinksMap.entries()) {
-    // multipleRecordLinksMap.set(key, {
+      // multipleRecordLinksMap.set(key, {
     //   ...multipleRecordLinksMap.get(key), data: data.map(({ data }) => {
     //     return data[value?.field_name]
     //   })
     // })
 
-    let newArray = data.map(({ data }) => {
-      // console.log(value?.field_name)
-      let updatedArray = []
-      if (Array.isArray(data[value?.field_name])) {
-        updatedArray = [...data[value?.field_name]]
-      }
-      return data[value?.field_name]
-    })
 
-    // console.log(newArray)
-  }
+  // let i = 0
 
   // for (let [key, value] of multipleRecordLinksMap.entries()) {
   //   console.log(key + ' = ', value);
@@ -76,16 +146,18 @@ export default function TableScreen() {
   // console.log(valuesArray);
   // console.log(data);
 
-  return <Table tableData={data} tableModel={modelResult.data} />;
-}
 
-function getTableRecords() {
+      // let rowsRecordId = data.map(({ data }) => {
+    //   let updatedArray = []
+    //   if (Array.isArray(data[value?.field_name])) {
+    //     updatedArray = [...data[value?.field_name]]
+    //   }
+    //   return data[value?.field_name]
+    // })
 
-  const data = useGetTableRecordsQuery()
+    // rowsRecordId.map((ele) => {
+    //   uniqueRecordIdMap.set(ele, undefined)
+    // })
 
-
-
-  return data;
-
-
-}
+    // const datad = fetchLinkedRecordData(key, newArray, token)
+    // console.log(datad)
