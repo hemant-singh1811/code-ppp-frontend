@@ -72,6 +72,7 @@ const defaultColumn = {
     const initialValue = getValue();
     const location = useLocation();
     const socket = useSelector(state => state.socketWebData.socket);
+    const { selectedBaseId } = useSelector(state => state.globalState)
 
 
     // console.log(row._valuesCache)
@@ -89,7 +90,7 @@ const defaultColumn = {
       let newRowPart = { [updatedRowKey]: updatedRowValue }
 
       let obj = {
-        base_id: "",
+        base_id: selectedBaseId,
         table_id: location.pathname.split("/")[2],
         record_id: rowCopy.id52148213343234567,
         updated_data: newRowPart,

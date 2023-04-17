@@ -14,6 +14,7 @@ import AutoNumberCell from "./AutoNumberCell";
 import ModifiedAndCreatedCell from "./ModifiedAndCreatedCell";
 import ButtonCell from "./ButtonCell";
 import MultipleRecordLinksCell from "./MultipleRecordLinksCell";
+import MultipleAttachmentsTableCell from "./MultipleAttachmentsTableCell";
 
 export default function CellByFieldType({ field_type, cell }) {
   switch (field_type) {
@@ -75,6 +76,7 @@ export default function CellByFieldType({ field_type, cell }) {
     // pending components
 
     case "multipleAttachments": //array
+      return <MultipleAttachmentsTableCell cell={cell} rowData={cell?.getValue()} />;
       return <ImageReader data={cell?.getValue()} />;
 
     case "checkbox": //boolean

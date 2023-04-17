@@ -68,10 +68,12 @@ export default function TableScreen() {
 
 
     data.map(({ data }) => {
-      data[value?.field_name].map((item) => {
-        // console.log(item)
-        uniqueRecordIdSet.add(item)
-      })
+      if (Array.isArray(data[value?.field_name])) {
+        data[value?.field_name].map((item) => {
+          // console.log(item)
+          uniqueRecordIdSet.add(item)
+        })
+      }
     })
 
     let uniqueRecordIdArray = Array.from(uniqueRecordIdSet)

@@ -18,7 +18,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
 
   // console.log(rowData);
 
-  const { selectedTableId } = useSelector((state) => state.globalState);
+  const { selectedTableId, selectedBaseId } = useSelector((state) => state.globalState);
   const [SingleSelectToggle, setSingleSelectToggle] = React.useState(false);
   const [selectedOption, setSelectedOption] = React.useState(rowData);
   const [options, setOptions] = useState(newOptions);
@@ -90,7 +90,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
     let newRowPart = { [updatedRowKey]: [...selectedOption, searchTerm] };
 
     let rowObj = {
-      base_id: "",
+      base_id: selectedBaseId,
       table_id: location.pathname.split("/")[2],
       record_id: rowCopy.id52148213343234567,
       updated_data: newRowPart,
@@ -117,7 +117,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
     let newRowPart = { [updatedRowKey]: [...selectedOption, name] };
 
     let rowObj = {
-      base_id: "",
+      base_id: selectedBaseId,
       table_id: location.pathname.split("/")[2],
       record_id: rowCopy.id52148213343234567,
       updated_data: newRowPart,
@@ -147,7 +147,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
     let newRowPart = { [updatedRowKey]: updatedSelectedData };
 
     let rowObj = {
-      base_id: "",
+      base_id: selectedBaseId,
       table_id: location.pathname.split("/")[2],
       record_id: rowCopy.id52148213343234567,
       updated_data: newRowPart,

@@ -8,7 +8,7 @@ export default function MultilineTextCell({ cell }) {
   const [value, setValue] = useState(cell?.getValue() || '');
   const [isEditMode, setIsEditMode] = useState(false);
   const { table } = useContext(TableContext);
-
+  const { selectedBaseId } = useSelector(state => state.globalState)
 
   const multiLineTextRef = useRef(null);
 
@@ -33,7 +33,7 @@ export default function MultilineTextCell({ cell }) {
       let newRowPart = { [cell?.column.id]: event.target.innerText };
 
       let rowObj = {
-        base_id: "",
+        base_id: selectedBaseId,
         table_id: location.pathname.split("/")[2],
         record_id: cell?.row?.original.id52148213343234567,
         updated_data: newRowPart,

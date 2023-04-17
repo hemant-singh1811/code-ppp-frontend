@@ -8,6 +8,7 @@ export default function DateTableCell({ cell }) {
     const socket = useSelector((state) => state.socketWebData.socket);
     const [value, setValue] = useState(cell?.getValue());
     const { table } = useContext(TableContext);
+    const { selectedBaseId } = useSelector(state => state.globalState)
 
     const options = {
         static: true,
@@ -27,7 +28,7 @@ export default function DateTableCell({ cell }) {
             let newRowPart = { [cell?.column.id]: date };
 
             let rowObj = {
-                base_id: "",
+                base_id: selectedBaseId,
                 table_id: location.pathname.split("/")[2],
                 record_id: cell?.row?.original.id52148213343234567,
                 updated_data: newRowPart,

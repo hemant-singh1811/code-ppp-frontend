@@ -205,7 +205,7 @@ export default function TableColumnAdd({ headers }) {
                 )}
 
                 {fieldSearchInput !== "Link to another record" && (
-                  <div className=" mt-2 border-[#eaebed] border-2 rounded-md  overflow-hidden">
+                  <div className="max-h-[calc(100vh_/_2)] mt-2 border-[#eaebed] border-2 rounded-md  overflow-auto overflow-x-auto">
                     <input
                       type="search"
                       name=""
@@ -222,7 +222,7 @@ export default function TableColumnAdd({ headers }) {
                       }}
                     />
                     {!selectedFieldType && (
-                      <div className="h-4/5 overflow-scroll p-1 px-1.5">
+                      <div className="h-4/5 overflow-auto p-1 px-1.5 pb-0">
                         {frontEndFieldsType
                           .filter((ele) => {
                             return ele
@@ -373,7 +373,7 @@ function LinkedToAnotherRecordOptions({
 
   return (
     <>
-      <div className=" mt-2 border-[#eaebed] border-2 rounded-md  overflow-hidden">
+      <div className="max-h-[calc(100vh_/_2)] mt-2 border-[#eaebed] border-2 rounded-md  overflow-auto overflow-x-auto">
         <div className="flex justify-center items-center">
           <div
             onClick={() => {
@@ -415,7 +415,7 @@ function LinkedToAnotherRecordOptions({
         </div>
 
         {!selectedFieldTypeLinkedRecord && (
-          <div className="h-4/5 overflow-scroll p-1 px-1.5">
+          <div className="h-4/5 overflow-auto p-1 px-1.5 pb-0">
             {bases.map(({ baseid, tablemetadata }) => {
               if (baseid === selectedBaseId) {
                 return tablemetadata

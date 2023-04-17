@@ -1,86 +1,78 @@
-import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 
+// Import React FilePond
+import { FilePond, registerPlugin } from 'react-filepond'
+
+// Import FilePond styles
+import 'filepond/dist/filepond.min.css'
+
+// Import the Image EXIF Orientation and Image Preview plugins
+// Note: These need to be installed separately
+// `npm i filepond-plugin-image-preview filepond-plugin-image-exif-orientation --save`
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
+
+// Register the plugins
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
+
+// import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+// import { storage } from "../firebase";
+// Our app
 export default function Testing() {
-  let [isOpen, setIsOpen] = useState(true)
+  // const [files, setFiles] = useState([])
+  // const [fileUrls, setFileUrls] = useState([]);
+  // const storageRef = storage.ref();
 
-  function closeModal() {
-    setIsOpen(false)
-  }
 
-  function openModal() {
-    setIsOpen(true)
-  }
+  // const handleFileUpload = async (files) => {
+  //   const urls = await Promise.all(
+  //     Array.from(files).map(async (file) => {
+  //       const fileRef = storageRef.child(file.name);
+  //       const snapshot = await fileRef.put(file);
+  //       return snapshot.ref.getDownloadURL();
+  //     })
+  //   );
+  //   setFileUrls((prevUrls) => [...prevUrls, ...urls]);
+  // };
 
-  return (
-    <>
-      <div className=" inset-0 flex items-center justify-center">
-        <button
-          type="button"
-          onClick={openModal}
-          className="rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-        >
-          Open dialog
-        </button>
-      </div>
 
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
+  // return (
+  //   <div className="w-full h-[1000px] py-4 bg-yellow-500">
+  //     <FilePond
+  //       allowMultiple={true}
+  //       maxFileSize="1MB"
+  //       acceptedFileTypes={['image/*']}
+  //       onupdatefiles={(fileItems) => {
+  //         if (fileItems.length > 0) {
+  //           handleFileUpload(fileItems.map((fileItem) => fileItem.file));
+  //         }
+  //       }}
+  //     />
+  //     {/* <FilePond
+  //       files={files}
+  //       onupdatefiles={setFiles}
+  //       allowMultiple={true}
+  //       allowDrop
+  //       instantUpload='false'
+  //       maxFiles={50}
 
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
-                  >
-                    Payment successful
-                  </Dialog.Title>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      Your payment has been successfully submitted. We’ve sent
-                      you an email with all of the details of your order.
-                    </p>
-                  </div>
+  //       server="/api"
+  //       name="files"
+  //       //  {/* sets the file input name, it's filepond by default
+  //     {/* labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+  //     /> */}
 
-                  <div className="mt-4">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
-                    >
-                      Got it, thanks!
-                    </button>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
-    </>
-  )
+
+  //     <div>
+  //       {fileUrls.map((url) => (
+  //         <img key={url} src={url} alt="Uploaded file" />
+  //       ))}
+  //     </div>
+  //   </div>
+  // )
 }
+
 
 
 // import { Popover, Transition } from "@headlessui/react";

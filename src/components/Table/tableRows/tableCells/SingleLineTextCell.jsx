@@ -7,6 +7,7 @@ export default function SingleLineTextCell({ cell }) {
   const [value, setValue] = useState(cell?.getValue() || "");
   const [isEditMode, setIsEditMode] = useState(false);
   const { table } = useContext(TableContext);
+  const { selectedBaseId } = useSelector(state => state.globalState)
 
   function handleDoubleClick() {
     setIsEditMode(true);
@@ -27,7 +28,7 @@ export default function SingleLineTextCell({ cell }) {
       let newRowPart = { [cell?.column.id]: value };
 
       let rowObj = {
-        base_id: "",
+        base_id: selectedBaseId,
         table_id: location.pathname.split("/")[2],
         record_id: cell?.row?.original.id52148213343234567,
         updated_data: newRowPart,

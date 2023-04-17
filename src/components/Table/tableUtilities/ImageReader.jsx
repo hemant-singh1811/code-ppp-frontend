@@ -1,9 +1,7 @@
-import React, { useState, useCallback, useContext } from "react"
+import React, { useCallback, useContext } from "react"
 import { useDispatch } from "react-redux";
-import ImageViewer from "react-simple-image-viewer";
 import { handelAddImage } from "../../../store/features/ImageViewerSlice";
 import { TableContext } from "../tableComponents/TableComponents";
-import CustomImageViewer from "./CustomImageViewer";
 
 export default function ImageReader({ data }) {
     const dispatch = useDispatch()

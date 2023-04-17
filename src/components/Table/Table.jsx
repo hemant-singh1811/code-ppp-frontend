@@ -26,29 +26,44 @@ export default function Table({ tableData, tableModel, modifiedArrayOfObject }) 
     };
   });
 
+  console.log(tableModel)
 
-  const [tableDataModified, setTableDataModified] = React.useState(
-    tableData.map(({ data, id }) => {
-      const object = {};
-      defaultColumns.map(({ header }) => {
-        object[header] = data?.[header] || "";
-      });
-      object.id52148213343234567 = id;
-      return object;
-    })
+
+  const [tableDataModified, setTableDataModified] = React.useState([]
+    // tableData.map(({ data, id }) => {
+    //   const object = {};
+    //   defaultColumns.map(({ header }) => {
+    //     object[header] = data?.[header] || "";
+    //   });
+    //   object.id52148213343234567 = id;
+    //   return object;
+    // })
   );
 
   useEffect(() => {
     if (data) {
+      // let multipleLinkedRecColumns = defaultColumns.map(({ field_type, field_name }) => {
+      //   if (field_name === "multipleRecordLinks") {
+      //   }
+      // })
+      // console.log(defaultColumns)
+
       setTableDataModified(
         tableData.map(({ data, id }) => {
-          // console.log(data)
           const object = {};
-          defaultColumns.map(({ header }) => {
+          defaultColumns.map(({ header, field_type, linked_rec }) => {
             object[header] = data?.[header] || "";
-            // console.log(header)
+            if (field_type === "multipleRecordLinks") {
+              // console.log(data)
+              if (Array.isArray(data?.[header])) {
+                object[header] = data?.[header].map((ele) => {
+                  return { data: linkedRecordIdAndDataMap.get(ele), recordId: ele }
+                })
+              }
+            }
           });
           object.id52148213343234567 = id;
+
           return object;
         })
       )
@@ -72,9 +87,9 @@ export default function Table({ tableData, tableModel, modifiedArrayOfObject }) 
     })
   })
 
-  for (let [key, value] of linkedRecordIdAndDataMap) {
-    console.log(key, value)
-  }
+  // for (let [key, value] of linkedRecordIdAndDataMap) {
+  //   console.log(key, value)
+  // }
 
 
 
@@ -156,4 +171,4 @@ export default function Table({ tableData, tableModel, modifiedArrayOfObject }) 
   // import { useGetSavedViewQuery } from "../../store/services/alphaTruckingApi";
 // import Loading from "../utilities/Loading";
 // import Error from "../utilities/Error";
-// import AddRowTable from "./tableUtilities/AddRowTabl
+// import AddRowTable from "./tableUtilities/AddRowTable

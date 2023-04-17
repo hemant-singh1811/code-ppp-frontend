@@ -6,7 +6,7 @@ import { useEffect } from "react";
 
 export default function CheckBox({ cell, rowData }) {
   const socket = useSelector((state) => state.socketWebData.socket);
-  const { selectedTableId } = useSelector((state) => state.globalState);
+  const { selectedTableId, selectedBaseId } = useSelector((state) => state.globalState);
   const { table } = useContext(TableContext);
   const [isSelected, seIsSelected] = useState(rowData || false);
 
@@ -24,7 +24,7 @@ export default function CheckBox({ cell, rowData }) {
     let newRowPart = { [cell?.column.id]: checkBoxRef.current.checked };
 
     let rowObj = {
-      base_id: "",
+      base_id: selectedBaseId,
       table_id: selectedTableId,
       record_id: cell?.row?.original.id52148213343234567,
       updated_data: newRowPart,
