@@ -26,7 +26,7 @@ export default function Table({ tableData, tableModel, modifiedArrayOfObject }) 
     };
   });
 
-  console.log(tableModel)
+  // console.log(tableModel)
 
 
   const [tableDataModified, setTableDataModified] = React.useState([]
@@ -91,17 +91,9 @@ export default function Table({ tableData, tableModel, modifiedArrayOfObject }) 
   //   console.log(key, value)
   // }
 
-
-
-
-
-
-
-
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="relative overflow-hidden">
-        <AddTable />
         <TableComponents
           toggle={toggle}
           defaultColumns={defaultColumns}

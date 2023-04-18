@@ -1,0 +1,54 @@
+.loaderAlt {
+  width: 20px;
+  height: 20px;
+  display: block;
+  border: 5px solid rgb(0, 187, 255);
+  border-radius: 50%;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  -webkit-animation: rot5 1s infinite;
+  animation: rot5 1s infinite;
+  position: relative;
+}
+
+@-webkit-keyframes rot5 {
+  0% {
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+
+  50% {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+    border-top-color: rgb(0, 30, 255);
+    border-bottom-color: rgb(0, 162, 255);
+    border-right-color: transparent;
+    border-left-color: transparent;
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rot5 {
+  0% {
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+
+  50% {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+    border-top-color: rgb(0, 30, 255);
+    border-bottom-color: rgb(0, 162, 255);
+    border-right-color: transparent;
+    border-left-color: transparent;
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}

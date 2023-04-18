@@ -26,6 +26,12 @@ const initialState = {
   createTableBaseId: undefined,
   selectedTableId: undefined || window.location.pathname.split('/')[2],
   selectedBaseId: undefined || window.location.pathname.split('/')[1],
+  modal: {
+    isOpen: true,
+    heading: '',
+    error: '',
+    type: '',
+  },
 };
 
 const globalStateSlice = createSlice({
@@ -64,6 +70,16 @@ const globalStateSlice = createSlice({
       if (payload?.selectedBaseId)
         state.selectedBaseId = payload?.selectedBaseId;
     },
+    handelOpenModal: (state, { payload }) => {
+      state.modal.isOpen = true;
+      state.modal.error = payload.error;
+      state.modal.heading = payload.heading;
+    },
+    handelCloseModal: (state, { payload }) => {
+      state.modal.isOpen = false;
+      // state.modal.error = '';
+      // state.modal.heading = '';
+    },
   },
 });
 
@@ -74,6 +90,8 @@ export const {
   handleAddToggle,
   handleCreateTableBaseId,
   handelSelectedTableAndBaseId,
+  handelOpenModal,
+  handelCloseModal,
 } = globalStateSlice.actions;
 
 export default globalStateSlice.reducer;

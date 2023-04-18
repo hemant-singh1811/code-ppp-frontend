@@ -175,7 +175,7 @@ export default function Sidebar() {
                       isActive
                         ? item?.subMenu
                           ? "navLink"
-                          : "navLink active"
+                          : "navLink active bg-blue-500"
                         : "navLink"
                     }
                     onClick={() => {
@@ -228,7 +228,7 @@ export default function Sidebar() {
                                         // }}
                                         to={menu.to}
                                         className={({ isActive }) =>
-                                          isActive ? "navLink active" : "navLink"
+                                          isActive ? "navLink active bg-blue-200" : "navLink"
                                         }
                                         title={menu.title}
                                         onClick={() =>
@@ -328,7 +328,7 @@ function Menu({ deleteTableApi, baseId, tableId, close, dispatch }) {
     >
       <Popover.Panel onClick={(e) => {
         // e.preventDefault();
-      }} className="text-black absolute top-[35px] z-20 w-full rounded-md left-0 p-2 border-gray-400 border-[.5px] shadow-md flex flex-col bg-white">
+      }} className="text-black absolute top-[35px] z-20 w-full rounded-md left-[100px] p-2 border-gray-400 border-[.5px] shadow-md flex flex-col bg-white">
         <div className=" hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 w-full ">
           <span className="material-symbols-rounded text-lg font-light mr-4">
             edit

@@ -2,9 +2,11 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, redirect } from "react-router-dom";
 import { handelUpdateBases } from "../../../store/features/BasesStateSlice";
-import { handelSelectedTableAndBaseId, handleAddToggle } from "../../../store/features/globalStateSlice";
+import { handelOpenModal, handelSelectedTableAndBaseId, handleAddToggle } from "../../../store/features/globalStateSlice";
 import { handelAddSideBarField } from "../../../store/features/SideBarStateSlice";
 import { useCreateTableMutation } from "../../../store/services/alphaTruckingApi";
+import Loading from "../../utilities/Loading";
+import LoadingAlt from "../../utilities/LoadingAlt";
 
 export default function AddTable() {
   const { selectedBaseId } = useSelector(
@@ -34,8 +36,13 @@ export default function AddTable() {
     }
   });
 
+
+
+  // console.log(responseCreateTable)
+
   useEffect(() => {
     if (responseCreateTable?.data) {
+      console.log(responseCreateTable?.data)
       dispatch(
         handelUpdateBases({
           baseId: selectedBaseId,
@@ -50,12 +57,22 @@ export default function AddTable() {
       );
       dispatch(handelSelectedTableAndBaseId({ selectedTableId: responseCreateTable?.data?.table_id }))
       navigate(`/${selectedBaseId}/${responseCreateTable?.data?.table_id}`)
+      dispatch(handleAddToggle());
+      setTableNameInput("");
+      setTableDescriptionInput("");
     }
   }, [responseCreateTable.isSuccess]);
+
+  useEffect(() => {
+    if (responseCreateTable?.error) {
+      dispatch(handelOpenModal({ heading: "Table Creation", error: responseCreateTable?.error?.data?.err }))
+      console.log(responseCreateTable?.error)
+    }
+  }, [responseCreateTable.isError]);
   return (
     <div className="">
       {addTableToggle && (
-        <div className="text-black absolute bottom-1 z-50 bg-white w-96 rounded-md left-1 p-4 border-gray-400 border-2 flex flex-col">
+        <div className="text-black absolute bottom-[5px] z-50 bg-white w-96 rounded-md left-[225px] p-4 border-gray-400 border-2 flex flex-col">
           <input
             type="text"
             placeholder="Table Name (Mandatory)"
@@ -109,7 +126,7 @@ export default function AddTable() {
               </div>
               {
                 <button
-                  disabled={!tableNameInput || isExistTableNameInput}
+                  disabled={!tableNameInput || isExistTableNameInput || responseCreateTable.isLoading}
                   onClick={async () => {
                     await createTableApi({
                       tableId: selectedBaseId,
@@ -117,13 +134,16 @@ export default function AddTable() {
                         table_name: tableNameInput,
                       },
                     });
-                    dispatch(handleAddToggle());
-                    setTableNameInput("");
-                    setTableDescriptionInput("");
                   }}
-                  className="bg-blue-600 rounded-md p-1.5 px-4 text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400"
+                  className="bg-blue-600 rounded-md p-1.5 px-4 min-w-[105px] min-h-[31.5px] text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400 flex items-center justify-center"
                 >
-                  Create Table
+                  {responseCreateTable.isLoading ? (<div>
+                    <LoadingAlt />
+                  </div>) : <span >
+                    Create Table
+                  </span>
+                  }
+
                 </button>
               }
             </div>
