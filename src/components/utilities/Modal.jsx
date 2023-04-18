@@ -30,8 +30,8 @@ export default function Modal() {
                     leaveTo="opacity-0"
                 >
                     <div className="fixed inset-0 bg-black bg-opacity-25" />
-                </Transition.Child>
-                <div>
+                </Transition.Child> */}
+                {/* <div>
                     <div x-show="open" className="relative z-10" aria-labelledby="modal-title" x-ref="dialog" aria-modal="true">
                         <div className="fixed z-10 inset-0 overflow-y-auto">
                             <div className="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
@@ -69,9 +69,7 @@ export default function Modal() {
                         </div >
                     </div >
                 </div > */}
-
-
-                {/* <div className="fixed inset-0 overflow-y-auto">
+                <div className="fixed inset-0 overflow-y-auto">
                     <div className="flex min-h-full items-center justify-center p-4 text-center">
                         <Transition.Child
                             as={Fragment}
@@ -82,7 +80,7 @@ export default function Modal() {
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-red-400 text-white p-6 text-left align-middle shadow-xl transition-all">
+                            <Dialog.Panel className="w-full shadow-2xl max-w-md transform overflow-hidden rounded-2xl bg-blue-100 text-black p-6 text-left align-middle transition-all border-gray-400 border-[1px]">
                                 <Dialog.Title
                                     as="h3"
                                     className="text-lg font-medium leading-6 "
@@ -90,14 +88,14 @@ export default function Modal() {
                                     Error Detected in {heading}
                                 </Dialog.Title>
                                 <div className="mt-2">
-                                    <p className="text-sm ">
+                                    <p className="text-sm capitalize">
                                         {error}
                                     </p>
                                 </div>
                                 <div className="mt-4 flex justify-end">
                                     <button
                                         type="button"
-                                        className="inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium  hover:bg-red-200  text-black"
+                                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-200 px-4 py-2 text-sm font-medium  hover:bg-blue-300  text-black"
                                         onClick={closeModal}
                                     >
                                         Got it, thanks!
@@ -106,7 +104,7 @@ export default function Modal() {
                             </Dialog.Panel>
                         </Transition.Child>
                     </div>
-                </div> */}
+                </div>
             </Dialog>
         </Transition>
     )

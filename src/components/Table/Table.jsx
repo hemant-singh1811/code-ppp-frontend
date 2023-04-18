@@ -1,23 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import TableComponents from "./tableComponents/TableComponents";
-import { useSelector } from "react-redux";
-import AddTable from "./tableUtilities/AddTable";
-import Loading from "../utilities/Loading";
-import Error from "../utilities/Error";
-import { useGetTableRecordsQuery } from "../../store/services/alphaTruckingApi";
+import React, { useEffect, useState } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import TableComponents from './tableComponents/TableComponents';
+import { useSelector } from 'react-redux';
+import AddTable from './tableUtilities/AddTable';
+import Loading from '../utilities/Loading';
+import Error from '../utilities/Error';
+import { useGetTableRecordsQuery } from '../../store/services/alphaTruckingApi';
+import IndeterminateCheckbox from './tableUtilities/IndeterminateCheckbox';
 
-export default function Table({ tableData, tableModel, modifiedArrayOfObject }) {
+export default function Table({
+  tableData,
+  tableModel,
+  modifiedArrayOfObject,
+}) {
   const { driver } = useSelector((state) => state.views);
   const { model } = useSelector((state) => state.views);
   const { toggle } = useSelector((state) => state.globalState.mainSideBar);
-  const { data, isFetching, error, isSuccess } = useGetTableRecordsQuery({ data: modifiedArrayOfObject });
+  const { data, isFetching, error, isSuccess } = useGetTableRecordsQuery({
+    data: modifiedArrayOfObject,
+  });
   // const { data, error, isFetching , } = useGetSavedViewQuery();
 
   // this is for checking is the side bar is opened ?
 
-  const defaultColumns = tableModel.map(({ id, data }) => {
+  let defaultColumns = tableModel.map(({ id, data }) => {
     return {
       accessorKey: data?.field_name,
       id: data?.field_name,
@@ -26,10 +33,32 @@ export default function Table({ tableData, tableModel, modifiedArrayOfObject }) 
     };
   });
 
+  defaultColumns.unshift({
+    accessorKey: '',
+    id: 'select',
+    header: ({ table }) => (
+      <IndeterminateCheckbox
+        checked={table.getIsAllRowsSelected()}
+        indeterminate={table.getIsSomeRowsSelected()}
+        onChange={table.getToggleAllRowsSelectedHandler()}
+      />
+    ),
+    width: 20,
+    cell: ({ row }) => (
+      <div className='px-1'>
+        <IndeterminateCheckbox
+          checked={row.getIsSelected()}
+          indeterminate={row.getIsSomeSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      </div>
+    ),
+  });
+
   // console.log(tableModel)
 
-
-  const [tableDataModified, setTableDataModified] = React.useState([]
+  const [tableDataModified, setTableDataModified] = React.useState(
+    []
     // tableData.map(({ data, id }) => {
     //   const object = {};
     //   defaultColumns.map(({ header }) => {
@@ -52,13 +81,16 @@ export default function Table({ tableData, tableModel, modifiedArrayOfObject }) 
         tableData.map(({ data, id }) => {
           const object = {};
           defaultColumns.map(({ header, field_type, linked_rec }) => {
-            object[header] = data?.[header] || "";
-            if (field_type === "multipleRecordLinks") {
+            object[header] = data?.[header] || '';
+            if (field_type === 'multipleRecordLinks') {
               // console.log(data)
               if (Array.isArray(data?.[header])) {
                 object[header] = data?.[header].map((ele) => {
-                  return { data: linkedRecordIdAndDataMap.get(ele), recordId: ele }
-                })
+                  return {
+                    data: linkedRecordIdAndDataMap.get(ele),
+                    recordId: ele,
+                  };
+                });
               }
             }
           });
@@ -66,26 +98,24 @@ export default function Table({ tableData, tableModel, modifiedArrayOfObject }) 
 
           return object;
         })
-      )
+      );
     }
-  }, [isSuccess])
-
-
+  }, [isSuccess]);
 
   if (isFetching) {
-    return <Loading />
+    return <Loading />;
   }
   if (error) {
-    return <Error />
+    return <Error />;
   }
 
   const linkedRecordIdAndDataMap = new Map();
 
   data.forEach((ele) => {
     ele?.data.forEach(({ id, data }) => {
-      linkedRecordIdAndDataMap.set(id, data)
-    })
-  })
+      linkedRecordIdAndDataMap.set(id, data);
+    });
+  });
 
   // for (let [key, value] of linkedRecordIdAndDataMap) {
   //   console.log(key, value)
@@ -93,13 +123,13 @@ export default function Table({ tableData, tableModel, modifiedArrayOfObject }) 
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="relative overflow-hidden">
+      <div className='relative overflow-hidden'>
         <TableComponents
           toggle={toggle}
           defaultColumns={defaultColumns}
           data={tableDataModified}
           setData={setTableDataModified}
-        // tableConditions={model}
+          // tableConditions={model}
         />
       </div>
     </DndProvider>
@@ -108,59 +138,56 @@ export default function Table({ tableData, tableModel, modifiedArrayOfObject }) 
 
 // <pre>{JSON.stringify(table.getState(), null, 2)}</pre>
 
+// console.log(tableModel)
+// const keysMap = new Map();
 
-  // console.log(tableModel)
-  // const keysMap = new Map();
+// for (let index = 0; index < tableData.length; index++) {
+//   const keys = Object.keys(tableData[index].data);
+//   keys.map((ele) => {
+//     keysMap.set(ele);
+//   })
+// }
 
-  // for (let index = 0; index < tableData.length; index++) {
-  //   const keys = Object.keys(tableData[index].data);
-  //   keys.map((ele) => {
-  //     keysMap.set(ele);
-  //   })
-  // }
+// const dataKeys = [];
+// for (const [key] of keysMap) {
+//   dataKeys.push(key);
+// }
 
-  // const dataKeys = [];
-  // for (const [key] of keysMap) {
-  //   dataKeys.push(key);
-  // }
+// const defaultColumns = dataKeys.map((item) => {
+//   return ({
+//     accessorKey: item,
+//     id: item,
+//     header: item,
+//   })
+// })
 
-  // const defaultColumns = dataKeys.map((item) => {
-  //   return ({
-  //     accessorKey: item,
-  //     id: item,
-  //     header: item,
-  //   })
-  // })
+// console.log(tableModel)
 
-  // console.log(tableModel)
+// console.log(tableData)
 
-  // console.log(tableData)
+// if (isFetching) {
+//   return <Loading />
+// }
 
-    // if (isFetching) {
-  //   return <Loading />
-  // }
+// if (error) {
+//   return <Error />
+// }
 
-  // if (error) {
-  //   return <Error />
-  // }
+// console.log(tableModel)
 
-  // console.log(tableModel)
+// console.log(defaultColumns, model)
 
-  // console.log(defaultColumns, model)
+// console.log(defaultColumns)
 
+// for (let index = 0; index < defaultColumns.length; index++) {
+//   const keys = Object.keys(defaultColumns[index].field_type);
+//   keys.map((ele) => {
+//     keysMap.set(ele);
+//   })
+// }
+// console.log(keysMap)
 
-    // console.log(defaultColumns)
-
-  // for (let index = 0; index < defaultColumns.length; index++) {
-  //   const keys = Object.keys(defaultColumns[index].field_type);
-  //   keys.map((ele) => {
-  //     keysMap.set(ele);
-  //   })
-  // }
-  // console.log(keysMap)
-
-
-  // import { useGetSavedViewQuery } from "../../store/services/alphaTruckingApi";
+// import { useGetSavedViewQuery } from "../../store/services/alphaTruckingApi";
 // import Loading from "../utilities/Loading";
 // import Error from "../utilities/Error";
 // import AddRowTable from "./tableUtilities/AddRowTable

@@ -22,12 +22,15 @@ const initialState = {
     toggle: false,
     width: 270,
   },
-  addTableToggle: false,
+  addToggle: {
+    type: '',
+    isOpen: false,
+  },
   createTableBaseId: undefined,
   selectedTableId: undefined || window.location.pathname.split('/')[2],
   selectedBaseId: undefined || window.location.pathname.split('/')[1],
   modal: {
-    isOpen: true,
+    isOpen: false,
     heading: '',
     error: '',
     type: '',
@@ -58,7 +61,9 @@ const globalStateSlice = createSlice({
       }
     },
     handleAddToggle: (state, { payload }) => {
-      state.addTableToggle = payload;
+      //{ isOpen: true, type: 'table' }
+      state.addToggle.isOpen = payload.isOpen;
+      state.addToggle.type = payload.type;
     },
     handleCreateTableBaseId: (state, { payload }) => {
       state.createTableBaseId = payload;

@@ -122,7 +122,7 @@ export default function TableColumnAdd({ headers }) {
     fieldsMap.set(frontEndFieldsType[i], FieldsType[i]);
   }
 
-  for (let i = 0; i < columns?.length; i++) {
+  for (let i = 1; i < columns?.length; i++) {
     existingColumns.set(columns[i]?.header.toLocaleLowerCase(), true);
   }
 

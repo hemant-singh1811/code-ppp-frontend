@@ -110,7 +110,6 @@ export default function CellByFieldType({ field_type, cell }) {
       return <MultipleRecordLinksCell cell={cell} rowData={cell?.getValue()} />;
 
     default:
-      // console.log(field_type);
       return (
         <div className="w-full h-full overflow-hidden">
           {flexRender(cell.column.columnDef.cell, cell.getContext())}

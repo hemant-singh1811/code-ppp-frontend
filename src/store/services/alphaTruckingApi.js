@@ -111,36 +111,10 @@ export const alphaTruckingApi = createApi({
       }),
     }),
 
-    // GetTableRecords: builder.query({
-    //   query: (payload) => ({
-    //     url: `API/V1/getrecords/${payload.tableId}`,
-    //     body: payload.data, // field id is required to add a row; like this:- {"record_ids":[
-    //     //     "recNnTzcV4LU5QyL3",
-    //     //     "recSsQ1umIxk9UonT",
-    //     //     "receBpDSAcAy9IwZj",
-    //     //     "rechy2iQZtd44slZ5"
-    //     // ]}
-    //     method: 'PUT',
-    //   }),
-    // }),
-
-    // GetTableRecords: builder.query({
-    //   query: async (payload) => {
-    //     const response = await fetch(`API/V1/getrecords/${payload.tableId}`, {
-    //       body: payload.data,
-    //     });
-    //     if (!response.ok) {
-    //       throw new Error('Failed to fetch user');
-    //     }
-    //     const data = await response.json();
-    //     return data;
-    //   },
-    // }),
-
     // table api
     CreateTable: builder.mutation({
       query: (payload) => ({
-        url: `API/V1/createtable/${payload.tableId}`,
+        url: `API/V1/createtable/${payload.baseId}`,
         body: payload.data,
         method: 'PUT',
       }),
@@ -165,6 +139,15 @@ export const alphaTruckingApi = createApi({
     // "table_id":"tbl2lFS8fwFz5pEjx",
     // "table_name":"changed table nam1e"
     // }
+
+    // base api
+    CreateBase: builder.mutation({
+      query: (payload) => ({
+        url: `API/V1/createbase`,
+        body: payload.data,
+        method: 'POST',
+      }),
+    }),
 
     // rows api
 
@@ -289,6 +272,7 @@ export const {
   useRenameTableMutation,
   useGetModelDataMutation,
   useGetTableDataPartMutation,
+  useCreateBaseMutation,
 
   useGetTableRecordsQuery,
   useGetBasesQuery,
