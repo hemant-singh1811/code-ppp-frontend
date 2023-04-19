@@ -20,6 +20,15 @@ const BasesStateSlice = createSlice({
       });
       state.bases = updatedBases;
     },
+    // handelUpdateBases: (state, { payload }) => {
+    //   let updatedBases = state.bases.map((item) => {
+    //     if (payload.baseId === item.baseid) {
+    //       item.tablemetadata.push(payload.data);
+    //     }
+    //     return item;
+    //   });
+    //   state.bases = updatedBases;
+    // },
   },
 });
 

@@ -386,6 +386,7 @@ export default function CustomTable() {
 
   useEffect(() => {
     if (data) {
+      console.log('Get Saved View', data);
       data?.personalview?.map((ele, i) => {
         if (i === 0) {
           dispatch(

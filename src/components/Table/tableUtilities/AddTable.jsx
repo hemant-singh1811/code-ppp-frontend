@@ -53,7 +53,7 @@ export default function AddTable() {
 
   useEffect(() => {
     if (responseCreateTable?.data) {
-      console.log(responseCreateTable?.data);
+      console.log('create Table:', responseCreateTable?.data);
       dispatch(
         handelUpdateBases({
           baseId: selectedBaseId,
@@ -82,7 +82,7 @@ export default function AddTable() {
       setDescriptionInput('');
     }
     if (responseBaseTable?.data) {
-      console.log(responseBaseTable?.data);
+      console.log('create Base:', responseBaseTable?.data);
       dispatch(handelAddBases([...bases, responseBaseTable?.data]));
       dispatch(
         handelAddSideBarMenu([

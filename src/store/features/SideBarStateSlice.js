@@ -14,6 +14,12 @@ const SideBarStateSlice = createSlice({
     handelAddSideBarMenu: (state, { payload }) => {
       state.sidebar = payload;
     },
+    handelRemoveSideBarMenu: (state, { payload }) => {
+      let updatedSideBar = state.sidebar?.filter((item) => {
+        return payload.baseId !== item.baseId;
+      });
+      state.sidebar = updatedSideBar;
+    },
     handelAddSideBarField: (state, { payload }) => {
       let updatedSideBar = state.sidebar?.map((item) => {
         if (payload.baseId === item.baseId) {
@@ -54,6 +60,7 @@ export const {
   handelToggleSideBar,
   handelRemoveSideBarField,
   handelAddSideBarMenu,
+  handelRemoveSideBarMenu,
 } = SideBarStateSlice.actions;
 
 export default SideBarStateSlice.reducer;

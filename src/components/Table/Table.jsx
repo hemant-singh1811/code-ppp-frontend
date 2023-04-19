@@ -71,6 +71,7 @@ export default function Table({
 
   useEffect(() => {
     if (data) {
+      console.log('Get linked table Records', data);
       // let multipleLinkedRecColumns = defaultColumns.map(({ field_type, field_name }) => {
       //   if (field_name === "multipleRecordLinks") {
       //   }

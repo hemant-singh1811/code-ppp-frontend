@@ -56,19 +56,25 @@ export default function TableScreen() {
     return <Error error={error} />;
   }
 
+  console.log('Get Model:', modelResult.data);
+  console.log('Get data:', data);
+
+  // stores the linked model in the map by linked  table keys and model as values
   modelResult.data.map(({ data }) => {
     if (data.field_type === 'multipleRecordLinks') {
       multipleRecordLinksMap.set(data?.linked_rec?.tableid, data);
+      console.log(data?.linked_rec?.tableid, data);
     }
   });
 
   for (let [key, value] of multipleRecordLinksMap.entries()) {
     const uniqueRecordIdSet = new Set();
-
+    console.log(data);
     data.map(({ data }) => {
+      // console.log(value?.field_name);
       if (Array.isArray(data[value?.field_name])) {
         data[value?.field_name].map((item) => {
-          // console.log(item)
+          console.log(item);
           uniqueRecordIdSet.add(item);
         });
       }
@@ -87,6 +93,8 @@ export default function TableScreen() {
       record_ids: value,
     });
   }
+
+  console.log('array of records to received data:', modifiedArrayOfObject);
 
   return (
     <Table

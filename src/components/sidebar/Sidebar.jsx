@@ -32,9 +32,15 @@ export default function Sidebar() {
 
   const buttonRef = useRef(null);
 
-  function handleContextMenu(event, type) {
+  function handleContextMenu(event, type, tableId, baseId, name) {
     event.preventDefault();
-    setMenuVisible({ isOpen: true, type: type });
+    setMenuVisible({
+      isOpen: true,
+      type: type,
+      tableId: tableId || '',
+      baseId: baseId || '',
+      name: name || '',
+    });
     setPosition({
       x: toggle ? 80 : 245,
       // y: event.clientY - event.nativeEvent.offsetY,
@@ -44,7 +50,13 @@ export default function Sidebar() {
     });
   }
 
-  const [isMenuVisible, setMenuVisible] = useState({ isOpen: false, type: '' });
+  const [isMenuVisible, setMenuVisible] = useState({
+    isOpen: false,
+    type: '',
+    tableId: '',
+    baseId: '',
+    name: '',
+  });
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   useClickAway(buttonRef, () => {
@@ -56,6 +68,7 @@ export default function Sidebar() {
 
   useEffect(() => {
     if (data) {
+      console.log('Get Bases', data);
       dispatch(handelAddBases(data));
       createMenusByBase =
         data?.map((item) => {
@@ -190,7 +203,14 @@ export default function Sidebar() {
                     <NavLink
                       // ref={item.subMenu && buttonRef}
                       onContextMenu={(e) => {
-                        item.subMenu && handleContextMenu(e, 'base');
+                        item.subMenu &&
+                          handleContextMenu(
+                            e,
+                            'base',
+                            '',
+                            item.baseId,
+                            item.title
+                          );
                       }}
                       to={item?.to && item.to}
                       className={({ isActive }) =>
@@ -249,7 +269,13 @@ export default function Sidebar() {
                                     }
                                     // ref={buttonRef}
                                     onContextMenu={(e) =>
-                                      handleContextMenu(e, 'table')
+                                      handleContextMenu(
+                                        e,
+                                        'table',
+                                        menu.tableId,
+                                        menu.baseId,
+                                        menu.title
+                                      )
                                     }
                                     title={menu.title}
                                     onClick={() =>
@@ -331,12 +357,13 @@ export default function Sidebar() {
       </div>
       {isMenuVisible.isOpen && (
         <div
+          ref={buttonRef}
           style={{ left: position.x, top: position.y }}
           className='text-black absolute top-[28px] z-20 w-56 rounded-md left-0 p-2 border-gray-400 border-[.5px] shadow-md flex flex-col bg-white'>
           <div
-            onClick={() => {
-              setMenuVisible({ isOpen: false, type: '' });
-            }}
+            // onClick={() => {
+            //   setMenuVisible({ isOpen: false, type: '' });
+            // }}
             className='hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center capitalize '>
             <span className='material-symbols-rounded text-lg font-light mr-4'>
               edit
@@ -346,17 +373,47 @@ export default function Sidebar() {
           <div
             className='hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center capitalize'
             onClick={() => {
-              dispatch(
-                handelOpenModal({
-                  content: {
-                    heading: 'Delete Table',
-                    color: 'red',
-                    description:
-                      'Are you sure you want to Delete Table? All of your data will be permanently removed. This action cannot be undone.',
-                    action: 'Delete Table',
-                  },
-                })
-              );
+              switch (isMenuVisible.type) {
+                case 'table':
+                  dispatch(
+                    handelOpenModal({
+                      content: {
+                        heading: 'Delete Table',
+                        color: 'red',
+                        description:
+                          'Are you sure you want to Delete Table? All of your data will be permanently removed. This action cannot be undone.',
+                        action: 'delete',
+                        baseId: isMenuVisible.baseId,
+                        target: 'table',
+                        tableId: isMenuVisible.tableId,
+                        name: isMenuVisible.name,
+                      },
+                    })
+                  );
+                  break;
+                case 'base':
+                  dispatch(
+                    handelOpenModal({
+                      content: {
+                        heading: 'Delete Base',
+                        color: 'red',
+                        description:
+                          'Are you sure you want to Delete Base? All of your data will be permanently removed. This action cannot be undone.',
+                        action: 'delete',
+                        baseId: isMenuVisible.baseId,
+                        target: 'base',
+                        tableId: isMenuVisible.tableId,
+                        name: isMenuVisible.name,
+                      },
+                    })
+                  );
+
+                  break;
+
+                default:
+                  break;
+              }
+
               setMenuVisible({ isOpen: false, type: '' });
             }}>
             <span className='material-symbols-rounded text-lg font-light mr-4'>

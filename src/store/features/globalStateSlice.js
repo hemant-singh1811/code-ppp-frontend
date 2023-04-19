@@ -30,13 +30,17 @@ const initialState = {
   selectedTableId: undefined || window.location.pathname.split('/')[2],
   selectedBaseId: undefined || window.location.pathname.split('/')[1],
   modal: {
-    isOpen: true,
+    isOpen: false,
     content: {
       heading: '',
       description: '',
       action: '',
       icon: '',
       color: '',
+      baseId: '',
+      target: '',
+      tableId: '',
+      name: '',
     },
   },
 };
@@ -80,13 +84,16 @@ const globalStateSlice = createSlice({
         state.selectedBaseId = payload?.selectedBaseId;
     },
     handelOpenModal: (state, { payload }) => {
-      console.log(payload);
       state.modal.isOpen = true;
       state.modal.content.heading = payload.content.heading;
       state.modal.content.description = payload.content.description;
       state.modal.content.action = payload.content.action;
       state.modal.content.icon = payload.content.icon;
       state.modal.content.color = payload.content.color;
+      state.modal.content.baseId = payload.content.baseId;
+      state.modal.content.target = payload.content.target;
+      state.modal.content.tableId = payload.content.tableId;
+      state.modal.content.name = payload.content.name;
     },
     handelCloseModal: (state) => {
       state.modal.isOpen = false;
