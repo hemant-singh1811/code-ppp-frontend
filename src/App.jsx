@@ -9,12 +9,9 @@ import Modal from './components//utilities//Modal';
 
 function App() {
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(initSocket());
-  }, [dispatch]);
-
+  useEffect(() => dispatch(initSocket()), [dispatch]);
   const { userInfo } = useSelector((state) => state.auth);
+
   return (
     <div className='flex w-screen h-screen '>
       {userInfo && <Sidebar />}

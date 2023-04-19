@@ -109,24 +109,24 @@ export default function AddTable() {
     }
   }, [responseCreateTable.isSuccess || responseBaseTable.isSuccess]);
 
-  useEffect(() => {
-    if (responseCreateTable?.error) {
-      dispatch(
-        handelOpenModal({
-          heading: 'Table Creation',
-          error: responseCreateTable?.error?.data?.err,
-        })
-      );
-    }
-    if (responseBaseTable?.error) {
-      dispatch(
-        handelOpenModal({
-          heading: 'Base Creation',
-          error: responseBaseTable?.error?.data?.err,
-        })
-      );
-    }
-  }, [responseCreateTable.isError || responseBaseTable?.error]);
+  // useEffect(() => {
+  //   if (responseCreateTable?.error) {
+  //     dispatch(
+  //       handelOpenModal({
+  //         heading: 'Table Creation',
+  //         error: responseCreateTable?.error?.data?.err,
+  //       })
+  //     );
+  //   }
+  //   if (responseBaseTable?.error) {
+  //     dispatch(
+  //       handelOpenModal({
+  //         heading: 'Base Creation',
+  //         error: responseBaseTable?.error?.data?.err,
+  //       })
+  //     );
+  //   }
+  // }, [responseCreateTable.isError || responseBaseTable?.error]);
 
   return (
     <div className=''>

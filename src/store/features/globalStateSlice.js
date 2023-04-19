@@ -20,7 +20,7 @@ const initialState = {
   ],
   mainSideBar: {
     toggle: false,
-    width: 270,
+    width: 280,
   },
   addToggle: {
     type: '',
@@ -30,10 +30,14 @@ const initialState = {
   selectedTableId: undefined || window.location.pathname.split('/')[2],
   selectedBaseId: undefined || window.location.pathname.split('/')[1],
   modal: {
-    isOpen: false,
-    heading: '',
-    error: '',
-    type: '',
+    isOpen: true,
+    content: {
+      heading: '',
+      description: '',
+      action: '',
+      icon: '',
+      color: '',
+    },
   },
 };
 
@@ -76,14 +80,16 @@ const globalStateSlice = createSlice({
         state.selectedBaseId = payload?.selectedBaseId;
     },
     handelOpenModal: (state, { payload }) => {
+      console.log(payload);
       state.modal.isOpen = true;
-      state.modal.error = payload.error;
-      state.modal.heading = payload.heading;
+      state.modal.content.heading = payload.content.heading;
+      state.modal.content.description = payload.content.description;
+      state.modal.content.action = payload.content.action;
+      state.modal.content.icon = payload.content.icon;
+      state.modal.content.color = payload.content.color;
     },
-    handelCloseModal: (state, { payload }) => {
+    handelCloseModal: (state) => {
       state.modal.isOpen = false;
-      // state.modal.error = '';
-      // state.modal.heading = '';
     },
   },
 });
