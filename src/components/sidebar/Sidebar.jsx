@@ -216,7 +216,7 @@ export default function Sidebar() {
                         <span className='h-full my-auto left-1 material-symbols-rounded flex items-center'>
                           {item.icons}
                         </span>
-                        <span className={`title truncate pl-4 h-full pr-8`}>
+                        <span className={`title truncate pl-1 h-full `}>
                           {item.title || 'table'}
                         </span>
                       </div>
@@ -358,7 +358,9 @@ export default function Sidebar() {
                 width='24'>
                 <path d='M480 856q-17 0-28.5-11.5T440 816V616H240q-17 0-28.5-11.5T200 576q0-17 11.5-28.5T240 536h200V336q0-17 11.5-28.5T480 296q17 0 28.5 11.5T520 336v200h200q17 0 28.5 11.5T760 576q0 17-11.5 28.5T720 616H520v200q0 17-11.5 28.5T480 856Z' />
               </svg>
-              <span className={`title truncate text-black`}>Create Base</span>
+              <span className={`title truncate pl-1 text-black`}>
+                Create Base
+              </span>
             </div>
           </li>
         </ul>

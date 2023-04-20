@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 const SocketWebDataSlice = createSlice({
   name: 'socketWebData',
   initialState: {
-    socket: null,
+    socket: true,
   },
   reducers: {
     setSocket: (state, action) => {
@@ -22,7 +22,7 @@ export const initSocket = () => (dispatch) => {
   });
 
   socket.on('disconnect', () => {
-    dispatch(setSocket(null));
+    dispatch(setSocket(false));
   });
 };
 
