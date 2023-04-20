@@ -132,7 +132,7 @@ export const alphaTruckingApi = createApi({
       query: (payload) => ({
         url: `API/V1/tablerename/${payload.baseId}`,
         body: payload.data, //table_id
-        method: 'DELETE',
+        method: 'PUT',
       }),
     }),
     // {
@@ -159,9 +159,9 @@ export const alphaTruckingApi = createApi({
 
     RenameBase: builder.mutation({
       query: (payload) => ({
-        url: `API/V1/tablerename/${payload.baseId}`,
-        body: payload.data, //table_id
-        method: 'DELETE',
+        url: `API/V1/baserename`,
+        body: payload.data,
+        method: 'PATCH',
       }),
     }),
 
@@ -290,6 +290,7 @@ export const {
   useGetTableDataPartMutation,
   useCreateBaseMutation,
   useDeleteBaseMutation,
+  useRenameBaseMutation,
 
   useGetTableRecordsQuery,
   useGetBasesQuery,

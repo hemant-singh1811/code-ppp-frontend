@@ -12,13 +12,15 @@ function App() {
   useEffect(() => dispatch(initSocket()), [dispatch]);
   const { userInfo } = useSelector((state) => state.auth);
   const { socket } = useSelector((state) => state.socketWebData);
-
+  const { isOpen, type, action, name, baseId, tableId } = useSelector(
+    (state) => state.globalState.addToggle
+  );
   return socket ? (
     <div className='flex w-screen h-screen '>
       {userInfo && <Sidebar />}
       <div className='relative w-full flex'>
         <MainRouting />
-        <AddTable />
+        {isOpen && <AddTable />}
         <Modal />
       </div>
     </div>

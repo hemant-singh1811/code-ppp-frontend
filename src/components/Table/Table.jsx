@@ -3,7 +3,6 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import TableComponents from './tableComponents/TableComponents';
 import { useSelector } from 'react-redux';
-import AddTable from './tableUtilities/AddTable';
 import Loading from '../utilities/Loading';
 import Error from '../utilities/Error';
 import { useGetTableRecordsQuery } from '../../store/services/alphaTruckingApi';
@@ -14,13 +13,10 @@ export default function Table({
   tableModel,
   modifiedArrayOfObject,
 }) {
-  const { driver } = useSelector((state) => state.views);
-  const { model } = useSelector((state) => state.views);
   const { toggle } = useSelector((state) => state.globalState.mainSideBar);
   const { data, isFetching, error, isSuccess } = useGetTableRecordsQuery({
     data: modifiedArrayOfObject,
   });
-  // const { data, error, isFetching , } = useGetSavedViewQuery();
 
   // this is for checking is the side bar is opened ?
 
@@ -136,59 +132,3 @@ export default function Table({
     </DndProvider>
   );
 }
-
-// <pre>{JSON.stringify(table.getState(), null, 2)}</pre>
-
-// console.log(tableModel)
-// const keysMap = new Map();
-
-// for (let index = 0; index < tableData.length; index++) {
-//   const keys = Object.keys(tableData[index].data);
-//   keys.map((ele) => {
-//     keysMap.set(ele);
-//   })
-// }
-
-// const dataKeys = [];
-// for (const [key] of keysMap) {
-//   dataKeys.push(key);
-// }
-
-// const defaultColumns = dataKeys.map((item) => {
-//   return ({
-//     accessorKey: item,
-//     id: item,
-//     header: item,
-//   })
-// })
-
-// console.log(tableModel)
-
-// console.log(tableData)
-
-// if (isFetching) {
-//   return <Loading />
-// }
-
-// if (error) {
-//   return <Error />
-// }
-
-// console.log(tableModel)
-
-// console.log(defaultColumns, model)
-
-// console.log(defaultColumns)
-
-// for (let index = 0; index < defaultColumns.length; index++) {
-//   const keys = Object.keys(defaultColumns[index].field_type);
-//   keys.map((ele) => {
-//     keysMap.set(ele);
-//   })
-// }
-// console.log(keysMap)
-
-// import { useGetSavedViewQuery } from "../../store/services/alphaTruckingApi";
-// import Loading from "../utilities/Loading";
-// import Error from "../utilities/Error";
-// import AddRowTable from "./tableUtilities/AddRowTable

@@ -6,37 +6,15 @@ import {
   useGetTableDataQuery,
 } from '../../store/services/alphaTruckingApi';
 import Table from '../../components/Table/Table';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { handelAddTableWithMultipleRecords } from '../../store/features/globalStateSlice';
 
-// async function fetchLinkedRecordData(tableId, data, token) {
-//   const postData = { record_ids: data };
-
-//   try {
-//     const response = await axios.post(
-//       `${import.meta.env.VITE_SERVER_URL}API/V1/getrecords/${tableId}`,
-//       postData,
-//       {
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'Authorization': `Bearer ${token}`
-//         }
-//       }
-//     );
-
-//     const userData = response.data;
-//     console.log(userData);
-//     return userData;
-
-//   } catch (error) {
-//     console.error(error);
-//     throw new Error(error);
-//   }
-// }
+let multipleRecordLinksArray = [];
 
 export default function TableScreen() {
   const { selectedTableId } = useSelector((state) => state.globalState);
   // const token = useSelector((state) => state.auth.userInfo.user_token);
-
+  const dispatch = useDispatch();
   let { data, error, isFetching, refetch } =
     useGetTableDataQuery(selectedTableId);
   let modelResult = useGetModelQuery(selectedTableId);
@@ -48,6 +26,9 @@ export default function TableScreen() {
     refetch(selectedTableId);
     modelResult.refetch(selectedTableId);
   }, [selectedTableId]);
+  // useEffect(() => {
+  //   dispatch(handelAddTableWithMultipleRecords(multipleRecordLinksArray));
+  // }, [multipleRecordLinksArray]);
 
   if (isFetching || modelResult?.isFetching) {
     return <Loading />;
@@ -60,18 +41,21 @@ export default function TableScreen() {
   console.log('Get data:', data);
 
   // stores the linked model in the map by linked  table keys and model as values
-  modelResult.data.map(({ data }) => {
-    if (data.field_type === 'multipleRecordLinks') {
-      multipleRecordLinksMap.set(data?.linked_rec?.tableid, data);
-      console.log(data?.linked_rec?.tableid, data);
-    }
-  });
+  multipleRecordLinksArray = modelResult.data
+    .map(({ data }) => {
+      if (data.field_type === 'multipleRecordLinks') {
+        multipleRecordLinksMap.set(data?.linked_rec?.tableid, data);
+        return data;
+      }
+    })
+    .filter((data) => data);
+
+  console.log(multipleRecordLinksArray);
 
   for (let [key, value] of multipleRecordLinksMap.entries()) {
     const uniqueRecordIdSet = new Set();
     console.log(data);
     data.map(({ data }) => {
-      // console.log(value?.field_name);
       if (Array.isArray(data[value?.field_name])) {
         data[value?.field_name].map((item) => {
           console.log(item);
@@ -104,6 +88,31 @@ export default function TableScreen() {
     />
   );
 }
+
+// async function fetchLinkedRecordData(tableId, data, token) {
+//   const postData = { record_ids: data };
+
+//   try {
+//     const response = await axios.post(
+//       `${import.meta.env.VITE_SERVER_URL}API/V1/getrecords/${tableId}`,
+//       postData,
+//       {
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'Authorization': `Bearer ${token}`
+//         }
+//       }
+//     );
+
+//     const userData = response.data;
+//     console.log(userData);
+//     return userData;
+
+//   } catch (error) {
+//     console.error(error);
+//     throw new Error(error);
+//   }
+// }
 
 // function getTableRecords() {
 

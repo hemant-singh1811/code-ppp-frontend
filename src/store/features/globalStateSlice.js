@@ -1,7 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-// import { useLocation } from 'react-router-dom';
-
-// const location = useLocation();
 const initialState = {
   search: '',
   filter: [
@@ -25,6 +22,10 @@ const initialState = {
   addToggle: {
     type: '',
     isOpen: false,
+    action: '',
+    baseId: '',
+    tableId: '',
+    name: '',
   },
   createTableBaseId: undefined,
   selectedTableId: undefined || window.location.pathname.split('/')[2],
@@ -43,6 +44,7 @@ const initialState = {
       name: '',
     },
   },
+  tableWithMultipleRecords: [],
 };
 
 const globalStateSlice = createSlice({
@@ -69,9 +71,12 @@ const globalStateSlice = createSlice({
       }
     },
     handleAddToggle: (state, { payload }) => {
-      //{ isOpen: true, type: 'table' }
-      state.addToggle.isOpen = payload.isOpen;
-      state.addToggle.type = payload.type;
+      state.addToggle.isOpen = payload?.isOpen;
+      state.addToggle.type = payload?.type;
+      state.addToggle.action = payload?.action;
+      state.addToggle.baseId = payload?.baseId;
+      state.addToggle.tableId = payload?.tableId;
+      state.addToggle.name = payload?.name;
     },
     handleCreateTableBaseId: (state, { payload }) => {
       state.createTableBaseId = payload;
@@ -85,18 +90,21 @@ const globalStateSlice = createSlice({
     },
     handelOpenModal: (state, { payload }) => {
       state.modal.isOpen = true;
-      state.modal.content.heading = payload.content.heading;
-      state.modal.content.description = payload.content.description;
-      state.modal.content.action = payload.content.action;
-      state.modal.content.icon = payload.content.icon;
-      state.modal.content.color = payload.content.color;
-      state.modal.content.baseId = payload.content.baseId;
-      state.modal.content.target = payload.content.target;
-      state.modal.content.tableId = payload.content.tableId;
-      state.modal.content.name = payload.content.name;
+      state.modal.content.heading = payload?.content?.heading;
+      state.modal.content.description = payload?.content?.description;
+      state.modal.content.action = payload?.content?.action;
+      state.modal.content.icon = payload?.content?.icon;
+      state.modal.content.color = payload?.content?.color;
+      state.modal.content.target = payload?.content?.target;
+      state.modal.content.baseId = payload?.content?.baseId;
+      state.modal.content.tableId = payload?.content?.tableId;
+      state.modal.content.name = payload?.content?.name;
     },
     handelCloseModal: (state) => {
       state.modal.isOpen = false;
+    },
+    handelAddTableWithMultipleRecords: (state, { payload }) => {
+      state.tableWithMultipleRecords = payload;
     },
   },
 });
@@ -110,6 +118,7 @@ export const {
   handelSelectedTableAndBaseId,
   handelOpenModal,
   handelCloseModal,
+  handelAddTableWithMultipleRecords,
 } = globalStateSlice.actions;
 
 export default globalStateSlice.reducer;

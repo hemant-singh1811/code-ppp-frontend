@@ -14,11 +14,17 @@ import {
   useDeleteTableMutation,
 } from '../../../store/services/alphaTruckingApi';
 import LoadingAlt from '../LoadingAlt';
+import { handelRemoveBases } from '../../../store/features/BasesStateSlice';
+import { useNavigate } from 'react-router-dom';
 
 export default function Modal() {
   const { isOpen, content } = useSelector((state) => state.globalState.modal);
   const [deleteTableApi, responseDeleteTable] = useDeleteTableMutation();
   const [deleteBaseApi, responseDeleteBase] = useDeleteBaseMutation();
+  const { selectedTableId, selectedBaseId } = useSelector(
+    (state) => state.globalState
+  );
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -33,6 +39,10 @@ export default function Modal() {
   useEffect(() => {
     if (responseDeleteTable.data) {
       console.log('Delete table:', responseDeleteTable.data);
+      if (selectedTableId === responseDeleteTable.data.table_id) {
+        navigate('/');
+      }
+
       dispatch(
         handelRemoveSideBarField({
           baseId: content.baseId,
@@ -45,8 +55,16 @@ export default function Modal() {
   useEffect(() => {
     if (responseDeleteBase.data) {
       console.log('Delete Base:', responseDeleteBase.data);
+      if (selectedBaseId === responseDeleteBase?.data?.baseid) {
+        navigate('/');
+      }
       dispatch(
         handelRemoveSideBarMenu({
+          baseId: content.baseId,
+        })
+      );
+      dispatch(
+        handelRemoveBases({
           baseId: content.baseId,
         })
       );

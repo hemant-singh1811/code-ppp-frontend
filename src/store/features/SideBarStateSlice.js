@@ -14,18 +14,18 @@ const SideBarStateSlice = createSlice({
     handelAddSideBarMenu: (state, { payload }) => {
       state.sidebar = payload;
     },
-    handelRemoveSideBarMenu: (state, { payload }) => {
-      let updatedSideBar = state.sidebar?.filter((item) => {
-        return payload.baseId !== item.baseId;
-      });
-      state.sidebar = updatedSideBar;
-    },
     handelAddSideBarField: (state, { payload }) => {
       let updatedSideBar = state.sidebar?.map((item) => {
         if (payload.baseId === item.baseId) {
           item.subMenu.push(payload.data);
         }
         return item;
+      });
+      state.sidebar = updatedSideBar;
+    },
+    handelRemoveSideBarMenu: (state, { payload }) => {
+      let updatedSideBar = state.sidebar?.filter((item) => {
+        return payload.baseId !== item.baseId;
       });
       state.sidebar = updatedSideBar;
     },
@@ -51,16 +51,42 @@ const SideBarStateSlice = createSlice({
       });
       state.sidebar = updatedSidebar;
     },
+    handelRenameSideBarMenu: (state, { payload }) => {
+      let updatedSidebar = state.sidebar.map((item) => {
+        if (item.baseId === payload.baseId) {
+          console.log(payload.updatedName);
+          item.title = payload.updatedName;
+        }
+        return item;
+      });
+      state.sidebar = updatedSidebar;
+    },
+    handelRenameSideBarField: (state, { payload }) => {
+      let updatedSidebar = state.sidebar.map((item) => {
+        if (payload.baseId === item.baseId) {
+          item.subMenu = item.subMenu.map((ele) => {
+            if (ele.tableId === payload.tableId) {
+              ele.title = payload.updatedName;
+            }
+            return ele;
+          });
+        }
+        return item;
+      });
+      state.sidebar = updatedSidebar;
+    },
   },
 });
 
 export const {
   handelAddSideBar,
   handelAddSideBarField,
+  handelAddSideBarMenu,
   handelToggleSideBar,
   handelRemoveSideBarField,
-  handelAddSideBarMenu,
   handelRemoveSideBarMenu,
+  handelRenameSideBarMenu,
+  handelRenameSideBarField,
 } = SideBarStateSlice.actions;
 
 export default SideBarStateSlice.reducer;

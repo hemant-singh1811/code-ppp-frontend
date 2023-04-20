@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { handelAddBases } from '../../store/features/BasesStateSlice';
 import {
   handelOpenModal,
@@ -13,22 +13,16 @@ import {
   handelRemoveSideBarField,
   handelToggleSideBar,
 } from '../../store/features/SideBarStateSlice';
-import {
-  useDeleteTableMutation,
-  useGetBasesQuery,
-} from '../../store/services/alphaTruckingApi';
+import { useGetBasesQuery } from '../../store/services/alphaTruckingApi';
 import '../../stylesheet/sidebar.scss';
 import Error from '../utilities/Error';
 import Loading from '../utilities/Loading';
-import { Popover, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
 import { useClickAway } from 'react-use';
 
 export default function Sidebar() {
   const { toggle } = useSelector((state) => state.globalState.mainSideBar);
   const { sidebar } = useSelector((state) => state.sidebar);
   const { data, error, isFetching, isSuccess } = useGetBasesQuery();
-  const [deleteTableApi, responseDeleteTable] = useDeleteTableMutation();
 
   const buttonRef = useRef(null);
 
@@ -43,10 +37,7 @@ export default function Sidebar() {
     });
     setPosition({
       x: toggle ? 80 : 245,
-      // y: event.clientY - event.nativeEvent.offsetY,
       y: event.clientY - event.nativeEvent.layerY,
-      // y: event.clientY - event.currentTarget.offsetTop,
-      // y: event.clientY - event.nativeEvent.offsetY,
     });
   }
 
@@ -153,11 +144,6 @@ export default function Sidebar() {
     }
   }, [isSuccess]);
 
-  useEffect(() => {
-    if (responseDeleteTable.data) {
-    }
-  }, [responseDeleteTable.isSuccess]);
-
   if (isFetching) {
     return (
       <div
@@ -227,7 +213,7 @@ export default function Sidebar() {
                         className='flex justify-between items-center truncate h-full'
                         // title={item.title}
                       >
-                        <span className='absolute h-full my-auto left-1 material-symbols-rounded flex items-center'>
+                        <span className='h-full my-auto left-1 material-symbols-rounded flex items-center'>
                           {item.icons}
                         </span>
                         <span className={`title truncate pl-4 h-full pr-8`}>
@@ -236,7 +222,7 @@ export default function Sidebar() {
                       </div>
                       {item.subMenu && (
                         <svg
-                          className={` arrow min-w-[24px] absolute h-full right-0 ${
+                          className={` arrow min-w-[24px] h-full right-0 ${
                             item.isOpened && 'rotate_arrow'
                           }`}
                           xmlns='http://www.w3.org/2000/svg'
@@ -257,7 +243,9 @@ export default function Sidebar() {
                                 className={`${
                                   menu?.subMenu && menu.isOpened
                                     ? 'bg-[#13142b] rounded-lg ml-8'
-                                    : menu?.subMenu && 'ml-8'
+                                    : menu?.subMenu
+                                    ? 'ml-8'
+                                    : ''
                                 }`}>
                                 <li className='submenu_item max-w-[200px] relative'>
                                   <NavLink
@@ -291,6 +279,16 @@ export default function Sidebar() {
                                     </span>
                                     <div className='text-gray-400 mr-1 cursor-pointer hover:text-blue-800'>
                                       <svg
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleContextMenu(
+                                            e,
+                                            'table',
+                                            menu.tableId,
+                                            menu.baseId,
+                                            menu.title
+                                          );
+                                        }}
                                         xmlns='http://www.w3.org/2000/svg'
                                         height='20'
                                         viewBox='0 96 960 960'
@@ -305,10 +303,14 @@ export default function Sidebar() {
                           );
                         })}
                         <li
-                          className='submenu_item max-w-[170px]'
+                          className='submenu_item max-w-[180px]'
                           onClick={() => {
                             dispatch(
-                              handleAddToggle({ isOpen: true, type: 'table' })
+                              handleAddToggle({
+                                isOpen: true,
+                                type: 'table',
+                                action: 'create',
+                              })
                             );
                             dispatch(
                               handelSelectedTableAndBaseId({
@@ -337,9 +339,15 @@ export default function Sidebar() {
               );
             })}
           <li
-            className={'navLink  '}
+            className={'navLink'}
             onClick={() =>
-              dispatch(handleAddToggle({ isOpen: true, type: 'base' }))
+              dispatch(
+                handleAddToggle({
+                  isOpen: true,
+                  type: 'base',
+                  action: 'create',
+                })
+              )
             }>
             <div className='flex justify-between truncate'>
               <svg
@@ -361,9 +369,19 @@ export default function Sidebar() {
           style={{ left: position.x, top: position.y }}
           className='text-black absolute top-[28px] z-20 w-56 rounded-md left-0 p-2 border-gray-400 border-[.5px] shadow-md flex flex-col bg-white'>
           <div
-            // onClick={() => {
-            //   setMenuVisible({ isOpen: false, type: '' });
-            // }}
+            onClick={() => {
+              dispatch(
+                handleAddToggle({
+                  isOpen: true,
+                  type: isMenuVisible.type,
+                  action: 'rename',
+                  name: isMenuVisible.name,
+                  baseId: isMenuVisible.baseId,
+                  tableId: isMenuVisible.tableId,
+                })
+              );
+              setMenuVisible({ isOpen: false, type: '' });
+            }}
             className='hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center capitalize '>
             <span className='material-symbols-rounded text-lg font-light mr-4'>
               edit
@@ -424,47 +442,5 @@ export default function Sidebar() {
         </div>
       )}
     </div>
-  );
-}
-
-function Menu({ deleteTableApi, baseId, tableId, dispatch }) {
-  return (
-    <Transition
-      className='bg-white'
-      as={Fragment}
-      enter='transition ease-out duration-200'
-      enterFrom='opacity-0 translate-y-1'
-      enterTo='opacity-100 translate-y-0'
-      leave='transition ease-in duration-150'
-      leaveFrom='opacity-100 translate-y-0'
-      leaveTo='opacity-0 translate-y-1'>
-      <Popover.Panel
-        onClick={(e) => {
-          // e.preventDefault();
-        }}
-        className='text-black absolute top-[35px] z-20 w-full rounded-md left-[20px] p-2 border-gray-400 border-[.5px] shadow-md flex flex-col bg-white'>
-        <div className=' hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 w-full '>
-          <span className='material-symbols-rounded text-lg font-light mr-4'>
-            edit
-          </span>
-          Rename Table
-        </div>
-        <div
-          className='hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 w-full'
-          onClick={(e) => {
-            // e.stopPropagation();
-            deleteTableApi({ data: { table_id: tableId }, baseId: baseId });
-            dispatch(
-              handelRemoveSideBarField({ baseId: baseId, tableId: tableId })
-            );
-            // close()
-          }}>
-          <span className='material-symbols-rounded text-lg font-light mr-4'>
-            delete
-          </span>
-          Delete Table
-        </div>
-      </Popover.Panel>
-    </Transition>
   );
 }

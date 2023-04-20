@@ -35,6 +35,7 @@ export default function TableColumnAdd({ headers }) {
     'Single line text':
       'Enter text, or prefill each new cell with a default value.',
     'Long text': 'Enter multiple lines of text.',
+    'Look Up': 'See values from a field in a linked record.',
     Attachment:
       'Add images, documents, or other files to be viewed or downloaded.',
     Checkbox: 'Check or uncheck to indicate status.',
@@ -58,6 +59,7 @@ export default function TableColumnAdd({ headers }) {
 
   let frontEndFieldsType = [
     'Link to another record',
+    'Look Up',
     'Single line text',
     'Long text',
     'Attachment',
@@ -80,6 +82,7 @@ export default function TableColumnAdd({ headers }) {
   let correspondingType = [
     'array',
     'string',
+    'string',
     'paragraph',
     'file',
     'boolean',
@@ -100,6 +103,7 @@ export default function TableColumnAdd({ headers }) {
 
   let FieldsType = [
     'multipleRecordLinks',
+    'multipleLookupValues',
     'singleLineText',
     'multilineText',
     'multipleAttachments',
@@ -210,7 +214,7 @@ export default function TableColumnAdd({ headers }) {
                 )}
 
                 {fieldSearchInput !== 'Link to another record' && (
-                  <div className='max-h-[calc(100vh_/_2)] mt-2 border-[#eaebed] border-2 rounded-md  overflow-auto overflow-x-auto'>
+                  <div className='max-h-[calc(100vh_/_2)] mt-2 border-[#eaebed] border-2 rounded-md  overflow-auto overflow-x-auto p-1'>
                     <input
                       type='search'
                       name=''
@@ -227,7 +231,7 @@ export default function TableColumnAdd({ headers }) {
                       }}
                     />
                     {!selectedFieldType && (
-                      <div className='h-4/5 overflow-auto p-1 px-1.5 pb-0'>
+                      <div className='h-4/5 overflow-auto p-1 px-1.5  mb-1'>
                         {frontEndFieldsType
                           .filter((ele) => {
                             return ele
@@ -250,6 +254,21 @@ export default function TableColumnAdd({ headers }) {
                       </div>
                     )}
                   </div>
+                )}
+
+                {fieldSearchInput === 'Look Up' && (
+                  <LookUpOptions
+                    setFieldSearchInput={setFieldSearchInput}
+                    setFieldNameInput={setFieldNameInput}
+                    setIsExistFieldNameInput={setIsExistFieldNameInput}
+                    setSelectedFieldType={setSelectedFieldType}
+                    selectedFieldTypeLinkedRecord={
+                      selectedFieldTypeLinkedRecord
+                    }
+                    setSelectedFieldTypeLinkedRecord={
+                      setSelectedFieldTypeLinkedRecord
+                    }
+                  />
                 )}
 
                 {selectedFieldType && (
@@ -417,7 +436,7 @@ function LinkedToAnotherRecordOptions({
         </div>
 
         {!selectedFieldTypeLinkedRecord && (
-          <div className='h-4/5 overflow-auto p-1 px-1.5 pb-0'>
+          <div className='h-4/5 overflow-auto p-1 px-1.5'>
             {bases.map(({ baseid, tablemetadata }) => {
               if (baseid === selectedBaseId) {
                 return tablemetadata
@@ -447,6 +466,71 @@ function LinkedToAnotherRecordOptions({
                   });
               }
             })}
+          </div>
+        )}
+      </div>
+      {fieldSearchInputLinkedRecord && (
+        <div className='mt-3'>
+          Link to records in the {fieldSearchInputLinkedRecord} table.
+        </div>
+      )}
+    </>
+  );
+}
+function LookUpOptions({
+  setFieldSearchInput,
+  setFieldNameInput,
+  setIsExistFieldNameInput,
+  setSelectedFieldType,
+}) {
+  const [fieldSearchInputLinkedRecord, setFieldSearchInputLinkedRecord] =
+    React.useState('');
+  const { bases } = useSelector((state) => state.bases);
+  const { selectedBaseId, selectedTableId, tableWithMultipleRecords } =
+    useSelector((state) => state.globalState);
+
+  return (
+    <>
+      <div className='max-h-[calc(100vh_/_2)] mt-2 border-[#eaebed] border-2 rounded-md  overflow-auto overflow-x-auto'>
+        <div className='flex justify-center items-center'>
+          <input
+            type='search'
+            name=''
+            id=''
+            className='bg-[#f0f1f3] w-full px-3 p-1.5  outline-none focus:bg-blue-50 focus:border-transparent'
+            placeholder='Find a table to link'
+            value={fieldSearchInputLinkedRecord}
+            onChange={(e) => {
+              setFieldSearchInputLinkedRecord(e.target.value);
+            }}
+            onClick={() => {
+              setSelectedFieldTypeLinkedRecord(undefined);
+              setFieldSearchInputLinkedRecord('');
+            }}
+          />
+        </div>
+
+        {tableWithMultipleRecords && (
+          <div className='h-4/5 overflow-auto p-1 px-1.5'>
+            {tableWithMultipleRecords
+              .filter(({ table_name }) => {
+                return table_name
+                  ?.toLowerCase()
+                  ?.includes(fieldSearchInputLinkedRecord.toLowerCase());
+              })
+              .map(({ table_name }, i) => {
+                return (
+                  <div
+                    key={i}
+                    className='px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md'
+                    onClick={() => {
+                      setSelectedFieldTypeLinkedRecord(table_name);
+                      setFieldSearchInputLinkedRecord('Link to ' + table_name);
+                    }}>
+                    {table_name}
+                  </div>
+                );
+              })}
           </div>
         )}
       </div>

@@ -11,7 +11,7 @@ const BasesStateSlice = createSlice({
     handelAddBases: (state, { payload }) => {
       state.bases = payload;
     },
-    handelUpdateBases: (state, { payload }) => {
+    handelAddTableInBases: (state, { payload }) => {
       let updatedBases = state.bases.map((item) => {
         if (payload.baseId === item.baseid) {
           item.tablemetadata.push(payload.data);
@@ -20,18 +20,54 @@ const BasesStateSlice = createSlice({
       });
       state.bases = updatedBases;
     },
-    // handelUpdateBases: (state, { payload }) => {
-    //   let updatedBases = state.bases.map((item) => {
-    //     if (payload.baseId === item.baseid) {
-    //       item.tablemetadata.push(payload.data);
-    //     }
-    //     return item;
-    //   });
-    //   state.bases = updatedBases;
-    // },
+    handelRemoveTableInBases: (state, { payload }) => {
+      let updatedBases = state.bases.map((item) => {
+        if (payload.baseId === item.baseid) {
+          item.tablemetadata.filter((item) => {});
+        }
+        return item;
+      });
+      state.bases = updatedBases;
+    },
+    handelRemoveBases: (state, { payload }) => {
+      let updatedBases = state.bases.filter(
+        ({ baseid }) => baseid !== payload.baseId
+      );
+      state.bases = updatedBases;
+    },
+    handelRenameBases: (state, { payload }) => {
+      let updatedBases = state.bases.map((item) => {
+        if (item.baseid === payload.baseId) {
+          item.basemetadata.name = payload.updatedName;
+        }
+        return item;
+      });
+      state.bases = updatedBases;
+    },
+    handelRenameTableInBases: (state, { payload }) => {
+      let updatedBases = state.bases.map((item) => {
+        if (payload.baseId === item.baseid) {
+          item.tablemetadata = item.tablemetadata.map((ele) => {
+            if (ele.table_id === payload.tableId) {
+              ele.name = payload.updatedName;
+            }
+            return ele;
+          });
+        }
+        return item;
+      });
+      state.bases = updatedBases;
+    },
   },
 });
 
-export const { handelAddBases, handelUpdateBases } = BasesStateSlice.actions;
+export const {
+  handelRenameTableInBases,
+  handelRenameBases,
+  handelAddBases,
+  handelAddTableInBases,
+  handelRemoveBases,
+  handelRemoveTableInBases,
+} = BasesStateSlice.actions;
 
 export default BasesStateSlice.reducer;
