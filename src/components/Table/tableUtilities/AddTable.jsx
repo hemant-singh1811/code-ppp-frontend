@@ -41,7 +41,7 @@ export default function AddTable() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [nameInput, setNameInput] = useState(name);
+  const [nameInput, setNameInput] = useState(name || '');
   const [isExistNameInput, setIsExistNameInput] = useState(false);
   const [descriptionInput, setDescriptionInput] = useState('');
 
@@ -62,19 +62,31 @@ export default function AddTable() {
 
   // save all the table names and later check if the name is already present or not
   const existingTable = new Set();
+
+  // save all the bases names and later check if the name is already present or not
+  const existingBases = new Set();
+  // useEffect(() => {
   bases.map(({ baseid, tablemetadata }) => {
     if (baseid === selectedBaseId) {
       tablemetadata?.forEach(({ table_name }) => {
+        console.log(
+          'updating map f================================================================'
+        );
         existingTable.add(table_name?.toLocaleLowerCase());
       });
     }
   });
+  console.log('fdsafsd fdaf dafd');
 
-  // save all the bases names and later check if the name is already present or not
-  const existingBases = new Map();
   bases.map(({ basemetadata }) => {
-    existingBases.set(basemetadata.name);
+    existingBases.add(basemetadata.name);
   });
+  // }, []);
+
+  existingTable.forEach((key) => {
+    console.log('Existing table name', key);
+  });
+  console.log('fdsafads');
 
   useEffect(() => {
     if (responseCreateTable?.data) {
@@ -270,7 +282,7 @@ export default function AddTable() {
                 onClick={() =>
                   dispatch(handleAddToggle({ isOpen: false, type: '' }))
                 }>
-                <span className='material-symbols-rounded text-xl'>add</span>
+                <span className='material-icons-round text-xl'>add</span>
                 Add description
               </div>
             </div>

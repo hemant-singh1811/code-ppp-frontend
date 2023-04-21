@@ -40,7 +40,7 @@ export default function TableColumnDropDown({
         onClick={() => setIsMenuOpen(!isMenuOpen)}
         className='border-none outline-none h-full mr-2'>
         <div className='text-gray-400 -mr-2 cursor-pointer hover:text-blue-800  flex'>
-          <span className='material-symbols-rounded font-light inline-block my-auto'>
+          <span className='material-icons-round font-light inline-block my-auto'>
             expand_more
           </span>
         </div>
@@ -57,7 +57,7 @@ export default function TableColumnDropDown({
         leaveTo='opacity-0 translate-y-1'>
         <Popover.Panel className='text-black absolute top-[28px] z-20 w-56 rounded-md left-0 p-2 border-gray-400 border-[.5px] shadow-md flex flex-col bg-white'>
           <div className='hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center '>
-            <span className='material-symbols-rounded text-lg font-light mr-4'>
+            <span className='material-icons-round text-lg font-light mr-4'>
               edit
             </span>
             Edit Field
@@ -68,7 +68,7 @@ export default function TableColumnDropDown({
               deleteColumn();
               setIsMenuOpen(!isMenuOpen);
             }}>
-            <span className='material-symbols-rounded text-lg font-light mr-4'>
+            <span className='material-icons-round text-lg font-light mr-4'>
               delete
             </span>
             Delete Field

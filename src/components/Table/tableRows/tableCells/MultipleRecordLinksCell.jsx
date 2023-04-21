@@ -23,7 +23,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
     }
   });
 
-  // console.log(rowData)
+  // console.log(rowData);
   // [linked_rec?.selected_field_name]
 
   const socket = useSelector((state) => state.socketWebData.socket);
@@ -40,7 +40,9 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
   const [isDataFetched, setIsDataFetched] = useState(false);
   const [primaryData, setPrimaryData] = useState('');
   const [fetchedTableColumns, setFetchedTableColumns] = useState([]);
-  const [selectedRowData, setSelectedRowData] = React.useState(rowData || []);
+  const [selectedRowData, setSelectedRowData] = React.useState(
+    Array.isArray(rowData) ? rowData : [rowData] || []
+  );
   const [searchTerm, setSearchTerm] = useState('');
   const [isChildVisible, setIsChildVisible] = useState(false);
   const [rowsDataMap, setRowsDataMap] = useState(new Map());

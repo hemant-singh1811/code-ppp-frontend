@@ -7,7 +7,6 @@ import {
 } from '../../store/services/alphaTruckingApi';
 import Table from '../../components/Table/Table';
 import { useDispatch, useSelector } from 'react-redux';
-import { handelAddTableWithMultipleRecords } from '../../store/features/globalStateSlice';
 
 let multipleRecordLinksArray = [];
 
@@ -26,9 +25,6 @@ export default function TableScreen() {
     refetch(selectedTableId);
     modelResult.refetch(selectedTableId);
   }, [selectedTableId]);
-  // useEffect(() => {
-  //   dispatch(handelAddTableWithMultipleRecords(multipleRecordLinksArray));
-  // }, [multipleRecordLinksArray]);
 
   if (isFetching || modelResult?.isFetching) {
     return <Loading />;
@@ -50,15 +46,15 @@ export default function TableScreen() {
     })
     .filter((data) => data);
 
-  console.log(multipleRecordLinksArray);
+  // console.log(multipleRecordLinksArray);
 
   for (let [key, value] of multipleRecordLinksMap.entries()) {
     const uniqueRecordIdSet = new Set();
-    console.log(data);
+    // console.log(data);
     data.map(({ data }) => {
       if (Array.isArray(data[value?.field_name])) {
         data[value?.field_name].map((item) => {
-          console.log(item);
+          // console.log(item);
           uniqueRecordIdSet.add(item);
         });
       }
@@ -78,13 +74,17 @@ export default function TableScreen() {
     });
   }
 
-  console.log('array of records to received data:', modifiedArrayOfObject);
+  console.log(
+    'array of multiple Linked records send to server:',
+    modifiedArrayOfObject
+  );
 
   return (
     <Table
       tableData={data}
       tableModel={modelResult.data}
       modifiedArrayOfObject={modifiedArrayOfObject}
+      multipleRecordLinksArray={multipleRecordLinksArray}
     />
   );
 }

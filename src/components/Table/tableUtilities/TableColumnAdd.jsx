@@ -162,7 +162,7 @@ export default function TableColumnAdd({ headers }) {
         <>
           <Popover.Button className='outline-none w-[120px] th bg-[#f5f5f5]'>
             <div className='capitalize text-left text-lg font-normal select-none px-2 truncate w-full flex justify-center items-center cursor-pointer'>
-              <span className='material-symbols-rounded'>add</span>
+              <span className='material-icons-round'>add</span>
             </div>
           </Popover.Button>
           <Transition
@@ -297,9 +297,7 @@ export default function TableColumnAdd({ headers }) {
                         descriptionToggle && 'hidden'
                       } `}
                       onClick={() => setDescriptionToggle(true)}>
-                      <span className='material-symbols-rounded text-xl'>
-                        add
-                      </span>{' '}
+                      <span className='material-icons-round text-xl'>add</span>{' '}
                       Add description
                     </div>
                   </div>
@@ -509,7 +507,7 @@ function LookUpOptions({
             }}
           />
         </div>
-
+        {console.log(tableWithMultipleRecords)}
         {tableWithMultipleRecords && (
           <div className='h-4/5 overflow-auto p-1 px-1.5'>
             {tableWithMultipleRecords

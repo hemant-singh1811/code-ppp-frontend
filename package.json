@@ -11,6 +11,7 @@
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
     "@headlessui/react": "^1.7.13",
+    "@material-design-icons/font": "^0.14.6",
     "@reduxjs/toolkit": "^1.9.2",
     "@tailwindcss/forms": "^0.5.3",
     "@tanstack/match-sorter-utils": "^8.7.6",

@@ -170,7 +170,7 @@ export default function Sidebar() {
           className='navLink menu'
           onClick={() => dispatch(handleToggleMainSideBar())}>
           <h2 className='title'>Alpha Lion</h2>
-          <span className='material-symbols-rounded'>menu</span>
+          <span className='material-icons-round'>menu</span>
         </div>
         <div className='image'>
           <div className='border-[.75px] p-2 border-black'>
@@ -213,7 +213,7 @@ export default function Sidebar() {
                         className='flex justify-between items-center truncate h-full'
                         // title={item.title}
                       >
-                        <span className='h-full my-auto left-1 material-symbols-rounded flex items-center'>
+                        <span className='h-full my-auto left-1 material-icons-round flex items-center'>
                           {item.icons}
                         </span>
                         <span className={`title truncate pl-1 h-full `}>
@@ -385,7 +385,7 @@ export default function Sidebar() {
               setMenuVisible({ isOpen: false, type: '' });
             }}
             className='hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center capitalize '>
-            <span className='material-symbols-rounded text-lg font-light mr-4'>
+            <span className='material-icons-round text-lg font-light mr-4'>
               edit
             </span>
             Rename {isMenuVisible.type}
@@ -436,7 +436,7 @@ export default function Sidebar() {
 
               setMenuVisible({ isOpen: false, type: '' });
             }}>
-            <span className='material-symbols-rounded text-lg font-light mr-4'>
+            <span className='material-icons-round text-lg font-light mr-4'>
               delete
             </span>
             Delete {isMenuVisible.type}

@@ -72,22 +72,23 @@ export default function Login() {
                       </div>
                       <div className='mb-4 relative flex items-center'>
                         <input
-
                           type={showPassword ? 'text' : 'password'}
                           className='form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none'
                           placeholder='Password'
                           {...register('password')}
                           required
                         />
-                        <span className="absolute material-symbols-rounded z-50 right-2 text-xl cursor-pointer select-none" onClick={() => setShowPassword(!showPassword)} title="toggle password visibility">
-                          {showPassword ? "visibility_off" : 'visibility'}
+                        <span
+                          className='absolute material-icons-round z-50 right-2 text-xl cursor-pointer select-none'
+                          onClick={() => setShowPassword(!showPassword)}
+                          title='toggle password visibility'>
+                          {showPassword ? 'visibility_off' : 'visibility'}
                         </span>
                       </div>
                       <div className='text-center pt-1 mb-12 pb-1'>
                         <button
                           className='bg-orange-500 inline-block px-6 py-2.5 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3'
-                          type='submit'
-                        >
+                          type='submit'>
                           Log in
                         </button>
                         {/* <a className='text-gray-500'>Forgot password?</a> */}

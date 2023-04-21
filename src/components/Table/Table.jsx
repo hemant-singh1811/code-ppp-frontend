@@ -2,21 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import TableComponents from './tableComponents/TableComponents';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../utilities/Loading';
 import Error from '../utilities/Error';
 import { useGetTableRecordsQuery } from '../../store/services/alphaTruckingApi';
 import IndeterminateCheckbox from './tableUtilities/IndeterminateCheckbox';
+import { handelAddTableWithMultipleRecords } from '../../store/features/globalStateSlice';
 
 export default function Table({
   tableData,
   tableModel,
   modifiedArrayOfObject,
+  multipleRecordLinksArray,
 }) {
   const { toggle } = useSelector((state) => state.globalState.mainSideBar);
   const { data, isFetching, error, isSuccess } = useGetTableRecordsQuery({
     data: modifiedArrayOfObject,
   });
+  const dispatch = useDispatch();
 
   // this is for checking is the side bar is opened ?
 
@@ -64,6 +67,10 @@ export default function Table({
     //   return object;
     // })
   );
+
+  useEffect(() => {
+    dispatch(handelAddTableWithMultipleRecords(multipleRecordLinksArray));
+  }, []);
 
   useEffect(() => {
     if (data) {

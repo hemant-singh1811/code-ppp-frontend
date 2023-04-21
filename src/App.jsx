@@ -6,29 +6,18 @@ import { initSocket } from './store/features/sockets/SocketWebDataSlice';
 import { useEffect, useState } from 'react';
 import AddTable from './components/Table/tableUtilities/AddTable';
 import Modal from './components/utilities/modal/Modal';
-import 'material-symbols';
+// import 'material-symbols';
+import RefreshPageModal from './components/utilities/modal/RefreshPageModal';
+import '@material-design-icons/font';
 
 function App() {
   const dispatch = useDispatch();
-  useEffect(() => dispatch(initSocket()), [dispatch]);
   const { userInfo } = useSelector((state) => state.auth);
-  const { socket } = useSelector((state) => state.socketWebData);
-  const { isOpen, type, action, name, baseId, tableId } = useSelector(
-    (state) => state.globalState.addToggle
-  );
-  // const [isLoaded, setIsLoaded] = useState(false);
 
-  // useEffect(() => {
-  //   const onload = window.addEventListener('load', () => {
-  //     setIsLoaded(true);
-  //   });
+  const { isOpen } = useSelector((state) => state.globalState.addToggle);
+  useEffect(() => dispatch(initSocket()), [dispatch]);
 
-  //   return () => {
-  //     onload;
-  //   };
-  // }, []);
-
-  return socket ? (
+  return (
     <div className='flex w-screen h-screen '>
       {userInfo && <Sidebar />}
       <div className='relative w-full flex'>
@@ -36,9 +25,13 @@ function App() {
         {isOpen && <AddTable />}
         <Modal />
       </div>
+      <span class='material-icons'>menu</span>
+      <span class='material-icons-outlined'>face</span>
+      <span class='material-icons-round'>face</span>
+      <span class='material-icons-sharp'>face</span>
+      <span class='material-icons-two-tone'>face</span>
+      <RefreshPageModal />
     </div>
-  ) : (
-    'Refresh page'
   );
 }
 
