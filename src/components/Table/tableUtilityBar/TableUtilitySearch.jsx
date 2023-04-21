@@ -13,7 +13,7 @@ export default function TableUtilitySearching() {
         <>
           <Popover.Button className='relative flex items-center'>
             <span
-              className={`material-icons-round font-light cursor-pointer text-[#7e7e7e] p-1 rounded ${
+              className={`material-symbols-rounded font-light cursor-pointer text-[#7e7e7e] p-1 rounded ${
                 isOpen && '#4d4d4d'
               } ${globalFilter && 'bg-[#e1d5f9]'}`}>
               search
@@ -37,7 +37,7 @@ export default function TableUtilitySearching() {
                 onChange={(value) => setGlobalFilter(String(value.trim()))}
               />
               <span
-                className='material-icons-round text-black font-light p-1 py-2 cursor-pointer'
+                className='material-symbols-rounded text-black font-light p-1 py-2 cursor-pointer'
                 onClick={() => {
                   close();
                   setGlobalFilter('');

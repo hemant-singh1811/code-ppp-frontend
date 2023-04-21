@@ -62,7 +62,7 @@ export default function TableUtilityFilter({ table }) {
       {({ open, close }) => (
         <>
           <Popover.Button className='flex items-center font-medium outline-none'>
-            <span className='material-icons-round text-lg pr-1'>
+            <span className='material-symbols-rounded text-lg pr-1'>
               filter_list
             </span>
             Filter

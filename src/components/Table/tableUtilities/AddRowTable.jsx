@@ -222,7 +222,7 @@ export default function AddRowTable() {
           setOpenAddRowToggle(!openAddRowToggle);
         }}
         className='text-black border-[1px] shadow-md bg-white hover:bg-blue-100 border-black   absolute bottom-3 left-3 rounded-full px-3 pl-1 h-10 flex justify-center items-center cursor-pointer '>
-        <span className='material-icons-round'>add</span> Add Row
+        <span className='material-symbols-rounded'>add</span> Add Row
       </div>
       {openAddRowToggle && (
         <div className='h-4/5 w-1/2 overflow-scroll max-h-[80vh] min-w-[500px] max-w-[700px] mr-auto mt-auto bg-orange-100 z-50 p-10 pt-4 flex flex-col rounded-tr-md shadow-md'>

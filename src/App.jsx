@@ -6,9 +6,8 @@ import { initSocket } from './store/features/sockets/SocketWebDataSlice';
 import { useEffect, useState } from 'react';
 import AddTable from './components/Table/tableUtilities/AddTable';
 import Modal from './components/utilities/modal/Modal';
-// import 'material-symbols';
 import RefreshPageModal from './components/utilities/modal/RefreshPageModal';
-import '@material-design-icons/font';
+import 'material-symbols/rounded.scss';
 
 function App() {
   const dispatch = useDispatch();
@@ -25,11 +24,6 @@ function App() {
         {isOpen && <AddTable />}
         <Modal />
       </div>
-      <span class='material-icons'>menu</span>
-      <span class='material-icons-outlined'>face</span>
-      <span class='material-icons-round'>face</span>
-      <span class='material-icons-sharp'>face</span>
-      <span class='material-icons-two-tone'>face</span>
       <RefreshPageModal />
     </div>
   );

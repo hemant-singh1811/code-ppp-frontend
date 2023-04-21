@@ -184,7 +184,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
                   <div className={`truncate`}>{name}</div>
                   <span
                     onClick={() => deleteOption(name)}
-                    className='material-icons-round text-sm ml-2 '>
+                    className='material-symbols-rounded text-sm ml-2 '>
                     cancel
                   </span>
                 </div>
@@ -196,7 +196,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
             setSingleSelectToggle(!SingleSelectToggle);
             setSearchTerm('');
           }}
-          className='material-icons-round text-blue-500 ml-auto'>
+          className='material-symbols-rounded text-blue-500 ml-auto'>
           keyboard_arrow_down
         </span>
       </div>

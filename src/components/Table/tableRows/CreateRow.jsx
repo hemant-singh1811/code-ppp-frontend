@@ -58,7 +58,7 @@ export default function CreateRow() {
     <div
       className='hover:bg-gray-100 px-1 cursor-pointer h-full item-center flex'
       onClick={createRow}>
-      <span className='material-icons-round font-thin '>add</span>
+      <span className='material-symbols-rounded font-thin '>add</span>
     </div>
   );
 }

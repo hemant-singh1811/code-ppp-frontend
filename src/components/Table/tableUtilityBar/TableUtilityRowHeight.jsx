@@ -33,7 +33,9 @@ export default function TableUtilityRowHeight() {
       <div
         className='flex items-center font-medium'
         onClick={() => setRowHeightToggle(!rowHeightToggle)}>
-        <span className='material-icons-round text-lg pr-1'>table_rows</span>
+        <span className='material-symbols-rounded text-lg pr-1'>
+          table_rows
+        </span>
         Row Height
       </div>
       {rowHeightToggle && (
@@ -46,7 +48,7 @@ export default function TableUtilityRowHeight() {
                 className={`flex items-center text-base gap-4 cursor-pointer p-1 hover:bg-black hover:bg-opacity-10 rounded-sm pl-2 ${
                   ele.isActive && 'text-purple-500'
                 } `}>
-                <span className='material-icons-round text-lg pr-1'>
+                <span className='material-symbols-rounded text-lg pr-1'>
                   {ele.icon}
                 </span>
                 <div>{ele.name}</div>

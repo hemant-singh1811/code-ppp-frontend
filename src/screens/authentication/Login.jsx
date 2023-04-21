@@ -79,7 +79,7 @@ export default function Login() {
                           required
                         />
                         <span
-                          className='absolute material-icons-round z-50 right-2 text-xl cursor-pointer select-none'
+                          className='absolute material-symbols-rounded z-50 right-2 text-xl cursor-pointer select-none'
                           onClick={() => setShowPassword(!showPassword)}
                           title='toggle password visibility'>
                           {showPassword ? 'visibility_off' : 'visibility'}

@@ -282,7 +282,7 @@ export default function AddTable() {
                 onClick={() =>
                   dispatch(handleAddToggle({ isOpen: false, type: '' }))
                 }>
-                <span className='material-icons-round text-xl'>add</span>
+                <span className='material-symbols-rounded text-xl'>add</span>
                 Add description
               </div>
             </div>

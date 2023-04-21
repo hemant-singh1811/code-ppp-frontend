@@ -21,7 +21,7 @@ export default function TableUtilityViews() {
         onClick={() => {
           setViewsToggle(!viewsToggle);
         }}>
-        <span className='material-icons-round pr-1 text-lg'>menu</span>
+        <span className='material-symbols-rounded pr-1 text-lg'>menu</span>
         Views
       </div>
     </div>
@@ -129,7 +129,7 @@ export const ViewsComponent = ({ data, error, isFetching, isSuccess }) => {
     <div className='text-black bg-white h-full  border-[#c8c8c8] border-r-[1px] p-2 flex flex-col justify-between select-none transition-all'>
       <div>
         <div className='flex items-center relative mb-4'>
-          <span className='material-icons-round absolute text-[20px] ml-4 text-[rgb(68, 68, 68)]  font-extralight '>
+          <span className='material-symbols-rounded absolute text-[20px] ml-4 text-[rgb(68, 68, 68)]  font-extralight '>
             search
           </span>
           <input
@@ -150,8 +150,8 @@ export const ViewsComponent = ({ data, error, isFetching, isSuccess }) => {
                     }}>
                     <div className='font-medium text-lg'>{title}</div>
                     <div className='flex items-center gap-1'>
-                      {/* <span className="material-icons-round font-extralight  cursor-pointer rounded hover:bg-slate-300">add</span> */}
-                      <span className='material-icons-round font-extralight'>
+                      {/* <span className="material-symbols-rounded font-extralight  cursor-pointer rounded hover:bg-slate-300">add</span> */}
+                      <span className='material-symbols-rounded font-extralight'>
                         {collapsed ? 'expand_more' : 'expand_less'}
                       </span>
                     </div>
@@ -184,7 +184,7 @@ export const ViewsComponent = ({ data, error, isFetching, isSuccess }) => {
           className='flex justify-between p-2 cursor-pointer'
           onClick={() => setCreateToggle(!createToggle)}>
           <div className='text-xl  font-medium'>Create...</div>
-          <span className='material-icons-round font-extralight'>
+          <span className='material-symbols-rounded font-extralight'>
             {createToggle ? 'expand_more' : 'expand_less'}
           </span>
         </div>
@@ -196,7 +196,7 @@ export const ViewsComponent = ({ data, error, isFetching, isSuccess }) => {
                   key={i}
                   className='flex justify-between items-center p-2 rounded-md  cursor-pointer'>
                   <div className='flex items-center gap-2'>
-                    <span className='material-icons-round font-extralight'>
+                    <span className='material-symbols-rounded font-extralight'>
                       table_view
                     </span>
                     <div>Grid</div>
@@ -265,18 +265,18 @@ function TableViewsPopUpMenuToolkit({
       }`}>
       <div className='font-medium ml-7 text-base truncate'>{title}</div>
       <span
-        className='material-icons-round font-extralight text-base mx-1'
+        className='material-symbols-rounded font-extralight text-base mx-1'
         onClick={() => setIsMenuToggle(!isMenuToggle)}>
         expand_circle_down
       </span>
       {isMenuToggle && (
         <div className='absolute w-72 top-0 -right-[250px] bg-white p-2  z-50 shadow-lg border-gray-200 rounded border '>
           {/* <div className='flex items-center p-2 rounded cursor-pointer hover:bg-slate-100'>
-						<span className="material-icons-round font-extralight">edit</span>
+						<span className="material-symbols-rounded font-extralight">edit</span>
 						<div className='font-medium text-base truncate ml-2'>Rename</div>
 					</div>
 					<div className='flex items-center p-2 rounded cursor-pointer hover:bg-slate-100' onClick={() => { setIsMenuToggle(!isMenuToggle); viewsDispatch({ type: 'copyView', targetState: viewName, id: id, viewTitle: title }) }}>
-						<span className="material-icons-round font-extralight">content_copy</span>
+						<span className="material-symbols-rounded font-extralight">content_copy</span>
 						<div className='font-medium text-base truncate ml-2'>Duplicate View</div>
 					</div> */}
           <div
@@ -286,7 +286,9 @@ function TableViewsPopUpMenuToolkit({
               deleteViewApi({ tableId: selectedTableId, viewId: id });
             }}>
             {/* {console.log(id)} */}
-            <span className='material-icons-round font-extralight'>delete</span>
+            <span className='material-symbols-rounded font-extralight'>
+              delete
+            </span>
             <div className='font-medium text-base truncate ml-2'>
               Delete View
             </div>
@@ -353,7 +355,7 @@ function TableViewsAddToolkit({ viewsDispatch, views }) {
   return (
     <div ref={viewsMenu} className='relative flex items-center '>
       <span
-        className='material-icons-round font-extralight hover:bg-[#f4f4f4]'
+        className='material-symbols-rounded font-extralight hover:bg-[#f4f4f4]'
         onClick={() => setIsMenuToggle(!isMenuToggle)}>
         add
       </span>

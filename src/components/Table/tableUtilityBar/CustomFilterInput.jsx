@@ -59,7 +59,7 @@ export default function CustomFilterInput({
         <div
           onClick={() => removeCondition(id)}
           className='bg-white border border-gray-300 rounded-tr-md rounded-br-md flex items-center hover:bg-gray-100'>
-          <span className='material-icons-round  mx-2'>delete</span>
+          <span className='material-symbols-rounded  mx-2'>delete</span>
         </div>
       </div>
     </div>

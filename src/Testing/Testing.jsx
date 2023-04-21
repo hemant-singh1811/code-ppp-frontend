@@ -1,79 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
-// Import React FilePond
-import { FilePond, registerPlugin } from 'react-filepond'
-
-// Import FilePond styles
-import 'filepond/dist/filepond.min.css'
-
-// Import the Image EXIF Orientation and Image Preview plugins
-// Note: These need to be installed separately
-// `npm i filepond-plugin-image-preview filepond-plugin-image-exif-orientation --save`
-import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
-import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
-import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
-
-// Register the plugins
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
-
-// import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-// import { storage } from "../firebase";
-// Our app
 export default function Testing() {
-  // const [files, setFiles] = useState([])
-  // const [fileUrls, setFileUrls] = useState([]);
-  // const storageRef = storage.ref();
-
-
-  // const handleFileUpload = async (files) => {
-  //   const urls = await Promise.all(
-  //     Array.from(files).map(async (file) => {
-  //       const fileRef = storageRef.child(file.name);
-  //       const snapshot = await fileRef.put(file);
-  //       return snapshot.ref.getDownloadURL();
-  //     })
-  //   );
-  //   setFileUrls((prevUrls) => [...prevUrls, ...urls]);
-  // };
-
-
-  // return (
-  //   <div className="w-full h-[1000px] py-4 bg-yellow-500">
-  //     <FilePond
-  //       allowMultiple={true}
-  //       maxFileSize="1MB"
-  //       acceptedFileTypes={['image/*']}
-  //       onupdatefiles={(fileItems) => {
-  //         if (fileItems.length > 0) {
-  //           handleFileUpload(fileItems.map((fileItem) => fileItem.file));
-  //         }
-  //       }}
-  //     />
-  //     {/* <FilePond
-  //       files={files}
-  //       onupdatefiles={setFiles}
-  //       allowMultiple={true}
-  //       allowDrop
-  //       instantUpload='false'
-  //       maxFiles={50}
-
-  //       server="/api"
-  //       name="files"
-  //       //  {/* sets the file input name, it's filepond by default
-  //     {/* labelIdle='Drag & Drop your files or <span className="filepond--label-action">Browse</span>'
-  //     /> */}
-
-
-  //     <div>
-  //       {fileUrls.map((url) => (
-  //         <img key={url} src={url} alt="Uploaded file" />
-  //       ))}
-  //     </div>
-  //   </div>
-  // )
+  return <></>;
 }
-
-
 
 // import { Popover, Transition } from "@headlessui/react";
 // import { Fragment } from "react";

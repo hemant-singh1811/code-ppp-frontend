@@ -161,7 +161,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
             );
         })}
 
-        <span className='material-icons-round text-blue-500 ml-auto'>
+        <span className='material-symbols-rounded text-blue-500 ml-auto'>
           keyboard_arrow_down
         </span>
       </div>

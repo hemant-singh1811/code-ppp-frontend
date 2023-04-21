@@ -12,7 +12,9 @@ export default function TableUtilitySort({ table }) {
         <>
           <Popover.Button
             className={`flex items-center font-medium outline-none `}>
-            <span className='material-icons-round text-lg pr-1'>swap_vert</span>
+            <span className='material-symbols-rounded text-lg pr-1'>
+              swap_vert
+            </span>
             Sort
           </Popover.Button>
           <Transition

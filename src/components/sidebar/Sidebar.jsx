@@ -125,20 +125,20 @@ export default function Sidebar() {
             </svg>
           ),
           to: '/group-chat',
-        },
-        {
-          title: 'Testing',
-          icons: (
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              height='24'
-              viewBox='0 96 960 960'
-              width='24'>
-              <path d='M714 894 537 717l84-84 177 177q17 17 17 42t-17 42q-17 17-42 17t-42-17Zm-552 0q-17-17-17-42t17-42l234-234-68-68q-13 13-29 12t-27-12l-23-23v82l-7 7q-9 9-21 9t-21-9l-79-79q-9-9-9-21t9-21l7-7h82l-22-22q-12-12-12-28t12-28l114-114q20-20 43-29t47-9q24 0 47 9t43 29l-92 92 22 22q11 11 12 27t-12 29l68 68 90-90q-4-11-6.5-23t-2.5-24q0-59 40.5-99.5T701 215q15 0 28.5 3t27.5 9l-99 99 72 72 99-99q7 14 9.5 27.5T841 355q0 59-40.5 99.5T701 495q-12 0-24-2t-23-7L246 894q-17 17-42 17t-42-17Z' />
-            </svg>
-          ),
-          to: '/testing',
         }
+        // {
+        //   title: 'Testing',
+        //   icons: (
+        //     <svg
+        //       xmlns='http://www.w3.org/2000/svg'
+        //       height='24'
+        //       viewBox='0 96 960 960'
+        //       width='24'>
+        //       <path d='M714 894 537 717l84-84 177 177q17 17 17 42t-17 42q-17 17-42 17t-42-17Zm-552 0q-17-17-17-42t17-42l234-234-68-68q-13 13-29 12t-27-12l-23-23v82l-7 7q-9 9-21 9t-21-9l-79-79q-9-9-9-21t9-21l7-7h82l-22-22q-12-12-12-28t12-28l114-114q20-20 43-29t47-9q24 0 47 9t43 29l-92 92 22 22q11 11 12 27t-12 29l68 68 90-90q-4-11-6.5-23t-2.5-24q0-59 40.5-99.5T701 215q15 0 28.5 3t27.5 9l-99 99 72 72 99-99q7 14 9.5 27.5T841 355q0 59-40.5 99.5T701 495q-12 0-24-2t-23-7L246 894q-17 17-42 17t-42-17Z' />
+        //     </svg>
+        //   ),
+        //   to: '/testing',
+        // }
       );
       dispatch(handelAddSideBar(createMenusByBase));
     }
@@ -170,7 +170,7 @@ export default function Sidebar() {
           className='navLink menu'
           onClick={() => dispatch(handleToggleMainSideBar())}>
           <h2 className='title'>Alpha Lion</h2>
-          <span className='material-icons-round'>menu</span>
+          <span className='material-symbols-rounded'>menu</span>
         </div>
         <div className='image'>
           <div className='border-[.75px] p-2 border-black'>
@@ -213,7 +213,7 @@ export default function Sidebar() {
                         className='flex justify-between items-center truncate h-full'
                         // title={item.title}
                       >
-                        <span className='h-full my-auto left-1 material-icons-round flex items-center'>
+                        <span className='h-full my-auto left-1 material-symbols-rounded flex items-center'>
                           {item.icons}
                         </span>
                         <span className={`title truncate pl-1 h-full `}>
@@ -385,7 +385,7 @@ export default function Sidebar() {
               setMenuVisible({ isOpen: false, type: '' });
             }}
             className='hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center capitalize '>
-            <span className='material-icons-round text-lg font-light mr-4'>
+            <span className='material-symbols-rounded text-lg font-light mr-4'>
               edit
             </span>
             Rename {isMenuVisible.type}
@@ -436,7 +436,7 @@ export default function Sidebar() {
 
               setMenuVisible({ isOpen: false, type: '' });
             }}>
-            <span className='material-icons-round text-lg font-light mr-4'>
+            <span className='material-symbols-rounded text-lg font-light mr-4'>
               delete
             </span>
             Delete {isMenuVisible.type}

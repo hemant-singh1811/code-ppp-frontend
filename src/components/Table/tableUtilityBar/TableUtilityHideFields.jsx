@@ -9,7 +9,7 @@ export default function TableUtilityHideFields({ table }) {
       {({ open, close }) => (
         <>
           <Popover.Button className='flex items-center font-medium outline-none'>
-            <span className='material-icons-round text-lg pr-1'>
+            <span className='material-symbols-rounded text-lg pr-1'>
               visibility_off
             </span>
             Hide Fields
