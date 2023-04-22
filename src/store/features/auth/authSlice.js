@@ -1,13 +1,13 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { userLogin } from "./authActions";
+import { createSlice } from '@reduxjs/toolkit';
+import { userLogin } from './authActions';
 
 // initialize userToken from local storage
-let userInfo = localStorage.getItem("userToken")
-  ? JSON.parse(localStorage.getItem("userToken"))
+let userInfo = localStorage.getItem('userToken')
+  ? JSON.parse(localStorage.getItem('userToken'))
   : null;
 
 const userToken =
-  JSON.parse(localStorage.getItem("userToken"))?.user_token || null;
+  JSON.parse(localStorage.getItem('userToken'))?.user_token || null;
 
 const initialState = {
   loading: false,
@@ -18,7 +18,7 @@ const initialState = {
 };
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     handleLogout: (state, { payload }) => {
@@ -35,7 +35,7 @@ const authSlice = createSlice({
     [userLogin.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.userInfo = payload;
-      state.userToken = payload.user_token;
+      state.userToken = payload?.user_token;
     },
     [userLogin.rejected]: (state, { payload }) => {
       state.loading = false;
