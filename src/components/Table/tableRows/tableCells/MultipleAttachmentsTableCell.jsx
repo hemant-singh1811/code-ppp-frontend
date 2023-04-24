@@ -86,7 +86,7 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
       </div>
 
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as='div' className='relative z-10' onClose={closeModal}>
+        <Dialog as='div' className='relative z-10' onClose={() => <></>}>
           <Transition.Child
             as={Fragment}
             enter='ease-out duration-300'
@@ -277,6 +277,7 @@ function FileUploadHandler({ closeModal, cell }) {
 
       Promise.all(promises)
         .then(() => {
+          setSubmitButton(false);
           promises.map((prom) => {
             prom.on();
             console.log(prom);
@@ -293,15 +294,15 @@ function FileUploadHandler({ closeModal, cell }) {
 
       // setUploadTask(promises);
 
-      // Promise.all(promises)
-      //   .then(() => {
-      //     setFiles([]);
-      //     setUploadProgress(0);
-      //     console.log('Upload complete!');
-      //   })
-      //   .catch((error) => {
-      //     console.error(error);
-      //   });
+      Promise.all(promises)
+        .then(() => {
+          setFiles([]);
+          setUploadProgress(0);
+          console.log('Upload complete!');
+        })
+        .catch((error) => {
+          console.error(error);
+        });
       // for (let index = 0; index < selectedFile.length; index++) {
       //   SetFiles((preValue) => {
       //     return [...preValue, selectedFile[index]];
@@ -384,12 +385,19 @@ function FileUploadHandler({ closeModal, cell }) {
                             </p>
                             <div className='file-actions'>
                               {uploading ? (
-                                <div className='w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700'>
+                                <div class='w-full bg-gray-200 rounded-full dark:bg-gray-700'>
                                   <div
-                                    className='bg-blue-600 h-2.5 rounded-full'
-                                    style={{ width: progress + '%' }}></div>
+                                    class='bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full'
+                                    style={{ width: progress + '%' }}>
+                                    {progress}%
+                                  </div>
                                 </div>
                               ) : (
+                                // <div className='w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700'>
+                                //   <div
+                                //     className='bg-blue-600 h-2.5 rounded-full'
+                                //     style={{ width: progress + '%' }}></div>
+                                // </div>
                                 <button
                                   type='button'
                                   className='file-action-btn'
@@ -399,13 +407,13 @@ function FileUploadHandler({ closeModal, cell }) {
                               )}
                             </div>
                           </div>
-                          {uploading && (
+                          {/* {uploading && (
                             <div className='w-[100px] flex items-center justify-center overflow-hidden'>
                               <div className='loaderAltTwo '>
                                 <div>{progress}%</div>
                               </div>
                             </div>
-                          )}
+                          )} */}
                         </div>
                       );
                     })}

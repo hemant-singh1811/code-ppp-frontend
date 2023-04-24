@@ -3,6 +3,7 @@ import { useDeleteTableColumnMutation } from '../../../store/services/alphaTruck
 import { TableContext } from '../tableComponents/TableComponents';
 import { Popover, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import { useSelector } from 'react-redux';
 
 export default function TableColumnDropDown({
   columnDropdownRef,
@@ -13,13 +14,17 @@ export default function TableColumnDropDown({
   setIsMenuOpen,
 }) {
   const { columns, setColumns } = useContext(TableContext);
+  const { selectedBaseId, selectedTableId } = useSelector(
+    (state) => state.globalState
+  );
 
   const [addDeleteApi, responseDeleteColumn] = useDeleteTableColumnMutation();
 
   async function deleteColumn() {
     addDeleteApi({
-      tableId: location.pathname.split('/')[2],
+      baseId: selectedBaseId,
       data: {
+        table_id: selectedTableId,
         field_id: columnDef?.field_id,
       },
     });

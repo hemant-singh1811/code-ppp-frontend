@@ -19,7 +19,13 @@ const FileReader = () => {
   const renderFile = (file) => {
     switch (file.type) {
       case 'image':
-        return <img src={file.data} alt={file.name} />;
+        return (
+          <img
+            className='h-full w-full object-contain'
+            src={file.data}
+            alt={file.name}
+          />
+        );
       case 'video':
         return (
           <video controls>
@@ -96,8 +102,9 @@ const FileReader = () => {
           <object
             data={file.data}
             type={file.type + '/' + file.name.split('.').pop()}
-            width='100%'
-            height='600px'>
+            // width='100%'
+            // height='600px'
+            className='w-full h-full flex items-center justify-center'>
             <p>Unable to display file. Please download the file to view it.</p>
           </object>
         );
@@ -131,7 +138,7 @@ const FileReader = () => {
       {files.length > 0 && (
         <div className='flex flex-col h-full'>
           <div className='relative h-full'>
-            <div className='absolute top-0 bottom-0 left-0 right-0 p-2'>
+            <div className='absolute top-0 bottom-0 left-0 right-0 p-2 flex items-center justify-center'>
               {renderFile(files[currentFileIndex])}
             </div>
           </div>

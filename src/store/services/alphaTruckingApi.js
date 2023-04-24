@@ -187,7 +187,7 @@ export const alphaTruckingApi = createApi({
 
     DeleteTableColumn: builder.mutation({
       query: (payload) => ({
-        url: `API/V1/remcolumn/${payload.tableId}`,
+        url: `API/V1/remcolumn/${payload.baseId}`,
         body: payload.data, // field id is required to delete a column; like this:- {"field_id":"fldzmC9cdc4LgvYGI"}
         method: 'DELETE',
       }),
