@@ -8,7 +8,7 @@ import authReducer from '../features/auth/authSlice';
 import viewsReducer from '../features/viewsSlice';
 import basesReducer from '../features/BasesStateSlice';
 import sidebarReducer from '../features/SideBarStateSlice';
-import imagesViewerReducer from '../features/ImageViewerSlice';
+import fileViewerReducer from '../features/fileViewerSlice';
 import socketWebDataReducer from '../features/sockets/SocketWebDataSlice';
 import dataSliceReducer from '../services/alphaTruckingApi';
 
@@ -21,7 +21,7 @@ const reducer = {
   views: viewsReducer,
   bases: basesReducer,
   sidebar: sidebarReducer,
-  imagesViewer: imagesViewerReducer,
+  fileViewer: fileViewerReducer,
   socketWebData: socketWebDataReducer,
   dataSlice: dataSliceReducer,
 };

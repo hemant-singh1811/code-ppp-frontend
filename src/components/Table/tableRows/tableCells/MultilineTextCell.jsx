@@ -1,14 +1,16 @@
-import React, { useContext, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { TableContext } from "../../tableComponents/TableComponents";
-import { useEffect } from "react";
+import React, { useContext, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { TableContext } from '../../tableComponents/TableComponents';
+import { useEffect } from 'react';
 
 export default function MultilineTextCell({ cell }) {
   const socket = useSelector((state) => state.socketWebData.socket);
   const [value, setValue] = useState(cell?.getValue() || '');
   const [isEditMode, setIsEditMode] = useState(false);
   const { table } = useContext(TableContext);
-  const { selectedBaseId } = useSelector(state => state.globalState)
+  const { selectedBaseId, selectedTableId } = useSelector(
+    (state) => state.globalState
+  );
 
   const multiLineTextRef = useRef(null);
 
@@ -34,14 +36,17 @@ export default function MultilineTextCell({ cell }) {
 
       let rowObj = {
         base_id: selectedBaseId,
-        table_id: location.pathname.split("/")[2],
+        table_id: selectedTableId,
         record_id: cell?.row?.original.id52148213343234567,
         updated_data: newRowPart,
+        field_type: cell.column.columnDef.field_type,
+        field_name: cell.column.columnDef.field_name,
+        field_id: cell.column.columnDef.field_id,
       };
       console.log(rowObj);
 
-      socket.emit("updatedata", rowObj, (response) => {
-        console.log("res : ", response);
+      socket.emit('updatedata', rowObj, (response) => {
+        console.log('res : ', response);
       });
     }
   }
@@ -53,17 +58,17 @@ export default function MultilineTextCell({ cell }) {
     <div
       ref={multiLineTextRef}
       autoFocus={true}
-      contentEditable="plaintext-only"
-      role="textbox"
-      aria-multiline="true"
+      contentEditable='plaintext-only'
+      role='textbox'
+      aria-multiline='true'
       suppressContentEditableWarning={true}
       onClick={handleDoubleClick}
       onBlur={handleBlur}
       tabIndex={0}
-      className={`${isEditMode
-        ? "w-full px-2 p-1 h-[120px] bg-white z-[1000] relative text-left overflow-auto border border-black"
-        : "text-left w-full h-full truncate px-2 p-1"
-        } select-none`}
-    ></div>
+      className={`${
+        isEditMode
+          ? 'w-full px-2 p-1 h-[120px] bg-white z-[1000] relative text-left overflow-auto border border-black'
+          : 'text-left w-full h-full truncate px-2 p-1'
+      } select-none`}></div>
   );
 }

@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
-import { rankItem } from "@tanstack/match-sorter-utils";
-import TableUtilityBar from "../tableUtilityBar/TableUtilityBar";
-import CustomTable from "./CustomTable";
+import React, { useContext, useEffect, useState } from 'react';
+import { rankItem } from '@tanstack/match-sorter-utils';
+import TableUtilityBar from '../tableUtilityBar/TableUtilityBar';
+import CustomTable from './CustomTable';
 import {
   useReactTable,
   getCoreRowModel,
@@ -9,13 +9,11 @@ import {
   getSortedRowModel,
   getGroupedRowModel,
   getExpandedRowModel,
-} from "@tanstack/react-table";
-import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+} from '@tanstack/react-table';
+import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 export const TableContext = React.createContext();
-
-
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -65,15 +63,16 @@ const defaultColumn = {
   cell: ({
     getValue,
     row: { original, index },
-    column: { id },
+    column: { id, columnDef },
     table,
     row,
   }) => {
     const initialValue = getValue();
     const location = useLocation();
-    const socket = useSelector(state => state.socketWebData.socket);
-    const { selectedBaseId } = useSelector(state => state.globalState)
-
+    const socket = useSelector((state) => state.socketWebData.socket);
+    const { selectedBaseId, selectedTableId } = useSelector(
+      (state) => state.globalState
+    );
 
     // console.log(row._valuesCache)
     // We need to keep and update the state of the cell normally
@@ -85,18 +84,23 @@ const defaultColumn = {
       let rowCopy = original;
       rowCopy[id] = e.target.value;
 
-      let updatedRowKey = id
-      let updatedRowValue = row.original[id]
-      let newRowPart = { [updatedRowKey]: updatedRowValue }
+      // console.log(rowCopy);
+      let updatedRowKey = id;
+      let updatedRowValue = row.original[id];
+      let newRowPart = { [updatedRowKey]: updatedRowValue };
 
       let obj = {
         base_id: selectedBaseId,
-        table_id: location.pathname.split("/")[2],
+        table_id: selectedTableId,
         record_id: rowCopy.id52148213343234567,
         updated_data: newRowPart,
+        field_type: columnDef.field_type,
+        field_name: columnDef.field_name,
+        field_id: columnDef.field_id,
       };
-      socket.emit("updatedata", obj, (response) => {
-        console.log("res : ", response);
+      console.log(obj);
+      socket.emit('updatedata', obj, (response) => {
+        console.log('res : ', response);
       });
     };
 
@@ -105,7 +109,6 @@ const defaultColumn = {
       setValue(initialValue);
     }, [initialValue]);
 
-    // console.log(location.pathname.split('/')[2])
     return (
       // <div contentEditable="true"
       //   value={value}
@@ -133,18 +136,17 @@ export default function TableComponents({
   setData,
   tableConditions,
 }) {
-
   const [columns, setColumns] = useState(() => [...defaultColumns]);
   const [globalFilter, setGlobalFilter] = useState(
-    tableConditions?.model?.globalFilter || ""
+    tableConditions?.model?.globalFilter || ''
   );
   const [columnFilters, setColumnFilters] = useState([]);
   const [sorting, setSorting] = useState([]);
   const [rowHeight, setRowHeight] = useState([
     {
-      name: "small",
+      name: 'small',
       isActive: true,
-      icon: "density_small",
+      icon: 'density_small',
       height: 30,
       numberOfLines: 1,
     },
@@ -180,7 +182,7 @@ export default function TableComponents({
   const [columnPinning, setColumnPinning] = useState({});
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
   const table = useReactTable({
-    columnResizeMode: "onChange",
+    columnResizeMode: 'onChange',
     state: {
       columnOrder,
       globalFilter,
@@ -234,12 +236,12 @@ export default function TableComponents({
     // debugHeaders: true,
     // debugColumns: true,
   });
-  const { model } = useSelector(state => state.views)
+  const { model } = useSelector((state) => state.views);
 
   useEffect(() => {
     // table.setState(model)
     // console.log("model updated", model)
-  }, [model])
+  }, [model]);
 
   // console.log(table)
   return (
@@ -259,9 +261,8 @@ export default function TableComponents({
         columns: columns,
         setData: setData,
         data: data,
-      }}
-    >
-      <div className=" w-full  overflow-hidden h-screen text-white">
+      }}>
+      <div className=' w-full  overflow-hidden h-screen text-white'>
         <TableUtilityBar />
         <CustomTable />
       </div>

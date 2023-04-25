@@ -1,13 +1,15 @@
-import React, { useContext, useState } from "react";
-import { useSelector } from "react-redux";
-import { TableContext } from "../../tableComponents/TableComponents";
+import React, { useContext, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { TableContext } from '../../tableComponents/TableComponents';
 
 export default function SingleLineTextCell({ cell }) {
   const socket = useSelector((state) => state.socketWebData.socket);
-  const [value, setValue] = useState(cell?.getValue() || "");
+  const [value, setValue] = useState(cell?.getValue() || '');
   const [isEditMode, setIsEditMode] = useState(false);
   const { table } = useContext(TableContext);
-  const { selectedBaseId } = useSelector(state => state.globalState)
+  const { selectedBaseId, selectedTableId } = useSelector(
+    (state) => state.globalState
+  );
 
   function handleDoubleClick() {
     setIsEditMode(true);
@@ -29,31 +31,33 @@ export default function SingleLineTextCell({ cell }) {
 
       let rowObj = {
         base_id: selectedBaseId,
-        table_id: location.pathname.split("/")[2],
+        table_id: selectedTableId,
         record_id: cell?.row?.original.id52148213343234567,
         updated_data: newRowPart,
+        field_type: cell.column.columnDef.field_type,
+        field_name: cell.column.columnDef.field_name,
+        field_id: cell.column.columnDef.field_id,
       };
 
-      socket.emit("updatedata", rowObj, (response) => {
-        console.log("res : ", response);
+      socket.emit('updatedata', rowObj, (response) => {
+        console.log('res : ', response);
       });
     }
   }
 
   return isEditMode ? (
     <input
-      type="text"
+      type='text'
       value={value}
       onChange={handleChange}
       onBlur={handleBlur}
       autoFocus
-      className="w-full h-full truncate px-2 p-1"
+      className='w-full h-full truncate px-2 p-1'
     />
   ) : (
     <div
-      className="text-left w-full h-full truncate px-2 p-1"
-      onClick={handleDoubleClick}
-    >
+      className='text-left w-full h-full truncate px-2 p-1'
+      onClick={handleDoubleClick}>
       {value}
     </div>
   );

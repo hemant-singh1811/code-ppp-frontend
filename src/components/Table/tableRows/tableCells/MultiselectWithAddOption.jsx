@@ -22,7 +22,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
     (state) => state.globalState
   );
   const [SingleSelectToggle, setSingleSelectToggle] = React.useState(false);
-  const [selectedOption, setSelectedOption] = React.useState(rowData);
+  const [selectedOption, setSelectedOption] = React.useState(rowData || []);
   const [options, setOptions] = useState(newOptions);
   const [searchTerm, setSearchTerm] = useState('');
   const [bgColor, setBgColor] = useState(getRandomColor());
@@ -93,9 +93,12 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
 
     let rowObj = {
       base_id: selectedBaseId,
-      table_id: location.pathname.split('/')[2],
+      table_id: selectedTableId,
       record_id: rowCopy.id52148213343234567,
       updated_data: newRowPart,
+      field_type: cell.column.columnDef.field_type,
+      field_name: cell.column.columnDef.field_name,
+      field_id: cell.column.columnDef.field_id,
     };
 
     socket.emit('updatemetadata', obj, (response) => {
@@ -120,9 +123,12 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
 
     let rowObj = {
       base_id: selectedBaseId,
-      table_id: location.pathname.split('/')[2],
+      table_id: selectedTableId,
       record_id: rowCopy.id52148213343234567,
       updated_data: newRowPart,
+      field_type: cell.column.columnDef.field_type,
+      field_name: cell.column.columnDef.field_name,
+      field_id: cell.column.columnDef.field_id,
     };
     rowCopy[cell?.column.id] = rowData;
 
@@ -150,9 +156,12 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
 
     let rowObj = {
       base_id: selectedBaseId,
-      table_id: location.pathname.split('/')[2],
+      table_id: selectedTableId,
       record_id: rowCopy.id52148213343234567,
       updated_data: newRowPart,
+      field_type: cell.column.columnDef.field_type,
+      field_name: cell.column.columnDef.field_name,
+      field_id: cell.column.columnDef.field_id,
     };
     rowCopy[cell?.column.id] = rowData;
 

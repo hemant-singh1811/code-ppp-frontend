@@ -8,6 +8,7 @@ import AddTable from './components/Table/tableUtilities/AddTable';
 import Modal from './components/utilities/modal/Modal';
 import RefreshPageModal from './components/utilities/modal/RefreshPageModal';
 import 'material-symbols/rounded.scss';
+import FileViewer from './components/Table/tableUtilities/FileReader';
 
 function App() {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ function App() {
       <div className='relative w-full flex'>
         <MainRouting />
         {isOpen && <AddTable />}
+        <FileViewer />
         <Modal />
       </div>
       <RefreshPageModal />

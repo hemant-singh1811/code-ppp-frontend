@@ -90,6 +90,9 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
       updated_data: newRowPart,
       linked_rec: linkedRecord,
       is_added: true,
+      field_type: cell.column.columnDef.field_type,
+      field_name: cell.column.columnDef.field_name,
+      field_id: cell.column.columnDef.field_id,
     };
     console.log(rowObj);
     // rowCopy[cell?.column.id] = rowData;
@@ -118,6 +121,9 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
     // let oldRowPart = { [updatedRowKey]: selectedRowData };
 
     let rowObj = {
+      field_type: cell.column.columnDef.field_type,
+      field_name: cell.column.columnDef.field_name,
+      field_id: cell.column.columnDef.field_id,
       base_id: selectedBaseId,
       table_id: selectedTableId,
       record_id: rowCopy.id52148213343234567,

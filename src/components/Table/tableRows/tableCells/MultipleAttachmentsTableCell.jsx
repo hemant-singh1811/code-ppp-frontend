@@ -11,12 +11,11 @@ import {
   ref,
   uploadBytesResumable,
 } from 'firebase/storage';
+import { handelAddFiles } from '../../../../store/features/fileViewerSlice';
 // import { useStorage } from 'react-firebase-hooks/storage';
 // import { useDatabase } from 'react-firebase-hooks/database';
 
 export default function MultipleAttachmentsTableCell({ rowData, cell }) {
-  const socket = useSelector((state) => state.socketWebData.socket);
-
   const { selectedTableId, selectedBaseId } = useSelector(
     (state) => state.globalState
   );
@@ -32,6 +31,8 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
     thumbnails = rowData?.map(({ thumbnails }) => thumbnails?.small);
     images = rowData?.map(({ url }) => url);
   }
+
+  // console.log(rowData);
 
   const handleFocus = () => {
     setIsChildVisible(true);
@@ -55,17 +56,6 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
         onFocus={() => handleFocus()}
         onBlur={() => handleBlur()}
         tabIndex='1'>
-        {Array.isArray(images) &&
-          thumbnails.map((image, index) => (
-            <img
-              src={image?.url}
-              className={`border h-full rounded-sm  cursor-pointer object-fill `}
-              key={index}
-              // style={{ minWidth: activeHeight - 10 + 'px' }}
-              alt='i'
-            />
-          ))}
-
         {/* //add new record */}
         {isChildVisible && (
           <div
@@ -83,6 +73,18 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
             </svg>
           </div>
         )}
+        {Array.isArray(images) &&
+          thumbnails.map((image, index) => (
+            <img
+              onClick={() => {
+                dispatch(handelAddFiles(rowData));
+              }}
+              src={image?.url}
+              className={`border h-full rounded-sm  cursor-pointer object-fill `}
+              key={index}
+              alt='i'
+            />
+          ))}
       </div>
 
       <Transition appear show={isOpen} as={Fragment}>
@@ -122,10 +124,14 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
 
 function FileUploadHandler({ closeModal, cell }) {
   let fieldName = cell.column.columnDef.header;
+  const socket = useSelector((state) => state.socketWebData.socket);
   const [selectedFile, SetSelectedFile] = useState([]);
   const [Files, SetFiles] = useState([]);
-  const [uploadTask, setUploadTask] = useState(null);
-  const [fileUploadHandle, setFileUploadHandle] = useState([]);
+  const { selectedBaseId, selectedTableId } = useSelector(
+    (state) => state.globalState
+  );
+  // const [uploadTask, setUploadTask] = useState(null);
+  // const [fileUploadHandle, setFileUploadHandle] = useState([]);
 
   const [submitButton, setSubmitButton] = useState(false);
   const filesizes = (bytes, decimals = 2) => {
@@ -136,6 +142,8 @@ function FileUploadHandler({ closeModal, cell }) {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   };
+
+  let fileUploadHandleTemp = [];
 
   const InputChange = (e) => {
     // --For Multiple File Input
@@ -178,140 +186,120 @@ function FileUploadHandler({ closeModal, cell }) {
 
   const promises = [];
 
-  const FileUploadSubmit = (e) => {
+  const FileUploadSubmit = async (e) => {
     e.preventDefault();
     // console.log(selectedFile);
     setSubmitButton(true);
 
     // form reset on submit
     e.target.reset();
+
     if (selectedFile.length > 0) {
-      const storage = getStorage();
-      let totalSize = 0;
+      try {
+        const storage = getStorage();
+        let totalSize = 0;
 
-      selectedFile.map((file, i) => {
-        totalSize += file.size;
-        let tempFile = file.file;
+        selectedFile.map((file, i) => {
+          totalSize += file.size;
+          let tempFile = file.file;
 
-        const storageRef = ref(storage, file.file.name);
-        const uploadTask = uploadBytesResumable(storageRef, tempFile);
+          const storageRef = ref(storage, file.file.name);
+          const uploadTask = uploadBytesResumable(storageRef, tempFile);
 
-        promises.push(uploadTask);
+          promises.push({ uploadTask: uploadTask, file: file });
 
-        uploadTask.on(
-          'state_changed',
-          (snapshot) => {
-            const progress = (
-              (snapshot.bytesTransferred / snapshot.totalBytes) *
-              100
-            ).toFixed(0);
+          uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+              const progress = (
+                (snapshot.bytesTransferred / snapshot.totalBytes) *
+                100
+              ).toFixed(0);
 
-            SetSelectedFile((prev) => {
-              return prev.map((prevFiles) => {
-                if (file.id === prevFiles.id) {
-                  prevFiles.progress = progress;
-                  prevFiles.uploading = true;
-                  if (progress === 100) {
-                    prevFiles.uploading = false;
-                    prevFiles.isUploaded = true;
+              SetSelectedFile((prev) => {
+                return prev.map((prevFiles) => {
+                  if (file.id === prevFiles.id) {
+                    prevFiles.progress = progress;
+                    prevFiles.uploading = true;
+                    if (progress === 100) {
+                      prevFiles.uploading = false;
+                      prevFiles.isUploaded = true;
+                    }
                   }
-                }
-                return prevFiles;
+                  return prevFiles;
+                });
               });
-            });
-            switch (snapshot.state) {
-              case 'paused':
-                // console.log('Upload is paused');
-                break;
-              case 'running':
-                // console.log('Upload is running');
-                break;
+            },
+            (error) => {
+              console.error(error);
             }
-          },
-          (error) => {
-            console.error(error);
-          }
-          // async () => {
-          //   // Handle successful uploads on complete
-          //   // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-          //   const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          //   setFileUploadHandle([
-          //     ...fileUploadHandle,
-          //     {
-          //       filename: file.file.name,
-          //       size: file.file.size,
-          //       type: file.file.type,
-          //       thumbnails: {
-          //         small: {
-          //           width: 25,
-          //           height: 36,
-          //           url: downloadURL,
-          //         },
-          //         large: {
-          //           width: 512,
-          //           height: 725,
-          //           url: downloadURL,
-          //         },
-          //         full: {
-          //           width: 3000,
-          //           height: 3000,
-          //           url: downloadURL,
-          //         },
-          //       },
-          //       url: downloadURL,
-          //       width: 3000,
-          //       height: 4676,
-          //     },
-          //   ]);
-          //   console.log(downloadURL);
-          //   //  .then((downloadURL) => {
-          //   //     // console.log('File available at', downloadURL);
-          //   //     // console.log(uploadTask);
-          //   //     // console.log(downloadURL);
-          //   //   });
-          // }
-        );
-      });
+          );
+        });
 
-      // setUploadTask(promises);
+        await Promise.all(promises.map((ele) => ele.uploadTask));
+        for (let i = 0; i < promises.length; i++) {
+          let promise = promises[i];
+          const downloadURL = await getDownloadURL(
+            promise.uploadTask.snapshot.ref
+          );
+          AddUrlToSendServer(downloadURL, promise);
+        }
 
-      Promise.all(promises)
-        .then(() => {
+        let newRowPart = { [cell?.column.id]: fileUploadHandleTemp };
+        let rowObj = {
+          base_id: selectedBaseId,
+          table_id: selectedTableId,
+          record_id: cell?.row?.original.id52148213343234567,
+          updated_data: newRowPart,
+          field_type: cell.column.columnDef.field_type,
+          field_name: cell.column.columnDef.field_name,
+          field_id: cell.column.columnDef.field_id,
+          is_added: true,
+        };
+
+        socket.emit('updatedata', rowObj, (response) => {
+          console.log('res : ', response);
+          closeModal();
           setSubmitButton(false);
-          promises.map((prom) => {
-            prom.on();
-            console.log(prom);
-          });
-          console.log(promises);
-          setSubmitButton(false);
-          console.log('Upload complete!');
-          console.log('fileUploadHandle', fileUploadHandle);
           SetSelectedFile([]);
-        })
-        .catch((error) => {
-          console.error(error);
+          SetFiles([]);
         });
 
-      // setUploadTask(promises);
-
-      Promise.all(promises)
-        .then(() => {
-          setFiles([]);
-          setUploadProgress(0);
-          console.log('Upload complete!');
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      // for (let index = 0; index < selectedFile.length; index++) {
-      //   SetFiles((preValue) => {
-      //     return [...preValue, selectedFile[index]];
-      //   });
-      // }
-      // SetSelectedFile([]);
+        console.log(fileUploadHandleTemp);
+      } catch (error) {
+        console.error(error);
+      }
     } else {
       alert('Please select file');
     }
+  };
+
+  const AddUrlToSendServer = (downloadURL, promise) => {
+    fileUploadHandleTemp.push({
+      filename: promise.file.file.name,
+      size: promise.file.file.size,
+      type: promise.file.file.type,
+      thumbnails: {
+        small: {
+          width: 25,
+          height: 36,
+          url: downloadURL,
+        },
+        large: {
+          width: 512,
+          height: 725,
+          url: downloadURL,
+        },
+        full: {
+          width: 3000,
+          height: 3000,
+          url: downloadURL,
+        },
+      },
+      url: downloadURL,
+      width: 3000,
+      height: 4676,
+    });
   };
 
   const CancelUploadAll = async () => {
@@ -338,14 +326,15 @@ function FileUploadHandler({ closeModal, cell }) {
                   <div className='kb-file-upload'>
                     <div className='file-upload-box'>
                       <input
+                        disabled={submitButton}
                         type='file'
                         id='fileupload'
-                        className='file-upload-input'
+                        className='file-upload-input disabled:cursor-not-allowed'
                         onChange={InputChange}
                         multiple
                       />
                       <span>
-                        Drag and drop or{' '}
+                        {/* Drag and drop or{' '} */}
                         <span className='file-link'>Choose your files</span>
                       </span>
                     </div>
@@ -385,9 +374,9 @@ function FileUploadHandler({ closeModal, cell }) {
                             </p>
                             <div className='file-actions'>
                               {uploading ? (
-                                <div class='w-full bg-gray-200 rounded-full dark:bg-gray-700'>
+                                <div className='w-full bg-gray-200 rounded-full dark:bg-gray-700'>
                                   <div
-                                    class='bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full'
+                                    className='bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full'
                                     style={{ width: progress + '%' }}>
                                     {progress}%
                                   </div>
