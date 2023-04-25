@@ -192,8 +192,7 @@ const FileViewer = () => {
                   <div className='flex justify-start items-center bg-gray-100 p-4'>
                     <div
                       onClick={closeModal}
-                      className='border-[1px] rounded-full border-black p-1'
-                      title='close'>
+                      className='border-[1px] rounded-full border-black p-1 cursor-pointer'>
                       <svg
                         xmlns='http://www.w3.org/2000/svg'
                         fill='none'

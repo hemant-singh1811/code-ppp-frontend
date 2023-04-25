@@ -49,6 +49,104 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
   function openModal() {
     setIsOpen(true);
   }
+
+  console.log(rowData);
+
+  const renderFile = (file) => {
+    console.log(file);
+    switch (file?.type.split('/')[0]) {
+      case 'image':
+        return (
+          <img
+            className='h-full w-auto object-contain'
+            src={file?.url}
+            alt={file?.name}
+          />
+        );
+      case 'video':
+        return (
+          <video controls>
+            <source
+              src={file?.url}
+              type={file?.type + '/' + file?.name.split('.').pop()}
+            />
+            Your browser does not support the video tag.
+          </video>
+        );
+      case 'pdf':
+        return (
+          <embed
+            data={file?.url}
+            type='application/pdf'
+            // type={file?.type + '/' + file?.name.split('.').pop()}
+            width='100%'
+            height='600px'>
+            <p>Unable to display PDF. Please download the file to view it.</p>
+          </embed>
+        );
+      case 'audio':
+        return (
+          <audio controls>
+            <source
+              src={file?.url}
+              type={file?.type + '/' + file?.name.split('.').pop()}
+            />
+            Your browser does not support the audio tag.
+          </audio>
+        );
+      case 'html':
+        return (
+          <iframe
+            src={file?.url}
+            title={file?.name}
+            width='100%'
+            height='600px'></iframe>
+        );
+      case 'doc':
+        return (
+          <object
+            data={file?.url}
+            type={file?.type + '/' + file?.name.split('.').pop()}
+            width='100%'
+            height='600px'>
+            <p>
+              Unable to display document. Please download the file to view it.
+            </p>
+          </object>
+        );
+      case 'csv':
+        return (
+          <object
+            data={file?.url}
+            type={file?.type + '/' + file?.name.split('.').pop()}
+            width='100%'
+            height='600px'>
+            <p>Unable to display CSV. Please download the file to view it.</p>
+          </object>
+        );
+      case 'psd':
+        return (
+          <object
+            data={file?.url}
+            type={file?.type + '/' + file?.name.split('.').pop()}
+            width='100%'
+            height='600px'>
+            <p>Unable to display PSD. Please download the file to view it.</p>
+          </object>
+        );
+      default:
+        return (
+          <object
+            data={file?.url}
+            type={file?.type + '/' + file?.name.split('.').pop()}
+            // width='100%'
+            // height='600px'
+            className='w-full h-full flex items-center justify-center'>
+            <p>Unable to display file. Please download the file to view it.</p>
+          </object>
+        );
+    }
+  };
   return (
     <div className='h-full overflow-hidden select-none'>
       <div
@@ -73,6 +171,9 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
             </svg>
           </div>
         )}
+
+        {/* {Array.isArray(rowData) && rowData.map((ele) => renderFile(ele))} */}
+
         {Array.isArray(images) &&
           thumbnails.map((image, index) => (
             <img

@@ -65,28 +65,22 @@ export default function AddTable() {
 
   // save all the bases names and later check if the name is already present or not
   const existingBases = new Set();
-  // useEffect(() => {
+
   bases.map(({ baseid, tablemetadata }) => {
     if (baseid === selectedBaseId) {
       tablemetadata?.forEach(({ table_name }) => {
-        console.log(
-          'updating map f================================================================'
-        );
         existingTable.add(table_name?.toLocaleLowerCase());
       });
     }
   });
-  console.log('fdsafsd fdaf dafd');
 
   bases.map(({ basemetadata }) => {
     existingBases.add(basemetadata.name);
   });
-  // }, []);
 
-  existingTable.forEach((key) => {
-    console.log('Existing table name', key);
-  });
-  console.log('fdsafads');
+  // existingTable.forEach((key) => {
+  //   console.log('Existing table name', key);
+  // });
 
   useEffect(() => {
     if (responseCreateTable?.data) {
