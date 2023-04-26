@@ -148,12 +148,6 @@ const FileViewer = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
-    // const a = document.createElement('a');
-    // a.href = files[currentFileIndex].url;
-    // a.download = files[currentFileIndex].name;
-
-    // a.click();
   };
 
   const handleDeleteFile = (fileUploadHandleTemp) => {
@@ -172,10 +166,19 @@ const FileViewer = () => {
 
     socket.emit('updatedata', rowObj, (response) => {
       dispatch(handelRemoveFiles({ id: fileUploadHandleTemp.id }));
-      console.log('res : ', response);
-    });
 
-    // alert('Delete file');
+      // console.log(fileViewer.files);
+      fileViewer.table(
+        cell.row.index,
+        cell.column.id,
+        fileViewer.files.filter((ele) => ele.id !== fileUploadHandleTemp.id)
+      );
+      console.log('res : ', response);
+
+      if (fileViewer.files.length <= 1) {
+        closeModal();
+      }
+    });
   };
 
   const handleEditFile = () => {
@@ -239,8 +242,6 @@ const FileViewer = () => {
                         />
                       </svg>
                     </div>
-
-                    {/* <input type='file' multiple onChange={handleFileUpload} /> */}
                   </div>
                   {files?.length > 0 && (
                     <div className='flex flex-col h-full'>

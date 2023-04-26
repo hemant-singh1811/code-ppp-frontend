@@ -48,9 +48,6 @@ const BasesStateSlice = createSlice({
       let updatedBases = state.bases.map((item) => {
         if (payload.baseId === item.baseid) {
           item.tablemetadata = item.tablemetadata.map((ele) => {
-            console.log(
-              'fdasf daf dasf daf d================================================================'
-            );
             if (ele.table_id === payload.tableId) {
               ele.table_name = payload.updatedName;
             }

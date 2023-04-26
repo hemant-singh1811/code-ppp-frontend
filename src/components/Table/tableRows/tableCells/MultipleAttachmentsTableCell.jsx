@@ -23,9 +23,9 @@ import LoadingAlt from '../../../utilities/LoadingAlt';
 export default function MultipleAttachmentsTableCell({ rowData, cell }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isChildVisible, setIsChildVisible] = useState(false);
-
+  const { files } = useSelector((state) => state.fileViewer);
   const dispatch = useDispatch();
-
+  const { table } = useContext(TableContext);
   // let images;
   // let thumbnails;
   // if (Array.isArray(rowData)) {
@@ -61,7 +61,12 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
           <img
             onClick={() => {
               dispatch(
-                handelAddFiles({ files: rowData, index: i, cell: cell })
+                handelAddFiles({
+                  files: rowData,
+                  index: i,
+                  cell: cell,
+                  table: table.options.meta?.updateData,
+                })
               );
             }}
             key={i}
@@ -75,7 +80,12 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
           <div
             onClick={() => {
               dispatch(
-                handelAddFiles({ files: rowData, index: i, cell: cell })
+                handelAddFiles({
+                  files: rowData,
+                  index: i,
+                  cell: cell,
+                  table: table.options.meta?.updateData,
+                })
               );
             }}
             key={i}
@@ -100,7 +110,12 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
           <div
             onClick={() => {
               dispatch(
-                handelAddFiles({ files: rowData, index: i, cell: cell })
+                handelAddFiles({
+                  files: rowData,
+                  index: i,
+                  cell: cell,
+                  table: table.options.meta?.updateData,
+                })
               );
             }}
             key={i}
@@ -125,7 +140,12 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
           <div
             onClick={() => {
               dispatch(
-                handelAddFiles({ files: rowData, index: i, cell: cell })
+                handelAddFiles({
+                  files: rowData,
+                  index: i,
+                  cell: cell,
+                  table: table.options.meta?.updateData,
+                })
               );
             }}
             key={i}
@@ -156,6 +176,10 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
         );
     }
   };
+  // useEffect(() => {
+  //   table.options.meta?.updateData(cell.row.index, cell.column.id, files);
+  // }, [files]);
+
   return (
     <div className='h-full overflow-hidden select-none'>
       <div
@@ -365,14 +389,16 @@ function FileUploadHandler({ closeModal, cell }) {
           is_added: true,
         };
 
+        console.log(cell.getValue());
+
         socket.emit('updatedata', rowObj, (response) => {
           // console.log([...response.resdata.sample, ...cell.getValue()]);
           console.log('res : ', response);
           dispatch(handelUpdateFiles(response?.resdata));
-          // table.options.meta?.updateData(cell.row.index, cell.column.id, [
-          //   ...response.resdata,
-          //   ...cell.getValue(),
-          // ]);
+          table.options.meta?.updateData(cell.row.index, cell.column.id, [
+            ...response.resdata,
+            ...cell.getValue(),
+          ]);
           closeModal();
           setSubmitButton(false);
           SetSelectedFile([]);

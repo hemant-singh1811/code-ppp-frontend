@@ -3,8 +3,9 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   files: [],
   isOpen: false,
-  index: 99,
+  index: 0,
   cell: '',
+  table: '',
 };
 
 const ImageViewerSlice = createSlice({
@@ -16,6 +17,7 @@ const ImageViewerSlice = createSlice({
       state.index = payload.index;
       state.isOpen = true;
       state.cell = payload.cell;
+      state.table = payload.table;
     },
     handelToggleFilesModal: (state) => {
       state.isOpen = !state.isOpen;
