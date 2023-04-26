@@ -181,7 +181,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
       }`}
       // className="relative select-none h-full w-full z-0"
       ref={singleSelectRef}>
-      <div className='bg-white w-full rounded-md cursor-pointer flex items-center px-2 justify-between '>
+      <div className=' w-full rounded-md cursor-pointer flex items-center px-2 justify-between '>
         <div className='overflow-hidden flex'>
           {options?.map(({ name, color, bgcolor }, i) => {
             if (selectedOption?.includes(name) && name !== '')

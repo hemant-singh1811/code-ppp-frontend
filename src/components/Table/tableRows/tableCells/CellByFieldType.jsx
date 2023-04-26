@@ -116,7 +116,7 @@ export default function CellByFieldType({ field_type, cell }) {
 
     default:
       return (
-        <div className='w-full h-full overflow-hidden'>
+        <div className='w-full h-full overflow-hidden flex items-center justify-center'>
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </div>
       );

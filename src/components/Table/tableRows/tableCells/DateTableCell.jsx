@@ -41,7 +41,7 @@ export default function DateTableCell({ cell }) {
           console.log('res : ', response);
         });
       }}
-      className=' w-full h-full min-h-[29px] px-2'
+      className='bg-transparent w-full h-full min-h-[29px] px-2'
       placeholder='DD/MM/YYYY'
       options={options}
     />

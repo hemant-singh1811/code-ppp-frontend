@@ -150,7 +150,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
           setSingleSelectToggle(!SingleSelectToggle);
           setSearchTerm('');
         }}
-        className='bg-white w-full rounded-md cursor-pointer flex items-center px-2 justify-between '>
+        className=' w-full rounded-md cursor-pointer flex items-center px-2 justify-between '>
         {options?.map(({ name, color, bgcolor }, i) => {
           if (selectedOption?.includes(name) && name !== '')
             return (

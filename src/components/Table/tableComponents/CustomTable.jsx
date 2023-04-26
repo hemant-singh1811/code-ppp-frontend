@@ -312,18 +312,26 @@ const DraggableColumnHeader = ({ header, table, index }) => {
           <div
             ref={dragRef}
             className='capitalize text-lg font-normal px-2  flex justify-between item items-center h-full'>
-            <div className='flex items-center w-[calc(100%_-_20px)]'>
+            <div
+              className={`flex items-center ${
+                index === 0 ? 'w-full' : ' w-[calc(100%_-_20px)]'
+              }`}>
+              {index !== 0 && (
+                <div
+                  className='h-full min-w-[20px]'
+                  onMouseEnter={() =>
+                    handleMouseOver(column.columnDef.field_type)
+                  }
+                  onMouseLeave={() =>
+                    handleMouseLeave(column.columnDef.field_type)
+                  }>
+                  {getSvg(column.columnDef.field_type)}
+                </div>
+              )}
               <div
-                className=' h-full min-w-[20px]'
-                onMouseEnter={() =>
-                  handleMouseOver(column.columnDef.field_type)
-                }
-                onMouseLeave={() =>
-                  handleMouseLeave(column.columnDef.field_type)
-                }>
-                {getSvg(column.columnDef.field_type)}
-              </div>
-              <div className='truncate w-full text-left ml-1'>
+                className={`truncate w-full text-left ${
+                  index !== 0 && 'ml-1'
+                }`}>
                 {header.isPlaceholder
                   ? null
                   : flexRender(
@@ -332,32 +340,36 @@ const DraggableColumnHeader = ({ header, table, index }) => {
                     )}
               </div>
             </div>
+            {index !== 0 && (
+              <div
+                ref={divRef}
+                className='absolute top-9 bg-white rounded-md px-2 border-2 hidden min-w-max'>
+                {fieldName(column.columnDef.field_type)}
+              </div>
+            )}
 
-            <div
-              ref={divRef}
-              className='absolute top-9 bg-white rounded-md px-2 border-2 hidden min-w-max'>
-              {fieldName(column.columnDef.field_type)}
-            </div>
-
-            <TableColumnDropDown
-              open={open}
-              close={close}
-              isMenuOpen={isMenuOpen}
-              setIsMenuOpen={setIsMenuOpen}
-              columnDropdownRef={columnDropdownRef}
-              columnDef={header?.column?.columnDef}
-            />
+            {index !== 0 && (
+              <TableColumnDropDown
+                open={open}
+                close={close}
+                isMenuOpen={isMenuOpen}
+                setIsMenuOpen={setIsMenuOpen}
+                columnDropdownRef={columnDropdownRef}
+                columnDef={header?.column?.columnDef}
+              />
+            )}
           </div>
-
-          <div
-            {...{
-              onMouseDown: header.getResizeHandler(),
-              onTouchStart: header.getResizeHandler(),
-              className: `resizerHeader ${
-                header.column.getIsResizing() ? 'isResizingHeader' : ''
-              }`,
-            }}
-          />
+          {index !== 0 && (
+            <div
+              {...{
+                onMouseDown: header.getResizeHandler(),
+                onTouchStart: header.getResizeHandler(),
+                className: `resizerHeader ${
+                  header.column.getIsResizing() ? 'isResizingHeader' : ''
+                }`,
+              }}
+            />
+          )}
         </div>
       )}
     </Popover>

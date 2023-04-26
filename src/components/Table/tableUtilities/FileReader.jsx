@@ -42,11 +42,12 @@ const FileViewer = () => {
         );
       case 'video':
         return (
-          <video controls>
+          <video className='w-full h-auto max-h-full' controls>
             <source
               src={file.url}
-              // type='video/mp4'
-              type={file?.type}
+              type='video/mp4'
+              // type={file?.type}
+              className='w-full h-full object-contain'
             />
             Your browser does not support the video tag.
           </video>
@@ -209,7 +210,7 @@ const FileViewer = () => {
           leave='ease-in duration-200'
           leaveFrom='opacity-100'
           leaveTo='opacity-0'>
-          <div className='fixed inset-0  backdrop-blur-md  ' />
+          <div className='fixed inset-0 backdrop-blur-md bg-[#0000004a]' />
         </Transition.Child>
 
         <div className='fixed inset-0 overflow-y-auto '>

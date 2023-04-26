@@ -41,7 +41,7 @@ export default function CheckBox({ cell, rowData }) {
   }
 
   return (
-    <div className='w-full h-full flex items-center justify-center'>
+    <div className='w-full h-full flex items-center justify-center cursor-pointer'>
       <input
         ref={checkBoxRef}
         type='checkbox'

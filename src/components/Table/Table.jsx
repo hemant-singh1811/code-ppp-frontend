@@ -35,6 +35,7 @@ export default function Table({
   defaultColumns.unshift({
     accessorKey: '',
     id: 'select',
+    size: 40,
     header: ({ table }) => (
       <IndeterminateCheckbox
         checked={table.getIsAllRowsSelected()}
@@ -44,13 +45,12 @@ export default function Table({
     ),
     width: 20,
     cell: ({ row }) => (
-      <div className='px-1'>
-        <IndeterminateCheckbox
-          checked={row.getIsSelected()}
-          indeterminate={row.getIsSomeSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      </div>
+      <IndeterminateCheckbox
+        data={row}
+        checked={row.getIsSelected()}
+        indeterminate={row.getIsSomeSelected()}
+        onChange={row.getToggleSelectedHandler()}
+      />
     ),
   });
 

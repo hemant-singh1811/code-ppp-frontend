@@ -56,9 +56,22 @@ export default function CreateRow() {
 
   return (
     <div
-      className='hover:bg-gray-100 px-1 cursor-pointer h-full item-center flex'
+      className='hover:bg-gray-100 px-1 cursor-pointer h-full flex items-center justify-center'
       onClick={createRow}>
-      <span className='material-symbols-rounded font-thin '>add</span>
+      {/* <span className='material-symbols-rounded font-thin '>add</span> */}
+      <svg
+        xmlns='http://www.w3.org/2000/svg'
+        fill='none'
+        viewBox='0 0 24 24'
+        strokeWidth={1.5}
+        stroke='currentColor'
+        className='w-5 h-5 font-thin '>
+        <path
+          strokeLinecap='round'
+          strokeLinejoin='round'
+          d='M12 4.5v15m7.5-7.5h-15'
+        />
+      </svg>
     </div>
   );
 }

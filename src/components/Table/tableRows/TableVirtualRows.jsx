@@ -62,7 +62,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                   return ( */}
                 <div
                   // key={virtualColumn.index}
-                  className='tr z-0'
+                  className='tr z-0 hover:bg-blue-50'
                   style={{
                     position: 'absolute',
                     top: 0,
@@ -76,7 +76,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                   {row.getVisibleCells().map((cell, index) => {
                     return (
                       <div
-                        className={`td webkitLineClamp${activeNumberOfLines} mx-auto my-auto text-center `}
+                        className={`td  webkitLineClamp${activeNumberOfLines} mx-auto my-auto text-center `}
                         key={cell.id}
                         {...{
                           style: {
