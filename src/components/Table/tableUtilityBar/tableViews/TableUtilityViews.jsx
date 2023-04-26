@@ -28,7 +28,9 @@ export default function TableUtilityViews() {
   );
 }
 
-export const ViewsComponent = ({ data, error, isFetching, isSuccess }) => {
+export const ViewsComponent = () => {
+  const { selectedTableViews } = useSelector((state) => state.views);
+  let data = selectedTableViews;
   function reducer(state, { type, targetState, viewTitle, id, updatedState }) {
     switch (type) {
       case 'setInitialState':
@@ -69,44 +71,61 @@ export const ViewsComponent = ({ data, error, isFetching, isSuccess }) => {
   // console.log(data)
   const [createToggle, setCreateToggle] = useState(true);
   const dispatch = useDispatch();
-  useEffect(() => {
-    if (data) {
-      viewsDispatch({
-        updatedState: [
-          {
-            title: 'Personal Views',
-            collapsed: true,
-            data: data?.personalview?.map((ele, i) => {
-              return {
-                title: ele?.metadata?.name,
-                data: ele?.model,
-                id: ele?.metadata?.views_id,
-              };
-            }),
-          },
-          {
-            title: 'Shared View',
-            collapsed: true,
-            data: data?.sharedview?.map((ele) => {
-              return {
-                title: ele?.metadata?.name,
-                data: ele?.model,
-                id: ele?.metadata?.views_id,
-              };
-            }),
-          },
-        ],
-        type: 'setInitialState',
-      });
-    }
-  }, [isSuccess]);
-  const [views, viewsDispatch] = useReducer(reducer, []);
-  if (isFetching) {
-    return <Loading />;
-  }
-  if (error) {
-    return <Error error={error} />;
-  }
+  // useEffect(() => {
+  //   if (data) {
+  //     viewsDispatch({
+  //       updatedState: [
+  //         {
+  //           title: 'Personal Views',
+  //           collapsed: true,
+  //           data: data?.personalview?.map((ele, i) => {
+  //             return {
+  //               title: ele?.metadata?.name,
+  //               data: ele?.model,
+  //               id: ele?.metadata?.views_id,
+  //             };
+  //           }),
+  //         },
+  //         {
+  //           title: 'Shared View',
+  //           collapsed: true,
+  //           data: data?.sharedview?.map((ele) => {
+  //             return {
+  //               title: ele?.metadata?.name,
+  //               data: ele?.model,
+  //               id: ele?.metadata?.views_id,
+  //             };
+  //           }),
+  //         },
+  //       ],
+  //       type: 'setInitialState',
+  //     });
+  //   }
+  // }, [isSuccess]);
+  const [views, viewsDispatch] = useReducer(reducer, [
+    {
+      title: 'Personal Views',
+      collapsed: true,
+      data: data?.personalview?.map((ele, i) => {
+        return {
+          title: ele?.metadata?.name,
+          data: ele?.model,
+          id: ele?.metadata?.views_id,
+        };
+      }),
+    },
+    {
+      title: 'Shared View',
+      collapsed: true,
+      data: data?.sharedview?.map((ele) => {
+        return {
+          title: ele?.metadata?.name,
+          data: ele?.model,
+          id: ele?.metadata?.views_id,
+        };
+      }),
+    },
+  ]);
 
   // const initialState = [
   // 	{

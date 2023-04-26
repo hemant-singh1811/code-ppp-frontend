@@ -3,10 +3,12 @@ import Error from '../../components/utilities/Error';
 import Loading from '../../components/utilities/Loading';
 import {
   useGetModelQuery,
+  useGetSavedViewQuery,
   useGetTableDataQuery,
 } from '../../store/services/alphaTruckingApi';
 import Table from '../../components/Table/Table';
 import { useDispatch, useSelector } from 'react-redux';
+import { handleAddSelectedTableViews } from '../../store/features/viewsSlice';
 
 let multipleRecordLinksArray = [];
 
@@ -17,6 +19,9 @@ export default function TableScreen() {
   let { data, error, isFetching, refetch } =
     useGetTableDataQuery(selectedTableId);
   let modelResult = useGetModelQuery(selectedTableId);
+  const getSavedViewApi = useGetSavedViewQuery({
+    data: { table_id: selectedTableId },
+  });
 
   const multipleRecordLinksMap = new Map();
   const RecordIdArrayWithTableIdMap = new Map(); // table id -> multiple record [] of a particular column
@@ -25,11 +30,15 @@ export default function TableScreen() {
     refetch(selectedTableId);
     modelResult.refetch(selectedTableId);
   }, [selectedTableId]);
+  useEffect(() => {
+    console.log('GET SAVED VIEW MODAL', getSavedViewApi.data);
+    dispatch(handleAddSelectedTableViews(getSavedViewApi.data));
+  }, [getSavedViewApi.isSuccess]);
 
-  if (isFetching || modelResult?.isFetching) {
+  if (isFetching || modelResult?.isFetching || getSavedViewApi.isFetching) {
     return <Loading />;
   }
-  if (error || modelResult?.error) {
+  if (error || modelResult?.error || getSavedViewApi.error) {
     return <Error error={error} />;
   }
 

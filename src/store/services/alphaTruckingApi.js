@@ -30,14 +30,6 @@ export const alphaTruckingApi = createApi({
 
     // views api
 
-    PostViews: builder.mutation({
-      query: (payload) => ({
-        url: 'API/V1/changesaved',
-        body: { model: payload },
-        method: 'POST',
-      }),
-    }),
-
     GetSavedView: builder.query({
       query: (payload) => ({
         url: 'API/V1/getsavedviewmodel',
@@ -285,7 +277,6 @@ export const {
   useDeleteViewMutation,
   useDeleteTableColumnMutation,
   useDeleteBaseMutation,
-  usePostViewsMutation,
   useAddTableRowMutation,
   useRenameTableMutation,
   useRenameBaseMutation,

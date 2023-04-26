@@ -134,14 +134,19 @@ export default function TableComponents({
   data,
   toggle,
   setData,
-  tableConditions,
 }) {
+  const { model } = useSelector((state) => state.views);
   const [columns, setColumns] = useState(() => [...defaultColumns]);
-  const [globalFilter, setGlobalFilter] = useState(
-    tableConditions?.model?.globalFilter || ''
-  );
+  const [globalFilter, setGlobalFilter] = useState(model?.globalFilter || '');
   const [columnFilters, setColumnFilters] = useState([]);
   const [sorting, setSorting] = useState([]);
+  const [grouping, setGrouping] = useState([]);
+  const [columnOrder, setColumnOrder] = useState(
+    //must start out with populated columnOrder so we can splice
+    model?.columnOrder || columns?.map((column) => column.id)
+  );
+
+  const [viewsToggle, setViewsToggle] = useState(false);
   const [rowHeight, setRowHeight] = useState([
     {
       name: 'small',
@@ -172,13 +177,7 @@ export default function TableComponents({
     //   numberOfLines: 4,
     // },
   ]);
-  const [grouping, setGrouping] = useState([]);
-  const [viewsToggle, setViewsToggle] = useState(false);
   let { activeRowHeight, activeNumberOfLines } = handleRowHeight(rowHeight);
-  const [columnOrder, setColumnOrder] = useState(
-    //must start out with populated columnOrder so we can splice
-    tableConditions?.model?.columnOrder || columns?.map((column) => column.id)
-  );
   const [columnPinning, setColumnPinning] = useState({});
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
   const table = useReactTable({
@@ -236,12 +235,11 @@ export default function TableComponents({
     // debugHeaders: true,
     // debugColumns: true,
   });
-  const { model } = useSelector((state) => state.views);
 
   useEffect(() => {
-    // table.setState(model)
-    // console.log("model updated", model)
-  }, [model]);
+    table.setState(model);
+    console.log('model updated', model);
+  }, []);
 
   // console.log(table)
   return (
@@ -261,6 +259,10 @@ export default function TableComponents({
         columns: columns,
         setData: setData,
         data: data,
+        columnOrder: columnOrder,
+        columnFilters: columnFilters,
+        sorting: sorting,
+        grouping: grouping,
       }}>
       <div className=' w-full  overflow-hidden h-screen text-white'>
         <TableUtilityBar />

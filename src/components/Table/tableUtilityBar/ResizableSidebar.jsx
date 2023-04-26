@@ -1,12 +1,7 @@
-import React, { useRef, useEffect } from "react";
-import { ViewsComponent } from "./tableViews/TableUtilityViews";
+import React, { useRef, useEffect } from 'react';
+import { ViewsComponent } from './tableViews/TableUtilityViews';
 
-export const ResizableSidebar = ({
-  data,
-  error,
-  isFetching,
-  isSuccess,
-}) => {
+export const ResizableSidebar = () => {
   const ref = useRef(null);
   const refRight = useRef(null);
 
@@ -16,8 +11,8 @@ export const ResizableSidebar = ({
     let width = parseInt(styles.width, 10);
     let x = 0;
 
-    reSizeAbleEle.style.top = "0px";
-    reSizeAbleEle.style.left = "0px";
+    reSizeAbleEle.style.top = '0px';
+    reSizeAbleEle.style.left = '0px';
 
     // Right resize
     const onMouseMoveRightResize = (event) => {
@@ -28,41 +23,34 @@ export const ResizableSidebar = ({
     };
 
     const onMouseUpRightResize = (event) => {
-      document.removeEventListener("mousemove", onMouseMoveRightResize);
+      document.removeEventListener('mousemove', onMouseMoveRightResize);
     };
 
     const onMouseDownRightResize = (event) => {
       x = event.clientX;
       reSizeAbleEle.style.left = styles.left;
       reSizeAbleEle.style.right = null;
-      document.addEventListener("mousemove", onMouseMoveRightResize);
-      document.addEventListener("mouseup", onMouseUpRightResize);
+      document.addEventListener('mousemove', onMouseMoveRightResize);
+      document.addEventListener('mouseup', onMouseUpRightResize);
     };
 
     // Add mouse down event listener
     const resizerRight = refRight.current;
-    resizerRight.addEventListener("mousedown", onMouseDownRightResize);
+    resizerRight.addEventListener('mousedown', onMouseDownRightResize);
 
     return () => {
-      resizerRight.removeEventListener("mousedown", onMouseDownRightResize);
+      resizerRight.removeEventListener('mousedown', onMouseDownRightResize);
     };
   }, []);
 
   return (
     <div
       ref={ref}
-      className="relative w-[100px] h-[calc(100vh_-_40px)] min-w-[250px] max-w-[600px] "
-    >
-      <ViewsComponent
-        data={data}
-        error={error}
-        isFetching={isFetching}
-        isSuccess={isSuccess}
-      />
+      className='relative w-[100px] h-[calc(100vh_-_40px)] min-w-[250px] max-w-[600px] '>
+      <ViewsComponent />
       <div
         ref={refRight}
-        className="absolute resizer cursor-col-resize h-full hover:bg-[#ababab] bg-[#ababab] "
-      ></div>
+        className='absolute resizer cursor-col-resize h-full hover:bg-[#ababab] bg-[#ababab] '></div>
     </div>
   );
 };

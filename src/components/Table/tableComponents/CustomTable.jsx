@@ -387,42 +387,13 @@ const reorderColumn = (draggedColumnId, targetColumnId, columnOrder) => {
 };
 
 export default function CustomTable() {
-  const { selectedTableId } = useSelector((state) => state.globalState);
-  const { data, error, isFetching, isSuccess } = useGetSavedViewQuery({
-    data: { table_id: selectedTableId },
-  });
   const { toggle, table, viewsToggle } = useContext(TableContext);
   const tableContainerRef = React.useRef(null);
   const { rows } = table.getRowModel();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (data) {
-      console.log('Get Saved View', data);
-      data?.personalview?.map((ele, i) => {
-        if (i === 0) {
-          dispatch(
-            handleUpdateViews({
-              name: ele?.metadata?.name,
-              id: ele?.metadata?.views_id,
-              model: ele?.model,
-            })
-          );
-        }
-      });
-    }
-  }, [isSuccess]);
 
   return (
     <div className='flex overflow-hidden'>
-      {viewsToggle && (
-        <ResizableSidebar
-          data={data}
-          error={error}
-          isFetching={isFetching}
-          isSuccess={isSuccess}
-        />
-      )}
+      {viewsToggle && <ResizableSidebar />}
       <div
         className={`overflow-scroll scrollbar-hidden 
        ${toggle ? 'w-[calc(100vw_-_80px)]' : `w-[calc(100vw_-_240px)] `}
