@@ -1,14 +1,22 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { handelToggleFilesModal } from '../../../store/features/fileViewerSlice';
+import {
+  handelRemoveFiles,
+  handelToggleFilesModal,
+} from '../../../store/features/fileViewerSlice';
 const FileViewer = () => {
-  const fileViewer = useSelector((state) => state.fileViewer);
-
-  const data = fileViewer.files;
-  const [files, setFiles] = useState(data || []);
-  const [currentFileIndex, setCurrentFileIndex] = useState(0);
   const dispatch = useDispatch();
+  const fileViewer = useSelector((state) => state.fileViewer);
+  const socket = useSelector((state) => state.socketWebData.socket);
+  const { selectedBaseId, selectedTableId } = useSelector(
+    (state) => state.globalState
+  );
+  const [files, setFiles] = useState(fileViewer.files || []);
+  // console.log(fileViewer.index);
+  const [currentFileIndex, setCurrentFileIndex] = useState(fileViewer.index);
+  // console.log(currentFileIndex);
+
   const handleFileUpload = (e) => {
     const filesArray = Array.from(e.target.files).map((file) => {
       return {
@@ -21,12 +29,8 @@ const FileViewer = () => {
     setCurrentFileIndex(0);
   };
 
-  useEffect(() => {
-    setFiles(data);
-  }, [data]);
-
-  console.log(data);
   const renderFile = (file) => {
+    // console.log(file?.type.split('/')[0]);
     switch (file?.type.split('/')[0]) {
       case 'image':
         return (
@@ -40,78 +44,80 @@ const FileViewer = () => {
         return (
           <video controls>
             <source
-              src={file?.url}
-              type={file?.type + '/' + file?.name.split('.').pop()}
+              src={file.url}
+              // type='video/mp4'
+              type={file?.type}
             />
             Your browser does not support the video tag.
           </video>
         );
-      case 'pdf':
+      case 'application':
         return (
-          <embed
-            data={file?.url}
-            type='application/pdf'
-            // type={file?.type + '/' + file?.name.split('.').pop()}
-            width='100%'
-            height='600px'>
-            <p>Unable to display PDF. Please download the file to view it.</p>
-          </embed>
+          <object
+            data={file.url}
+            type={file.type}
+            className='w-full h-full flex items-center justify-center'>
+            <p>Unable to display file. Please download the file to view it.</p>
+          </object>
         );
       case 'audio':
         return (
           <audio controls>
-            <source
-              src={file?.url}
-              type={file?.type + '/' + file?.name.split('.').pop()}
-            />
+            <source src={file.url} type={file?.type} />
             Your browser does not support the audio tag.
           </audio>
         );
-      case 'html':
-        return (
-          <iframe
-            src={file?.url}
-            title={file?.name}
-            width='100%'
-            height='600px'></iframe>
-        );
-      case 'doc':
-        return (
-          <object
-            data={file?.url}
-            type={file?.type + '/' + file?.name.split('.').pop()}
-            width='100%'
-            height='600px'>
-            <p>
-              Unable to display document. Please download the file to view it.
-            </p>
-          </object>
-        );
-      case 'csv':
-        return (
-          <object
-            data={file?.url}
-            type={file?.type + '/' + file?.name.split('.').pop()}
-            width='100%'
-            height='600px'>
-            <p>Unable to display CSV. Please download the file to view it.</p>
-          </object>
-        );
-      case 'psd':
-        return (
-          <object
-            data={file?.url}
-            type={file?.type + '/' + file?.name.split('.').pop()}
-            width='100%'
-            height='600px'>
-            <p>Unable to display PSD. Please download the file to view it.</p>
-          </object>
-        );
+      // case 'html':
+      //   return (
+      //     <iframe
+      //       src={file?.url}
+      //       title={file?.name}
+      //       width='100%'
+      //       height='600px'></iframe>
+      //   );
+      // case 'doc':
+      //   return (
+      //     <object
+      //       data={file?.url}
+      //       type={file?.type}
+      //       width='100%'
+      //       height='600px'>
+      //       <p>
+      //         Unable to display document. Please download the file to view it.
+      //       </p>
+      //     </object>
+      //   );
+      // case 'csv':
+      //   return (
+      //     <object
+      //       data={file?.url}
+      //       type={file?.type}
+      //       width='100%'
+      //       height='600px'>
+      //       <p>Unable to display CSV. Please download the file to view it.</p>
+      //     </object>
+      //   );
+      // case 'psd':
+      //   return (
+      //     <object
+      //       data={file?.url}
+      //       type={file?.type}
+      //       width='100%'
+      //       height='600px'>
+      //       <p>Unable to display PSD. Please download the file to view it.</p>
+      //     </object>
+      //   );
+      // case 'text':
+      //   return (
+      //     <object data={file?.url} type={file?.type} width='100%' height='100%'>
+      //       <p>Unable to display PSD. Please download the file to view it.</p>
+      //     </object>
+      //   );
       default:
         return (
           <object
             data={file?.url}
-            type={file?.type + '/' + file?.name.split('.').pop()}
+            type={file?.type}
             // width='100%'
             // height='600px'
             className='w-full h-full flex items-center justify-center'>
@@ -137,7 +143,8 @@ const FileViewer = () => {
     // Create a download link for the file
     const link = document.createElement('a');
     link.href = files[currentFileIndex].url;
-    link.download = files[currentFileIndex].filename;
+    link.download = files[currentFileIndex].name;
+    link.target = '_blank';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -148,12 +155,33 @@ const FileViewer = () => {
 
     // a.click();
   };
-  const handleDeleteFile = () => {
-    alert('Delete file');
+
+  const handleDeleteFile = (fileUploadHandleTemp) => {
+    const cell = fileViewer.cell;
+    let newRowPart = { [cell?.column.id]: [fileUploadHandleTemp] };
+    let rowObj = {
+      base_id: selectedBaseId,
+      table_id: selectedTableId,
+      record_id: cell?.row?.original.id52148213343234567,
+      updated_data: newRowPart,
+      field_type: cell.column.columnDef.field_type,
+      field_name: cell.column.columnDef.field_name,
+      field_id: cell.column.columnDef.field_id,
+      is_added: false,
+    };
+
+    socket.emit('updatedata', rowObj, (response) => {
+      dispatch(handelRemoveFiles({ id: fileUploadHandleTemp.id }));
+      console.log('res : ', response);
+    });
+
+    // alert('Delete file');
   };
+
   const handleEditFile = () => {
     alert('Edit file');
   };
+
   function closeModal() {
     dispatch(handelToggleFilesModal());
     setFiles([]);
@@ -163,6 +191,10 @@ const FileViewer = () => {
     dispatch(handelToggleFilesModal());
   }
 
+  useEffect(() => {
+    setFiles(fileViewer.files);
+    setCurrentFileIndex(fileViewer.index);
+  }, [fileViewer]);
   return (
     <Transition appear show={fileViewer.isOpen} as={Fragment}>
       <Dialog as='div' className='relative z-10' onClose={closeModal}>
@@ -221,7 +253,7 @@ const FileViewer = () => {
                       <div className='flex justify-between items-center bg-white py-2 px-4'>
                         <div>
                           <h2 className='text-lg font-bold text-left'>
-                            {files[currentFileIndex]?.filename}
+                            {files[currentFileIndex]?.name}
                           </h2>
                           <p className='text-sm text-gray-500 text-left'>
                             {files[currentFileIndex]?.type}
@@ -230,7 +262,9 @@ const FileViewer = () => {
                         <div className='flex gap-2'>
                           <button
                             className='text-gray-600 hover:text-gray-900 border-black border-[1px] rounded-full p-2 hover:bg-red-100'
-                            onClick={handleDeleteFile}>
+                            onClick={() =>
+                              handleDeleteFile(files[currentFileIndex])
+                            }>
                             <svg
                               xmlns='http://www.w3.org/2000/svg'
                               fill='none'
@@ -245,7 +279,7 @@ const FileViewer = () => {
                               />
                             </svg>
                           </button>
-                          <button
+                          {/* <button
                             className='text-gray-600 hover:text-gray-900 border-black border-[1px] rounded-full p-2 hover:bg-red-100'
                             onClick={handleEditFile}>
                             <svg
@@ -261,7 +295,7 @@ const FileViewer = () => {
                                 d='M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125'
                               />
                             </svg>
-                          </button>
+                          </button> */}
                           <button
                             className='text-gray-600 hover:text-gray-900 border-black border-[1px] rounded-full p-2 hover:bg-blue-100'
                             onClick={handleDownloadFile}>

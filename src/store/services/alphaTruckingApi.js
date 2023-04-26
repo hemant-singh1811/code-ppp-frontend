@@ -277,20 +277,20 @@ export const { selectAll: selectAllData } = dataAdapter.getSelectors(
 );
 
 export const {
-  useAddTableColumnMutation,
   useCreateTableMutation,
+  useCreateBaseMutation,
   useCreateViewMutation,
+  useAddTableColumnMutation,
   useDeleteTableMutation,
   useDeleteViewMutation,
-  usePostViewsMutation,
   useDeleteTableColumnMutation,
+  useDeleteBaseMutation,
+  usePostViewsMutation,
   useAddTableRowMutation,
   useRenameTableMutation,
+  useRenameBaseMutation,
   useGetModelDataMutation,
   useGetTableDataPartMutation,
-  useCreateBaseMutation,
-  useDeleteBaseMutation,
-  useRenameBaseMutation,
 
   useGetTableRecordsQuery,
   useGetBasesQuery,

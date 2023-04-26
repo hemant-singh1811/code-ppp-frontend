@@ -11,26 +11,27 @@ import {
   ref,
   uploadBytesResumable,
 } from 'firebase/storage';
-import { handelAddFiles } from '../../../../store/features/fileViewerSlice';
+import {
+  handelAddFiles,
+  handelUpdateFiles,
+} from '../../../../store/features/fileViewerSlice';
+import { TableContext } from '../../tableComponents/TableComponents';
+import LoadingAlt from '../../../utilities/LoadingAlt';
 // import { useStorage } from 'react-firebase-hooks/storage';
 // import { useDatabase } from 'react-firebase-hooks/database';
 
 export default function MultipleAttachmentsTableCell({ rowData, cell }) {
-  const { selectedTableId, selectedBaseId } = useSelector(
-    (state) => state.globalState
-  );
   const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
   const [isChildVisible, setIsChildVisible] = useState(false);
 
   const dispatch = useDispatch();
 
-  let images;
-  let thumbnails;
-  if (Array.isArray(rowData)) {
-    thumbnails = rowData?.map(({ thumbnails }) => thumbnails?.small);
-    images = rowData?.map(({ url }) => url);
-  }
+  // let images;
+  // let thumbnails;
+  // if (Array.isArray(rowData)) {
+  //   thumbnails = rowData?.map(({ thumbnails }) => thumbnails?.small);
+  //   images = rowData?.map(({ url }) => url);
+  // }
 
   // console.log(rowData);
 
@@ -50,107 +51,115 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
     setIsOpen(true);
   }
 
-  console.log(rowData);
+  // console.log(rowData);
 
-  const renderFile = (file) => {
-    console.log(file);
+  const renderFile = (file, i) => {
+    // console.log(file, i);
     switch (file?.type.split('/')[0]) {
       case 'image':
         return (
           <img
-            className='h-full w-auto object-contain'
+            onClick={() => {
+              dispatch(
+                handelAddFiles({ files: rowData, index: i, cell: cell })
+              );
+            }}
+            key={i}
+            className='h-full w-auto object-contain border  rounded-sm  cursor-pointer'
             src={file?.url}
             alt={file?.name}
           />
         );
       case 'video':
         return (
-          <video controls>
-            <source
-              src={file?.url}
-              type={file?.type + '/' + file?.name.split('.').pop()}
-            />
-            Your browser does not support the video tag.
-          </video>
-        );
-      case 'pdf':
-        return (
-          <embed
-            data={file?.url}
-            type='application/pdf'
-            // type={file?.type + '/' + file?.name.split('.').pop()}
-            width='100%'
-            height='600px'>
-            <p>Unable to display PDF. Please download the file to view it.</p>
-          </embed>
+          <div
+            onClick={() => {
+              dispatch(
+                handelAddFiles({ files: rowData, index: i, cell: cell })
+              );
+            }}
+            key={i}
+            className=' border h-full rounded-sm flex justify-center items-center cursor-pointer'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              strokeWidth={1.5}
+              stroke='currentColor'
+              className='w-6 h-6'>
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z'
+              />
+            </svg>
+          </div>
         );
       case 'audio':
         return (
-          <audio controls>
-            <source
-              src={file?.url}
-              type={file?.type + '/' + file?.name.split('.').pop()}
-            />
-            Your browser does not support the audio tag.
-          </audio>
-        );
-      case 'html':
-        return (
-          <iframe
-            src={file?.url}
-            title={file?.name}
-            width='100%'
-            height='600px'></iframe>
-        );
-      case 'doc':
-        return (
-          <object
-            data={file?.url}
-            type={file?.type + '/' + file?.name.split('.').pop()}
-            width='100%'
-            height='600px'>
-            <p>
-              Unable to display document. Please download the file to view it.
-            </p>
-          </object>
-        );
-      case 'csv':
-        return (
-          <object
-            data={file?.url}
-            type={file?.type + '/' + file?.name.split('.').pop()}
-            width='100%'
-            height='600px'>
-            <p>Unable to display CSV. Please download the file to view it.</p>
-          </object>
-        );
-      case 'psd':
-        return (
-          <object
-            data={file?.url}
-            type={file?.type + '/' + file?.name.split('.').pop()}
-            width='100%'
-            height='600px'>
-            <p>Unable to display PSD. Please download the file to view it.</p>
-          </object>
+          <div
+            onClick={() => {
+              dispatch(
+                handelAddFiles({ files: rowData, index: i, cell: cell })
+              );
+            }}
+            key={i}
+            className=' border h-full rounded-sm flex justify-center items-center cursor-pointer'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              strokeWidth={1.5}
+              stroke='currentColor'
+              className='w-6 h-6'>
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z'
+              />
+            </svg>
+          </div>
         );
       default:
         return (
-          <object
-            data={file?.url}
-            type={file?.type + '/' + file?.name.split('.').pop()}
-            // width='100%'
-            // height='600px'
-            className='w-full h-full flex items-center justify-center'>
-            <p>Unable to display file. Please download the file to view it.</p>
-          </object>
+          <div
+            onClick={() => {
+              dispatch(
+                handelAddFiles({ files: rowData, index: i, cell: cell })
+              );
+            }}
+            key={i}
+            className=' border h-full rounded-sm flex justify-center items-center cursor-pointer'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              strokeWidth={1.5}
+              stroke='currentColor'
+              className='w-6 h-6 m-auto'>
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z'
+              />
+            </svg>
+          </div>
+
+          // <object
+          //   data={file?.url}
+          //   type={file?.type + '/'}
+          //   // width='100%'
+          //   // height='600px'
+          //   className='w-full h-full flex items-center justify-center'>
+          //   <p>Unable to display file. Please download the file to view it.</p>
+          // </object>
         );
     }
   };
   return (
     <div className='h-full overflow-hidden select-none'>
       <div
-        className='flex h-full w-full items-center  px-1 gap-1'
+        className='flex h-full w-full items-center  px-1 gap-3 '
         onFocus={() => handleFocus()}
         onBlur={() => handleBlur()}
         tabIndex='1'>
@@ -172,9 +181,9 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
           </div>
         )}
 
-        {/* {Array.isArray(rowData) && rowData.map((ele) => renderFile(ele))} */}
+        {Array.isArray(rowData) && rowData.map((ele, i) => renderFile(ele, i))}
 
-        {Array.isArray(images) &&
+        {/* {Array.isArray(images) &&
           thumbnails.map((image, index) => (
             <img
               onClick={() => {
@@ -185,7 +194,7 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
               key={index}
               alt='i'
             />
-          ))}
+          ))} */}
       </div>
 
       <Transition appear show={isOpen} as={Fragment}>
@@ -224,15 +233,14 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
 }
 
 function FileUploadHandler({ closeModal, cell }) {
-  let fieldName = cell.column.columnDef.header;
+  const { table } = useContext(TableContext);
   const socket = useSelector((state) => state.socketWebData.socket);
   const [selectedFile, SetSelectedFile] = useState([]);
   const [Files, SetFiles] = useState([]);
   const { selectedBaseId, selectedTableId } = useSelector(
     (state) => state.globalState
   );
-  // const [uploadTask, setUploadTask] = useState(null);
-  // const [fileUploadHandle, setFileUploadHandle] = useState([]);
+  const dispatch = useDispatch();
 
   const [submitButton, setSubmitButton] = useState(false);
   const filesizes = (bytes, decimals = 2) => {
@@ -316,7 +324,6 @@ function FileUploadHandler({ closeModal, cell }) {
                 (snapshot.bytesTransferred / snapshot.totalBytes) *
                 100
               ).toFixed(0);
-
               SetSelectedFile((prev) => {
                 return prev.map((prevFiles) => {
                   if (file.id === prevFiles.id) {
@@ -345,7 +352,7 @@ function FileUploadHandler({ closeModal, cell }) {
           );
           AddUrlToSendServer(downloadURL, promise);
         }
-
+        // console.log(fileUploadHandleTemp);
         let newRowPart = { [cell?.column.id]: fileUploadHandleTemp };
         let rowObj = {
           base_id: selectedBaseId,
@@ -359,14 +366,20 @@ function FileUploadHandler({ closeModal, cell }) {
         };
 
         socket.emit('updatedata', rowObj, (response) => {
+          // console.log([...response.resdata.sample, ...cell.getValue()]);
           console.log('res : ', response);
+          dispatch(handelUpdateFiles(response?.resdata));
+          // table.options.meta?.updateData(cell.row.index, cell.column.id, [
+          //   ...response.resdata,
+          //   ...cell.getValue(),
+          // ]);
           closeModal();
           setSubmitButton(false);
           SetSelectedFile([]);
           SetFiles([]);
         });
 
-        console.log(fileUploadHandleTemp);
+        // console.log(fileUploadHandleTemp);
       } catch (error) {
         console.error(error);
       }
@@ -376,8 +389,9 @@ function FileUploadHandler({ closeModal, cell }) {
   };
 
   const AddUrlToSendServer = (downloadURL, promise) => {
+    // console.log(downloadURL);
     fileUploadHandleTemp.push({
-      filename: promise.file.file.name,
+      name: promise.file.file.name,
       size: promise.file.file.size,
       type: promise.file.file.type,
       thumbnails: {
@@ -488,6 +502,7 @@ function FileUploadHandler({ closeModal, cell }) {
                                 //     className='bg-blue-600 h-2.5 rounded-full'
                                 //     style={{ width: progress + '%' }}></div>
                                 // </div>
+
                                 <button
                                   type='button'
                                   className='file-action-btn'
@@ -512,8 +527,9 @@ function FileUploadHandler({ closeModal, cell }) {
                     <button
                       disabled={submitButton}
                       type='submit'
-                      className='btn bg-blue-500 text-white form-submit disabled:bg-gray-500'>
-                      Upload
+                      className='btn bg-blue-500 text-white flex gap-2 form-submit disabled:bg-gray-500'>
+                      {submitButton && <LoadingAlt />}
+                      <div>Upload</div>
                     </button>
                     <div
                       onClick={() => CancelUploadAll()}
