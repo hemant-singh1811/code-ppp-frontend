@@ -183,7 +183,7 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
   return (
     <div className='h-full overflow-hidden select-none'>
       <div
-        className='flex h-full w-full items-center  px-1 gap-3 '
+        className='flex h-full w-full items-center  px-1 gap-1 p-0.5 '
         onFocus={() => handleFocus()}
         onBlur={() => handleBlur()}
         tabIndex='1'>
