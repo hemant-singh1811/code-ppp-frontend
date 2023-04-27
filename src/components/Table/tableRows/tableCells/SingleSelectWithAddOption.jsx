@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useDetectOutsideClick } from '../../../../utilities/customHooks/useDetectOutsideClick';
-import { useSelector } from 'react-redux';
-import { TableContext } from '../../tableComponents/TableComponents';
+import React, { useContext, useEffect, useState } from "react";
+import { useDetectOutsideClick } from "../../../../utilities/customHooks/useDetectOutsideClick";
+import { useSelector } from "react-redux";
+import { TableContext } from "../../tableComponents/TableComponents";
 
 function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   const { columns, setColumns } = useContext(TableContext);
@@ -11,7 +11,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   // Call hook passing in the ref and a function to call on outside click
   useDetectOutsideClick(singleSelectRef, () => setSingleSelectToggle(false));
 
-  let newOptions = [{ name: '' }];
+  let newOptions = [{ name: "" }];
   if (Array.isArray(columnData?.options)) {
     newOptions = columnData?.options;
   }
@@ -22,13 +22,13 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   const [SingleSelectToggle, setSingleSelectToggle] = React.useState(false);
   const [selectedOption, setSelectedOption] = React.useState(rowData || []);
   const [options, setOptions] = useState(newOptions);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [bgColor, setBgColor] = useState(getRandomColor());
   const [textColor, setTextColor] = useState(getContrastColor(bgColor));
 
   function getRandomColor() {
     const color = Math.floor(Math.random() * 16777215).toString(16);
-    return '#66' + '0'.repeat(6 - color.length) + color;
+    return "#66" + "0".repeat(6 - color.length) + color;
   }
 
   function getContrastColor(hexColor) {
@@ -36,7 +36,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     const g = parseInt(hexColor.substr(3, 2), 16);
     const b = parseInt(hexColor.substr(5, 2), 16);
     const yiq = (r * 299 + g * 587 + b * 114) / 1000;
-    return yiq >= 128 ? '#000000' : '#ffffff';
+    return yiq >= 128 ? "#000000" : "#ffffff";
   }
   let rowCopy = cell?.row?.original;
 
@@ -81,7 +81,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
 
     rowData = [searchTerm];
     setSelectedOption([searchTerm]);
-    setSearchTerm('');
+    setSearchTerm("");
     setSingleSelectToggle(!SingleSelectToggle);
     rowCopy[cell?.column.id] = rowData;
 
@@ -98,12 +98,12 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
       field_id: cell.column.columnDef.field_id,
     };
 
-    socket.emit('updatemetadata', obj, (response) => {
-      console.log('socket response: ' + JSON.stringify(response));
+    socket.emit("updatemetadata", obj, (response) => {
+      console.log("socket response: " + JSON.stringify(response));
     });
 
-    socket.emit('updatedata', rowObj, (response) => {
-      console.log('res : ', response);
+    socket.emit("updatedata", rowObj, (response) => {
+      console.log("res : ", response);
     });
 
     const newBgColor = getRandomColor();
@@ -129,8 +129,8 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     rowCopy[cell?.column.id] = rowData;
 
     // console.log(rowObj)
-    socket.emit('updatedata', rowObj, (response) => {
-      console.log('res : ', response);
+    socket.emit("updatedata", rowObj, (response) => {
+      console.log("res : ", response);
     });
     setSingleSelectToggle(!SingleSelectToggle);
   }
@@ -142,44 +142,58 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   return (
     <div
       className={`relative select-none h-full w-full z-0 flex items-center  border-transparent border rounded-sm ${
-        SingleSelectToggle && 'border-blue-500'
+        SingleSelectToggle && "border-blue-500"
       }`}
-      ref={singleSelectRef}>
+      ref={singleSelectRef}
+    >
       <div
         onClick={() => {
           setSingleSelectToggle(!SingleSelectToggle);
-          setSearchTerm('');
+          setSearchTerm("");
         }}
-        className=' w-full rounded-md cursor-pointer flex items-center px-2 justify-between '>
+        className=" w-full rounded-md cursor-pointer flex items-center px-2 justify-between "
+      >
         {options?.map(({ name, color, bgcolor }, i) => {
-          if (selectedOption?.includes(name) && name !== '')
+          if (selectedOption?.includes(name) && name !== "")
             return (
               <div
                 key={i}
                 className={`rounded-3xl px-2 truncate w-fit bg-opacity-20`}
-                style={{ background: bgcolor, color: color }}>
+                style={{ background: bgcolor, color: color }}
+              >
                 {name}
               </div>
             );
         })}
-
-        <span className='material-symbols-rounded text-blue-500 ml-auto'>
-          keyboard_arrow_down
-        </span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="min-w-4 w-4 h-4 text-blue-500 ml-auto"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+          />
+        </svg>
       </div>
       {SingleSelectToggle && (
         <div
-          className='absolute -left-1 top-8 w-full max-h-[300px] bg-white rounded-md shadow-lg min-w-[200px] border  overflow-x-hidden overflow-y-auto'
-          style={{ zIndex: 100 }}>
+          className="absolute -left-1 top-8 w-full max-h-[300px] bg-white rounded-md shadow-lg min-w-[200px] border  overflow-x-hidden overflow-y-auto"
+          style={{ zIndex: 100 }}
+        >
           <input
-            type='text'
-            name='search option'
-            id=''
-            placeholder='find an option'
-            className='w-full outline-none p-2'
+            type="text"
+            name="search option"
+            id=""
+            placeholder="find an option"
+            className="w-full outline-none p-2"
             onChange={(e) => setSearchTerm(e.target.value)}
             value={searchTerm}
-            autoComplete={'off'}
+            autoComplete={"off"}
             autoFocus
           />
           <div>
@@ -190,12 +204,14 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
                   <div
                     onClick={() => updateOption(name)}
                     key={i}
-                    className='p-2 hover:bg-blue-100 flex min-h-[30px] w-full'>
+                    className="p-2 hover:bg-blue-100 flex min-h-[30px] w-full"
+                  >
                     {name && (
                       <div
-                        onClick={() => setSearchTerm('')}
+                        onClick={() => setSearchTerm("")}
                         style={{ background: bgcolor, color: color }}
-                        className={`rounded-xl px-2 border-black border-[0.1px] truncate`}>
+                        className={`rounded-xl px-2 border-black border-[0.1px] truncate`}
+                      >
                         {name}
                       </div>
                     )}
@@ -206,13 +222,15 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
               .length === 0 && (
               <div
                 onClick={addNewOption}
-                className='p-2 hover:bg-blue-100 flex truncate'>
-                <div className='truncate flex'>
+                className="p-2 hover:bg-blue-100 flex truncate"
+              >
+                <div className="truncate flex">
                   Add New Option:
                   {searchTerm && (
                     <span
                       style={{ background: bgColor, color: textColor }}
-                      className={`rounded-xl px-2 ml-1 truncate`}>
+                      className={`rounded-xl px-2 ml-1 truncate`}
+                    >
                       {searchTerm}
                     </span>
                   )}

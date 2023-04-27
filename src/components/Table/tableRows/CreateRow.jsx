@@ -1,9 +1,9 @@
-import React from 'react';
-import { useAddTableRowMutation } from '../../../store/services/alphaTruckingApi';
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { TableContext } from '../tableComponents/TableComponents';
-import { useContext } from 'react';
+import React from "react";
+import { useAddTableRowMutation } from "../../../store/services/alphaTruckingApi";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { TableContext } from "../tableComponents/TableComponents";
+import { useContext } from "react";
 
 export default function CreateRow() {
   const [addRowApi, responseCreateRow] = useAddTableRowMutation();
@@ -14,7 +14,7 @@ export default function CreateRow() {
 
   useEffect(() => {
     if (responseCreateRow.data) {
-      console.log('Create Row', responseCreateRow.data);
+      console.log("Create Row", responseCreateRow.data);
       let newData = {
         ...responseCreateRow.data?.data,
         id52148213343234567: responseCreateRow.data?.metadata?.record_id,
@@ -27,21 +27,21 @@ export default function CreateRow() {
     let updatedData = {};
     columns.forEach(({ field_type, field_name }) => {
       switch (field_type) {
-        case 'singleSelect':
-          updatedData[field_name] = '';
+        case "singleSelect":
+          updatedData[field_name] = "";
           break;
-        case 'multipleSelects':
-          updatedData[field_name] = '';
+        case "multipleSelects":
+          updatedData[field_name] = "";
           break;
-        case 'multipleAttachments':
+        case "multipleAttachments":
           updatedData[field_name] = [];
           break;
-        case 'checkbox':
+        case "checkbox":
           updatedData[field_name] = false;
           break;
 
         default: //string
-          updatedData[field_name] = '';
+          updatedData[field_name] = "";
           break;
       }
     });
@@ -56,20 +56,21 @@ export default function CreateRow() {
 
   return (
     <div
-      className='hover:bg-gray-100 px-1 cursor-pointer h-full flex items-center justify-center'
-      onClick={createRow}>
-      {/* <span className='material-symbols-rounded font-thin '>add</span> */}
+      className="hover:bg-gray-100 px-1 cursor-pointer h-full flex items-center justify-center"
+      onClick={createRow}
+    >
       <svg
-        xmlns='http://www.w3.org/2000/svg'
-        fill='none'
-        viewBox='0 0 24 24'
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
         strokeWidth={1.5}
-        stroke='currentColor'
-        className='w-5 h-5 font-thin '>
+        stroke="currentColor"
+        className="w-5 h-5 font-thin "
+      >
         <path
-          strokeLinecap='round'
-          strokeLinejoin='round'
-          d='M12 4.5v15m7.5-7.5h-15'
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M12 4.5v15m7.5-7.5h-15"
         />
       </svg>
     </div>
