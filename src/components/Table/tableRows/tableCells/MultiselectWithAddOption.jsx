@@ -183,7 +183,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
       ref={singleSelectRef}
     >
       <div className=" w-full rounded-md cursor-pointer flex items-center px-2 justify-between ">
-        <div className="overflow-hidden flex">
+        <div className="overflow-hidden flex w-full">
           {options?.map(({ name, color, bgcolor }, i) => {
             if (selectedOption?.includes(name) && name !== "")
               return (
@@ -222,7 +222,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="min-w-4 w-4 h-4 text-blue-500 ml-auto"
+          className="min-w-4  h-4 text-blue-500 ml-auto"
         >
           <path
             strokeLinecap="round"
