@@ -395,8 +395,8 @@ export default function CustomTable() {
     <div className='flex overflow-hidden'>
       {viewsToggle && <ResizableSidebar />}
       <div
-        id='style-1'
-        className={`overflow-scroll overflow-y-hidden 
+        id='custom-scrollbar'
+        className={`overflow-auto overflow-y-hidden 
        ${toggle ? 'w-[calc(100vw_-_80px)]' : `w-[calc(100vw_-_240px)] `}
         `}>
         <div
