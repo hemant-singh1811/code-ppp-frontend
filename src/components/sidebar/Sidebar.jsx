@@ -85,6 +85,30 @@ export default function Sidebar() {
             }),
           };
         }) || [];
+
+      // sort base and table by name
+      createMenusByBase = createMenusByBase.sort((a, b) => {
+        if (a.title.toLowerCase() < b.title.toLowerCase()) {
+          return -1;
+        }
+        if (a.title.toLowerCase() > b.title.toLowerCase()) {
+          return 1;
+        }
+        return 0;
+      });
+      createMenusByBase = createMenusByBase.map((ele) => {
+        ele.subMenu = ele.subMenu.sort((a, b) => {
+          if (a.title.toLowerCase() < b.title.toLowerCase()) {
+            return -1;
+          }
+          if (a.title.toLowerCase() > b.title.toLowerCase()) {
+            return 1;
+          }
+          return 0;
+        });
+        return ele;
+      });
+
       createMenusByBase.unshift(
         {
           title: 'Dashboard',
@@ -140,6 +164,7 @@ export default function Sidebar() {
         //   to: '/testing',
         // }
       );
+
       dispatch(handelAddSideBar(createMenusByBase));
     }
   }, [isSuccess]);

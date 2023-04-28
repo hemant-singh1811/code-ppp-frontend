@@ -237,7 +237,8 @@ export default function TableComponents({
   });
 
   useEffect(() => {
-    table.setState(model);
+    console.log('model:', model);
+    if (model.length > 0) table.setState(model);
     console.log('model updated', model);
   }, []);
 

@@ -8,12 +8,7 @@ import TableUtilitySearching from './TableUtilitySearch';
 import TableUtilitySort from './TableUtilitySort';
 import { TableContext } from '../tableComponents/TableComponents';
 import TableUtilityViews from './tableViews/TableUtilityViews';
-// import { usePostViewsMutation } from '../../../store/services/alphaTruckingApi';
 import { handleUpdateViews } from '../../../store/features/viewsSlice';
-import { useFirstMountState, useRendersCount } from 'react-use';
-
-// import { io } from "socket.io-client";
-// const socket = io(import.meta.env.VITE_SERVER_URL + "webdata");
 
 export default function TableUtilityBar() {
   const {
@@ -28,24 +23,11 @@ export default function TableUtilityBar() {
   } = useContext(TableContext);
   const socket = useSelector((state) => state.socketWebData.socket);
   const dispatch = useDispatch();
-  const rendersCount = useRendersCount();
   const [tableStates, setTableStates] = useState();
   // const [updatePost, result] = usePostViewsMutation()
   const selectedView = useSelector((state) => state.views);
   const { userToken } = useSelector((state) => state.auth);
   let tabledata = table.options.state;
-
-  const isFirstMount = useFirstMountState();
-  // const update = useUpdate();
-
-  console.log('mounting first mount', table.options);
-  console.log(rendersCount);
-  // useEffect(() => {
-  //   if (isFirstMount) {
-  //   } else {
-  //     console.log('object');
-  //   }
-  // }, [table.options.state]);
 
   useEffect(() => {
     dispatch(
