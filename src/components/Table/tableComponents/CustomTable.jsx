@@ -395,7 +395,8 @@ export default function CustomTable() {
     <div className='flex overflow-hidden'>
       {viewsToggle && <ResizableSidebar />}
       <div
-        className={`overflow-scroll scrollbar-hidden 
+        id='style-1'
+        className={`overflow-scroll overflow-y-hidden 
        ${toggle ? 'w-[calc(100vw_-_80px)]' : `w-[calc(100vw_-_240px)] `}
         `}>
         <div
@@ -405,7 +406,7 @@ export default function CustomTable() {
               width: table.getTotalSize() + 120,
             },
           }}
-          className={`divTable scrollbar-hidden`}>
+          className={`divTable `}>
           <div className='thead bg-[#f5f5f5] text-[#333333] relative z-[2]'>
             {table.getHeaderGroups().map((headerGroup) => (
               <div key={headerGroup.id} className='tr'>

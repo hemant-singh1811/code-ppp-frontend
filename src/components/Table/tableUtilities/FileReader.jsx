@@ -5,6 +5,7 @@ import {
   handelRemoveFiles,
   handelToggleFilesModal,
 } from '../../../store/features/fileViewerSlice';
+import LoadingAlt from '../../utilities/LoadingAlt';
 const FileViewer = () => {
   const dispatch = useDispatch();
   const fileViewer = useSelector((state) => state.fileViewer);
@@ -13,6 +14,7 @@ const FileViewer = () => {
     (state) => state.globalState
   );
   const [files, setFiles] = useState(fileViewer.files || []);
+  const [isDeleting, setIsDeleting] = useState(false);
   // console.log(fileViewer.index);
   const [currentFileIndex, setCurrentFileIndex] = useState(fileViewer.index);
   // console.log(currentFileIndex);
@@ -152,6 +154,7 @@ const FileViewer = () => {
   };
 
   const handleDeleteFile = (fileUploadHandleTemp) => {
+    setIsDeleting(true);
     const cell = fileViewer.cell;
     let newRowPart = { [cell?.column.id]: [fileUploadHandleTemp] };
     let rowObj = {
@@ -175,7 +178,7 @@ const FileViewer = () => {
         fileViewer.files.filter((ele) => ele.id !== fileUploadHandleTemp.id)
       );
       console.log('res : ', response);
-
+      setIsDeleting(false);
       if (fileViewer.files.length <= 1) {
         closeModal();
       }
@@ -199,6 +202,15 @@ const FileViewer = () => {
     setFiles(fileViewer.files);
     setCurrentFileIndex(fileViewer.index);
   }, [fileViewer]);
+  let [isOpen, setIsOpen] = useState(false);
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  function openModal() {
+    setIsOpen(true);
+  }
   return (
     <Transition appear show={fileViewer.isOpen} as={Fragment}>
       <Dialog as='div' className='relative z-10' onClose={closeModal}>
@@ -212,6 +224,14 @@ const FileViewer = () => {
           leaveTo='opacity-0'>
           <div className='fixed inset-0 backdrop-blur-md bg-[#0000004a]' />
         </Transition.Child>
+        <div className='fixed inset-0 flex items-center justify-center'>
+          <button
+            type='button'
+            onClick={openModal}
+            className='rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75'>
+            Open dialog
+          </button>
+        </div>
 
         <div className='fixed inset-0 overflow-y-auto '>
           <div className='flex min-h-full items-center justify-center  text-center '>
@@ -224,6 +244,60 @@ const FileViewer = () => {
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'>
               <Dialog.Panel className='w-full h-full '>
+                <Transition appear show={isOpen} as={Fragment}>
+                  <Dialog
+                    as='div'
+                    className='relative z-10'
+                    onClose={closeModal}>
+                    <Transition.Child
+                      as={Fragment}
+                      enter='ease-out duration-300'
+                      enterFrom='opacity-0'
+                      enterTo='opacity-100'
+                      leave='ease-in duration-200'
+                      leaveFrom='opacity-100'
+                      leaveTo='opacity-0'>
+                      <div className='fixed inset-0 bg-black bg-opacity-25' />
+                    </Transition.Child>
+
+                    <div className='fixed inset-0 overflow-y-auto'>
+                      <div className='flex min-h-full items-center justify-center p-4 text-center'>
+                        <Transition.Child
+                          as={Fragment}
+                          enter='ease-out duration-300'
+                          enterFrom='opacity-0 scale-95'
+                          enterTo='opacity-100 scale-100'
+                          leave='ease-in duration-200'
+                          leaveFrom='opacity-100 scale-100'
+                          leaveTo='opacity-0 scale-95'>
+                          <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all'>
+                            <Dialog.Title
+                              as='h3'
+                              className='text-lg font-medium leading-6 text-gray-900'>
+                              Payment successful
+                            </Dialog.Title>
+                            <div className='mt-2'>
+                              <p className='text-sm text-gray-500'>
+                                Your payment has been successfully submitted.
+                                We’ve sent you an email with all of the details
+                                of your order.
+                              </p>
+                            </div>
+
+                            <div className='mt-4'>
+                              <button
+                                type='button'
+                                className='inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2'
+                                onClick={closeModal}>
+                                Got it, thanks!
+                              </button>
+                            </div>
+                          </Dialog.Panel>
+                        </Transition.Child>
+                      </div>
+                    </div>
+                  </Dialog>
+                </Transition>
                 <div className='flex flex-col h-screen w-full'>
                   <div className='flex justify-start items-center bg-gray-100 p-4'>
                     <div
@@ -263,27 +337,34 @@ const FileViewer = () => {
                         </div>
                         <div className='flex gap-2'>
                           <button
-                            className='text-gray-600 hover:text-gray-900 border-black border-[1px] rounded-full p-2 hover:bg-red-100'
+                            disabled={isDeleting}
+                            className='text-gray-600 hover:text-gray-900 border-black border-[1px] rounded-full p-2 hover:bg-red-100 cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-100'
                             onClick={() =>
                               handleDeleteFile(files[currentFileIndex])
                             }>
-                            <svg
-                              xmlns='http://www.w3.org/2000/svg'
-                              fill='none'
-                              viewBox='0 0 24 24'
-                              strokeWidth={1.5}
-                              stroke='currentColor'
-                              className='w-6 h-6'>
-                              <path
-                                strokeLinecap='round'
-                                strokeLinejoin='round'
-                                d='M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0'
-                              />
-                            </svg>
+                            {isDeleting ? (
+                              <LoadingAlt />
+                            ) : (
+                              <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                fill='none'
+                                viewBox='0 0 24 24'
+                                strokeWidth={1.5}
+                                stroke='currentColor'
+                                className='w-6 h-6'>
+                                <path
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  d='M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0'
+                                />
+                              </svg>
+                            )}
                           </button>
-                          {/* <button
+                          <button
                             className='text-gray-600 hover:text-gray-900 border-black border-[1px] rounded-full p-2 hover:bg-red-100'
-                            onClick={handleEditFile}>
+                            onClick={() =>
+                              handleEditFile(files[currentFileIndex])
+                            }>
                             <svg
                               xmlns='http://www.w3.org/2000/svg'
                               fill='none'
@@ -297,7 +378,7 @@ const FileViewer = () => {
                                 d='M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125'
                               />
                             </svg>
-                          </button> */}
+                          </button>
                           <button
                             className='text-gray-600 hover:text-gray-900 border-black border-[1px] rounded-full p-2 hover:bg-blue-100'
                             onClick={handleDownloadFile}>
