@@ -415,7 +415,7 @@ export default function CustomTable() {
       <div
         id='custom-scrollbar'
         className={`overflow-auto overflow-y-hidden 
-       ${toggle ? 'w-[calc(100vw_-_80px)]' : `w-[calc(100vw_-_210px)] `}
+       ${toggle ? 'w-[calc(100vw_-_80px)]' : `w-[calc(100vw_-_250px)] `}
         `}>
         <div
           ref={tableContainerRef}

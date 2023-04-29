@@ -55,14 +55,16 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
           }}>
           {rowVirtualizer.getVirtualItems().map((virtualRow, i) => {
             const row = rows[virtualRow.index];
-
+            console.log(row.getIsSelected());
             return (
               <React.Fragment key={virtualRow.index}>
                 {/* {columnVirtualizer.getVirtualItems().map((virtualColumn) => {
                   return ( */}
                 <div
                   // key={virtualColumn.index}
-                  className='tr z-0 hover:bg-blue-50'
+                  className={`tr z-0 bg-white hover:bg-blue-50 ${
+                    row.getIsSelected() && 'bg-purple-100'
+                  }`}
                   style={{
                     position: 'absolute',
                     top: 0,
