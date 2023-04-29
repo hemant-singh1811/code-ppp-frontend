@@ -405,17 +405,25 @@ const reorderColumn = (draggedColumnId, targetColumnId, columnOrder) => {
 };
 
 export default function CustomTable() {
-  const { toggle, table, viewsToggle } = useContext(TableContext);
+  const { toggle, table } = useContext(TableContext);
+  const { isViewsOpen } = useSelector((state) => state.globalState);
   const tableContainerRef = React.useRef(null);
   const { rows } = table.getRowModel();
-
   return (
     <div className='flex overflow-hidden'>
-      {viewsToggle && <ResizableSidebar />}
+      {isViewsOpen && <ResizableSidebar />}
       <div
         id='custom-scrollbar'
         className={`overflow-auto overflow-y-hidden 
-       ${toggle ? 'w-[calc(100vw_-_80px)]' : `w-[calc(100vw_-_250px)] `}
+       ${
+         toggle
+           ? isViewsOpen
+             ? 'w-[calc(100vw_-_330px)]'
+             : 'w-[calc(100vw_-_80px)]'
+           : isViewsOpen
+           ? `w-[calc(100vw_-_520px)]`
+           : `w-[calc(100vw_-_270px)]`
+       }
         `}>
         <div
           ref={tableContainerRef}

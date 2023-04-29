@@ -55,7 +55,6 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
           }}>
           {rowVirtualizer.getVirtualItems().map((virtualRow, i) => {
             const row = rows[virtualRow.index];
-            console.log(row.getIsSelected());
             return (
               <React.Fragment key={virtualRow.index}>
                 {/* {columnVirtualizer.getVirtualItems().map((virtualColumn) => {

@@ -172,8 +172,8 @@ export default function Sidebar() {
   if (isFetching) {
     return (
       <div
-        className={`sidebar_container scrollbar-hidden select-none relative ${
-          toggle ? 'closed' : 'opened'
+        className={`sidebar_container scrollbar-hidden  select-none relative ${
+          toggle ? 'closed ' : 'opened '
         } `}>
         <Loading />;
       </div>
@@ -186,7 +186,7 @@ export default function Sidebar() {
   return (
     <>
       <div
-        className={`sidebar_container h-screen select-none relative  ${
+        className={`sidebar_container scrollbar-hidden h-screen select-none relative  ${
           toggle ? 'closed' : 'opened'
         } `}
         // style={{ scrollbarWidth: 0 }}

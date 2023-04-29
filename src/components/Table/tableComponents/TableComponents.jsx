@@ -146,7 +146,6 @@ export default function TableComponents({
     model?.columnOrder || columns?.map((column) => column.id)
   );
 
-  const [viewsToggle, setViewsToggle] = useState(false);
   const [rowHeight, setRowHeight] = useState([
     {
       name: 'small',
@@ -254,8 +253,6 @@ export default function TableComponents({
         toggle: toggle,
         activeRowHeight: activeRowHeight,
         activeNumberOfLines: activeNumberOfLines,
-        viewsToggle: viewsToggle,
-        setViewsToggle: setViewsToggle,
         setColumns: setColumns,
         columns: columns,
         setData: setData,

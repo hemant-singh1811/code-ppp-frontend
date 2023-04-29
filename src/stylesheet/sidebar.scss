@@ -100,7 +100,7 @@
 }
 .opened {
   // width: 270px !important;
-  width: 320px !important;
+  min-width: 270px !important;
 }
 .closed {
   min-width: 80px !important;
