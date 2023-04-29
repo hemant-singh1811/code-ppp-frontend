@@ -127,6 +127,14 @@ export const alphaTruckingApi = createApi({
         method: 'PUT',
       }),
     }),
+
+    RenameTableFile: builder.mutation({
+      query: (payload) => ({
+        url: `API/V1/renameTableFile`,
+        body: payload, //table_id
+        method: 'PATCH',
+      }),
+    }),
     // {
     // "table_id":"tbl2lFS8fwFz5pEjx",
     // "table_name":"changed table nam1e"
@@ -280,6 +288,7 @@ export const {
   useAddTableRowMutation,
   useRenameTableMutation,
   useRenameBaseMutation,
+  useRenameTableFileMutation,
   useGetModelDataMutation,
   useGetTableDataPartMutation,
 

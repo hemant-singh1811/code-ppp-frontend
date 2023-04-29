@@ -7,6 +7,7 @@ import {
 } from '../../../store/features/fileViewerSlice';
 import LoadingAlt from '../../utilities/LoadingAlt';
 import LazyLoadingImage from './LazyLoadingImage';
+import { useRenameTableFileMutation } from '../../../store/services/alphaTruckingApi';
 const FileViewer = () => {
   const dispatch = useDispatch();
   const fileViewer = useSelector((state) => state.fileViewer);
@@ -14,11 +15,13 @@ const FileViewer = () => {
   const { selectedBaseId, selectedTableId } = useSelector(
     (state) => state.globalState
   );
+  const [renameFileApi, responseRenameFile] = useRenameTableFileMutation();
   const [files, setFiles] = useState(fileViewer.files || []);
   const [isDeleting, setIsDeleting] = useState(false);
-  // console.log(fileViewer.index);
   const [currentFileIndex, setCurrentFileIndex] = useState(fileViewer.index);
-  // console.log(currentFileIndex);
+  const [editFileName, setEditFileName] = useState('');
+  let [isOpen, setIsOpen] = useState(false);
+  const [selectedFileIdForRename, setSelectedFileIdForRename] = useState('');
 
   const handleFileUpload = (e) => {
     const filesArray = Array.from(e.target.files).map((file) => {
@@ -179,6 +182,7 @@ const FileViewer = () => {
         cell.column.id,
         fileViewer.files.filter((ele) => ele.id !== fileUploadHandleTemp.id)
       );
+
       console.log('res : ', response);
       setIsDeleting(false);
       if (fileViewer.files.length <= 1) {
@@ -187,8 +191,23 @@ const FileViewer = () => {
     });
   };
 
-  const handleEditFile = () => {
+  const handleEditFile = (ele) => {
+    setSelectedFileIdForRename(ele.id);
+    setEditFileName(ele.name);
     openInnerModal();
+  };
+
+  const handleEditFileRename = () => {
+    const cell = fileViewer.cell;
+    renameFileApi({
+      base_id: selectedBaseId,
+      table_id: selectedTableId,
+      record_id: cell.row.original.id52148213343234567,
+      field_id: cell.column.columnDef.field_id,
+      file_id: selectedFileIdForRename,
+      field_name: cell.column.columnDef.field_name,
+      updated_name: editFileName.trim(),
+    });
   };
 
   function closeModal() {
@@ -197,16 +216,6 @@ const FileViewer = () => {
     setFiles([]);
   }
 
-  function openModal() {
-    dispatch(handelToggleFilesModal());
-  }
-
-  useEffect(() => {
-    setFiles(fileViewer.files);
-    setCurrentFileIndex(fileViewer.index);
-  }, [fileViewer]);
-  let [isOpen, setIsOpen] = useState(false);
-
   function closeInnerModal() {
     setIsOpen(false);
   }
@@ -214,6 +223,44 @@ const FileViewer = () => {
   function openInnerModal() {
     setIsOpen(true);
   }
+
+  useEffect(() => {
+    setFiles(fileViewer.files);
+    setCurrentFileIndex(fileViewer.index);
+  }, [fileViewer]);
+
+  useEffect(() => {
+    if (responseRenameFile.isSuccess) {
+      console.log('response Rename File', responseRenameFile.data);
+      const cell = fileViewer.cell;
+      fileViewer.table(
+        cell.row.index,
+        cell.column.id,
+        files.map((ele) => {
+          if (selectedFileIdForRename === ele.id) {
+            const copyObj = { ...ele };
+            copyObj.name = editFileName;
+            return copyObj;
+          }
+          return ele;
+        })
+      );
+
+      setFiles((prev) => {
+        return prev.map((file) => {
+          if (file.id === selectedFileIdForRename) {
+            const copyObj = { ...file };
+            copyObj.name = editFileName;
+            return copyObj;
+          }
+          return file;
+        });
+      });
+
+      closeInnerModal();
+    }
+  }, [responseRenameFile.isSuccess]);
+
   return (
     <>
       <Transition appear show={fileViewer.isOpen} as={Fragment}>
@@ -425,13 +472,24 @@ const FileViewer = () => {
                     Rename
                   </Dialog.Title>
                   <div className='mt-2'>
-                    <input type='text' className=' border-2 border-blue-500' />
+                    <input
+                      type='text'
+                      className=' border-2 border-blue-500'
+                      value={editFileName}
+                      onChange={(e) => {
+                        setEditFileName(e.target.value);
+                      }}
+                    />
                     <div className='mt-4 flex justify-end'>
                       <button
                         type='button'
-                        className='inline-flex ml-auto justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2'
-                        onClick={closeInnerModal}>
-                        Rename
+                        className='inline-flex ml-auto min-w-[80px] justify-center rounded-md border border-transparent bg-blue-100 px-4 py-1 h-[25px] items-center text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2'
+                        onClick={() => handleEditFileRename()}>
+                        {responseRenameFile.isLoading ? (
+                          <LoadingAlt />
+                        ) : (
+                          'Rename'
+                        )}
                       </button>
                     </div>
                   </div>

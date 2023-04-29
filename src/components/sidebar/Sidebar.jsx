@@ -184,7 +184,7 @@ export default function Sidebar() {
   }
 
   return (
-    <div>
+    <>
       <div
         className={`sidebar_container h-screen select-none relative  ${
           toggle ? 'closed' : 'opened'
@@ -500,6 +500,6 @@ export default function Sidebar() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

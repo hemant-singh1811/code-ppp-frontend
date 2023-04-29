@@ -242,7 +242,7 @@ const fieldName = (dataType) => {
     case 'date':
       return 'Date';
     default:
-      return dataType;
+      return `${dataType}: UnSupported Field Type ⚠️`;
   }
 };
 
@@ -415,7 +415,7 @@ export default function CustomTable() {
       <div
         id='custom-scrollbar'
         className={`overflow-auto overflow-y-hidden 
-       ${toggle ? 'w-[calc(100vw_-_80px)]' : `w-[calc(100vw_-_240px)] `}
+       ${toggle ? 'w-[calc(100vw_-_80px)]' : `w-[calc(100vw_-_210px)] `}
         `}>
         <div
           ref={tableContainerRef}
