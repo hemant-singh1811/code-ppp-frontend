@@ -11,16 +11,7 @@ import TableUtilityViews from './tableViews/TableUtilityViews';
 import { handleUpdateViews } from '../../../store/features/viewsSlice';
 
 export default function TableUtilityBar() {
-  const {
-    table,
-    activeRowHeight,
-    globalFilter,
-    columns,
-    columnOrder,
-    columnFilters,
-    sorting,
-    grouping,
-  } = useContext(TableContext);
+  const { table } = useContext(TableContext);
   const socket = useSelector((state) => state.socketWebData.socket);
   const dispatch = useDispatch();
   const [tableStates, setTableStates] = useState();
@@ -58,7 +49,16 @@ export default function TableUtilityBar() {
     // setTableStates(table.options.state)
     // updatePost({ model: table.options.state })
     // dispatch(handleAddViews({ view: "driver", data: tableStates }))
-  }, [globalFilter, columns, columnOrder, columnFilters, sorting, grouping]);
+  }, [
+    table.options.state.columnVisibility,
+    table.options.state.columnSizing,
+    table.options.state.columnFilters,
+    table.options.state.columnOrder,
+    table.options.state.columnVisibility,
+    table.options.state.globalFilter,
+    table.options.state.sorting,
+    table.options.state.grouping,
+  ]);
 
   // console.log("tabledata", tabledata);
 

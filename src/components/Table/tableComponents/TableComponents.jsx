@@ -180,7 +180,8 @@ export default function TableComponents({
   const [columnPinning, setColumnPinning] = useState({});
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
   const table = useReactTable({
-    columnResizeMode: 'onChange',
+    //onChange
+    columnResizeMode: 'onEnd',
     state: {
       columnOrder,
       globalFilter,
@@ -237,8 +238,8 @@ export default function TableComponents({
 
   useEffect(() => {
     console.log('model:', model);
-    if (model.length > 0) table.setState(model);
-    console.log('model updated', model);
+    table.setState(model);
+    console.log('model updated', table.options.state);
   }, []);
 
   // console.log(table)

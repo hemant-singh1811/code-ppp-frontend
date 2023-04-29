@@ -144,10 +144,10 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
               position: 'absolute',
               top: 0,
               left: 0,
-              // width: `${columns[virtualRow.index]}px`,
               height: `${activeRowHeight}px`,
-              // zIndex: rowVirtualizer.getVirtualItems().length - i,
               transform: `translateY(${rowVirtualizer.getTotalSize()}px)`,
+              // width: `${columns[virtualRow.index]}px`,
+              // zIndex: rowVirtualizer.getVirtualItems().length - i,
               // height: `${rows[virtualRow.index]}px`,
             }}>
             <CreateRow />

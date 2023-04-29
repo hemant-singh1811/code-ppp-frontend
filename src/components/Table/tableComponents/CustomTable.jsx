@@ -421,8 +421,8 @@ export default function CustomTable() {
              ? 'w-[calc(100vw_-_330px)]'
              : 'w-[calc(100vw_-_80px)]'
            : isViewsOpen
-           ? `w-[calc(100vw_-_520px)]`
-           : `w-[calc(100vw_-_270px)]`
+           ? `w-[calc(100vw_-_495px)]`
+           : `w-[calc(100vw_-_245px)]`
        }
         `}>
         <div
