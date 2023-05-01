@@ -1,8 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  name: "",
-  id: "",
+  name: '',
+  id: '',
   model: [],
   selectedTableViews: {
     personalview: [],
@@ -11,7 +11,7 @@ const initialState = {
 };
 
 const viewsSlice = createSlice({
-  name: "views",
+  name: 'views',
   initialState,
   reducers: {
     handleUpdateViews: (state, { payload }) => {
@@ -28,6 +28,9 @@ const viewsSlice = createSlice({
           state.model = ele?.model;
         }
       });
+    },
+    handelAddView: (state, { payload }) => {
+      state.selectedTableViews.sharedview.push();
     },
     handelUpdateModel: (state, { payload }) => {
       // name: title,
