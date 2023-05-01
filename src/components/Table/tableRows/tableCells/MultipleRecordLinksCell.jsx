@@ -75,7 +75,10 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
       { data: ele.data, recordId: ele.id },
     ]);
 
-    let selectedRowRecordId = selectedRowData.map(({ recordId }) => recordId);
+    // let selectedRowRecordId = selectedRowData.map((ele) => {
+
+    //   return ele.recordId;
+    // });
     // rowData = [ele];
 
     let updatedRowKey = cell?.column.id;
@@ -116,7 +119,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
       ({ recordId }) => recordId
     );
 
-    let newRowPart = { [updatedRowKey]: ele.recordId };
+    let newRowPart = { [updatedRowKey]: ele?.recordId };
     // let newRowPart = { [updatedRowKey]: selectedRowRecordId };
     // let oldRowPart = { [updatedRowKey]: selectedRowData };
 
@@ -176,34 +179,6 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
         onFocus={() => handleFocus()}
         onBlur={() => handleBlur()}
         tabIndex='1'>
-        {selectedRowData?.map((ele, i) => {
-          // console.log(ele);
-          return (
-            <div
-              key={i}
-              className='flex bg-purple-100 rounded-md items-center cursor-pointer px-1'>
-              <div className='h-full w-max'>
-                {ele?.data?.hasOwnProperty(
-                  cell.column.columnDef.linked_rec.selected_field_name
-                ) &&
-                  ele.data[
-                    cell.column.columnDef.linked_rec.selected_field_name
-                  ]}
-              </div>
-              {isChildVisible && (
-                <svg
-                  onClick={() => removeSelectedRow(ele)}
-                  xmlns='http://www.w3.org/2000/svg'
-                  height='20'
-                  viewBox='0 96 960 960'
-                  width='20'>
-                  <path d='M480 604.308 270.154 814.154q-5.615 5.615-13.769 6-8.154.385-14.539-6T235.461 800q0-7.769 6.385-14.154L451.692 576 241.846 366.154q-5.615-5.615-6-13.769-.385-8.154 6-14.539T256 331.461q7.769 0 14.154 6.385L480 547.692l209.846-209.846q5.615-5.615 13.769-6 8.154-.385 14.539 6T724.539 352q0 7.769-6.385 14.154L508.308 576l209.846 209.846q5.615 5.615 6 13.769.385 8.154-6 14.539T704 820.539q-7.769 0-14.154-6.385L480 604.308Z' />
-                </svg>
-              )}
-            </div>
-          );
-        })}
-
         {/* //add new record */}
         {isChildVisible && (
           <div
@@ -224,6 +199,34 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
             </svg>
           </div>
         )}
+        {selectedRowData?.map((ele, i) => {
+          return (
+            ele && (
+              <div
+                key={i}
+                className='flex bg-purple-100 rounded-md items-center cursor-pointer px-1'>
+                <div className='h-full w-max'>
+                  {ele?.data?.hasOwnProperty(
+                    cell.column.columnDef.linked_rec.selected_field_name
+                  ) &&
+                    ele.data[
+                      cell.column.columnDef.linked_rec.selected_field_name
+                    ]}
+                </div>
+                {isChildVisible && (
+                  <svg
+                    onClick={() => removeSelectedRow(ele)}
+                    xmlns='http://www.w3.org/2000/svg'
+                    height='20'
+                    viewBox='0 96 960 960'
+                    width='20'>
+                    <path d='M480 604.308 270.154 814.154q-5.615 5.615-13.769 6-8.154.385-14.539-6T235.461 800q0-7.769 6.385-14.154L451.692 576 241.846 366.154q-5.615-5.615-6-13.769-.385-8.154 6-14.539T256 331.461q7.769 0 14.154 6.385L480 547.692l209.846-209.846q5.615-5.615 13.769-6 8.154-.385 14.539 6T724.539 352q0 7.769-6.385 14.154L508.308 576l209.846 209.846q5.615 5.615 6 13.769.385 8.154-6 14.539T704 820.539q-7.769 0-14.154-6.385L480 604.308Z' />
+                  </svg>
+                )}
+              </div>
+            )
+          );
+        })}
       </div>
 
       <Transition appear show={isOpen} as={Fragment}>
@@ -285,7 +288,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
                         ?.filter((element) => {
                           let isRecordIdContains = true;
                           selectedRowData.forEach((ele) => {
-                            if (ele.recordId === element.id) {
+                            if (ele?.recordId === element?.id) {
                               isRecordIdContains = false;
                             }
                           });
