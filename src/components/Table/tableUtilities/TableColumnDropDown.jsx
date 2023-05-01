@@ -74,7 +74,7 @@ export default function TableColumnDropDown({
         leaveTo="opacity-0 translate-y-1"
       >
         <Popover.Panel className="text-black absolute top-[28px] z-20 w-56 rounded-md left-0 p-2 border-gray-400 border-[.5px] shadow-md flex flex-col bg-white">
-          <div className="hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center ">
+          {/* <div className="hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center ">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -90,7 +90,7 @@ export default function TableColumnDropDown({
               />
             </svg>
             Edit Field
-          </div>
+          </div> */}
           <div
             className="hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center "
             onClick={() => {

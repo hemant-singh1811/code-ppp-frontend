@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { rankItem } from '@tanstack/match-sorter-utils';
-import TableUtilityBar from '../tableUtilityBar/TableUtilityBar';
-import CustomTable from './CustomTable';
+import React, { useContext, useEffect, useState } from "react";
+import { rankItem } from "@tanstack/match-sorter-utils";
+import TableUtilityBar from "../tableUtilityBar/TableUtilityBar";
+import CustomTable from "./CustomTable";
 import {
   useReactTable,
   getCoreRowModel,
@@ -9,9 +9,9 @@ import {
   getSortedRowModel,
   getGroupedRowModel,
   getExpandedRowModel,
-} from '@tanstack/react-table';
-import { useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+} from "@tanstack/react-table";
+import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export const TableContext = React.createContext();
 
@@ -99,8 +99,8 @@ const defaultColumn = {
         field_id: columnDef.field_id,
       };
       console.log(obj);
-      socket.emit('updatedata', obj, (response) => {
-        console.log('res : ', response);
+      socket.emit("updatedata", obj, (response) => {
+        console.log("res : ", response);
       });
     };
 
@@ -137,7 +137,7 @@ export default function TableComponents({
 }) {
   const { model } = useSelector((state) => state.views);
   const [columns, setColumns] = useState(() => [...defaultColumns]);
-  const [globalFilter, setGlobalFilter] = useState(model?.globalFilter || '');
+  const [globalFilter, setGlobalFilter] = useState(model?.globalFilter || "");
   const [columnFilters, setColumnFilters] = useState([]);
   const [sorting, setSorting] = useState([]);
   const [grouping, setGrouping] = useState([]);
@@ -148,9 +148,9 @@ export default function TableComponents({
 
   const [rowHeight, setRowHeight] = useState([
     {
-      name: 'small',
+      name: "small",
       isActive: true,
-      icon: 'density_small',
+      icon: "density_small",
       height: 30,
       numberOfLines: 1,
     },
@@ -178,10 +178,10 @@ export default function TableComponents({
   ]);
   let { activeRowHeight, activeNumberOfLines } = handleRowHeight(rowHeight);
   const [columnPinning, setColumnPinning] = useState({});
-  const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
+  // const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
   const table = useReactTable({
     //onChange
-    columnResizeMode: 'onEnd',
+    columnResizeMode: "onEnd",
     state: {
       columnOrder,
       globalFilter,
@@ -212,12 +212,12 @@ export default function TableComponents({
 
     //new editable row code
 
-    autoResetPageIndex,
+    // autoResetPageIndex,
     // Provide our updateData function to our table meta
     meta: {
       updateData: (rowIndex, columnId, value) => {
         // Skip age index reset until after next rerender
-        skipAutoResetPageIndex();
+        // skipAutoResetPageIndex();
         setData((old) =>
           old.map((row, index) => {
             if (index === rowIndex) {
@@ -237,9 +237,11 @@ export default function TableComponents({
   });
 
   useEffect(() => {
-    console.log('model:', model);
-    table.setState(model);
-    console.log('model updated', table.options.state);
+    console.log("model:", model);
+    if (model != []) {
+      table.setState(model);
+    }
+    console.log("model updated", table.options.state);
   }, []);
 
   // console.log(table)
@@ -262,8 +264,9 @@ export default function TableComponents({
         columnFilters: columnFilters,
         sorting: sorting,
         grouping: grouping,
-      }}>
-      <div className=' w-full  overflow-hidden h-screen text-white'>
+      }}
+    >
+      <div className=" w-full  overflow-hidden h-screen text-white">
         <TableUtilityBar />
         <CustomTable />
       </div>

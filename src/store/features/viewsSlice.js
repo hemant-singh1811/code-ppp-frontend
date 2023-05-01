@@ -1,14 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  name: '',
-  id: '',
+  name: "",
+  id: "",
   model: [],
-  selectedTableViews: '',
+  selectedTableViews: {
+    personalview: [],
+    sharedview: [],
+  },
 };
 
 const viewsSlice = createSlice({
-  name: 'views',
+  name: "views",
   initialState,
   reducers: {
     handleUpdateViews: (state, { payload }) => {
@@ -18,7 +21,6 @@ const viewsSlice = createSlice({
     },
     handleAddSelectedTableViews: (state, { payload }) => {
       state.selectedTableViews = payload;
-
       payload?.personalview?.map((ele, i) => {
         if (i === 0) {
           state.name = ele?.metadata?.name;
@@ -27,10 +29,34 @@ const viewsSlice = createSlice({
         }
       });
     },
+    handelUpdateModel: (state, { payload }) => {
+      // name: title,
+      // id: id,
+      // model: model,
+      let personalview = state.selectedTableViews.personalview.map(
+        (view, i) => {
+          if (view.metadata.views_id === payload.id) {
+            view.model = payload.model;
+          }
+          return view;
+        }
+      );
+      let sharedview = state.selectedTableViews.sharedview.map((view, i) => {
+        if (view.metadata.views_id === payload.id) {
+          view.model = payload.model;
+        }
+        return view;
+      });
+
+      state.selectedTableViews = { personalview, sharedview };
+    },
   },
 });
 
-export const { handleUpdateViews, handleAddSelectedTableViews } =
-  viewsSlice.actions;
+export const {
+  handleUpdateViews,
+  handleAddSelectedTableViews,
+  handelUpdateModel,
+} = viewsSlice.actions;
 
 export default viewsSlice.reducer;

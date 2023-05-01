@@ -1,14 +1,17 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import TableUtilityFilter from './TableUtilityFilter';
-import TableUtilityGrouping from './TableUtilityGrouping';
-import TableUtilityHideFields from './TableUtilityHideFields';
-import TableUtilityRowHeight from './TableUtilityRowHeight';
-import TableUtilitySearching from './TableUtilitySearch';
-import TableUtilitySort from './TableUtilitySort';
-import { TableContext } from '../tableComponents/TableComponents';
-import TableUtilityViews from './tableViews/TableUtilityViews';
-import { handleUpdateViews } from '../../../store/features/viewsSlice';
+import React, { useContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import TableUtilityFilter from "./TableUtilityFilter";
+import TableUtilityGrouping from "./TableUtilityGrouping";
+import TableUtilityHideFields from "./TableUtilityHideFields";
+import TableUtilityRowHeight from "./TableUtilityRowHeight";
+import TableUtilitySearching from "./TableUtilitySearch";
+import TableUtilitySort from "./TableUtilitySort";
+import { TableContext } from "../tableComponents/TableComponents";
+import TableUtilityViews from "./tableViews/TableUtilityViews";
+import {
+  handelUpdateModel,
+  handleUpdateViews,
+} from "../../../store/features/viewsSlice";
 
 export default function TableUtilityBar() {
   const { table } = useContext(TableContext);
@@ -28,6 +31,13 @@ export default function TableUtilityBar() {
         model: table.options.state,
       })
     );
+    dispatch(
+      handelUpdateModel({
+        name: selectedView.name,
+        id: selectedView.id,
+        model: tabledata,
+      })
+    );
 
     let obj = {
       user_token: userToken,
@@ -35,10 +45,10 @@ export default function TableUtilityBar() {
       view_id: selectedView.id,
     };
 
-    console.log('update views', obj);
+    console.log("update views", obj);
 
-    socket.emit('changesaved', obj, (response) => {
-      console.log('socket response update views: ' + JSON.stringify(response));
+    socket.emit("changesaved", obj, (response) => {
+      console.log("socket response update views: " + JSON.stringify(response));
       // console.log("res from server : ", response.message);
     });
 
@@ -65,10 +75,10 @@ export default function TableUtilityBar() {
   // console.log(tableStates)x
 
   return (
-    <div className='flex items-center p-1  w-full justify-between  select-none bg-white border-[#c8c8c8] border-b-[1px]'>
-      <div className='flex items-center gap-2 '>
+    <div className="flex items-center p-1  w-full justify-between  select-none bg-white border-[#c8c8c8] border-b-[1px]">
+      <div className="flex items-center gap-2 ">
         <TableUtilityViews table={table} />
-        <div className='w-[.5px] bg-black h-6' />
+        <div className="w-[.5px] bg-black h-6" />
         <TableUtilityHideFields table={table} />
         <TableUtilityFilter table={table} />
         <TableUtilityGrouping table={table} />
