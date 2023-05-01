@@ -395,10 +395,18 @@ function FileUploadHandler({ closeModal, cell }) {
           // console.log([...response.resdata.sample, ...cell.getValue()]);
           console.log('res : ', response);
           dispatch(handelUpdateFiles(response?.resdata));
-          table.options.meta?.updateData(cell.row.index, cell.column.id, [
-            ...response.resdata,
-            ...cell.getValue(),
-          ]);
+          if (cell.getValue() === undefined) {
+            table.options.meta?.updateData(
+              cell.row.index,
+              cell.column.id,
+              response.resdata
+            );
+          } else {
+            table.options.meta?.updateData(cell.row.index, cell.column.id, [
+              ...response.resdata,
+              ...cell.getValue(),
+            ]);
+          }
           closeModal();
           setSubmitButton(false);
           SetSelectedFile([]);
