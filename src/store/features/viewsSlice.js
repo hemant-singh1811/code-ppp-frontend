@@ -1,65 +1,109 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  name: '',
-  id: '',
-  model: [],
-  selectedTableViews: {
-    personalview: [],
-    sharedview: [],
-  },
+  selectedView: {},
+  views: [],
 };
 
 const viewsSlice = createSlice({
   name: 'views',
   initialState,
   reducers: {
-    handleUpdateViews: (state, { payload }) => {
-      state.name = payload.name;
-      state.id = payload.id;
-      state.model = payload.model;
+    handleUpdateSelectedViews: (state, { payload }) => {
+      state.selectedView.name = payload.name;
+      state.selectedView.id = payload.id;
+      state.selectedView.model = payload.model;
     },
-    handleAddSelectedTableViews: (state, { payload }) => {
-      state.selectedTableViews = payload;
-      payload?.personalview?.map((ele, i) => {
-        if (i === 0) {
-          state.name = ele?.metadata?.name;
-          state.id = ele?.metadata?.views_id;
-          state.model = ele?.model;
+    handleAddViews: (state, { payload }) => {
+      state.views = state.views.map((ele) => {
+        if (payload.type === ele.title) {
+          ele.data.push({
+            title: payload.viewTitle,
+            data: payload.model,
+            id: payload.id,
+          });
         }
+        return ele;
       });
     },
-    handelAddView: (state, { payload }) => {
-      state.selectedTableViews.sharedview.push();
+    handelRemoveView: (state, { payload }) => {
+      state.views = state.views.map((ele) => {
+        ele.data = ele.data.filter((view) => {
+          // if (state.selectedView.id === view.id) {
+          //   state.selectedView = ele.data[0];
+          // }
+          return view.id !== payload;
+        });
+
+        return ele;
+      });
     },
-    handelUpdateModel: (state, { payload }) => {
-      // name: title,
-      // id: id,
-      // model: model,
-      let personalview = state.selectedTableViews.personalview.map(
-        (view, i) => {
-          if (view.metadata.views_id === payload.id) {
-            view.model = payload.model;
-          }
-          return view;
-        }
-      );
-      let sharedview = state.selectedTableViews.sharedview.map((view, i) => {
-        if (view.metadata.views_id === payload.id) {
-          view.model = payload.model;
+    handelToggleView: (state, { payload }) => {
+      state.views = state.views.map((view) => {
+        if (view.id === payload) {
+          view.collapsed = !view.collapsed;
         }
         return view;
       });
-
-      state.selectedTableViews = { personalview, sharedview };
+    },
+    handelUpdateModel: (state, { payload }) => {
+      // state.views = state.views.map((ele) => {
+      //   ele.data = ele.data.filter(({ id }) => id !== payload);
+      //   return ele;
+      // });
+      state.views = state.views.map((view) => {
+        view.data = view.data.map((ele) => {
+          if (ele.id === payload.id) {
+            ele.data = payload.model;
+          }
+          return ele;
+        });
+        return view;
+      });
+    },
+    handelAddInitialState: (state, { payload }) => {
+      payload?.sharedview?.map((ele, i) => {
+        if (i === 0) {
+          state.selectedView.name = ele?.metadata?.name;
+          state.selectedView.id = ele?.metadata?.views_id;
+          state.selectedView.model = ele?.model;
+        }
+      });
+      state.views = [
+        {
+          title: 'Personal Views',
+          collapsed: true,
+          data: payload?.personalview?.map((ele, i) => {
+            return {
+              title: ele?.metadata?.name,
+              data: ele?.model,
+              id: ele?.metadata?.views_id,
+            };
+          }),
+        },
+        {
+          title: 'Shared Views',
+          collapsed: true,
+          data: payload?.sharedview?.map((ele) => {
+            return {
+              title: ele?.metadata?.name,
+              data: ele?.model,
+              id: ele?.metadata?.views_id,
+            };
+          }),
+        },
+      ];
     },
   },
 });
 
 export const {
-  handleUpdateViews,
-  handleAddSelectedTableViews,
+  handleUpdateSelectedViews,
+  handleAddViews,
   handelUpdateModel,
+  handelAddInitialState,
+  handelRemoveView,
+  handelToggleView,
 } = viewsSlice.actions;
 
 export default viewsSlice.reducer;

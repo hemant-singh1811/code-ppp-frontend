@@ -10,65 +10,78 @@ import { TableContext } from '../tableComponents/TableComponents';
 import TableUtilityViews from './tableViews/TableUtilityViews';
 import {
   handelUpdateModel,
-  handleUpdateViews,
+  handleUpdateSelectedViews,
 } from '../../../store/features/viewsSlice';
+import { useDebounce } from 'react-use';
 
 export default function TableUtilityBar() {
   const { table } = useContext(TableContext);
   const socket = useSelector((state) => state.socketWebData.socket);
   const dispatch = useDispatch();
-  const [tableStates, setTableStates] = useState();
-  // const [updatePost, result] = usePostViewsMutation()
-  const selectedView = useSelector((state) => state.views);
+  const { selectedView } = useSelector((state) => state.views);
   const { userToken } = useSelector((state) => state.auth);
   let tabledata = table.options.state;
 
-  // useEffect(() => {
-  //   dispatch(
-  //     handleUpdateViews({
-  //       name: selectedView.name,
-  //       id: selectedView.id,
-  //       model: table.options.state,
-  //     })
-  //   );
-  //   dispatch(
-  //     handelUpdateModel({
-  //       name: selectedView.name,
-  //       id: selectedView.id,
-  //       model: tabledata,
-  //     })
-  //   );
+  const [state, setState] = React.useState('Typing stopped');
+  const [val, setVal] = React.useState('');
+  const [debouncedValue, setDebouncedValue] = React.useState('');
 
-  //   let obj = {
-  //     user_token: userToken,
-  //     model: table.options.state,
-  //     view_id: selectedView.id,
-  //   };
+  const [, cancel] = useDebounce(
+    () => {
+      setState('Typing stopped');
+      setDebouncedValue(val);
+    },
+    2000,
+    [val]
+  );
 
-  //   console.log("update views", obj);
+  console.log(val);
 
-  //   socket.emit("changesaved", obj, (response) => {
-  //     console.log("socket response update views: " + JSON.stringify(response));
-  //     // console.log("res from server : ", response.message);
-  //   });
+  useEffect(() => {
+    setVal(table.options.state);
 
-  //   // console.log("socket called");
-  //   // console.log(obj);
-  //   // let data = table.options.state
-  //   // console.log(data)
-  //   // setTableStates(table.options.state)
-  //   // updatePost({ model: table.options.state })
-  //   // dispatch(handleAddViews({ view: "driver", data: tableStates }))
-  // }, [
-  //   table.options.state.columnVisibility,
-  //   table.options.state.columnSizing,
-  //   table.options.state.columnFilters,
-  //   table.options.state.columnOrder,
-  //   table.options.state.columnVisibility,
-  //   table.options.state.globalFilter,
-  //   table.options.state.sorting,
-  //   table.options.state.grouping,
-  // ]);
+    // dispatch(
+    //   handleUpdateSelectedViews({
+    //     name: selectedView?.name,
+    //     id: selectedView?.id,
+    //     model: table.options.state,
+    //   })
+    // );
+    // dispatch(
+    //   handelUpdateModel({
+    //     name: selectedView?.name,
+    //     id: selectedView?.id,
+    //     model: tabledata,
+    //   })
+    // );
+    // let obj = {
+    //   user_token: userToken,
+    //   model: table.options.state,
+    //   view_id: selectedView?.id,
+    // };
+    // console.log('update views', obj);
+    // socket.emit('changesaved', obj, (response) => {
+    //   console.log(
+    //     'socket response update views: ' + JSON.stringify(response)
+    //   );
+    // });
+    // console.log("socket called");
+    // console.log(obj);
+    // let data = table.options.state
+    // console.log(data)
+    // setTableStates(table.options.state)
+    // updatePost({ model: table.options.state })
+    // dispatch(handleAddViews({ view: "driver", data: tableStates }))
+  }, [
+    table.options.state.columnVisibility,
+    table.options.state.columnSizing,
+    table.options.state.columnFilters,
+    table.options.state.columnOrder,
+    table.options.state.columnVisibility,
+    table.options.state.globalFilter,
+    table.options.state.sorting,
+    table.options.state.grouping,
+  ]);
 
   // console.log("tabledata", tabledata);
 

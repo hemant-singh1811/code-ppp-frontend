@@ -135,15 +135,15 @@ export default function TableComponents({
   toggle,
   setData,
 }) {
-  const { model } = useSelector((state) => state.views);
+  const { selectedView } = useSelector((state) => state.views);
   const [columns, setColumns] = useState(() => [...defaultColumns]);
-  const [globalFilter, setGlobalFilter] = useState(model?.globalFilter || '');
+  const [globalFilter, setGlobalFilter] = useState('');
   const [columnFilters, setColumnFilters] = useState([]);
   const [sorting, setSorting] = useState([]);
   const [grouping, setGrouping] = useState([]);
   const [columnOrder, setColumnOrder] = useState(
     //must start out with populated columnOrder so we can splice
-    model?.columnOrder || columns?.map((column) => column.id)
+    columns?.map((column) => column.id)
   );
 
   const [rowHeight, setRowHeight] = useState([
@@ -236,13 +236,13 @@ export default function TableComponents({
     // debugColumns: true,
   });
 
-  // useEffect(() => {
-  //   console.log("model:", model);
-  //   if (model != []) {
-  //     table.setState(model);
-  //   }
-  //   console.log("model updated", table.options.state);
-  // }, []);
+  useEffect(() => {
+    console.log('model:', selectedView);
+    if (Object.keys(selectedView?.model).length > 0) {
+      table.setState(selectedView?.model);
+    }
+    console.log('model updated', table.options.state);
+  }, [selectedView?.model]);
 
   // console.log(table)
   return (

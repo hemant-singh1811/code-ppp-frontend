@@ -7,7 +7,7 @@ import {
   useGetTableDataQuery,
 } from '../../store/services/alphaTruckingApi';
 import { useDispatch, useSelector } from 'react-redux';
-import { handleAddSelectedTableViews } from '../../store/features/viewsSlice';
+import { handelAddInitialState } from '../../store/features/viewsSlice';
 import Table from '../../components/Table/Table';
 
 let multipleRecordLinksArray = [];
@@ -38,7 +38,7 @@ export default function TableScreen() {
   useEffect(() => {
     if (getSavedViewApi.isSuccess) {
       console.log('GET SAVED VIEW MODAL:', getSavedViewApi.data);
-      dispatch(handleAddSelectedTableViews(getSavedViewApi.data));
+      dispatch(handelAddInitialState(getSavedViewApi.data));
     }
   }, [getSavedViewApi.isSuccess]);
 
