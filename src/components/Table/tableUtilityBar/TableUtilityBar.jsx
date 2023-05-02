@@ -12,7 +12,6 @@ import {
   handelUpdateModel,
   handleUpdateSelectedViews,
 } from '../../../store/features/viewsSlice';
-import { useDebounce } from 'react-use';
 
 export default function TableUtilityBar() {
   const { table } = useContext(TableContext);
@@ -22,24 +21,7 @@ export default function TableUtilityBar() {
   const { userToken } = useSelector((state) => state.auth);
   let tabledata = table.options.state;
 
-  const [state, setState] = React.useState('Typing stopped');
-  const [val, setVal] = React.useState('');
-  const [debouncedValue, setDebouncedValue] = React.useState('');
-
-  const [, cancel] = useDebounce(
-    () => {
-      setState('Typing stopped');
-      setDebouncedValue(val);
-    },
-    2000,
-    [val]
-  );
-
-  console.log(val);
-
   useEffect(() => {
-    setVal(table.options.state);
-
     // dispatch(
     //   handleUpdateSelectedViews({
     //     name: selectedView?.name,
@@ -65,12 +47,6 @@ export default function TableUtilityBar() {
     //     'socket response update views: ' + JSON.stringify(response)
     //   );
     // });
-    // console.log("socket called");
-    // console.log(obj);
-    // let data = table.options.state
-    // console.log(data)
-    // setTableStates(table.options.state)
-    // updatePost({ model: table.options.state })
     // dispatch(handleAddViews({ view: "driver", data: tableStates }))
   }, [
     table.options.state.columnVisibility,

@@ -1,8 +1,7 @@
-import { useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { handleFilterChange } from "../../store/features/globalStateSlice";
-import "../../stylesheet/filterModal.scss";
-import { useDetectOutsideClick } from "../../utilities/customHooks/useDetectOutsideClick";
+import { useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { handleFilterChange } from '../../store/features/globalStateSlice';
+import { useDetectOutsideClick } from '../../utilities/customHooks/useDetectOutsideClick';
 
 export default function AsideThreeDotsDropDown() {
   // Create a ref that we add to the element for which we want to detect outside clicks
@@ -19,8 +18,9 @@ export default function AsideThreeDotsDropDown() {
         <div>
           <button
             onClick={() => setToggle(!toggle)}
-            className={` flex w-full items-center justify-center rounded-full p-2 bg-black  text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${toggle ? "bg-opacity-100" : ""
-              }`}>
+            className={` flex w-full items-center justify-center rounded-full p-2 bg-black  text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${
+              toggle ? 'bg-opacity-100' : ''
+            }`}>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'

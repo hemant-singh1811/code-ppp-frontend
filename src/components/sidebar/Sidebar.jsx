@@ -14,7 +14,7 @@ import {
   handelToggleSideBar,
 } from '../../store/features/SideBarStateSlice';
 import { useGetBasesQuery } from '../../store/services/alphaTruckingApi';
-import '../../stylesheet/sidebar.scss';
+import '../../stylesheet/sidebar.css';
 import Error from '../utilities/Error';
 import Loading from '../utilities/Loading';
 import { useClickAway } from 'react-use';

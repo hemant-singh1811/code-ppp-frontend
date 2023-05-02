@@ -17,7 +17,6 @@ export default function Chatting({ user_token, socket }) {
   const mainChatRef = useRef(null);
   const handlePickUpFileClick = useRef(null);
   const { messages } = useSelector((state) => state.message);
-  // const currentDateTime = moment().format("YYYY-MM-DD HH:mm:ss");
   const currentDateTime = DateGenerator();
 
   const send = (text, user_token, url, type, file_name) => {
