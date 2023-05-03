@@ -40,7 +40,8 @@ const viewsSlice = createSlice({
     },
     handelToggleView: (state, { payload }) => {
       state.views = state.views.map((view) => {
-        if (view.id === payload) {
+        console.log(JSON.stringify(view, null, 2));
+        if (view.title === payload) {
           view.collapsed = !view.collapsed;
         }
         return view;

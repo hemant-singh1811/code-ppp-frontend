@@ -40,7 +40,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
     <>
       <div
         ref={parentRef}
-        className='list text-black scrollbar-hidden h-[calc(100vh_-_72px)] overflow-x-visible z-[1] relative'
+        className='list text-black scrollbar-hidden h-[calc(100vh_-_100px)] overflow-x-visible z-[1] relative'
         // style={{ overflowY: 'auto' }}//do not remove overflow auto if you remove it table virtual row will break
         style={{
           overflowX: 'auto',
@@ -153,6 +153,12 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
             <CreateRow />
           </div>
         </div>
+      </div>
+      <div className='text-black'>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit
+        perspiciatis explicabo quisquam ullam fuga rem sed a, dolores temporibus
+        voluptate pariatur eveniet eaque. Sed accusamus cupiditate porro
+        recusandae similique alias?
       </div>
     </>
   );

@@ -131,26 +131,26 @@ export const ViewsComponent = () => {
                     </div>
                   </div>
                   {collapsed &&
-                  data.filter((ele) => ele.title.includes(search)) < 1 ? (
-                    <div className='flex justify-center items-center py-2 bg-red-50'>
-                      No View Found
-                    </div>
-                  ) : (
-                    data
-                      .filter((ele) => ele.title.includes(search))
-                      .map((ele, i) => {
-                        return (
-                          <div key={i}>
-                            <TableViewsPopUpMenuToolkit
-                              title={ele.title}
-                              viewName={title}
-                              id={ele.id}
-                              model={ele.data}
-                            />
-                          </div>
-                        );
-                      })
-                  )}
+                    (data.filter((ele) => ele.title.includes(search)) < 1 ? (
+                      <div className='flex justify-center items-center py-2 bg-red-50'>
+                        No View Found
+                      </div>
+                    ) : (
+                      data
+                        .filter((ele) => ele.title.includes(search))
+                        .map((ele, i) => {
+                          return (
+                            <div key={i}>
+                              <TableViewsPopUpMenuToolkit
+                                title={ele.title}
+                                viewName={title}
+                                id={ele.id}
+                                model={ele.data}
+                              />
+                            </div>
+                          );
+                        })
+                    ))}
 
                   {views[1].data.length > 0 && index === 0 && (
                     <div className='h-[1px] w-full bg-[#e8e8e8] px-2 my-2 ' />

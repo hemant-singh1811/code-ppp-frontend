@@ -49,6 +49,7 @@ export default function CreateRow() {
           break;
       }
     });
+    // setData([...data, updatedData]);
     addRowApi({
       baseId: selectedBaseId,
       data: {
