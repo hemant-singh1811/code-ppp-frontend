@@ -12,12 +12,15 @@ import {
   handelUpdateModel,
   handleUpdateSelectedViews,
 } from '../../../store/features/viewsSlice';
+import TableUtilityColor from './TableUtilityColor';
 
 export default function TableUtilityBar() {
   const { table } = useContext(TableContext);
   const socket = useSelector((state) => state.socketWebData.socket);
   const dispatch = useDispatch();
-  const { selectedView } = useSelector((state) => state.views);
+  const { selectedView, previousSelectedView } = useSelector(
+    (state) => state.views
+  );
   const { userToken } = useSelector((state) => state.auth);
   let tabledata = table.options.state;
 
@@ -29,25 +32,24 @@ export default function TableUtilityBar() {
     //     model: table.options.state,
     //   })
     // );
-    // dispatch(
-    //   handelUpdateModel({
-    //     name: selectedView?.name,
-    //     id: selectedView?.id,
-    //     model: tabledata,
-    //   })
-    // );
-    // let obj = {
-    //   user_token: userToken,
-    //   model: table.options.state,
-    //   view_id: selectedView?.id,
-    // };
-    // console.log('update views', obj);
-    // socket.emit('changesaved', obj, (response) => {
-    //   console.log(
-    //     'socket response update views: ' + JSON.stringify(response)
-    //   );
-    // });
-    // dispatch(handleAddViews({ view: "driver", data: tableStates }))
+    dispatch(
+      handelUpdateModel({
+        name: selectedView?.name,
+        id: selectedView?.id,
+        model: tabledata,
+      })
+    );
+    let obj = {
+      user_token: userToken,
+      model: table.options.state,
+      view_id: selectedView?.id,
+      previousSelectedView,
+    };
+    console.log('update views', obj);
+    socket.emit('changesaved', obj, (response) => {
+      console.log('socket response update views: ' + JSON.stringify(response));
+    });
+    // dispatch(handleAddViews({ view: 'driver', data: tableStates }));
   }, [
     table.options.state.columnVisibility,
     table.options.state.columnSizing,
@@ -73,6 +75,7 @@ export default function TableUtilityBar() {
         <TableUtilityGrouping table={table} />
         <TableUtilitySort table={table} />
         {/* <TableUtilityRowHeight /> */}
+        <TableUtilityColor table={table} />
       </div>
       <TableUtilitySearching />
     </div>

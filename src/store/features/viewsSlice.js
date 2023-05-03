@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   selectedView: {},
+  previousSelectedView: {},
   views: [],
 };
 
@@ -10,6 +11,9 @@ const viewsSlice = createSlice({
   initialState,
   reducers: {
     handleUpdateSelectedViews: (state, { payload }) => {
+      state.previousSelectedView.name = state.selectedView.name;
+      state.previousSelectedView.id = state.selectedView.id;
+      state.previousSelectedView.model = state.selectedView.model;
       state.selectedView.name = payload.name;
       state.selectedView.id = payload.id;
       state.selectedView.model = payload.model;
@@ -48,10 +52,6 @@ const viewsSlice = createSlice({
       });
     },
     handelUpdateModel: (state, { payload }) => {
-      // state.views = state.views.map((ele) => {
-      //   ele.data = ele.data.filter(({ id }) => id !== payload);
-      //   return ele;
-      // });
       state.views = state.views.map((view) => {
         view.data = view.data.map((ele) => {
           if (ele.id === payload.id) {
