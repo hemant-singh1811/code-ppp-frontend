@@ -111,24 +111,46 @@ input[type='number'] {
   }
 }
 .resizerHeader {
-  position: absolute;
-  right: 0px;
-  top: 10%;
-  height: 80%;
-  width: 2.5px;
+  position: relative;
+  /* top: auto;
+  bottom: auto;
+  margin: auto; */
+  margin: 5px;
+  padding-left: 1px;
+  left: -0.3px;
+  height: 90%;
+  width: 3px;
   border-radius: 2px;
-  background: blue;
+  background: #dde1e3;
+  opacity: 0;
+}
+
+.resizerHeader.isResizingHeader {
+  background: #dde1e3;
+  opacity: 1;
+}
+
+.resize-container:hover .resizerHeader {
+  opacity: 1;
+}
+
+.resize-container {
   cursor: ew-resize;
   user-select: none;
   touch-action: none;
 }
 
-.resizerHeader.isResizingHeader {
-  background: blue;
-  opacity: 1;
+/* .parent {
+  background-color: #e0e0e0;
+  padding: 20px;
+  border: 1px solid #ccc;
 }
 
-@media (hover: hover) {
+.parent:hover .child {
+  background-color: #c7c7c7;
+} */
+
+/* @media (hover: hover) {
   .resizerHeader {
     opacity: 0;
   }
@@ -136,10 +158,7 @@ input[type='number'] {
     opacity: 1;
   }
 
-  /* *:hover > .resizerHeader {
-    opacity: 1;
-  } */
-}
+} */
 /* ************** table resizer code end **************** */
 
 .tr:hover {
@@ -157,15 +176,34 @@ input[type='number'] {
 
 .divTable {
   height: calc(100vh - 50px);
+
   /* overflow: scroll; */
 }
 
 .th,
 .td {
-  border: 0.5px solid lightgray;
+  /* border: 0.5px solid lightgray; */
   /* box-shadow: inset 0 0 0 0.5px lightgray; */
   /* padding: 0.25rem; */
   /* text-overflow: ellipsis;  */
+  border-bottom: 1px solid rgb(221, 225, 227);
+  border-left: 1px solid rgb(243, 243, 243);
+  border-right: none;
+  border-top: none;
+}
+.td:last-child {
+  box-shadow: rgb(221, 225, 227) 1px 0px 0px 0px;
+}
+.td:first-child {
+  box-shadow: rgb(221, 225, 227) 1px 0px 0px 0px inset;
+}
+
+.th {
+  box-shadow: rgb(221, 225, 227) -1px 0px 0px 0px inset;
+}
+
+.thead {
+  border-left: 1px solid rgb(221, 225, 227);
 }
 
 .th {
@@ -265,6 +303,8 @@ input {
   width: 100%;
   padding: 2px 4px;
   background-color: transparent;
+  z-index: 1000000;
+  position: relative;
   /* outline-width: 0px; */
   /* border: 2px solid transparent; */
   /* border-radius: 2px; */

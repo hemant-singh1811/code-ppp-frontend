@@ -22,20 +22,38 @@ export default function Table({
   const dispatch = useDispatch();
 
   // this is for checking is the side bar is opened ?
-
-  let defaultColumns = tableModel.map(({ id, data }) => {
-    return {
-      accessorKey: data?.field_name,
-      id: data?.field_name,
-      header: data?.field_name,
-      ...data,
-    };
+  let defaultColumns = [];
+  defaultColumns = tableModel
+    .map(({ id, data }) => {
+      return (
+        !data?.is_primary && {
+          accessorKey: data?.field_name,
+          id: data?.field_name,
+          header: data?.field_name,
+          ...data,
+        }
+      );
+    })
+    .filter((ele) => ele);
+  tableModel.map(({ id, data }) => {
+    if (data?.is_primary) {
+      defaultColumns.unshift({
+        accessorKey: data?.field_name,
+        id: data?.field_name,
+        header: data?.field_name,
+        enableHiding: false,
+        ...data,
+      });
+    }
   });
 
   defaultColumns.unshift({
     accessorKey: '',
     id: 'select',
-    size: 40,
+    is_primary: true,
+    hiddenInConditions: true,
+    size: 60,
+    enableHiding: false,
     header: ({ table }) => (
       <IndeterminateCheckbox
         checked={table.getIsAllRowsSelected()}
@@ -43,7 +61,6 @@ export default function Table({
         onChange={table.getToggleAllRowsSelectedHandler()}
       />
     ),
-    width: 20,
     cell: ({ row }) => (
       <IndeterminateCheckbox
         data={row}

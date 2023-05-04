@@ -55,15 +55,19 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
           }}>
           {rowVirtualizer.getVirtualItems().map((virtualRow, i) => {
             const row = rows[virtualRow.index];
+            // console.log(row);
             return (
               <React.Fragment key={virtualRow.index}>
                 {/* {columnVirtualizer.getVirtualItems().map((virtualColumn) => {
                   return ( */}
                 <div
                   // key={virtualColumn.index}
-                  className={`tr z-0 bg-white hover:bg-blue-50 ${
-                    row.getIsSelected() && 'bg-purple-100'
-                  }`}
+                  className={`tr z-0 bg-white  ${
+                    row.getIsSelected()
+                      ? 'hover:bg-[#f1f6ff]'
+                      : 'hover:bg-[#F8F8F8]'
+                  } 
+                   ${row.getIsSelected() && 'bg-[#f1f6ff]'}`}
                   style={{
                     position: 'absolute',
                     top: 0,
@@ -75,6 +79,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                     // height: `${rows[virtualRow.index]}px`,
                   }}>
                   {row.getVisibleCells().map((cell, index) => {
+                    console.log(cell);
                     return (
                       <div
                         className={`td  webkitLineClamp${activeNumberOfLines} mx-auto my-auto text-center `}
@@ -90,6 +95,8 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                               : cell.getIsPlaceholder()
                               ? '#ff000042'
                               : '',
+                            borderLeftWidth:
+                              cell.column.columnDef?.is_primary && 0,
                           },
                         }}>
                         {cell.getIsGrouped() ? (
@@ -139,13 +146,14 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
             );
           })}
           <div
-            className='border flex items-center w-[calc(100%_-_120px)]'
+            className='border flex items-center w-[calc(100%_-_119px)]'
             style={{
               position: 'absolute',
               top: 0,
               left: 0,
               height: `${activeRowHeight}px`,
               transform: `translateY(${rowVirtualizer.getTotalSize()}px)`,
+              borderTopWidth: 0,
               // width: `${columns[virtualRow.index]}px`,
               // zIndex: rowVirtualizer.getVirtualItems().length - i,
               // height: `${rows[virtualRow.index]}px`,

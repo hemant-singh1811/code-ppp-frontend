@@ -4,7 +4,6 @@ import { Popover, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 
 export default function TableUtilityColor({ table }) {
-  const [searchInput, setSearchInput] = useState('');
   return (
     <Popover className='flex items-center hover:bg-black hover:bg-opacity-10 rounded-md text-[#4d4d4d] p-0.5 px-2 text-lg  cursor-pointer relative '>
       <Popover.Button className='flex items-center font-medium outline-none'>
@@ -32,9 +31,76 @@ export default function TableUtilityColor({ table }) {
         leave='transition ease-in duration-150'
         leaveFrom='opacity-100 translate-y-0'
         leaveTo='opacity-0 translate-y-1'>
-        <Popover.Panel className='absolute top-10 left-0 z-[3] bg-white w-[310px] max-h-[calc(100vh/_.5)] shadow-2xl rounded-md overflow-hidden border-[#c8c8c8] border-2'>
-          <div className='p-4 hover:bg-gray-200'>
-            <div className='text-black flex'>
+        <Popover.Panel className='absolute top-10 left-0 z-[3] bg-white  max-h-[calc(100vh/_.5)] rounded-md overflow-hidden shadow-custom '>
+          <Panel />
+        </Popover.Panel>
+      </Transition>
+    </Popover>
+  );
+}
+
+const Panel = () => {
+  const [selectType, setSelectType] = useState('');
+
+  switch (selectType) {
+    case 'fields':
+      return (
+        <div>
+          <div>
+            <svg
+              onClick={() => setSelectType('')}
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              strokeWidth={1.5}
+              stroke='currentColor'
+              className='w-6 h-6'>
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M6 18L18 6M6 6l12 12'
+              />
+            </svg>
+
+            <p>Coloring records the same as</p>
+          </div>
+        </div>
+      );
+
+    case 'conditions':
+      return (
+        <div>
+          <div>
+            <svg
+              onClick={() => setSelectType('')}
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              strokeWidth={1.5}
+              stroke='currentColor'
+              className='w-6 h-6'>
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M6 18L18 6M6 6l12 12'
+              />
+            </svg>
+
+            <p>Coloring records the same as</p>
+          </div>
+        </div>
+      );
+
+    default:
+      return (
+        <div className='w-[310px]'>
+          <div
+            className='p-4 hover:bg-gray-200'
+            onClick={() => {
+              console.log('object');
+              setSelectType('fields');
+            }}>
+            <div className='text-black flex items-center'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 height='20'
@@ -49,8 +115,10 @@ export default function TableUtilityColor({ table }) {
               Color records the same as a single select field
             </p>
           </div>
-          <div className='p-4 hover:bg-gray-200'>
-            <div className='text-black flex'>
+          <div
+            className='p-4 hover:bg-gray-200'
+            onClick={() => setSelectType('conditions')}>
+            <div className='text-black flex items-center'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'
@@ -70,8 +138,7 @@ export default function TableUtilityColor({ table }) {
               Color records based on conditions
             </p>
           </div>
-        </Popover.Panel>
-      </Transition>
-    </Popover>
-  );
-}
+        </div>
+      );
+  }
+};

@@ -35,8 +35,11 @@ export default function CustomFilterInput({
           className='block w-60 p-2  bg-white border border-gray-300 rounded-tl-md rounded-bl-md outline-none appearance-none hover:bg-gray-100 text-base'>
           {table.getHeaderGroups().map((headerGroup) =>
             headerGroup.headers.map((header, i) => {
-              // if (i === 0) return;
-              return <option key={i}>{header.column.id}</option>;
+              return (
+                !header.column.columnDef?.hiddenInConditions && (
+                  <option key={i}>{header.column.id}</option>
+                )
+              );
             })
           )}
         </select>

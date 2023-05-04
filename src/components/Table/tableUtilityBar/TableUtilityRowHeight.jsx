@@ -39,7 +39,7 @@ export default function TableUtilityRowHeight() {
         Row Height
       </div>
       {rowHeightToggle && (
-        <div className='absolute top-10 left-0 z-50 bg-white w-[200px] p-2 rounded-md border-[#c8c8c8] border-2'>
+        <div className='absolute top-10 left-0 z-50 bg-white w-[200px] p-2 rounded-md shadow-custom '>
           {rowHeight.map((ele) => {
             return (
               <div

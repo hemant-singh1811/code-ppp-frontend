@@ -39,7 +39,7 @@ function IndeterminateCheckbox({
 
   return data ? (
     <div
-      className='hover:bg-blue-50 w-full h-full flex items-center justify-center cursor-pointer'
+      className=' w-full h-full flex items-center justify-center cursor-pointer'
       {...rest}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}>

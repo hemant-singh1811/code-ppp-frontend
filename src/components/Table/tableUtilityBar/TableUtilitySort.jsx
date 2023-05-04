@@ -36,7 +36,7 @@ export default function TableUtilitySort({ table }) {
             leave='transition ease-in duration-150'
             leaveFrom='opacity-100 translate-y-0'
             leaveTo='opacity-0 translate-y-1'>
-            <Popover.Panel className='absolute top-10 left-0 z-50 bg-white w-[300px] p-2 rounded-md  max-h-96 overflow-y-scroll border-[#c8c8c8] border-2'>
+            <Popover.Panel className='absolute top-10 left-0 z-50 bg-white w-[300px] p-2 rounded-md  max-h-[calc(100vh/_.5)] overflow-y-auto shadow-custom'>
               <div>
                 Sort By:
                 <div className='h-[.5px] mb-2 mt-1 w-full bg-[#03001C]' />
@@ -47,32 +47,34 @@ export default function TableUtilitySort({ table }) {
                       //   return;
                       // }
                       return (
-                        <div
-                          onClick={() => {
-                            header.column.toggleSorting();
-                          }}
-                          key={header.id}
-                          colSpan={header.colSpan}
-                          className='flex justify-between items-center hover:bg-black hover:bg-opacity-10 pr-2'>
-                          {header.isPlaceholder ? null : (
-                            <label className='flex items-center text-base gap-4 p-1  rounded-sm pl-2 cursor-pointer'>
-                              <div
-                                {...{
-                                  className: header.column.getCanSort()
-                                    ? 'cursor-pointer select-none'
-                                    : '',
-                                }}>
-                                <div className='capitalize truncate flex-1'>
-                                  {header.column.id}
+                        !header.column.columnDef?.hiddenInConditions && (
+                          <div
+                            onClick={() => {
+                              header.column.toggleSorting();
+                            }}
+                            key={header.id}
+                            colSpan={header.colSpan}
+                            className='flex justify-between items-center hover:bg-black hover:bg-opacity-10 pr-2'>
+                            {header.isPlaceholder ? null : (
+                              <label className='flex items-center text-base gap-4 p-1  rounded-sm pl-2 cursor-pointer'>
+                                <div
+                                  {...{
+                                    className: header.column.getCanSort()
+                                      ? 'cursor-pointer select-none'
+                                      : '',
+                                  }}>
+                                  <div className='capitalize truncate flex-1'>
+                                    {header.column.id}
+                                  </div>
                                 </div>
-                              </div>
-                            </label>
-                          )}
-                          {{
-                            asc: ' 🔼',
-                            desc: ' 🔽',
-                          }[header.column.getIsSorted()] ?? null}
-                        </div>
+                              </label>
+                            )}
+                            {{
+                              asc: ' 🔼',
+                              desc: ' 🔽',
+                            }[header.column.getIsSorted()] ?? null}
+                          </div>
+                        )
                       );
                     })}
                   </div>

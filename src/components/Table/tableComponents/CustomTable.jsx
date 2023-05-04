@@ -304,7 +304,7 @@ const DraggableColumnHeader = ({ header, table, index }) => {
     event.preventDefault();
     setIsMenuOpen(true);
   };
-
+  console.log(column);
   return (
     <Popover className='' ref={buttonRef}>
       {({ open, close }) => (
@@ -317,16 +317,17 @@ const DraggableColumnHeader = ({ header, table, index }) => {
             key: header.id,
             style: {
               width: header.getSize(),
+              boxShadow: column.columnDef?.hiddenInConditions && 'none',
             },
           }}
           ref={(el) => {
             previewRef(el);
-            dropRef(el);
+            if (!column?.columnDef?.is_primary) dropRef(el);
             // divRef;
           }}
           colSpan={header.colSpan}>
           <div
-            ref={dragRef}
+            ref={!column?.columnDef?.is_primary ? dragRef : null}
             className='capitalize text-lg font-normal px-2  flex justify-between item items-center h-full'>
             <div
               className={`flex items-center ${
@@ -380,11 +381,16 @@ const DraggableColumnHeader = ({ header, table, index }) => {
               {...{
                 onMouseDown: header.getResizeHandler(),
                 onTouchStart: header.getResizeHandler(),
-                className: `resizerHeader ${
-                  header.column.getIsResizing() ? 'isResizingHeader' : ''
-                }`,
               }}
-            />
+              className=' absolute z-10 w-4 h-full top-0 -right-2 resize-container flex justify-center items-center'>
+              <div
+                {...{
+                  className: `resizerHeader ${
+                    header.column.getIsResizing() ? 'isResizingHeader' : ''
+                  }`,
+                }}
+              />
+            </div>
           )}
         </div>
       )}

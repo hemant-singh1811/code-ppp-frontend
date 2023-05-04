@@ -32,7 +32,7 @@ export default function TableUtilityHideFields({ table }) {
         leave='transition ease-in duration-150'
         leaveFrom='opacity-100 translate-y-0'
         leaveTo='opacity-0 translate-y-1'>
-        <Popover.Panel className='absolute top-10 left-0 z-[3] bg-white w-[300px] max-h-[calc(100vh/_.5)] shadow-2xl  p-2 rounded-md overflow-y-scroll border-[#c8c8c8] border-2'>
+        <Popover.Panel className='absolute top-10 left-0 z-[3] bg-white w-[300px] max-h-[calc(100vh/_.5)]   p-2 rounded-md overflow-y-auto shadow-custom'>
           <div className='relative'>
             <div className='flex items-center relative mb-4'>
               <svg
@@ -66,30 +66,33 @@ export default function TableUtilityHideFields({ table }) {
                     .includes(searchInput.toLowerCase().trim())
                 )
                 .map((column, i) => {
-                  // console.log(column.getToggleVisibilityHandler());
                   return (
-                    <label
-                      key={i}
-                      className='flex items-center text-base gap-4 p-1 hover:bg-black hover:bg-opacity-10 rounded-sm pl-2 cursor-pointer w-full'>
-                      <Switch
-                        checked={column.getIsVisible()}
-                        onChange={(e) => column.toggleVisibility(e)}
-                        className={`${
-                          column.getIsVisible() ? 'bg-green-500' : 'bg-gray-300'
-                        }
-          relative inline-flex h-[10px] w-[20px] shrink-0 cursor-pointer rounded-full border-[1px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}>
-                        <span
-                          aria-hidden='true'
+                    !column.columnDef?.is_primary && (
+                      <label
+                        key={i}
+                        className='flex items-center text-base gap-4 p-1 hover:bg-black hover:bg-opacity-10 rounded-sm pl-2 cursor-pointer w-full'>
+                        <Switch
+                          checked={column.getIsVisible()}
+                          onChange={(e) => column.toggleVisibility(e)}
                           className={`${
                             column.getIsVisible()
-                              ? 'translate-x-[10px]'
-                              : 'translate-x-0'
+                              ? 'bg-green-500'
+                              : 'bg-gray-300'
                           }
+          relative inline-flex h-[10px] w-[20px] shrink-0 cursor-pointer rounded-full border-[1px] border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}>
+                          <span
+                            aria-hidden='true'
+                            className={`${
+                              column.getIsVisible()
+                                ? 'translate-x-[10px]'
+                                : 'translate-x-0'
+                            }
             pointer-events-none inline-block h-[8px] w-[8px] transform top-0 rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
-                        />
-                      </Switch>
-                      <div className='capitalize truncate'>{column.id}</div>
-                    </label>
+                          />
+                        </Switch>
+                        <div className='capitalize truncate'>{column.id}</div>
+                      </label>
+                    )
                   );
                 })}
             </div>

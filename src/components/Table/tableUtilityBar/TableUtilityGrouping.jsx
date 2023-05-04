@@ -35,7 +35,7 @@ export default function TableUtilityGrouping({ table }) {
             leave='transition ease-in duration-150'
             leaveFrom='opacity-100 translate-y-0'
             leaveTo='opacity-0 translate-y-1'>
-            <Popover.Panel className='absolute top-10 left-0 z-[3] bg-white w-[300px] p-2 rounded-md  max-h-96 overflow-y-scroll border-[#c8c8c8] border-2'>
+            <Popover.Panel className='absolute top-10 left-0 z-[3] bg-white w-[300px] p-2 rounded-md max-h-[calc(100vh/_.5)]  overflow-y-auto shadow-custom'>
               Group By:
               <div className='h-[.5px] mb-2 mt-1 w-full bg-[#03001C]' />
               {table.getHeaderGroups().map((headerGroup) => {
@@ -45,31 +45,34 @@ export default function TableUtilityGrouping({ table }) {
                       // if (i === 0) {
                       //   return;
                       // }
+                      console.log();
                       return (
-                        <div
-                          {...{
-                            onClick: header.column.getToggleGroupingHandler(),
-                            style: {
-                              cursor: 'pointer',
-                            },
-                          }}
-                          key={header.id}
-                          colSpan={header.colSpan}
-                          className='flex items-center text-base gap-4 p-1 hover:bg-black hover:bg-opacity-10 rounded-sm pl-2 cursor-pointer '>
-                          {header.isPlaceholder ? null : (
-                            <div>
-                              {header.column.getCanGroup() ? (
-                                // If the header can be grouped, let's add a toggle
-                                <button>
-                                  {header.column.getIsGrouped()
-                                    ? `🛑(${header.column.getGroupedIndex()}) `
-                                    : `👊 `}
-                                </button>
-                              ) : null}{' '}
-                              {header.column.id}
-                            </div>
-                          )}
-                        </div>
+                        !header.column.columnDef?.hiddenInConditions && (
+                          <div
+                            {...{
+                              onClick: header.column.getToggleGroupingHandler(),
+                              style: {
+                                cursor: 'pointer',
+                              },
+                            }}
+                            key={header.id}
+                            colSpan={header.colSpan}
+                            className='flex items-center text-base gap-4 p-1 hover:bg-black hover:bg-opacity-10 rounded-sm pl-2 cursor-pointer '>
+                            {header.isPlaceholder ? null : (
+                              <div>
+                                {header.column.getCanGroup() ? (
+                                  // If the header can be grouped, let's add a toggle
+                                  <button>
+                                    {header.column.getIsGrouped()
+                                      ? `🛑(${header.column.getGroupedIndex()}) `
+                                      : `👊 `}
+                                  </button>
+                                ) : null}{' '}
+                                {header.column.id}
+                              </div>
+                            )}
+                          </div>
+                        )
                       );
                     })}
                   </div>
