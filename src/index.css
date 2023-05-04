@@ -206,11 +206,18 @@ input[type='number'] {
   border-left: 1px solid rgb(221, 225, 227);
 }
 
+.thead > div {
+  height: 32px;
+}
+.thead > .tr {
+  height: 32px;
+}
+
 .th {
   position: relative;
   font-weight: bold;
   text-align: center;
-  height: 30px;
+  /* height: 30px; */
   /* overflow: hidden; */
 }
 
@@ -339,3 +346,7 @@ input:focus {
   border-radius: 5px;
   z-index: 1;
 } */
+
+.tr > div > th {
+  height: 32px !important;
+}

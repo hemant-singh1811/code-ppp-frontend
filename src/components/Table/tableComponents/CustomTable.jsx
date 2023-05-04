@@ -304,7 +304,7 @@ const DraggableColumnHeader = ({ header, table, index }) => {
     event.preventDefault();
     setIsMenuOpen(true);
   };
-  console.log(column);
+  // console.log(column);
   return (
     <Popover className='' ref={buttonRef}>
       {({ open, close }) => (
@@ -318,6 +318,7 @@ const DraggableColumnHeader = ({ header, table, index }) => {
             style: {
               width: header.getSize(),
               boxShadow: column.columnDef?.hiddenInConditions && 'none',
+              height: 32,
             },
           }}
           ref={(el) => {

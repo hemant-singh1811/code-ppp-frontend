@@ -5,10 +5,23 @@ import { TableContext } from '../tableComponents/TableComponents';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import CellByFieldType from './tableCells/CellByFieldType';
 import CreateRow from './CreateRow';
+import { useWindowSize } from 'react-use';
 
 export default function TableVirtualRows({ tableContainerRef, rows }) {
-  const { activeRowHeight, activeNumberOfLines, table } =
+  let { activeRowHeight, activeNumberOfLines, table } =
     useContext(TableContext);
+  const { width, height } = useWindowSize();
+
+  let shortHeight = 32;
+  let mediumHeight = 56;
+  let tallHeight = 88;
+  let extraTallHeight = 128;
+
+  activeRowHeight = extraTallHeight;
+
+  let heightOverScan = (height - 68) / activeRowHeight;
+
+  // console.log(heightOverScan);
 
   const columns = table.getAllColumns();
   const parentRef = React.useRef();
@@ -17,14 +30,14 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
     count: rows.length,
     getScrollElement: () => parentRef.current,
     estimateSize: (i) => activeRowHeight,
-    overscan: 10,
+    overscan: heightOverScan,
   });
 
   let columnVirtualizer = useVirtualizer({
     horizontal: true,
     count: columns.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: (i) => 150,
+    estimateSize: (i) => 10,
     overscan: 100,
   });
 
@@ -45,9 +58,10 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
         style={{
           overflowX: 'auto',
           overflowY: 'visible',
+          background: '#f7f7f7',
         }}>
         <div
-          className='tbody scrollbar-hidden'
+          className='tbody scrollbar-hidden mb-40'
           style={{
             height: `${rowVirtualizer.getTotalSize()}px`,
             // width: `${columnVirtualizer.getTotalSize()}px`,
@@ -79,7 +93,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                     // height: `${rows[virtualRow.index]}px`,
                   }}>
                   {row.getVisibleCells().map((cell, index) => {
-                    console.log(cell);
+                    // console.log(cell);
                     return (
                       <div
                         className={`td  webkitLineClamp${activeNumberOfLines} mx-auto my-auto text-center `}
@@ -151,9 +165,10 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
               position: 'absolute',
               top: 0,
               left: 0,
-              height: `${activeRowHeight}px`,
+              height: `30px`,
               transform: `translateY(${rowVirtualizer.getTotalSize()}px)`,
               borderTopWidth: 0,
+              background: '#fff',
               // width: `${columns[virtualRow.index]}px`,
               // zIndex: rowVirtualizer.getVirtualItems().length - i,
               // height: `${rows[virtualRow.index]}px`,
