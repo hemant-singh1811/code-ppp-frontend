@@ -419,7 +419,7 @@ export default function CustomTable() {
       {isViewsOpen && <ResizableSidebar />}
       <div
         id='custom-scrollbar'
-        className={`overflow-auto overflow-y-hidden 
+        className={`overflow-auto overflow-y-hidden bg-[#f7f7f7] 
        ${
          toggle
            ? isViewsOpen

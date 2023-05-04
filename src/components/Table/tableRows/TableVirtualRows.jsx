@@ -19,9 +19,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
 
   activeRowHeight = extraTallHeight;
 
-  let heightOverScan = (height - 68) / activeRowHeight;
-
-  // console.log(heightOverScan);
+  let heightOverScan = ((height - 68) / activeRowHeight).toFixed();
 
   const columns = table.getAllColumns();
   const parentRef = React.useRef();
@@ -41,6 +39,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
     overscan: 100,
   });
 
+  console.log(heightOverScan);
   // useEffect(() => {
   // }, [activeRowHeight])
 
@@ -68,31 +67,31 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
             position: 'relative',
           }}>
           {rowVirtualizer.getVirtualItems().map((virtualRow, i) => {
-            const row = rows[virtualRow.index];
+            const row = rows[virtualRow?.index];
             // console.log(row);
             return (
-              <React.Fragment key={virtualRow.index}>
+              <React.Fragment key={virtualRow?.index || i}>
                 {/* {columnVirtualizer.getVirtualItems().map((virtualColumn) => {
                   return ( */}
                 <div
                   // key={virtualColumn.index}
                   className={`tr z-0 bg-white  ${
-                    row.getIsSelected()
+                    row?.getIsSelected()
                       ? 'hover:bg-[#f1f6ff]'
                       : 'hover:bg-[#F8F8F8]'
                   } 
-                   ${row.getIsSelected() && 'bg-[#f1f6ff]'}`}
+                   ${row?.getIsSelected() && 'bg-[#f1f6ff]'}`}
                   style={{
                     position: 'absolute',
                     top: 0,
                     left: 0,
-                    width: `${columns[virtualRow.index]}px`,
+                    width: `${columns[virtualRow?.index]}px`,
                     height: `${activeRowHeight}px`,
                     zIndex: rowVirtualizer.getVirtualItems().length - i,
-                    transform: `translateY(${virtualRow.start}px)`,
+                    transform: `translateY(${virtualRow?.start}px)`,
                     // height: `${rows[virtualRow.index]}px`,
                   }}>
-                  {row.getVisibleCells().map((cell, index) => {
+                  {row?.getVisibleCells().map((cell, index) => {
                     // console.log(cell);
                     return (
                       <div
