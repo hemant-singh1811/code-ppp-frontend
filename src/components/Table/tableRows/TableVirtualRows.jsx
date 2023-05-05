@@ -6,48 +6,52 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import CellByFieldType from './tableCells/CellByFieldType';
 import CreateRow from './CreateRow';
 import { useWindowSize } from 'react-use';
+import { useDispatch } from 'react-redux';
+// import { handelHoverRow } from '../../../store/features/globalStateSlice';
 
 export default function TableVirtualRows({ tableContainerRef, rows }) {
   let { activeRowHeight, activeNumberOfLines, table } =
     useContext(TableContext);
   const { width, height } = useWindowSize();
-
-  let shortHeight = 32;
-  let mediumHeight = 56;
-  let tallHeight = 88;
-  let extraTallHeight = 128;
-
-  activeRowHeight = extraTallHeight;
-
+  const dispatch = useDispatch();
   let heightOverScan = ((height - 68) / activeRowHeight).toFixed();
 
   const columns = table.getAllColumns();
   const parentRef = React.useRef();
-
-  let rowVirtualizer = useVirtualizer({
+  const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: (i) => activeRowHeight,
+    estimateSize: () => activeRowHeight,
     overscan: heightOverScan,
   });
 
-  let columnVirtualizer = useVirtualizer({
-    horizontal: true,
-    count: columns.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: (i) => 10,
-    overscan: 100,
-  });
+  // let columnVirtualizer = useVirtualizer({
+  //   horizontal: true,
+  //   count: columns.length,
+  //   getScrollElement: () => parentRef.current,
+  //   estimateSize: (i) => 10,
+  //   overscan: 100,
 
-  console.log(heightOverScan);
-  // useEffect(() => {
-  // }, [activeRowHeight])
+  // });
 
-  // console.log(rowVirtualizer)
+  // const handleMouseEnter = (ele) => {
+  //   dispatch(handelHoverRow(ele));
+  // };
 
-  // console.log(activeRowHeight)
+  // const handleMouseLeave = () => {
+  //   dispatch(handelHoverRow(null));
+  // };
 
-  // let totalSize = undefined
+  const [isHovering, setIsHovering] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+  };
+
   return (
     <>
       <div
@@ -66,98 +70,27 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
             // width: `${columnVirtualizer.getTotalSize()}px`,
             position: 'relative',
           }}>
-          {rowVirtualizer.getVirtualItems().map((virtualRow, i) => {
-            const row = rows[virtualRow?.index];
-            // console.log(row);
-            return (
-              <React.Fragment key={virtualRow?.index || i}>
-                {/* {columnVirtualizer.getVirtualItems().map((virtualColumn) => {
-                  return ( */}
-                <div
-                  // key={virtualColumn.index}
-                  className={`tr z-0 bg-white  ${
-                    row?.getIsSelected()
-                      ? 'hover:bg-[#f1f6ff]'
-                      : 'hover:bg-[#F8F8F8]'
-                  } 
-                   ${row?.getIsSelected() && 'bg-[#f1f6ff]'}`}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: `${columns[virtualRow?.index]}px`,
-                    height: `${activeRowHeight}px`,
-                    zIndex: rowVirtualizer.getVirtualItems().length - i,
-                    transform: `translateY(${virtualRow?.start}px)`,
-                    // height: `${rows[virtualRow.index]}px`,
-                  }}>
-                  {row?.getVisibleCells().map((cell, index) => {
-                    // console.log(cell);
-                    return (
-                      <div
-                        className={`td  webkitLineClamp${activeNumberOfLines} mx-auto my-auto text-center `}
-                        key={cell.id}
-                        {...{
-                          style: {
-                            width: cell.column.getSize(),
-                            height: activeRowHeight,
-                            background: cell.getIsGrouped()
-                              ? '#0aff0082'
-                              : cell.getIsAggregated()
-                              ? '#ffa50078'
-                              : cell.getIsPlaceholder()
-                              ? '#ff000042'
-                              : '',
-                            borderLeftWidth:
-                              cell.column.columnDef?.is_primary && 0,
-                          },
-                        }}>
-                        {cell.getIsGrouped() ? (
-                          // If it's a grouped cell, add an expander and row count
-                          <>
-                            <button
-                              className='flex'
-                              {...{
-                                onClick: row.getToggleExpandedHandler(),
-                                style: {
-                                  cursor: row.getCanExpand()
-                                    ? 'pointer'
-                                    : 'normal',
-                                },
-                              }}>
-                              <div>{row.getIsExpanded() ? '👇' : '👉'} </div>
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext()
-                              )}
-                              ({row.subRows.length})
-                            </button>
-                          </>
-                        ) : cell.getIsAggregated() ? (
-                          // If the cell is aggregated, use the Aggregated
-                          // renderer for cell
-                          flexRender(
-                            cell.column.columnDef.aggregatedCell ??
-                              cell.column.columnDef.cell,
-                            cell.getContext()
-                          )
-                        ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
-                          // Otherwise, just render the regular cell
-                          <>
-                            <CellByFieldType
-                              cell={cell}
-                              field_type={cell.column.columnDef.field_type}
-                            />
-                            {/* {console.log(cell.column.columnDef.field_type)} */}
-                          </>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </React.Fragment>
-            );
-          })}
+          {rowVirtualizer
+            .getVirtualItems()
+            .map((virtualRow, i, initialArray) => {
+              const row = rows[virtualRow?.index];
+              // console.log(virtualRow);
+              // console.log(row);
+              // console.log(arr);
+              return VirtualRow(
+                virtualRow,
+                i,
+                handleMouseEnter,
+                handleMouseLeave,
+                rowVirtualizer,
+                row,
+                columns,
+                activeRowHeight,
+                initialArray,
+                activeNumberOfLines,
+                isHovering
+              );
+            })}
           <div
             className='border flex items-center w-[calc(100%_-_119px)]'
             style={{
@@ -183,5 +116,111 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
         recusandae similique alias?
       </div>
     </>
+  );
+}
+
+function VirtualRow(
+  virtualRow,
+  i,
+  handleMouseEnter,
+  handleMouseLeave,
+  rowVirtualizer,
+  row,
+  columns,
+  activeRowHeight,
+  initialArray,
+  activeNumberOfLines,
+  isHovering
+) {
+  return (
+    <React.Fragment key={virtualRow?.index || i}>
+      {/* {columnVirtualizer.getVirtualItems().map((virtualColumn) => {
+        return ( */}
+      <div
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        data-index={virtualRow.index}
+        ref={rowVirtualizer.measureElement}
+        className={`tr z-0 bg-white  ${
+          row?.getIsSelected() ? 'hover:bg-[#f1f6ff]' : 'hover:bg-[#F8F8F8]'
+        } 
+                   ${row?.getIsSelected() && 'bg-[#f1f6ff]'}`}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: `${columns[virtualRow?.index]}px`,
+          height: `${activeRowHeight}px`,
+          zIndex: initialArray.length - i,
+          transform: `translateY(${virtualRow?.start}px)`,
+        }}>
+        {row?.getVisibleCells().map((cell) => {
+          return (
+            <div
+              className={`td  webkitLineClamp${activeNumberOfLines} mx-auto my-auto text-center `}
+              key={cell.id}
+              {...{
+                style: {
+                  width: cell.column.getSize(),
+                  height: activeRowHeight,
+                  background: cell.getIsGrouped()
+                    ? '#0aff0082'
+                    : cell.getIsAggregated()
+                    ? '#ffa50078'
+                    : cell.getIsPlaceholder()
+                    ? '#ff000042'
+                    : '',
+                  borderLeftWidth: cell.column.columnDef?.is_primary && 0,
+                },
+              }}>
+              {cell.getIsGrouped() ? (
+                // If it's a grouped cell, add an expander and row count
+                <>
+                  <button
+                    className='flex'
+                    {...{
+                      onClick: row.getToggleExpandedHandler(),
+                      style: {
+                        cursor: row.getCanExpand() ? 'pointer' : 'normal',
+                      },
+                    }}>
+                    <div>{row.getIsExpanded() ? '👇' : '👉'} </div>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}(
+                    {row.subRows.length})
+                  </button>
+                </>
+              ) : cell.getIsAggregated() ? (
+                // If the cell is aggregated, use the Aggregated
+                // renderer for cell
+                // flexRender(
+                //   cell.column.columnDef.aggregatedCell ??
+                //     cell.column.columnDef.cell,
+                //   cell.getContext()
+                // )
+                <CellByFieldType
+                  row={row}
+                  cell={cell}
+                  field_type={cell.column.columnDef.field_type}
+                />
+              ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
+                // Otherwise, just render the regular cell
+                <>
+                  <CellByFieldType
+                    cell={cell}
+                    isHovering={isHovering}
+                    row={row}
+                    field_type={cell.column.columnDef.field_type}
+                    hiddenInConditions={
+                      cell.column.columnDef.hiddenInConditions
+                    }
+                  />
+                  {/* {console.log(cell.column.columnDef.field_type)} */}
+                </>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </React.Fragment>
   );
 }

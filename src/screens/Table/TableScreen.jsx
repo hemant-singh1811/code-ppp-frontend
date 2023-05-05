@@ -17,7 +17,7 @@ export default function TableScreen() {
 
   const dispatch = useDispatch();
 
-  let { data, error, isFetching, refetch } =
+  let { data, error, isFetching, refetch, isSuccess } =
     useGetTableDataQuery(selectedTableId);
 
   let modelResult = useGetModelQuery(selectedTableId);
@@ -42,16 +42,23 @@ export default function TableScreen() {
     }
   }, [getSavedViewApi.isSuccess]);
 
+  useEffect(() => {
+    if (modelResult.data) {
+      console.log('GET MODAL:', modelResult.data);
+    }
+  }, [modelResult.isSuccess]);
+  useEffect(() => {
+    if (data) {
+      console.log('GET DATA:', data);
+    }
+  }, [isSuccess]);
+
   if (isFetching || modelResult?.isFetching || getSavedViewApi.isFetching) {
     return <Loading />;
   }
   if (error || modelResult?.error || getSavedViewApi.error) {
     return <Error error={error} />;
   }
-
-  console.log('GET MODAL:', modelResult.data);
-
-  console.log('GET DATA:', data);
 
   // stores the linked model in the map by linked  table keys and model as values
   multipleRecordLinksArray = modelResult.data
@@ -90,11 +97,6 @@ export default function TableScreen() {
       record_ids: value,
     });
   }
-
-  console.log(
-    'array of multiple Linked records send to server:',
-    modifiedArrayOfObject
-  );
 
   // return <></>;
   return (

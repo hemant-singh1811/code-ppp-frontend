@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Switch } from '@headlessui/react';
 import { Popover, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 
-export default function TableUtilityColor({ table }) {
+export default function TableUtilityColor() {
   return (
     <Popover className='flex items-center hover:bg-black hover:bg-opacity-10 rounded-md text-[#4d4d4d] p-0.5 px-2 text-lg  cursor-pointer relative '>
       <Popover.Button className='flex items-center font-medium outline-none'>

@@ -46,6 +46,11 @@ const initialState = {
   },
   tableWithMultipleRecords: [],
   isViewsOpen: false,
+  rowsUtility: {
+    selectedRow: null,
+    hoveredRow: null,
+    activeRow: null,
+  },
 };
 
 const globalStateSlice = createSlice({
@@ -110,6 +115,9 @@ const globalStateSlice = createSlice({
     handelAddTableWithMultipleRecords: (state, { payload }) => {
       state.tableWithMultipleRecords = payload;
     },
+    handelHoverRow: (state, { payload }) => {
+      state.rowsUtility.hoveredRow = payload;
+    },
   },
 });
 
@@ -124,6 +132,7 @@ export const {
   handelCloseModal,
   handelAddTableWithMultipleRecords,
   handelViewsToggle,
+  handelHoverRow,
 } = globalStateSlice.actions;
 
 export default globalStateSlice.reducer;

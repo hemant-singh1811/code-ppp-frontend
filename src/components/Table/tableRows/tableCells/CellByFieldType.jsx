@@ -15,8 +15,27 @@ import ModifiedAndCreatedCell from './ModifiedAndCreatedCell';
 import ButtonCell from './ButtonCell';
 import MultipleRecordLinksCell from './MultipleRecordLinksCell';
 import MultipleAttachmentsTableCell from './MultipleAttachmentsTableCell';
+import DefaultSelectCell from './DefaultSelectCell';
 
-export default function CellByFieldType({ field_type, cell }) {
+export default function CellByFieldType({
+  hiddenInConditions,
+  field_type,
+  cell,
+  row,
+  isHovering,
+}) {
+  console.log('row', row);
+  if (hiddenInConditions) {
+    return (
+      <DefaultSelectCell
+        isHovering={isHovering}
+        data={row}
+        checked={row?.getIsSelected()}
+        indeterminate={row?.getIsSomeSelected()}
+        onChange={row.getToggleSelectedHandler()}
+      />
+    );
+  }
   switch (field_type) {
     case 'singleSelect': //array
       return Array.isArray(cell?.getValue()) ||

@@ -74,7 +74,7 @@ export default function TableUtilityBar() {
         <TableUtilityFilter table={table} />
         <TableUtilityGrouping table={table} />
         <TableUtilitySort table={table} />
-        {/* <TableUtilityRowHeight /> */}
+        <TableUtilityRowHeight />
         <TableUtilityColor table={table} />
       </div>
       <TableUtilitySearching />

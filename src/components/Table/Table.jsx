@@ -8,6 +8,7 @@ import Error from '../utilities/Error';
 import { useGetTableRecordsQuery } from '../../store/services/alphaTruckingApi';
 import IndeterminateCheckbox from './tableUtilities/IndeterminateCheckbox';
 import { handelAddTableWithMultipleRecords } from '../../store/features/globalStateSlice';
+import { useEffectOnce } from 'react-use';
 
 export default function Table({
   tableData,
@@ -21,6 +22,13 @@ export default function Table({
   });
   const dispatch = useDispatch();
 
+  useEffectOnce(() => {
+    console.log(
+      'array of multiple Linked records send to server:',
+      modifiedArrayOfObject
+    );
+  });
+
   // this is for checking is the side bar is opened ?
   let defaultColumns = [];
   defaultColumns = tableModel
@@ -30,6 +38,7 @@ export default function Table({
           accessorKey: data?.field_name,
           id: data?.field_name,
           header: data?.field_name,
+          minSize: 100,
           ...data,
         }
       );
@@ -42,6 +51,7 @@ export default function Table({
         id: data?.field_name,
         header: data?.field_name,
         enableHiding: false,
+        minSize: 100,
         ...data,
       });
     }
@@ -61,14 +71,14 @@ export default function Table({
         onChange={table.getToggleAllRowsSelectedHandler()}
       />
     ),
-    cell: ({ row }) => (
-      <IndeterminateCheckbox
-        data={row}
-        checked={row.getIsSelected()}
-        indeterminate={row.getIsSomeSelected()}
-        onChange={row.getToggleSelectedHandler()}
-      />
-    ),
+    // cell: ({ row }) => (
+    //   <IndeterminateCheckbox
+    //     data={row}
+    //     checked={row.getIsSelected()}
+    //     indeterminate={row.getIsSomeSelected()}
+    //     onChange={row.getToggleSelectedHandler()}
+    //   />
+    // ),
   });
 
   // console.log(tableModel)

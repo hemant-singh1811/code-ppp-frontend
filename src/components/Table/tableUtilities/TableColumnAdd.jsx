@@ -160,8 +160,10 @@ export default function TableColumnAdd({ headers }) {
     <Popover className='relative'>
       {({ open, close }) => (
         <>
-          <Popover.Button className='outline-none w-[120px] th bg-[#f5f5f5]'>
-            <div className='capitalize text-left text-lg font-normal select-none px-2 truncate w-full flex justify-center items-center cursor-pointer'>
+          <Popover.Button
+            className='outline-none w-[120px]  th bg-[#f5f5f5] h-8'
+            style={{ height: 32 }}>
+            <div className='capitalize text-left text-lg font-normal select-none px-2 truncate w-full flex justify-center items-center cursor-pointer h-8'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'

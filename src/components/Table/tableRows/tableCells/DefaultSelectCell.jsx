@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
-function IndeterminateCheckbox({
+function DefaultSelectCell({
   data,
   indeterminate,
+  isHovering,
   className = '',
   ...rest
 }) {
   const ref = React.useRef(null);
   const { rowsUtility } = useSelector((state) => state.globalState);
-  const [isHover, setIsHover] = useState(false);
+  //   const [isHover, setIsHover] = useState(false);
 
   React.useEffect(() => {
     if (typeof indeterminate === 'boolean') {
@@ -19,13 +20,13 @@ function IndeterminateCheckbox({
     }
   }, [ref, indeterminate]);
 
-  const handleMouseEnter = () => {
-    setIsHover(true);
-  };
+  //   const handleMouseEnter = () => {
+  //     setIsHover(true);
+  //   };
 
-  const handleMouseLeave = () => {
-    setIsHover(false);
-  };
+  //   const handleMouseLeave = () => {
+  //     setIsHover(false);
+  //   };
 
   function customInput() {
     return (
@@ -42,9 +43,10 @@ function IndeterminateCheckbox({
     <div
       className=' w-full h-full flex items-center justify-center cursor-pointer'
       {...rest}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}>
-      {!isHover && !rest.checked ? (
+      //   onMouseEnter={handleMouseEnter}
+      //   onMouseLeave={handleMouseLeave}
+    >
+      {!isHovering && !rest.checked ? (
         <div>{parseInt(data?.id) + 1}</div>
       ) : (
         customInput()
@@ -55,4 +57,4 @@ function IndeterminateCheckbox({
   );
 }
 
-export default IndeterminateCheckbox;
+export default DefaultSelectCell;
