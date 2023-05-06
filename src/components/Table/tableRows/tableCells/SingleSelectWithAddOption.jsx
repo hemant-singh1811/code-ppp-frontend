@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { TableContext } from "../../tableComponents/TableComponents";
 
 function SingleSelectWithAddOption({ columnData, rowData, cell }) {
-  const { columns, setColumns } = useContext(TableContext);
+  const { columns, setColumns, table } = useContext(TableContext);
   const socket = useSelector((state) => state.socketWebData.socket);
   // Create a ref that we add to the element for which we want to detect outside clicks
   const singleSelectRef = React.useRef();
@@ -59,6 +59,10 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
         ],
       },
     };
+
+    table.options.meta?.updateData(cell.row.index, cell.column.id, [
+      searchTerm,
+    ]);
 
     setColumns((prev) => {
       return prev.map((data) => {
@@ -127,7 +131,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
       field_id: cell.column.columnDef.field_id,
     };
     rowCopy[cell?.column.id] = rowData;
-
+    table.options.meta?.updateData(cell.row.index, cell.column.id, [name]);
     // console.log(rowObj)
     socket.emit("updatedata", rowObj, (response) => {
       console.log("res : ", response);

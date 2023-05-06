@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import TableComponents from './tableComponents/TableComponents';
-import { useDispatch, useSelector } from 'react-redux';
-import Loading from '../utilities/Loading';
-import Error from '../utilities/Error';
-import { useGetTableRecordsQuery } from '../../store/services/alphaTruckingApi';
-import IndeterminateCheckbox from './tableUtilities/IndeterminateCheckbox';
-import { handelAddTableWithMultipleRecords } from '../../store/features/globalStateSlice';
-import { useEffectOnce } from 'react-use';
+import React, { useEffect, useState } from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import TableComponents from "./tableComponents/TableComponents";
+import { useDispatch, useSelector } from "react-redux";
+import Loading from "../utilities/Loading";
+import Error from "../utilities/Error";
+import { useGetTableRecordsQuery } from "../../store/services/alphaTruckingApi";
+import IndeterminateCheckbox from "./tableUtilities/IndeterminateCheckbox";
+import { handelAddTableWithMultipleRecords } from "../../store/features/globalStateSlice";
+import { useEffectOnce } from "react-use";
 
 export default function Table({
   tableData,
@@ -24,7 +24,7 @@ export default function Table({
 
   useEffectOnce(() => {
     console.log(
-      'array of multiple Linked records send to server:',
+      "array of multiple Linked records send to server:",
       modifiedArrayOfObject
     );
   });
@@ -58,14 +58,15 @@ export default function Table({
   });
 
   defaultColumns.unshift({
-    accessorKey: '',
-    id: 'select',
+    accessorKey: "",
+    id: "select",
     is_primary: true,
     hiddenInConditions: true,
-    size: 60,
+    size: 67,
     enableHiding: false,
     header: ({ table }) => (
       <IndeterminateCheckbox
+        className="-ml-[10px]"
         checked={table.getIsAllRowsSelected()}
         indeterminate={table.getIsSomeRowsSelected()}
         onChange={table.getToggleAllRowsSelectedHandler()}
@@ -101,7 +102,7 @@ export default function Table({
 
   useEffect(() => {
     if (data) {
-      console.log('Get linked table Records', data);
+      console.log("Get linked table Records", data);
       // let multipleLinkedRecColumns = defaultColumns.map(({ field_type, field_name }) => {
       //   if (field_name === "multipleRecordLinks") {
       //   }
@@ -112,8 +113,8 @@ export default function Table({
         tableData.map(({ data, id }) => {
           const object = {};
           defaultColumns.map(({ header, field_type, linked_rec }) => {
-            object[header] = data?.[header] || '';
-            if (field_type === 'multipleRecordLinks') {
+            object[header] = data?.[header] || "";
+            if (field_type === "multipleRecordLinks") {
               // console.log(data)
               if (Array.isArray(data?.[header])) {
                 object[header] = data?.[header].map((ele) => {
@@ -154,7 +155,7 @@ export default function Table({
   // return <>   </>;
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className='relative overflow-hidden'>
+      <div className="relative overflow-hidden">
         <TableComponents
           toggle={toggle}
           defaultColumns={defaultColumns}

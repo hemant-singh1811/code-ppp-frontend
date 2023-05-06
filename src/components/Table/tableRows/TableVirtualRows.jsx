@@ -1,13 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { flexRender } from '@tanstack/react-table';
+import React, { useContext, useEffect, useState } from "react";
+import { flexRender } from "@tanstack/react-table";
 // import { useVirtual } from "react-virtual";
-import { TableContext } from '../tableComponents/TableComponents';
-import { useVirtualizer } from '@tanstack/react-virtual';
-import CellByFieldType from './tableCells/CellByFieldType';
-import CreateRow from './CreateRow';
-import { useWindowSize } from 'react-use';
-import { useDispatch } from 'react-redux';
+import { TableContext } from "../tableComponents/TableComponents";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import CellByFieldType from "./tableCells/CellByFieldType";
+import CreateRow from "./CreateRow";
+import { useWindowSize } from "react-use";
+import { useDispatch } from "react-redux";
 // import { handelHoverRow } from '../../../store/features/globalStateSlice';
+import { motion } from "framer-motion";
 
 export default function TableVirtualRows({ tableContainerRef, rows }) {
   let { activeRowHeight, activeNumberOfLines, table } =
@@ -56,20 +57,22 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
     <>
       <div
         ref={parentRef}
-        className='list text-black scrollbar-hidden h-[calc(100vh_-_100px)] overflow-x-visible z-[1] relative'
+        className="list text-black transition-all select-none scrollbar-hidden h-[calc(100vh_-_100px)] overflow-x-visible z-[1] relative"
         // style={{ overflowY: 'auto' }}//do not remove overflow auto if you remove it table virtual row will break
         style={{
-          overflowX: 'auto',
-          overflowY: 'visible',
-          background: '#f7f7f7',
-        }}>
+          overflowX: "auto",
+          overflowY: "visible",
+          background: "#f7f7f7",
+        }}
+      >
         <div
-          className='tbody scrollbar-hidden mb-40'
+          className="tbody scrollbar-hidden mb-40"
           style={{
             height: `${rowVirtualizer.getTotalSize()}px`,
             // width: `${columnVirtualizer.getTotalSize()}px`,
-            position: 'relative',
-          }}>
+            position: "relative",
+          }}
+        >
           {rowVirtualizer
             .getVirtualItems()
             .map((virtualRow, i, initialArray) => {
@@ -92,24 +95,25 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
               );
             })}
           <div
-            className='border flex items-center w-[calc(100%_-_119px)]'
+            className="border flex items-center w-[calc(100%_-_119px)]"
             style={{
-              position: 'absolute',
+              position: "absolute",
               top: 0,
               left: 0,
               height: `30px`,
               transform: `translateY(${rowVirtualizer.getTotalSize()}px)`,
               borderTopWidth: 0,
-              background: '#fff',
+              background: "#fff",
               // width: `${columns[virtualRow.index]}px`,
               // zIndex: rowVirtualizer.getVirtualItems().length - i,
               // height: `${rows[virtualRow.index]}px`,
-            }}>
+            }}
+          >
             <CreateRow />
           </div>
         </div>
       </div>
-      <div className='text-black'>
+      <div className="text-black">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit
         perspiciatis explicabo quisquam ullam fuga rem sed a, dolores temporibus
         voluptate pariatur eveniet eaque. Sed accusamus cupiditate porro
@@ -137,23 +141,22 @@ function VirtualRow(
       {/* {columnVirtualizer.getVirtualItems().map((virtualColumn) => {
         return ( */}
       <div
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
         data-index={virtualRow.index}
         ref={rowVirtualizer.measureElement}
         className={`tr z-0 bg-white  ${
-          row?.getIsSelected() ? 'hover:bg-[#f1f6ff]' : 'hover:bg-[#F8F8F8]'
+          row?.getIsSelected() ? "hover:bg-[#f1f6ff]" : "hover:bg-[#F8F8F8]"
         } 
-                   ${row?.getIsSelected() && 'bg-[#f1f6ff]'}`}
+                   ${row?.getIsSelected() && "bg-[#f1f6ff]"}`}
         style={{
-          position: 'absolute',
+          position: "absolute",
           top: 0,
           left: 0,
           width: `${columns[virtualRow?.index]}px`,
           height: `${activeRowHeight}px`,
           zIndex: initialArray.length - i,
           transform: `translateY(${virtualRow?.start}px)`,
-        }}>
+        }}
+      >
         {row?.getVisibleCells().map((cell) => {
           return (
             <div
@@ -164,27 +167,29 @@ function VirtualRow(
                   width: cell.column.getSize(),
                   height: activeRowHeight,
                   background: cell.getIsGrouped()
-                    ? '#0aff0082'
+                    ? "#0aff0082"
                     : cell.getIsAggregated()
-                    ? '#ffa50078'
+                    ? "#ffa50078"
                     : cell.getIsPlaceholder()
-                    ? '#ff000042'
-                    : '',
+                    ? "#ff000042"
+                    : "",
                   borderLeftWidth: cell.column.columnDef?.is_primary && 0,
                 },
-              }}>
+              }}
+            >
               {cell.getIsGrouped() ? (
                 // If it's a grouped cell, add an expander and row count
                 <>
                   <button
-                    className='flex'
+                    className="flex"
                     {...{
                       onClick: row.getToggleExpandedHandler(),
                       style: {
-                        cursor: row.getCanExpand() ? 'pointer' : 'normal',
+                        cursor: row.getCanExpand() ? "pointer" : "normal",
                       },
-                    }}>
-                    <div>{row.getIsExpanded() ? '👇' : '👉'} </div>
+                    }}
+                  >
+                    <div>{row.getIsExpanded() ? "👇" : "👉"} </div>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}(
                     {row.subRows.length})
                   </button>
@@ -207,7 +212,6 @@ function VirtualRow(
                 <>
                   <CellByFieldType
                     cell={cell}
-                    isHovering={isHovering}
                     row={row}
                     field_type={cell.column.columnDef.field_type}
                     hiddenInConditions={
