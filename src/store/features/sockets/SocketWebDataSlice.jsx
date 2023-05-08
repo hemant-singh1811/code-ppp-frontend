@@ -109,7 +109,7 @@ export const initSocket = () => (dispatch, state) => {
         dispatch(
           handelAddTableInBases({
             baseId: selectedBaseId,
-            data: data?.data,
+            data: data,
           })
         );
         dispatch(
