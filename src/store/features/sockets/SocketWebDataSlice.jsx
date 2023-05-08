@@ -35,8 +35,6 @@ const SocketWebDataSlice = createSlice({
 
 export const initSocket = () => (dispatch, state) => {
   const { user_token, user_id } = state().auth.userInfo;
-  const { selectedBaseId, mainSideBar } = state().globalState;
-  console.log(selectedBaseId);
   const socket = io(import.meta.env.VITE_SERVER_URL + 'webdata');
 
   socket.on('connect', () => {
@@ -58,7 +56,7 @@ export const initSocket = () => (dispatch, state) => {
 
   socket.on('UpdatedBaseData', ({ action, data }) => {
     console.log('UpdatedBaseData : ', action, data);
-
+    const { selectedBaseId, selectedTableId } = state().globalState;
     switch (action) {
       case 'CREATE BASE':
         dispatch(handelAddBases([data]));
@@ -94,6 +92,9 @@ export const initSocket = () => (dispatch, state) => {
         );
         break;
       case 'DELETE BASE':
+        if (selectedBaseId === data?.baseid) {
+          navigate('/');
+        }
         dispatch(
           handelRemoveSideBarMenu({
             baseId: data.baseid,
@@ -143,6 +144,9 @@ export const initSocket = () => (dispatch, state) => {
         );
         break;
       case 'DELETE TABLE':
+        if (selectedTableId === data.table_id) {
+          navigate('/');
+        }
         dispatch(
           handelRemoveSideBarField({
             baseId: data.baseid,

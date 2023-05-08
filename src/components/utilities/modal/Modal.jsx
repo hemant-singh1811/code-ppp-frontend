@@ -39,10 +39,6 @@ export default function Modal() {
   useEffect(() => {
     if (responseDeleteTable.data) {
       console.log('Delete table:', responseDeleteTable.data);
-      if (selectedTableId === responseDeleteTable.data.table_id) {
-        navigate('/');
-      }
-
       // dispatch(
       //   handelRemoveSideBarField({
       //     baseId: content.baseId,
@@ -55,9 +51,6 @@ export default function Modal() {
   useEffect(() => {
     if (responseDeleteBase.data) {
       console.log('Delete Base:', responseDeleteBase.data);
-      if (selectedBaseId === responseDeleteBase?.data?.baseid) {
-        navigate('/');
-      }
       // dispatch(
       //   handelRemoveSideBarMenu({
       //     baseId: content.baseId,
@@ -68,7 +61,7 @@ export default function Modal() {
       //     baseId: content.baseId,
       //   })
       // );
-      // dispatch(handelCloseModal(''));
+      dispatch(handelCloseModal(''));
     }
   }, [responseDeleteBase.isSuccess]);
 
