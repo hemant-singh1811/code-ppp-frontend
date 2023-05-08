@@ -52,7 +52,7 @@ export const initSocket = () => (dispatch, state) => {
   });
 
   socket.on('UpdatedBaseData', ({ action, data }) => {
-    console.log('UpdatedBaseData : ', response);
+    console.log('UpdatedBaseData : ', data);
 
     switch (action) {
       case 'CREATE BASE':
