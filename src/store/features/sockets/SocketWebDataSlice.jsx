@@ -93,7 +93,8 @@ export const initSocket = () => (dispatch, state) => {
         break;
       case 'DELETE BASE':
         if (selectedBaseId === data?.baseid) {
-          navigate('/');
+          window.location.replace('/');
+          // navigate('/');
         }
         dispatch(
           handelRemoveSideBarMenu({
@@ -145,7 +146,7 @@ export const initSocket = () => (dispatch, state) => {
         break;
       case 'DELETE TABLE':
         if (selectedTableId === data.table_id) {
-          navigate('/');
+          window.location.replace('/');
         }
         dispatch(
           handelRemoveSideBarField({

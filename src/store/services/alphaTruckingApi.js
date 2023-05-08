@@ -60,7 +60,7 @@ export const alphaTruckingApi = createApi({
       query: () => ({
         url: '/API/V1/bases',
         method: 'POST',
-        transformResponse: (response) => response.data,
+        // transformResponse: (response) => response.data,
       }),
     }),
 
@@ -69,7 +69,7 @@ export const alphaTruckingApi = createApi({
       query: (tableId) => ({
         url: `/API/V1/getmodel/${tableId}`,
         method: 'POST',
-        transformResponse: (response) => response.data,
+        // transformResponse: (response) => response.data,
       }),
     }),
 
@@ -77,7 +77,7 @@ export const alphaTruckingApi = createApi({
       query: (tableId) => ({
         url: `/API/V1/getdata/${tableId}`,
         method: 'POST',
-        transformResponse: (response) => response.data,
+        // transformResponse: (response) => response.data,
       }),
     }),
 
