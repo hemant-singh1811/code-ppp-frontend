@@ -36,9 +36,6 @@ function DefaultSelectCell({ data, indeterminate, className = "", ...rest }) {
     );
   }
 
-  // console.log(selectedColorCondition);
-  // console.log(data.original);
-
   return (
     <div
       className="flex h-full items-start"

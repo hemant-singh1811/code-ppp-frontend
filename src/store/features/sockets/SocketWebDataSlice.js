@@ -1,8 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit';
-import io from 'socket.io-client';
+import { createSlice } from "@reduxjs/toolkit";
+import io from "socket.io-client";
 
 const SocketWebDataSlice = createSlice({
-  name: 'socketWebData',
+  name: "socketWebData",
   initialState: {
     socket: true,
     isConnected: true,
@@ -16,15 +16,19 @@ const SocketWebDataSlice = createSlice({
 });
 
 export const initSocket = () => (dispatch) => {
-  const socket = io(import.meta.env.VITE_SERVER_URL + 'webdata');
+  const socket = io(import.meta.env.VITE_SERVER_URL + "webdata");
 
-  socket.on('connect', () => {
+  socket.on("connect", () => {
     dispatch(setSocket({ socket: socket, isConnected: socket.connected }));
-    console.log('connecting to server by socket', socket.id);
+    console.log("connecting to server by socket", socket.id);
   });
 
-  socket.on('disconnect', () => {
+  socket.on("disconnect", () => {
     dispatch(setSocket({ socket: socket, isConnected: socket.connected }));
+  });
+
+  socket.on("updatedata", (response) => {
+    console.log("res : ", response);
   });
 };
 

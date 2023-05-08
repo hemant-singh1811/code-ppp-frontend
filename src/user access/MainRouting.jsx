@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router";
+import { Route, Routes, Navigate } from "react-router";
 import { useSelector } from "react-redux";
 import Login from "../screens/authentication/Login";
 import ProtectedRoute from "../screens/authentication/ProtectedRoute";
@@ -26,6 +26,7 @@ export default function MainRouting() {
 
   return (
     <Routes>
+      <Route path="*" element={<Navigate to={"/"} />} />
       <Route path="/" element={userInfo ? <Dashboard /> : <Login />} />
       <Route element={<ProtectedRoute />}>
         {routes.map(({ path, component }, index) => {

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useDetectOutsideClick } from "../../../../utilities/customHooks/useDetectOutsideClick";
 import { useSelector } from "react-redux";
 import { TableContext } from "../../tableComponents/TableComponents";
+import { colorPallet } from "../../../../utilities/colorPallet";
 
 function MultiselectWithAddOption({ columnData, rowData, cell }) {
   const { columns, setColumns } = useContext(TableContext);
@@ -25,21 +26,14 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
   const [selectedOption, setSelectedOption] = React.useState(rowData || []);
   const [options, setOptions] = useState(newOptions);
   const [searchTerm, setSearchTerm] = useState("");
-  const [bgColor, setBgColor] = useState(getRandomColor());
-  const [textColor, setTextColor] = useState(getContrastColor(bgColor));
+  const [bgColorAndTextColor, setBgColorAndTextColor] = useState(
+    getRandomColor()
+  );
 
   function getRandomColor() {
-    const color = Math.floor(Math.random() * 16777215).toString(16);
-    return "#66" + "0".repeat(6 - color.length) + color;
+    return colorPallet[Math.floor(Math.random() * colorPallet.length)];
   }
 
-  function getContrastColor(hexColor) {
-    const r = parseInt(hexColor.substr(1, 2), 16);
-    const g = parseInt(hexColor.substr(3, 2), 16);
-    const b = parseInt(hexColor.substr(5, 2), 16);
-    const yiq = (r * 299 + g * 587 + b * 114) / 1000;
-    return yiq >= 128 ? "#000000" : "#ffffff";
-  }
   let rowCopy = cell?.row?.original;
 
   function addNewOption() {
@@ -57,7 +51,11 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
         field_name: columnData?.field_name,
         options: [
           ...options,
-          { name: searchTerm, bgcolor: bgColor, color: textColor },
+          {
+            name: searchTerm,
+            bgcolor: bgColorAndTextColor.background,
+            color: bgColorAndTextColor.color,
+          },
         ],
       },
     };
@@ -67,7 +65,11 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
         if (data.field_id === columnData.field_id) {
           data.options = [
             ...options,
-            { name: searchTerm, bgcolor: bgColor, color: textColor },
+            {
+              name: searchTerm,
+              bgcolor: bgColorAndTextColor.background,
+              color: bgColorAndTextColor.color,
+            },
           ];
         }
         return data;
@@ -76,11 +78,14 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
 
     setOptions([
       ...options,
-      { name: searchTerm, bgcolor: bgColor, color: textColor },
+      {
+        name: searchTerm,
+        bgcolor: bgColorAndTextColor.background,
+        color: bgColorAndTextColor.color,
+      },
     ]);
 
     rowData = [searchTerm];
-    // setSelectedOption([searchTerm]);
 
     setSelectedOption([...selectedOption, searchTerm]);
 
@@ -109,14 +114,11 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
       console.log("res : ", response);
     });
 
-    const newBgColor = getRandomColor();
-    setBgColor(newBgColor);
-    setTextColor(getContrastColor(newBgColor));
+    setBgColorAndTextColor(getRandomColor());
   }
 
   function updateOption(name) {
     rowData = [name];
-    // setSelectedOption([name]);
     setSelectedOption([...selectedOption, name]);
     let updatedRowKey = cell?.column.id;
     let newRowPart = { [updatedRowKey]: [...selectedOption, name] };
@@ -261,7 +263,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
                       <div
                         onClick={() => setSearchTerm("")}
                         style={{ background: bgcolor, color: color }}
-                        className={`rounded-xl px-2 border-black border-[0.1px] truncate`}
+                        className={`rounded-xl px-2  truncate`}
                       >
                         {name}
                       </div>
@@ -279,7 +281,10 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
                   Add New Option:
                   {searchTerm && (
                     <span
-                      style={{ background: bgColor, color: textColor }}
+                      style={{
+                        background: bgColorAndTextColor.background,
+                        color: bgColorAndTextColor.color,
+                      }}
                       className={`rounded-xl px-2 ml-1 truncate`}
                     >
                       {searchTerm}
