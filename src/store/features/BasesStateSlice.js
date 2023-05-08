@@ -41,7 +41,9 @@ const BasesStateSlice = createSlice({
     handelRemoveTableInBases: (state, { payload }) => {
       let updatedBases = state.bases.map((item) => {
         if (payload.baseId === item.baseid) {
-          item.tablemetadata.filter((item) => {});
+          item.tablemetadata = item.tablemetadata.filter(
+            (item) => item.table_id !== payload.tableId
+          );
         }
         return item;
       });

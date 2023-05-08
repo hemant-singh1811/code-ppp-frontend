@@ -134,7 +134,7 @@ export default function AddTable() {
 
   useEffect(() => {
     if (responseCreateTable?.data) {
-      // console.log('create Table:', responseCreateTable?.data);
+      console.log('create Table:', responseCreateTable?.data);
       // dispatch(
       //   handelAddTableInBases({
       //     baseId: selectedBaseId,

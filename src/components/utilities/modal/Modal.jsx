@@ -43,12 +43,12 @@ export default function Modal() {
         navigate('/');
       }
 
-      dispatch(
-        handelRemoveSideBarField({
-          baseId: content.baseId,
-          tableId: content.tableId,
-        })
-      );
+      // dispatch(
+      //   handelRemoveSideBarField({
+      //     baseId: content.baseId,
+      //     tableId: content.tableId,
+      //   })
+      // );
       dispatch(handelCloseModal(''));
     }
   }, [responseDeleteTable.isSuccess]);

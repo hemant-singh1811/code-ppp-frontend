@@ -5,12 +5,14 @@ import {
   handelAddBases,
   handelAddTableInBases,
   handelRemoveBases,
+  handelRemoveTableInBases,
   handelRenameBases,
   handelRenameTableInBases,
 } from '../BasesStateSlice';
 import {
   handelAddSideBarField,
   handelAddSideBarMenu,
+  handelRemoveSideBarField,
   handelRemoveSideBarMenu,
   handelRenameSideBarField,
   handelRenameSideBarMenu,
@@ -108,18 +110,18 @@ export const initSocket = () => (dispatch, state) => {
         console.log('CREATE TABLE CALLED', data);
         dispatch(
           handelAddTableInBases({
-            baseId: selectedBaseId,
+            baseId: data.baseid,
             data: data,
           })
         );
         dispatch(
           handelAddSideBarField({
-            baseId: selectedBaseId,
+            baseId: data.baseid,
             data: {
               title: data?.table_name,
               tableId: data?.table_id,
-              to: `${selectedBaseId}/${data?.table_id}`,
-              baseId: selectedBaseId,
+              to: `${data.baseid}/${data?.table_id}`,
+              baseId: data.baseid,
             },
           })
         );
@@ -141,6 +143,18 @@ export const initSocket = () => (dispatch, state) => {
         );
         break;
       case 'DELETE TABLE':
+        dispatch(
+          handelRemoveSideBarField({
+            baseId: data.baseid,
+            tableId: data.table_id,
+          })
+        );
+        dispatch(
+          handelRemoveTableInBases({
+            baseId: data.baseid,
+            tableId: data.table_id,
+          })
+        );
         break;
 
       default:
