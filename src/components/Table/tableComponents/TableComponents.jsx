@@ -67,7 +67,7 @@ const defaultColumn = {
     row,
   }) => {
     const initialValue = getValue();
-    const socket = useSelector((state) => state.socketWebData.socket);
+    const socket = useSelector((state) => state?.socketWebData.socket);
     const { selectedBaseId, selectedTableId } = useSelector(
       (state) => state.globalState
     );

@@ -94,7 +94,6 @@ export const initSocket = () => (dispatch, state) => {
       case 'DELETE BASE':
         if (selectedBaseId === data?.baseid) {
           window.location.replace('/');
-          // navigate('/');
         }
         dispatch(
           handelRemoveSideBarMenu({
@@ -109,7 +108,6 @@ export const initSocket = () => (dispatch, state) => {
         dispatch(handelCloseModal(''));
         break;
       case 'CREATE TABLE':
-        console.log('CREATE TABLE CALLED', data);
         dispatch(
           handelAddTableInBases({
             baseId: data.baseid,

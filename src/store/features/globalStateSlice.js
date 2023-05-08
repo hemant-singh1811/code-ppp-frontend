@@ -27,9 +27,9 @@ const initialState = {
     tableId: '',
     name: '',
   },
-  createTableBaseId: '',
-  selectedTableId: '', //|| window.location.pathname.split('/')[2],
-  selectedBaseId: '', //|| window.location.pathname.split('/')[1],
+  createTableBaseId: undefined,
+  selectedTableId: undefined || window.location.pathname.split('/')[2],
+  selectedBaseId: undefined || window.location.pathname.split('/')[1],
   modal: {
     isOpen: false,
     content: {
