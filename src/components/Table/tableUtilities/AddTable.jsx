@@ -81,9 +81,9 @@ export default function AddTable() {
     existingBases.add(basemetadata?.name);
   });
 
-  existingTable.forEach((key) => {
-    console.log('Existing table name', key);
-  });
+  // existingTable.forEach((key) => {
+  //   console.log('Existing table name', key);
+  // });
 
   useEffect(() => {
     if (responseCreateBase?.data) {

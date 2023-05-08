@@ -44,6 +44,7 @@ const SideBarStateSlice = createSlice({
 
     // updates on tables in side bar
     handelAddSideBarField: (state, { payload }) => {
+      // console.log(object)
       let updatedSideBar = state.sidebar?.map((item) => {
         if (payload.baseId === item.baseId) {
           item.subMenu.push(payload.data);

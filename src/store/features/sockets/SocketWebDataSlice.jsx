@@ -4,15 +4,18 @@ import io from 'socket.io-client';
 import {
   handelAddBases,
   handelAddTableInBases,
+  handelRemoveBases,
   handelRenameBases,
   handelRenameTableInBases,
 } from '../BasesStateSlice';
 import {
   handelAddSideBarField,
   handelAddSideBarMenu,
+  handelRemoveSideBarMenu,
   handelRenameSideBarField,
   handelRenameSideBarMenu,
 } from '../SideBarStateSlice';
+import { handelCloseModal } from '../globalStateSlice';
 
 const SocketWebDataSlice = createSlice({
   name: 'socketWebData',
@@ -31,7 +34,7 @@ const SocketWebDataSlice = createSlice({
 export const initSocket = () => (dispatch, state) => {
   const { user_token, user_id } = state().auth.userInfo;
   const { selectedBaseId, mainSideBar } = state().globalState;
-
+  console.log(selectedBaseId);
   const socket = io(import.meta.env.VITE_SERVER_URL + 'webdata');
 
   socket.on('connect', () => {
@@ -52,7 +55,7 @@ export const initSocket = () => (dispatch, state) => {
   });
 
   socket.on('UpdatedBaseData', ({ action, data }) => {
-    console.log('UpdatedBaseData : ', data);
+    console.log('UpdatedBaseData : ', action, data);
 
     switch (action) {
       case 'CREATE BASE':
@@ -89,8 +92,20 @@ export const initSocket = () => (dispatch, state) => {
         );
         break;
       case 'DELETE BASE':
+        dispatch(
+          handelRemoveSideBarMenu({
+            baseId: data.baseid,
+          })
+        );
+        dispatch(
+          handelRemoveBases({
+            baseId: data.baseid,
+          })
+        );
+        dispatch(handelCloseModal(''));
         break;
       case 'CREATE TABLE':
+        console.log('CREATE TABLE CALLED', data);
         dispatch(
           handelAddTableInBases({
             baseId: selectedBaseId,

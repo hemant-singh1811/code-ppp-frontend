@@ -58,17 +58,17 @@ export default function Modal() {
       if (selectedBaseId === responseDeleteBase?.data?.baseid) {
         navigate('/');
       }
-      dispatch(
-        handelRemoveSideBarMenu({
-          baseId: content.baseId,
-        })
-      );
-      dispatch(
-        handelRemoveBases({
-          baseId: content.baseId,
-        })
-      );
-      dispatch(handelCloseModal(''));
+      // dispatch(
+      //   handelRemoveSideBarMenu({
+      //     baseId: content.baseId,
+      //   })
+      // );
+      // dispatch(
+      //   handelRemoveBases({
+      //     baseId: content.baseId,
+      //   })
+      // );
+      // dispatch(handelCloseModal(''));
     }
   }, [responseDeleteBase.isSuccess]);
 
