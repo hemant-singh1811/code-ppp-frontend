@@ -86,40 +86,8 @@ export default function AddTable() {
   });
 
   useEffect(() => {
-    if (responseCreateTable?.data) {
-      console.log('create Table:', responseCreateTable?.data);
-      dispatch(
-        handelAddTableInBases({
-          baseId: selectedBaseId,
-          data: responseCreateTable?.data,
-        })
-      );
-      dispatch(
-        handelAddSideBarField({
-          baseId: selectedBaseId,
-          data: {
-            title: responseCreateTable?.data?.table_name,
-            tableId: responseCreateTable?.data?.table_id,
-            to: `${selectedBaseId}/${responseCreateTable?.data?.table_id}`,
-            baseId: selectedBaseId,
-          },
-        })
-      );
-      dispatch(
-        handelSelectedTableAndBaseId({
-          selectedTableId: responseCreateTable?.data?.table_id,
-        })
-      );
-      dispatch(handleAddToggle({ isOpen: false, type: '' }));
-      setNameInput('');
-      setDescriptionInput('');
-      navigate(`/${selectedBaseId}/${responseCreateTable?.data?.table_id}`);
-    }
-  }, [responseCreateTable.isSuccess]);
-
-  useEffect(() => {
     if (responseCreateBase?.data) {
-      console.log('create Base:', responseCreateBase?.data);
+      // console.log('create Base:', responseCreateBase?.data);
       // dispatch(handelAddBases([responseCreateBase?.data]));
       // dispatch(
       //   handelAddSideBarMenu({
@@ -144,48 +112,80 @@ export default function AddTable() {
   }, [responseCreateBase.isSuccess]);
 
   useEffect(() => {
-    if (responseRenameTable?.data) {
-      console.log('Rename Table:', responseRenameTable?.data);
+    if (responseRenameBase?.data) {
+      // console.log('Rename Base:', responseRenameBase?.data);
+      // dispatch(
+      //   handelRenameBases({
+      //     baseId: responseRenameBase?.data?.baseid,
+      //     updatedName: responseRenameBase?.data?.base_name,
+      //   })
+      // );
+      // dispatch(
+      //   handelRenameSideBarMenu({
+      //     baseId: responseRenameBase?.data?.baseid,
+      //     updatedName: responseRenameBase?.data?.base_name,
+      //   })
+      // );
+      dispatch(handleAddToggle({ isOpen: false, type: '' }));
+      setNameInput('');
+      setDescriptionInput('');
+    }
+  }, [responseRenameBase.isSuccess]);
+
+  useEffect(() => {
+    if (responseCreateTable?.data) {
+      // console.log('create Table:', responseCreateTable?.data);
+      // dispatch(
+      //   handelAddTableInBases({
+      //     baseId: selectedBaseId,
+      //     data: responseCreateTable?.data,
+      //   })
+      // );
+      // dispatch(
+      //   handelAddSideBarField({
+      //     baseId: selectedBaseId,
+      //     data: {
+      //       title: responseCreateTable?.data?.table_name,
+      //       tableId: responseCreateTable?.data?.table_id,
+      //       to: `${selectedBaseId}/${responseCreateTable?.data?.table_id}`,
+      //       baseId: selectedBaseId,
+      //     },
+      //   })
+      // );
       dispatch(
-        handelRenameTableInBases({
-          baseId: baseId,
-          tableId: tableId,
-          updatedName: nameInput.trim(),
+        handelSelectedTableAndBaseId({
+          selectedTableId: responseCreateTable?.data?.table_id,
         })
       );
-      dispatch(
-        handelRenameSideBarField({
-          baseId: baseId,
-          tableId: tableId,
-          updatedName: nameInput.trim(),
-        })
+      dispatch(handleAddToggle({ isOpen: false, type: '' }));
+      setNameInput('');
+      setDescriptionInput('');
+      navigate(`/${selectedBaseId}/${responseCreateTable?.data?.table_id}`);
+    }
+  }, [responseCreateTable.isSuccess]);
+
+  useEffect(() => {
+    if (responseRenameTable?.data) {
+      // console.log('Rename Table:', responseRenameTable?.data);
+      // dispatch(
+      //   handelRenameTableInBases({
+      //     baseId: responseRenameTable?.data.baseid,
+      //     tableId: responseRenameTable?.data.table_id,
+      //     updatedName: responseRenameTable?.data.table_name,
+      //   })
+      // );
+      // dispatch(
+      //   handelRenameSideBarField({
+      //     baseId: responseRenameTable?.data.baseid,
+      //     tableId: responseRenameTable?.data.table_id,
+      //     updatedName: responseRenameTable?.data.table_name,
+      //   })
       );
       dispatch(handleAddToggle({ isOpen: false, type: '' }));
       setNameInput('');
       setDescriptionInput('');
     }
   }, [responseRenameTable.isSuccess]);
-
-  useEffect(() => {
-    if (responseRenameBase?.data) {
-      console.log('Rename Base:', responseRenameBase?.data);
-      dispatch(
-        handelRenameBases({
-          baseId: responseRenameBase?.data?.baseid,
-          updatedName: responseRenameBase?.data?.base_name,
-        })
-      );
-      dispatch(
-        handelRenameSideBarMenu({
-          baseId: responseRenameBase?.data?.baseid,
-          updatedName: responseRenameBase?.data?.base_name,
-        })
-      );
-      dispatch(handleAddToggle({ isOpen: false, type: '' }));
-      setNameInput('');
-      setDescriptionInput('');
-    }
-  }, [responseRenameBase.isSuccess]);
 
   // useEffect(() => {
   //   if (responseCreateTable?.error) {
