@@ -180,7 +180,7 @@ export default function AddTable() {
       //     tableId: responseRenameTable?.data.table_id,
       //     updatedName: responseRenameTable?.data.table_name,
       //   })
-      );
+      // );
       dispatch(handleAddToggle({ isOpen: false, type: '' }));
       setNameInput('');
       setDescriptionInput('');

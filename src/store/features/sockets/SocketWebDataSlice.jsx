@@ -51,17 +51,17 @@ export const initSocket = () => (dispatch, state) => {
     console.log('join base room res : ', res);
   });
 
-  socket.on('UpdatedBaseData', (data) => {
-    console.log('UpdatedBaseData : ', data);
+  socket.on('UpdatedBaseData', ({ action, data }) => {
+    console.log('UpdatedBaseData : ', response);
 
-    switch (data?.action) {
+    switch (action) {
       case 'CREATE BASE':
-        dispatch(handelAddBases([data?.data]));
+        dispatch(handelAddBases([data]));
         dispatch(
           handelAddSideBarMenu({
             subMenu: [],
-            baseId: data?.data.baseid,
-            title: data?.data.basemetadata.name,
+            baseId: data.baseid,
+            title: data.basemetadata.name,
             icons: (
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -77,14 +77,14 @@ export const initSocket = () => (dispatch, state) => {
       case 'RENAME BASE':
         dispatch(
           handelRenameBases({
-            baseId: data?.data?.baseid,
-            updatedName: data?.data?.base_name,
+            baseId: data?.baseid,
+            updatedName: data?.base_name,
           })
         );
         dispatch(
           handelRenameSideBarMenu({
-            baseId: data?.data?.baseid,
-            updatedName: data?.data?.base_name,
+            baseId: data?.baseid,
+            updatedName: data?.base_name,
           })
         );
         break;
@@ -101,9 +101,9 @@ export const initSocket = () => (dispatch, state) => {
           handelAddSideBarField({
             baseId: selectedBaseId,
             data: {
-              title: data?.data?.table_name,
-              tableId: data?.data?.table_id,
-              to: `${selectedBaseId}/${data?.data?.table_id}`,
+              title: data?.table_name,
+              tableId: data?.table_id,
+              to: `${selectedBaseId}/${data?.table_id}`,
               baseId: selectedBaseId,
             },
           })
@@ -112,16 +112,16 @@ export const initSocket = () => (dispatch, state) => {
       case 'RENAME TABLE':
         dispatch(
           handelRenameTableInBases({
-            baseId: data?.data.baseid,
-            tableId: data?.data.table_id,
-            updatedName: data?.data.table_name,
+            baseId: data?.baseid,
+            tableId: data?.table_id,
+            updatedName: data?.table_name,
           })
         );
         dispatch(
           handelRenameSideBarField({
-            baseId: data?.data.baseid,
-            tableId: data?.data.table_id,
-            updatedName: data?.data.table_name,
+            baseId: data?.baseid,
+            tableId: data?.table_id,
+            updatedName: data?.table_name,
           })
         );
         break;
