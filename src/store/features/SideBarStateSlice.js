@@ -11,21 +11,44 @@ const SideBarStateSlice = createSlice({
     handelAddSideBar: (state, { payload }) => {
       state.sidebar = payload;
     },
+    handelToggleSideBar: (state, { payload }) => {
+      let updatedSidebar = state.sidebar.map((prevMenu) => {
+        if (payload.baseId === prevMenu.baseId) {
+          prevMenu.isOpened = !prevMenu.isOpened;
+        }
+        return prevMenu;
+      });
+      state.sidebar = updatedSidebar;
+    },
+
+    // updates on bases in side bar
     handelAddSideBarMenu: (state, { payload }) => {
       state.sidebar = payload;
     },
+    handelRemoveSideBarMenu: (state, { payload }) => {
+      let updatedSideBar = state.sidebar?.filter((item) => {
+        return payload.baseId !== item.baseId;
+      });
+      state.sidebar = updatedSideBar;
+    },
+    handelRenameSideBarMenu: (state, { payload }) => {
+      let updatedSidebar = state.sidebar.map((item) => {
+        if (item.baseId === payload.baseId) {
+          console.log(payload.updatedName);
+          item.title = payload.updatedName;
+        }
+        return item;
+      });
+      state.sidebar = updatedSidebar;
+    },
+
+    // updates on tables in side bar
     handelAddSideBarField: (state, { payload }) => {
       let updatedSideBar = state.sidebar?.map((item) => {
         if (payload.baseId === item.baseId) {
           item.subMenu.push(payload.data);
         }
         return item;
-      });
-      state.sidebar = updatedSideBar;
-    },
-    handelRemoveSideBarMenu: (state, { payload }) => {
-      let updatedSideBar = state.sidebar?.filter((item) => {
-        return payload.baseId !== item.baseId;
       });
       state.sidebar = updatedSideBar;
     },
@@ -41,25 +64,6 @@ const SideBarStateSlice = createSlice({
         }
       });
       state.sidebar = updatedSideBar;
-    },
-    handelToggleSideBar: (state, { payload }) => {
-      let updatedSidebar = state.sidebar.map((prevMenu) => {
-        if (payload.baseId === prevMenu.baseId) {
-          prevMenu.isOpened = !prevMenu.isOpened;
-        }
-        return prevMenu;
-      });
-      state.sidebar = updatedSidebar;
-    },
-    handelRenameSideBarMenu: (state, { payload }) => {
-      let updatedSidebar = state.sidebar.map((item) => {
-        if (item.baseId === payload.baseId) {
-          console.log(payload.updatedName);
-          item.title = payload.updatedName;
-        }
-        return item;
-      });
-      state.sidebar = updatedSidebar;
     },
     handelRenameSideBarField: (state, { payload }) => {
       let updatedSidebar = state.sidebar.map((item) => {

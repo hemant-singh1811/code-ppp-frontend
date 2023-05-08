@@ -131,7 +131,7 @@ export default function TableColumnAdd({ headers }) {
   for (let i = 1; i < columns?.length; i++) {
     existingColumns.set(columns[i]?.header.toLocaleLowerCase(), true);
   }
-
+  console.log(bases);
   bases.forEach((ele) => {
     if (ele?.baseid === selectedBaseId) {
       ele?.tablemetadata.forEach(({ table_id, table_name }) => {

@@ -1,30 +1,30 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, redirect } from "react-router-dom";
+import React, { Fragment, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, redirect } from 'react-router-dom';
 import {
   handelAddBases,
   handelAddTableInBases,
   handelRenameBases,
   handelRenameTableInBases,
-} from "../../../store/features/BasesStateSlice";
+} from '../../../store/features/BasesStateSlice';
 import {
   handelSelectedTableAndBaseId,
   handleAddToggle,
-} from "../../../store/features/globalStateSlice";
+} from '../../../store/features/globalStateSlice';
 import {
   handelAddSideBarField,
   handelAddSideBarMenu,
   handelRenameSideBarField,
   handelRenameSideBarMenu,
-} from "../../../store/features/SideBarStateSlice";
+} from '../../../store/features/SideBarStateSlice';
 import {
   useCreateBaseMutation,
   useCreateTableMutation,
   useRenameBaseMutation,
   useRenameTableMutation,
-} from "../../../store/services/alphaTruckingApi";
-import LoadingAlt from "../../utilities/LoadingAlt";
-import { Dialog, Transition } from "@headlessui/react";
+} from '../../../store/services/alphaTruckingApi';
+import LoadingAlt from '../../utilities/LoadingAlt';
+import { Dialog, Transition } from '@headlessui/react';
 
 export default function AddTable() {
   const [createTableApi, responseCreateTable] = useCreateTableMutation();
@@ -44,9 +44,9 @@ export default function AddTable() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [nameInput, setNameInput] = useState(name || "");
+  const [nameInput, setNameInput] = useState(name || '');
   const [isExistNameInput, setIsExistNameInput] = useState(false);
-  const [descriptionInput, setDescriptionInput] = useState("");
+  const [descriptionInput, setDescriptionInput] = useState('');
 
   // useEffect(() => {
   //   setNameInput(name);
@@ -54,12 +54,12 @@ export default function AddTable() {
   // }, [baseId || tableId]);
 
   useEffect(() => {
-    setNameInput(name || "");
+    setNameInput(name || '');
     // setDescriptionInput(name || '');
   }, [baseId]);
 
   useEffect(() => {
-    setNameInput(name || "");
+    setNameInput(name || '');
     // setDescriptionInput(name || '');
   }, [tableId]);
 
@@ -87,7 +87,7 @@ export default function AddTable() {
 
   useEffect(() => {
     if (responseCreateTable?.data) {
-      console.log("create Table:", responseCreateTable?.data);
+      console.log('create Table:', responseCreateTable?.data);
       dispatch(
         handelAddTableInBases({
           baseId: selectedBaseId,
@@ -110,16 +110,16 @@ export default function AddTable() {
           selectedTableId: responseCreateTable?.data?.table_id,
         })
       );
-      dispatch(handleAddToggle({ isOpen: false, type: "" }));
-      setNameInput("");
-      setDescriptionInput("");
+      dispatch(handleAddToggle({ isOpen: false, type: '' }));
+      setNameInput('');
+      setDescriptionInput('');
       navigate(`/${selectedBaseId}/${responseCreateTable?.data?.table_id}`);
     }
   }, [responseCreateTable.isSuccess]);
 
   useEffect(() => {
     if (responseCreateBase?.data) {
-      console.log("create Base:", responseCreateBase?.data);
+      console.log('create Base:', responseCreateBase?.data);
       dispatch(handelAddBases([...bases, responseCreateBase?.data]));
       dispatch(
         handelAddSideBarMenu([
@@ -130,26 +130,25 @@ export default function AddTable() {
             title: responseCreateBase?.data.basemetadata.name,
             icons: (
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="24"
-                viewBox="0 96 960 960"
-                width="24"
-              >
-                <path d="M160 896V256h640v640H160Zm40-433.846h560V296H200v166.154Zm199.923 196.923h160.154V502.154H399.923v156.923Zm0 196.923h160.154V699.077H399.923V856ZM200 659.077h159.923V502.154H200v156.923Zm400.077 0H760V502.154H600.077v156.923ZM200 856h159.923V699.077H200V856Zm400.077 0H760V699.077H600.077V856Z" />
+                xmlns='http://www.w3.org/2000/svg'
+                height='24'
+                viewBox='0 96 960 960'
+                width='24'>
+                <path d='M160 896V256h640v640H160Zm40-433.846h560V296H200v166.154Zm199.923 196.923h160.154V502.154H399.923v156.923Zm0 196.923h160.154V699.077H399.923V856ZM200 659.077h159.923V502.154H200v156.923Zm400.077 0H760V502.154H600.077v156.923ZM200 856h159.923V699.077H200V856Zm400.077 0H760V699.077H600.077V856Z' />
               </svg>
             ),
           },
         ])
       );
-      dispatch(handleAddToggle({ isOpen: false, type: "" }));
-      setNameInput("");
-      setDescriptionInput("");
+      dispatch(handleAddToggle({ isOpen: false, type: '' }));
+      setNameInput('');
+      setDescriptionInput('');
     }
   }, [responseCreateBase.isSuccess]);
 
   useEffect(() => {
     if (responseRenameTable?.data) {
-      console.log("Rename Table:", responseRenameTable?.data);
+      console.log('Rename Table:', responseRenameTable?.data);
       dispatch(
         handelRenameTableInBases({
           baseId: baseId,
@@ -164,15 +163,15 @@ export default function AddTable() {
           updatedName: nameInput.trim(),
         })
       );
-      dispatch(handleAddToggle({ isOpen: false, type: "" }));
-      setNameInput("");
-      setDescriptionInput("");
+      dispatch(handleAddToggle({ isOpen: false, type: '' }));
+      setNameInput('');
+      setDescriptionInput('');
     }
   }, [responseRenameTable.isSuccess]);
 
   useEffect(() => {
     if (responseRenameBase?.data) {
-      console.log("Rename Base:", responseRenameBase?.data);
+      console.log('Rename Base:', responseRenameBase?.data);
       dispatch(
         handelRenameBases({
           baseId: responseRenameBase?.data?.baseid,
@@ -185,9 +184,9 @@ export default function AddTable() {
           updatedName: responseRenameBase?.data?.base_name,
         })
       );
-      dispatch(handleAddToggle({ isOpen: false, type: "" }));
-      setNameInput("");
-      setDescriptionInput("");
+      dispatch(handleAddToggle({ isOpen: false, type: '' }));
+      setNameInput('');
+      setDescriptionInput('');
     }
   }, [responseRenameBase.isSuccess]);
 
@@ -213,39 +212,37 @@ export default function AddTable() {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
-        as="div"
-        className="relative z-50"
-        onClose={() => dispatch(handleAddToggle({ isOpen: false, type: "" }))}
-      >
+        as='div'
+        className='relative z-50'
+        onClose={() => dispatch(handleAddToggle({ isOpen: false, type: '' }))}>
         <Transition.Child
           className={`text-black absolute bottom-[10px] z-50  w-96 rounded-md  bg-white p-4 border-gray-400 border-2 flex flex-col ${
-            mainSideBar.toggle ? "left-[80px]" : "left-[244px]"
+            mainSideBar.toggle ? 'left-[80px]' : 'left-[244px]'
           }`}
           as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0 scale-95"
-          enterTo="opacity-100 scale-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100 scale-100"
-          leaveTo="opacity-0 scale-95"
-        >
-          <Dialog.Panel className="">
+          enter='ease-out duration-300'
+          enterFrom='opacity-0 scale-95'
+          enterTo='opacity-100 scale-100'
+          leave='ease-in duration-200'
+          leaveFrom='opacity-100 scale-100'
+          leaveTo='opacity-0 scale-95'>
+          <Dialog.Panel className=''>
             <div>
               <input
-                type="text"
+                type='text'
                 placeholder={
-                  type === "table"
-                    ? "Table Name (Mandatory)"
-                    : type === "base"
-                    ? "Base Name (Mandatory)"
-                    : ""
+                  type === 'table'
+                    ? 'Table Name (Mandatory)'
+                    : type === 'base'
+                    ? 'Base Name (Mandatory)'
+                    : ''
                 }
-                className="w-full p-1 px-2 border-2 rounded-md outline-blue-500 border-[#cccecf] mb-3"
+                className='w-full p-1 px-2 border-2 rounded-md outline-blue-500 border-[#cccecf] mb-3'
                 value={nameInput}
                 onChange={(e) => {
                   setNameInput(e.target.value);
                   switch (type) {
-                    case "table":
+                    case 'table':
                       existingTable.has(
                         e.target.value.toLocaleLowerCase().trim()
                       )
@@ -254,7 +251,7 @@ export default function AddTable() {
 
                       break;
 
-                    case "base":
+                    case 'base':
                       existingBases.has(
                         e.target.value.toLocaleLowerCase().trim()
                       )
@@ -270,64 +267,61 @@ export default function AddTable() {
               />
 
               {isExistNameInput && (
-                <div className="text-red-700 text-sm m-1 -mt-3 -mb-2">
-                  Please enter a unique {type === "table" ? "Table" : "Base"}{" "}
+                <div className='text-red-700 text-sm m-1 -mt-3 -mb-2'>
+                  Please enter a unique {type === 'table' ? 'Table' : 'Base'}{' '}
                   name
                 </div>
               )}
 
-              <div className="mt-4">
-                <div className="mb-1">Description</div>
+              <div className='mt-4'>
+                <div className='mb-1'>Description</div>
                 <input
-                  type="text"
-                  className="px-2 p-1 w-full outline-gray-400  bg-[#f2f2f2] rounded-md"
+                  type='text'
+                  className='px-2 p-1 w-full outline-gray-400  bg-[#f2f2f2] rounded-md'
                   placeholder={
-                    type === "table"
-                      ? "Describe this Table (optional)"
-                      : type === "base"
-                      ? "Describe this Base (optional)"
-                      : ""
+                    type === 'table'
+                      ? 'Describe this Table (optional)'
+                      : type === 'base'
+                      ? 'Describe this Base (optional)'
+                      : ''
                   }
                   value={descriptionInput}
                   onChange={(e) => setDescriptionInput(e.target.value)}
                 />
               </div>
 
-              <div className="flex justify-between items-center mt-8">
+              <div className='flex justify-between items-center mt-8'>
                 <div>
                   <div
                     className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
-                      isOpen && "hidden"
+                      isOpen && 'hidden'
                     } `}
                     onClick={() =>
-                      dispatch(handleAddToggle({ isOpen: false, type: "" }))
-                    }
-                  >
+                      dispatch(handleAddToggle({ isOpen: false, type: '' }))
+                    }>
                     <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'
                       strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="w-6 h-6"
-                    >
+                      stroke='currentColor'
+                      className='w-6 h-6'>
                       <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 4.5v15m7.5-7.5h-15"
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        d='M12 4.5v15m7.5-7.5h-15'
                       />
                     </svg>
                     Add description
                   </div>
                 </div>
-                <div className="flex items-center gap-2 select-none">
+                <div className='flex items-center gap-2 select-none'>
                   <div
-                    className="hover:bg-gray-200 p-1.5 rounded-md px-4 cursor-pointer"
+                    className='hover:bg-gray-200 p-1.5 rounded-md px-4 cursor-pointer'
                     onClick={() => {
-                      dispatch(handleAddToggle({ isOpen: false, type: "" }));
-                      setNameInput("");
-                    }}
-                  >
+                      dispatch(handleAddToggle({ isOpen: false, type: '' }));
+                      setNameInput('');
+                    }}>
                     cancel
                   </div>
                   {
@@ -338,9 +332,9 @@ export default function AddTable() {
                         responseCreateTable.isLoading
                       }
                       onClick={() => {
-                        if (action === "rename") {
+                        if (action === 'rename') {
                           switch (type) {
-                            case "table":
+                            case 'table':
                               renameTableApi({
                                 baseId: baseId,
                                 data: {
@@ -350,7 +344,7 @@ export default function AddTable() {
                                 },
                               });
                               break;
-                            case "base":
+                            case 'base':
                               renameBaseApi({
                                 data: {
                                   baseid: baseId,
@@ -364,7 +358,7 @@ export default function AddTable() {
                           }
                         } else {
                           switch (type) {
-                            case "table":
+                            case 'table':
                               createTableApi({
                                 baseId: selectedBaseId,
                                 data: {
@@ -373,7 +367,7 @@ export default function AddTable() {
                                 },
                               });
                               break;
-                            case "base":
+                            case 'base':
                               createBaseApi({
                                 data: {
                                   base_name: nameInput.trim(),
@@ -386,8 +380,7 @@ export default function AddTable() {
                           }
                         }
                       }}
-                      className="bg-blue-600 rounded-md p-1.5 px-4 min-w-[105px] min-h-[31.5px] text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400 flex items-center justify-center"
-                    >
+                      className='bg-blue-600 rounded-md p-1.5 px-4 min-w-[105px] min-h-[31.5px] text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400 flex items-center justify-center'>
                       {responseCreateTable.isLoading ||
                       responseCreateBase.isLoading ||
                       responseRenameTable.isLoading ||
@@ -396,8 +389,8 @@ export default function AddTable() {
                           <LoadingAlt />
                         </div>
                       ) : (
-                        <span className="capitalize">
-                          {action} {type === "table" ? "Table" : "Base"}
+                        <span className='capitalize'>
+                          {action} {type === 'table' ? 'Table' : 'Base'}
                         </span>
                       )}
                     </button>
