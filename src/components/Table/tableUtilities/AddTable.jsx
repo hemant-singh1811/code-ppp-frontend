@@ -78,12 +78,12 @@ export default function AddTable() {
   });
 
   bases.map(({ basemetadata }) => {
-    existingBases.add(basemetadata.name);
+    existingBases.add(basemetadata?.name);
   });
 
-  // existingTable.forEach((key) => {
-  //   console.log('Existing table name', key);
-  // });
+  existingTable.forEach((key) => {
+    console.log('Existing table name', key);
+  });
 
   useEffect(() => {
     if (responseCreateTable?.data) {
@@ -120,26 +120,23 @@ export default function AddTable() {
   useEffect(() => {
     if (responseCreateBase?.data) {
       console.log('create Base:', responseCreateBase?.data);
-      dispatch(handelAddBases([...bases, responseCreateBase?.data]));
-      dispatch(
-        handelAddSideBarMenu([
-          ...sidebar,
-          {
-            subMenu: [],
-            baseId: responseCreateBase?.data.baseid,
-            title: responseCreateBase?.data.basemetadata.name,
-            icons: (
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                height='24'
-                viewBox='0 96 960 960'
-                width='24'>
-                <path d='M160 896V256h640v640H160Zm40-433.846h560V296H200v166.154Zm199.923 196.923h160.154V502.154H399.923v156.923Zm0 196.923h160.154V699.077H399.923V856ZM200 659.077h159.923V502.154H200v156.923Zm400.077 0H760V502.154H600.077v156.923ZM200 856h159.923V699.077H200V856Zm400.077 0H760V699.077H600.077V856Z' />
-              </svg>
-            ),
-          },
-        ])
-      );
+      // dispatch(handelAddBases([responseCreateBase?.data]));
+      // dispatch(
+      //   handelAddSideBarMenu({
+      //     subMenu: [],
+      //     baseId: responseCreateBase?.data.baseid,
+      //     title: responseCreateBase?.data.basemetadata.name,
+      //     icons: (
+      //       <svg
+      //         xmlns='http://www.w3.org/2000/svg'
+      //         height='24'
+      //         viewBox='0 96 960 960'
+      //         width='24'>
+      //         <path d='M160 896V256h640v640H160Zm40-433.846h560V296H200v166.154Zm199.923 196.923h160.154V502.154H399.923v156.923Zm0 196.923h160.154V699.077H399.923V856ZM200 659.077h159.923V502.154H200v156.923Zm400.077 0H760V502.154H600.077v156.923ZM200 856h159.923V699.077H200V856Zm400.077 0H760V699.077H600.077V856Z' />
+      //       </svg>
+      //     ),
+      //   })
+      // );
       dispatch(handleAddToggle({ isOpen: false, type: '' }));
       setNameInput('');
       setDescriptionInput('');

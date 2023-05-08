@@ -23,7 +23,7 @@ const SideBarStateSlice = createSlice({
 
     // updates on bases in side bar
     handelAddSideBarMenu: (state, { payload }) => {
-      state.sidebar = payload;
+      state.sidebar = [...state.sidebar, payload];
     },
     handelRemoveSideBarMenu: (state, { payload }) => {
       let updatedSideBar = state.sidebar?.filter((item) => {

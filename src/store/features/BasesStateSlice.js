@@ -10,7 +10,7 @@ const BasesStateSlice = createSlice({
   reducers: {
     // handel updates in bases state
     handelAddBases: (state, { payload }) => {
-      state.bases = payload;
+      state.bases = [...state.bases, ...payload];
     },
     handelRemoveBases: (state, { payload }) => {
       let updatedBases = state.bases.filter(
