@@ -25,6 +25,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
+    "react-error-boundary": "^4.0.4",
     "react-flatpickr": "^3.10.13",
     "react-hook-form": "^7.43.0",
     "react-redux": "^8.0.5",

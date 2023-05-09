@@ -19,6 +19,7 @@ function App() {
   return (
     <div className="flex w-screen h-screen ">
       {userInfo && <Sidebar />}
+
       <div className="relative w-full flex">
         <MainRouting />
         {isOpen && <AddTable />}
