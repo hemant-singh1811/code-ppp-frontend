@@ -45,7 +45,7 @@ export default function MultilineTextCell({ cell }) {
       };
       console.log(rowObj);
 
-      socket.emit('updatedata', rowObj, (response) => {
+      socket?.emit('updatedata', rowObj, (response) => {
         console.log('res : ', response);
       });
     }

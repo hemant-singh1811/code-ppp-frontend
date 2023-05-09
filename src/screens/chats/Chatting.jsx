@@ -36,7 +36,7 @@ export default function Chatting({ user_token, socket }) {
       group_id: load?.truck_id[0] || '',
       user_id: 'praditya',
     };
-    socket.emit('send_msg', box);
+    socket?.emit('send_msg', box);
   };
 
   //input add msg

@@ -1,42 +1,42 @@
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { io } from "socket.io-client";
-import ActiveScreen from "../../screens/chats/ActiveScreen";
-import { addMessage } from "../../store/features/messageSlice";
-import Aside from "../aside/Aside";
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { io } from 'socket.io-client';
+import ActiveScreen from '../../screens/chats/ActiveScreen';
+import { addMessage } from '../../store/features/messageSlice';
+import Aside from '../aside/Aside';
 const socket = io(import.meta.env.VITE_SERVER_URL);
 
 export default function Chats() {
   let user_token =
-    "fghfjkjglksjlfjkljflewjriowejrlkewnlrkjhoi423uoi4u2304u23094uj3oriuiou";
+    'fghfjkjglksjlfjkljflewjriowejrlkewnlrkjhoi423uoi4u2304u23094uj3oriuiou';
   const dispatch = useDispatch();
   useEffect(() => {
     try {
-      socket.on("newconnect", (data) => {
+      socket.on('newconnect', (data) => {
         // console.log("data received: " + JSON.stringify(data));
-        console.log("socket connected", socket.id)
+        console.log('socket connected', socket.id);
       });
 
       let room = () => {
-        socket.emit("joinroom", {
+        socket?.emit('joinroom', {
           user_token: user_token,
         });
       };
       room();
 
-      socket.on("disconnection", () => {
-        console.log("disconnect");
+      socket.on('disconnection', () => {
+        console.log('disconnect');
         room();
       });
 
-      socket.on("room_response", (data) => {
+      socket.on('room_response', (data) => {
         console.log(data);
       });
-      socket.on("msg_response", (data) => {
+      socket.on('msg_response', (data) => {
         console.log(data);
       });
 
-      socket.on("rec_msg", ({ message }) => {
+      socket.on('rec_msg', ({ message }) => {
         // console.log(message);
         if (message?.user_token !== user_token) {
           console.table(message);
@@ -63,7 +63,7 @@ export default function Chats() {
     }
   }, []);
   return (
-    <div className="flex  h-screen overflow-hidden w-full text-black">
+    <div className='flex  h-screen overflow-hidden w-full text-black'>
       <Aside />
       <ActiveScreen user_token={user_token} socket={socket} />
     </div>

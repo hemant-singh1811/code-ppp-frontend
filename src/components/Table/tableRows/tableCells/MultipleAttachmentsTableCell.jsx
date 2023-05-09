@@ -391,7 +391,7 @@ function FileUploadHandler({ closeModal, cell }) {
 
         console.log(cell.getValue());
 
-        socket.emit('updatedata', rowObj, (response) => {
+        socket?.emit('updatedata', rowObj, (response) => {
           // console.log([...response.resdata.sample, ...cell.getValue()]);
           console.log('res : ', response);
           dispatch(handelUpdateFiles(response?.resdata));

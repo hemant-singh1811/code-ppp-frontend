@@ -46,9 +46,13 @@ export default function TableUtilityBar() {
       previousSelectedView,
     };
     console.log('update views', obj);
-    socket.emit('changesaved', obj, (response) => {
-      console.log('socket response update views: ' + JSON.stringify(response));
-    });
+    if (socket.isConnected) {
+      socket.emit('changesaved', obj, (response) => {
+        console.log(
+          'socket response update views: ' + JSON.stringify(response)
+        );
+      });
+    }
     // dispatch(handleAddViews({ view: 'driver', data: tableStates }));
   }, [
     table.options.state.columnVisibility,

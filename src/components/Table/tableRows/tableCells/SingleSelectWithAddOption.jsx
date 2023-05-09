@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useDetectOutsideClick } from "../../../../utilities/customHooks/useDetectOutsideClick";
-import { useSelector } from "react-redux";
-import { TableContext } from "../../tableComponents/TableComponents";
-import { colorPallet } from "../../../../utilities/colorPallet";
+import React, { useContext, useEffect, useState } from 'react';
+import { useDetectOutsideClick } from '../../../../utilities/customHooks/useDetectOutsideClick';
+import { useSelector } from 'react-redux';
+import { TableContext } from '../../tableComponents/TableComponents';
+import { colorPallet } from '../../../../utilities/colorPallet';
 
 function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   const { columns, setColumns, table } = useContext(TableContext);
@@ -12,7 +12,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   // Call hook passing in the ref and a function to call on outside click
   useDetectOutsideClick(singleSelectRef, () => setSingleSelectToggle(false));
 
-  let newOptions = [{ name: "" }];
+  let newOptions = [{ name: '' }];
   if (Array.isArray(columnData?.options)) {
     newOptions = columnData?.options;
   }
@@ -23,7 +23,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   const [SingleSelectToggle, setSingleSelectToggle] = React.useState(false);
   const [selectedOption, setSelectedOption] = React.useState(rowData || []);
   const [options, setOptions] = useState(newOptions);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [bgColorAndTextColor, setBgColorAndTextColor] = useState(
     getRandomColor()
   );
@@ -92,7 +92,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
 
     rowData = [searchTerm];
     setSelectedOption([searchTerm]);
-    setSearchTerm("");
+    setSearchTerm('');
     setSingleSelectToggle(!SingleSelectToggle);
     rowCopy[cell?.column.id] = rowData;
 
@@ -109,12 +109,12 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
       field_id: cell.column.columnDef.field_id,
     };
 
-    socket.emit("updatemetadata", obj, (response) => {
-      console.log("socket response: " + JSON.stringify(response));
+    socket?.emit('updatemetadata', obj, (response) => {
+      console.log('socket response: ' + JSON.stringify(response));
     });
 
-    socket.emit("updatedata", rowObj, (response) => {
-      console.log("res : ", response);
+    socket?.emit('updatedata', rowObj, (response) => {
+      console.log('res : ', response);
     });
 
     setBgColorAndTextColor(getRandomColor());
@@ -138,8 +138,8 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     rowCopy[cell?.column.id] = rowData;
     table.options.meta?.updateData(cell.row.index, cell.column.id, [name]);
     // console.log(rowObj)
-    socket.emit("updatedata", rowObj, (response) => {
-      console.log("res : ", response);
+    socket?.emit('updatedata', rowObj, (response) => {
+      console.log('res : ', response);
     });
     setSingleSelectToggle(!SingleSelectToggle);
   }
@@ -152,25 +152,22 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     <div
       onClick={() => {
         setSingleSelectToggle(!SingleSelectToggle);
-        setSearchTerm("");
+        setSearchTerm('');
       }}
-      className="flex h-full w-full items-center p-1  "
-    >
+      className='flex h-full w-full items-center p-1  '>
       <div
         className={`relative select-none h-full  z-0 flex items-start  border-transparent border rounded-sm w-[calc(100%_-_14px)] ${
-          SingleSelectToggle && "border-blue-500"
+          SingleSelectToggle && 'border-blue-500'
         }`}
-        ref={singleSelectRef}
-      >
-        <div className=" w-full rounded-md cursor-pointer flex items-center pr-1 justify-between ">
+        ref={singleSelectRef}>
+        <div className=' w-full rounded-md cursor-pointer flex items-center pr-1 justify-between '>
           {options?.map(({ name, color, bgcolor }, i) => {
-            if (selectedOption?.includes(name) && name !== "")
+            if (selectedOption?.includes(name) && name !== '')
               return (
                 <div
                   key={i}
                   className={`rounded-3xl px-2 text-[13px] truncate w-fit bg-opacity-20`}
-                  style={{ background: bgcolor, color: color }}
-                >
+                  style={{ background: bgcolor, color: color }}>
                   {name}
                 </div>
               );
@@ -178,21 +175,20 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
         </div>
         {SingleSelectToggle && (
           <div
-            className="absolute -left-1 top-7 w-full  bg-white rounded-md shadow-lg min-w-[200px] border  overflow-x-hidden"
-            style={{ zIndex: 100 }}
-          >
+            className='absolute -left-1 top-7 w-full  bg-white rounded-md shadow-lg min-w-[200px] border  overflow-x-hidden'
+            style={{ zIndex: 100 }}>
             <input
-              type="text"
-              name="search option"
-              id=""
-              placeholder="find an option"
-              className="w-full outline-none p-2"
+              type='text'
+              name='search option'
+              id=''
+              placeholder='find an option'
+              className='w-full outline-none p-2'
               onChange={(e) => setSearchTerm(e.target.value)}
               value={searchTerm}
-              autoComplete={"off"}
+              autoComplete={'off'}
               autoFocus
             />
-            <div className="max-h-[300px]  overflow-y-auto">
+            <div className='max-h-[300px]  overflow-y-auto'>
               {options
                 ?.filter(({ name }) => name?.includes(searchTerm))
                 .map(({ color, name, bgcolor }, i) => {
@@ -200,14 +196,12 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
                     <div
                       onClick={() => updateOption(name)}
                       key={i}
-                      className="p-2 hover:bg-blue-100 flex min-h-[30px] w-full"
-                    >
+                      className='p-2 hover:bg-blue-100 flex min-h-[30px] w-full'>
                       {name && (
                         <div
-                          onClick={() => setSearchTerm("")}
+                          onClick={() => setSearchTerm('')}
                           style={{ background: bgcolor, color: color }}
-                          className={`rounded-xl px-2 truncate`}
-                        >
+                          className={`rounded-xl px-2 truncate`}>
                           {name}
                         </div>
                       )}
@@ -218,9 +212,8 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
                 0 && (
                 <div
                   onClick={addNewOption}
-                  className="p-2 hover:bg-blue-100 flex truncate"
-                >
-                  <div className="truncate flex">
+                  className='p-2 hover:bg-blue-100 flex truncate'>
+                  <div className='truncate flex'>
                     Add New Option:
                     {searchTerm && (
                       <span
@@ -228,8 +221,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
                           background: bgColorAndTextColor.background,
                           color: bgColorAndTextColor.color,
                         }}
-                        className={`rounded-xl px-2 ml-1 truncate`}
-                      >
+                        className={`rounded-xl px-2 ml-1 truncate`}>
                         {searchTerm}
                       </span>
                     )}
@@ -240,19 +232,18 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
           </div>
         )}
       </div>
-      <div className="min-w-4 h-4 flex">
+      <div className='min-w-4 h-4 flex'>
         <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
+          xmlns='http://www.w3.org/2000/svg'
+          fill='none'
+          viewBox='0 0 24 24'
           strokeWidth={1.5}
-          stroke="currentColor"
-          className="min-w-4 h-4 text-blue-500 ml-auto"
-        >
+          stroke='currentColor'
+          className='min-w-4 h-4 text-blue-500 ml-auto'>
           <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            d='M19.5 8.25l-7.5 7.5-7.5-7.5'
           />
         </svg>
       </div>
