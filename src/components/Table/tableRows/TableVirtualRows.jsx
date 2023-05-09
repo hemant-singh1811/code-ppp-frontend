@@ -1,20 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
-import { flexRender } from "@tanstack/react-table";
-// import { useVirtual } from "react-virtual";
-import { TableContext } from "../tableComponents/TableComponents";
-import { useVirtualizer } from "@tanstack/react-virtual";
-import CellByFieldType from "./tableCells/CellByFieldType";
-import CreateRow from "./CreateRow";
-import { useWindowSize } from "react-use";
-import { useDispatch } from "react-redux";
-// import { handelHoverRow } from '../../../store/features/globalStateSlice';
-import { motion } from "framer-motion";
+import React, { useContext, useEffect, useState } from 'react';
+import { flexRender } from '@tanstack/react-table';
+import { TableContext } from '../tableComponents/TableComponents';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import CellByFieldType from './tableCells/CellByFieldType';
+import CreateRow from './CreateRow';
+import { useWindowSize } from 'react-use';
 
 export default function TableVirtualRows({ tableContainerRef, rows }) {
   let { activeRowHeight, activeNumberOfLines, table } =
     useContext(TableContext);
   const { width, height } = useWindowSize();
-  const dispatch = useDispatch();
   let heightOverScan = ((height - 68) / activeRowHeight).toFixed();
 
   const columns = table.getAllColumns();
@@ -32,52 +27,30 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
   //   getScrollElement: () => parentRef.current,
   //   estimateSize: (i) => 10,
   //   overscan: 100,
-
   // });
-
-  // const handleMouseEnter = (ele) => {
-  //   dispatch(handelHoverRow(ele));
-  // };
-
-  // const handleMouseLeave = () => {
-  //   dispatch(handelHoverRow(null));
-  // };
-
-  // const [isHovering, setIsHovering] = useState(false);
-
-  // const handleMouseEnter = () => {
-  //   setIsHovering(true);
-  // };
-
-  // const handleMouseLeave = () => {
-  //   setIsHovering(false);
-  // };
 
   return (
     <>
       <div
         ref={parentRef}
-        className="list text-black transition-all select-none scrollbar-hidden h-[calc(100vh_-_100px)] overflow-x-visible z-[1] relative"
+        className='list text-black transition-all select-none scrollbar-hidden h-[calc(100vh_-_100px)] overflow-x-visible z-[1] relative'
         // style={{ overflowY: 'auto' }}//do not remove overflow auto if you remove it table virtual row will break
         style={{
-          overflowX: "auto",
-          overflowY: "visible",
-          background: "#f7f7f7",
-        }}
-      >
+          overflowX: 'auto',
+          overflowY: 'visible',
+          background: '#f7f7f7',
+        }}>
         <div
-          className="tbody scrollbar-hidden mb-40"
+          className='tbody scrollbar-hidden mb-40'
           style={{
             height: `${rowVirtualizer.getTotalSize()}px`,
             // width: `${columnVirtualizer.getTotalSize()}px`,
-            position: "relative",
-          }}
-        >
+            position: 'relative',
+          }}>
           {rowVirtualizer
             .getVirtualItems()
             .map((virtualRow, i, initialArray) => {
               const row = rows[virtualRow?.index];
-
               return (
                 <VirtualRow
                   key={i}
@@ -93,25 +66,24 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
               );
             })}
           <div
-            className="border flex items-center w-[calc(100%_-_119px)]"
+            className='border flex items-center w-[calc(100%_-_119px)]'
             style={{
-              position: "absolute",
+              position: 'absolute',
               top: 0,
               left: 0,
               height: `30px`,
               transform: `translateY(${rowVirtualizer.getTotalSize()}px)`,
               borderTopWidth: 0,
-              background: "#fff",
+              background: '#fff',
               // width: `${columns[virtualRow.index]}px`,
               // zIndex: rowVirtualizer.getVirtualItems().length - i,
               // height: `${rows[virtualRow.index]}px`,
-            }}
-          >
+            }}>
             <CreateRow />
           </div>
         </div>
       </div>
-      <div className="text-black">Lorem ipsum dolor sit amet</div>
+      <div className='text-black'>Lorem ipsum dolor sit amet</div>
     </>
   );
 }
@@ -126,36 +98,23 @@ function VirtualRow({
   initialArray,
   activeNumberOfLines,
 }) {
-  const [isFocusedRow, setIsFocusedRow] = React.useState(false);
-
-  const handleFocus = () => {
-    setIsFocusedRow(true);
-  };
-
-  const handleBlur = () => {
-    setIsFocusedRow(false);
-  };
-
   return (
     <div
       key={virtualRow?.index || i}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
       data-index={virtualRow.index}
       ref={rowVirtualizer.measureElement}
       className={`tr z-0 bg-white ${
-        row?.getIsSelected() ? "hover:bg-[#f1f6ff]" : "hover:bg-[#F8F8F8]"
-      } ${row?.getIsSelected() && "bg-[#f1f6ff]"}`}
+        row?.getIsSelected() ? 'hover:bg-[#f1f6ff]' : 'hover:bg-[#F8F8F8]'
+      } ${row?.getIsSelected() && 'bg-[#f1f6ff]'}`}
       style={{
-        position: "absolute",
+        position: 'absolute',
         top: 0,
         left: 0,
         width: `${columns[virtualRow?.index]}px`,
         height: `${activeRowHeight}px`,
-        zIndex: isFocusedRow ? 1000000 : initialArray.length - i,
+        zIndex: initialArray.length - i,
         transform: `translateY(${virtualRow?.start}px)`,
-      }}
-    >
+      }}>
       {row?.getVisibleCells().map((cell, i) => {
         return (
           <TableData
@@ -173,20 +132,8 @@ function VirtualRow({
 }
 
 function TableData({ activeNumberOfLines, cell, activeRowHeight, row, i }) {
-  // const [isFocused, setIsFocused] = React.useState(false);
-
-  // const handleFocus = () => {
-  //   setIsFocused(true);
-  // };
-
-  // const handleBlur = () => {
-  //   setIsFocused(false);
-  // };
-
   return (
     <div
-      // onFocus={handleFocus}
-      // onBlur={handleBlur}
       tabIndex={-1}
       className={`cell  webkitLineClamp${activeNumberOfLines} mx-auto my-auto text-center `}
       key={cell.id}
@@ -195,29 +142,27 @@ function TableData({ activeNumberOfLines, cell, activeRowHeight, row, i }) {
           width: cell.column.getSize(),
           height: activeRowHeight,
           background: cell.getIsGrouped()
-            ? "#0aff0082"
+            ? '#0aff0082'
             : cell.getIsAggregated()
-            ? "#ffa50078"
+            ? '#ffa50078'
             : cell.getIsPlaceholder()
-            ? "#ff000042"
-            : "",
+            ? '#ff000042'
+            : '',
           borderLeftWidth: cell.column.columnDef?.is_primary && 0,
         },
-      }}
-    >
+      }}>
       {cell.getIsGrouped() ? (
         // If it's a grouped cell, add an expander and row count
         <>
           <button
-            className="flex"
+            className='flex'
             {...{
               onClick: row.getToggleExpandedHandler(),
               style: {
-                cursor: row.getCanExpand() ? "pointer" : "normal",
+                cursor: row.getCanExpand() ? 'pointer' : 'normal',
               },
-            }}
-          >
-            <div>{row.getIsExpanded() ? "👇" : "👉"} </div>
+            }}>
+            <div>{row.getIsExpanded() ? '👇' : '👉'} </div>
             {flexRender(cell.column.columnDef.cell, cell.getContext())}(
             {row.subRows.length})
           </button>

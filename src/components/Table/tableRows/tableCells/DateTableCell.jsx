@@ -37,7 +37,7 @@ export default function DateTableCell({ cell }) {
           field_id: cell.column.columnDef.field_id,
         };
 
-        socket?.emit('updatedata', rowObj, (response) => {
+        socket.emit('updatedata', rowObj, (response) => {
           console.log('res : ', response);
         });
       }}

@@ -18,7 +18,7 @@ export default function Chats() {
       });
 
       let room = () => {
-        socket?.emit('joinroom', {
+        socket.emit('joinroom', {
           user_token: user_token,
         });
       };

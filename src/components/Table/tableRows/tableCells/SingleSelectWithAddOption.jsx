@@ -1,8 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { useDetectOutsideClick } from '../../../../utilities/customHooks/useDetectOutsideClick';
 import { useSelector } from 'react-redux';
 import { TableContext } from '../../tableComponents/TableComponents';
 import { colorPallet } from '../../../../utilities/colorPallet';
+import { Popover, Transition } from '@headlessui/react';
 
 function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   const { columns, setColumns, table } = useContext(TableContext);
@@ -20,6 +21,17 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   const { selectedTableId, selectedBaseId } = useSelector(
     (state) => state.globalState
   );
+
+  const [isFocused, setIsFocused] = React.useState(false);
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
+
   const [SingleSelectToggle, setSingleSelectToggle] = React.useState(false);
   const [selectedOption, setSelectedOption] = React.useState(rowData || []);
   const [options, setOptions] = useState(newOptions);
@@ -27,7 +39,6 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   const [bgColorAndTextColor, setBgColorAndTextColor] = useState(
     getRandomColor()
   );
-  // const [textColor, setTextColor] = useState(getContrastColor(text));
 
   function getRandomColor() {
     return colorPallet[Math.floor(Math.random() * colorPallet.length)];
@@ -109,11 +120,11 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
       field_id: cell.column.columnDef.field_id,
     };
 
-    socket?.emit('updatemetadata', obj, (response) => {
+    socket.emit('updatemetadata', obj, (response) => {
       console.log('socket response: ' + JSON.stringify(response));
     });
 
-    socket?.emit('updatedata', rowObj, (response) => {
+    socket.emit('updatedata', rowObj, (response) => {
       console.log('res : ', response);
     });
 
@@ -138,7 +149,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     rowCopy[cell?.column.id] = rowData;
     table.options.meta?.updateData(cell.row.index, cell.column.id, [name]);
     // console.log(rowObj)
-    socket?.emit('updatedata', rowObj, (response) => {
+    socket.emit('updatedata', rowObj, (response) => {
       console.log('res : ', response);
     });
     setSingleSelectToggle(!SingleSelectToggle);
@@ -149,31 +160,54 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   }, [columns]);
 
   return (
-    <div
-      onClick={() => {
-        setSingleSelectToggle(!SingleSelectToggle);
-        setSearchTerm('');
-      }}
-      className='flex h-full w-full items-center p-1  '>
-      <div
-        className={`relative select-none h-full  z-0 flex items-start  border-transparent border rounded-sm w-[calc(100%_-_14px)] ${
-          SingleSelectToggle && 'border-blue-500'
-        }`}
-        ref={singleSelectRef}>
-        <div className=' w-full rounded-md cursor-pointer flex items-center pr-1 justify-between '>
-          {options?.map(({ name, color, bgcolor }, i) => {
-            if (selectedOption?.includes(name) && name !== '')
-              return (
-                <div
-                  key={i}
-                  className={`rounded-3xl px-2 text-[13px] truncate w-fit bg-opacity-20`}
-                  style={{ background: bgcolor, color: color }}>
-                  {name}
-                </div>
-              );
-          })}
+    <Popover className='flex h-full items-center rounded-md text-[#4d4d4d] p-0.5 px-2 text-lg  cursor-pointer relative '>
+      <Popover.Button className='flex items-center font-medium outline-none'>
+        <div
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          style={{ background: isFocused && 'red' }}
+          onClick={() => {
+            setSingleSelectToggle(!SingleSelectToggle);
+            setSearchTerm('');
+          }}
+          className='flex h-full w-full items-center p-1  '>
+          <div
+            className={`relative select-none h-full  z-0 flex items-start  border-transparent border rounded-sm w-[calc(100%_-_14px)] ${
+              SingleSelectToggle && 'border-blue-500'
+            }`}
+            ref={singleSelectRef}>
+            {/* {SingleSelectToggle && (
+
+          )} */}
+          </div>
         </div>
-        {SingleSelectToggle && (
+
+        <div className='min-w-4 h-4 flex'>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth={1.5}
+            stroke='currentColor'
+            className='min-w-4 h-4 text-blue-500 ml-auto'>
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              d='M19.5 8.25l-7.5 7.5-7.5-7.5'
+            />
+          </svg>
+        </div>
+      </Popover.Button>
+      <Transition
+        className='bg-white'
+        as={Fragment}
+        enter='transition ease-out duration-200'
+        enterFrom='opacity-0 translate-y-1'
+        enterTo='opacity-100 translate-y-0'
+        leave='transition ease-in duration-150'
+        leaveFrom='opacity-100 translate-y-0'
+        leaveTo='opacity-0 translate-y-1'>
+        <Popover.Panel className='absolute  left-0 z-[3] bg-white   max-h-[calc(100vh/_.5)] rounded-md  shadow-custom '>
           <div
             className='absolute -left-1 top-7 w-full  bg-white rounded-md shadow-lg min-w-[200px] border  overflow-x-hidden'
             style={{ zIndex: 100 }}>
@@ -230,24 +264,9 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
               )}
             </div>
           </div>
-        )}
-      </div>
-      <div className='min-w-4 h-4 flex'>
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          fill='none'
-          viewBox='0 0 24 24'
-          strokeWidth={1.5}
-          stroke='currentColor'
-          className='min-w-4 h-4 text-blue-500 ml-auto'>
-          <path
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            d='M19.5 8.25l-7.5 7.5-7.5-7.5'
-          />
-        </svg>
-      </div>
-    </div>
+        </Popover.Panel>
+      </Transition>
+    </Popover>
   );
 }
 

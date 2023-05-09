@@ -51,7 +51,7 @@ export const initSocket = () => (dispatch, state) => {
   });
 
   if (socket) {
-    socket?.emit('joinBaseRoom', userInfo?.user_token, (res) => {
+    socket.emit('joinBaseRoom', userInfo?.user_token, (res) => {
       console.log('join base room res : ', res);
     });
   }

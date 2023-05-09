@@ -106,11 +106,11 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
       field_id: cell.column.columnDef.field_id,
     };
 
-    socket?.emit('updatemetadata', obj, (response) => {
+    socket.emit('updatemetadata', obj, (response) => {
       console.log('socket response: ' + JSON.stringify(response));
     });
 
-    socket?.emit('updatedata', rowObj, (response) => {
+    socket.emit('updatedata', rowObj, (response) => {
       console.log('res : ', response);
     });
 
@@ -134,7 +134,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
     };
     rowCopy[cell?.column.id] = rowData;
 
-    socket?.emit('updatedata', rowObj, (response) => {
+    socket.emit('updatedata', rowObj, (response) => {
       console.log('res : ', response);
     });
     setSingleSelectToggle(!SingleSelectToggle);
@@ -167,7 +167,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
     };
     rowCopy[cell?.column.id] = rowData;
 
-    socket?.emit('updatedata', rowObj, (response) => {
+    socket.emit('updatedata', rowObj, (response) => {
       console.log('res : ', response);
     });
   }

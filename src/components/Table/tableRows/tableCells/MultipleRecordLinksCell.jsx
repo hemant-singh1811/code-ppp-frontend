@@ -101,7 +101,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
     // rowCopy[cell?.column.id] = rowData;
 
     // console.log(rowObj)
-    socket?.emit('updatedata', rowObj, (response) => {
+    socket.emit('updatedata', rowObj, (response) => {
       console.log('res : ', response);
     });
   }
@@ -139,7 +139,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
     console.log(rowObj);
 
     // // console.log(rowObj)
-    socket?.emit('updatedata', rowObj, (response) => {
+    socket.emit('updatedata', rowObj, (response) => {
       console.log('res : ', response);
     });
   }

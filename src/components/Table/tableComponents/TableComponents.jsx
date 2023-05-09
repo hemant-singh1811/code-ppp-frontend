@@ -97,7 +97,7 @@ const defaultColumn = {
         field_id: columnDef.field_id,
       };
       console.log(obj);
-      socket?.emit('updatedata', obj, (response) => {
+      socket.emit('updatedata', obj, (response) => {
         console.log('res : ', response);
       });
     };

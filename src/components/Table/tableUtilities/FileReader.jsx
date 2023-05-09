@@ -173,7 +173,7 @@ const FileViewer = () => {
       is_added: false,
     };
 
-    socket?.emit('updatedata', rowObj, (response) => {
+    socket.emit('updatedata', rowObj, (response) => {
       dispatch(handelRemoveFiles({ id: fileUploadHandleTemp.id }));
 
       // console.log(fileViewer.files);
