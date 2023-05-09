@@ -34,7 +34,7 @@ const SocketWebDataSlice = createSlice({
 });
 
 export const initSocket = () => (dispatch, state) => {
-  const { user_token, user_id } = state().auth?.userInfo;
+  const userInfo = state().auth?.userInfo;
   const socket = io(import.meta.env.VITE_SERVER_URL + "webdata");
 
   socket.on("connect", () => {
@@ -50,7 +50,7 @@ export const initSocket = () => (dispatch, state) => {
     console.log("res : ", response);
   });
 
-  socket.emit("joinBaseRoom", user_token, (res) => {
+  socket.emit("joinBaseRoom", userInfo?.user_token, (res) => {
     console.log("join base room res : ", res);
   });
 

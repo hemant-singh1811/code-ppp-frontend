@@ -22,10 +22,14 @@ import DashboardCard13 from "../partials/dashboard/DashboardCard13";
 import Banner from "../partials/Banner";
 import "../css/style.css";
 import "../charts/ChartjsConfig";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { initSocket } from "../../../store/features/sockets/SocketWebDataSlice";
 
 function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  const dispatch = useDispatch();
+  useEffect(() => dispatch(initSocket()), [dispatch]);
   return (
     <div className="flex h-screen overflow-hidden w-full">
       {/* Sidebar */}
