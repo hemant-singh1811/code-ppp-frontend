@@ -154,7 +154,7 @@ export default function Table({
   for (let [key, value] of linkedRecordIdAndDataMap) {
     console.log(key, value);
   }
-  // return <>   </>;
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className='relative overflow-hidden'>

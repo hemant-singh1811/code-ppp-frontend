@@ -440,7 +440,7 @@ export default function CustomTable() {
           className={`divTable `}>
           <div className='thead bg-[#f5f5f5] text-[#333333] relative z-[2]'>
             {table.getHeaderGroups().map((headerGroup) => (
-              <div key={headerGroup.id} className='tr'>
+              <div key={headerGroup.id} className='row'>
                 {headerGroup.headers.map((header, index) => (
                   <DraggableColumnHeader
                     key={header.id}

@@ -21,14 +21,6 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
     overscan: heightOverScan,
   });
 
-  // let columnVirtualizer = useVirtualizer({
-  //   horizontal: true,
-  //   count: columns.length,
-  //   getScrollElement: () => parentRef.current,
-  //   estimateSize: (i) => 10,
-  //   overscan: 100,
-  // });
-
   return (
     <>
       <div
@@ -44,7 +36,6 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
           className='tbody scrollbar-hidden mb-40'
           style={{
             height: `${rowVirtualizer.getTotalSize()}px`,
-            // width: `${columnVirtualizer.getTotalSize()}px`,
             position: 'relative',
           }}>
           {rowVirtualizer
@@ -83,7 +74,9 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
           </div>
         </div>
       </div>
-      <div className='text-black'>Lorem ipsum dolor sit amet</div>
+      <div className='text-black bg-orange-200'>
+        There will be our status bar
+      </div>
     </>
   );
 }
@@ -103,13 +96,14 @@ function VirtualRow({
       key={virtualRow?.index || i}
       data-index={virtualRow.index}
       ref={rowVirtualizer.measureElement}
-      className={`tr z-0 bg-white ${
+      tabIndex={0}
+      className={`row z-0 bg-white ${
         row?.getIsSelected() ? 'hover:bg-[#f1f6ff]' : 'hover:bg-[#F8F8F8]'
       } ${row?.getIsSelected() && 'bg-[#f1f6ff]'}`}
       style={{
         position: 'absolute',
-        top: 0,
-        left: 0,
+        // top: 0,
+        // left: 0,
         width: `${columns[virtualRow?.index]}px`,
         height: `${activeRowHeight}px`,
         zIndex: initialArray.length - i,
@@ -134,8 +128,8 @@ function VirtualRow({
 function TableData({ activeNumberOfLines, cell, activeRowHeight, row, i }) {
   return (
     <div
-      tabIndex={-1}
-      className={`cell  webkitLineClamp${activeNumberOfLines} mx-auto my-auto text-center `}
+      tabIndex={0}
+      className={`cell  mx-auto my-auto text-center `}
       key={cell.id}
       {...{
         style: {
@@ -195,3 +189,11 @@ function TableData({ activeNumberOfLines, cell, activeRowHeight, row, i }) {
     </div>
   );
 }
+
+// let columnVirtualizer = useVirtualizer({
+//   horizontal: true,
+//   count: columns.length,
+//   getScrollElement: () => parentRef.current,
+//   estimateSize: (i) => 10,
+//   overscan: 100,
+// });
