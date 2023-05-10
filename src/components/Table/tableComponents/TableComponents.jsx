@@ -263,14 +263,13 @@ export default function TableComponents({
     // debugColumns: true,
   });
 
-  useEffect(() => {
-    console.log('model:', selectedView);
-    // console.log(Object.keys(selectedView?.model).length > 0);
-    if (Object.keys(selectedView?.model).length > 0) {
-      table.setState(selectedView?.model);
-    }
-    console.log('model updated', table.options.state);
-  }, [selectedView?.model]);
+  // useEffect(() => {
+  //   if (selectedView && Object.keys(selectedView?.model).length > 0) {
+  //     console.log('model:', selectedView);
+  //     table.setState(selectedView?.model);
+  //   }
+  //   console.log('model updated', table.options.state);
+  // }, [selectedView?.model]);
 
   return (
     <TableContext.Provider

@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from 'react';
 import TableVirtualRows from '../tableRows/TableVirtualRows';
-import { useDrag, useDrop } from 'react-dnd';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { flexRender } from '@tanstack/react-table';
 import { TableContext } from './TableComponents';
 import { ResizableSidebar } from '../tableUtilityBar/ResizableSidebar';
@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { Popover } from '@headlessui/react';
 import { useClickAway } from 'react-use';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const getSvg = (dataType) => {
   switch (dataType) {
@@ -417,9 +418,10 @@ export default function CustomTable() {
   return (
     <div className='flex overflow-hidden'>
       {isViewsOpen && <ResizableSidebar />}
-      <div
-        id='custom-scrollbar'
-        className={`overflow-auto overflow-y-hidden bg-[#f7f7f7] 
+      <DndProvider backend={HTML5Backend}>
+        <div
+          id='custom-scrollbar'
+          className={`overflow-auto overflow-y-hidden bg-[#f7f7f7] 
        ${
          toggle
            ? isViewsOpen
@@ -430,33 +432,37 @@ export default function CustomTable() {
            : `w-[calc(100vw_-_245px)]`
        }
         `}>
-        <div
-          ref={tableContainerRef}
-          {...{
-            style: {
-              width: table.getTotalSize() + 120,
-            },
-          }}
-          className={`divTable `}>
-          <div className='thead bg-[#f5f5f5] text-[#333333] relative z-[2]'>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <div key={headerGroup.id} className='row'>
-                {headerGroup.headers.map((header, index) => (
-                  <DraggableColumnHeader
-                    key={header.id}
-                    header={header}
-                    table={table}
-                    index={index}
-                  />
-                ))}
-                <TableColumnAdd headers={headerGroup.headers} />
-              </div>
-            ))}
+          <div
+            ref={tableContainerRef}
+            {...{
+              style: {
+                width: table.getTotalSize() + 120,
+              },
+            }}
+            className={`divTable `}>
+            <div className='thead bg-[#f5f5f5] text-[#333333] relative z-[2]'>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <div key={headerGroup.id} className='row'>
+                  {headerGroup.headers.map((header, index) => (
+                    <DraggableColumnHeader
+                      key={header.id}
+                      header={header}
+                      table={table}
+                      index={index}
+                    />
+                  ))}
+                  <TableColumnAdd headers={headerGroup.headers} />
+                </div>
+              ))}
+            </div>
+            <TableVirtualRows
+              tableContainerRef={tableContainerRef}
+              rows={rows}
+            />
           </div>
-          <TableVirtualRows tableContainerRef={tableContainerRef} rows={rows} />
+          {/* <AddRowTable /> */}
         </div>
-        {/* <AddRowTable /> */}
-      </div>
+      </DndProvider>
     </div>
   );
 }

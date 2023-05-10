@@ -52,12 +52,16 @@ export default function SingleLineTextCell({ cell }) {
       onChange={handleChange}
       onBlur={handleBlur}
       autoFocus
-      className='w-full h-full border-none px-2 p-1'
+      style={{
+        padding: '',
+        boxShadow: '0 0 0px 2px inset #166ee1',
+      }}
+      className='w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  '
     />
   ) : (
     <div
       className='text-left w-full h-full break-words truncate  px-2 p-1'
-      onDoubleClick={handleDoubleClick}>
+      onClick={handleDoubleClick}>
       {value}
     </div>
   );

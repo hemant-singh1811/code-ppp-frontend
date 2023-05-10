@@ -32,27 +32,27 @@ export default function TableUtilityBar() {
     //     model: table.options.state,
     //   })
     // );
-    dispatch(
-      handelUpdateModel({
-        name: selectedView?.name,
-        id: selectedView?.id,
-        model: tabledata,
-      })
-    );
-    let obj = {
-      user_token: userToken,
-      model: table.options.state,
-      view_id: selectedView?.id,
-      previousSelectedView,
-    };
-    console.log('update views', obj);
-    if (socket.isConnected) {
-      socket.emit('changesaved', obj, (response) => {
-        console.log(
-          'socket response update views: ' + JSON.stringify(response)
-        );
-      });
-    }
+    // dispatch(
+    //   handelUpdateModel({
+    //     name: selectedView?.name,
+    //     id: selectedView?.id,
+    //     model: tabledata,
+    //   })
+    // );
+    // let obj = {
+    //   user_token: userToken,
+    //   model: table.options.state,
+    //   view_id: selectedView?.id,
+    //   previousSelectedView,
+    // };
+    // console.log('update views', obj);
+    // if (socket.isConnected) {
+    //   socket.emit('changesaved', obj, (response) => {
+    //     console.log(
+    //       'socket response update views: ' + JSON.stringify(response)
+    //     );
+    //   });
+    // }
     // dispatch(handleAddViews({ view: 'driver', data: tableStates }));
   }, [
     table.options.state.columnVisibility,

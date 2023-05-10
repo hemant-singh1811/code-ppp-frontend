@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import React, { useEffect } from 'react';
 import TableComponents from './tableComponents/TableComponents';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../utilities/Loading';
@@ -9,10 +7,12 @@ import { useGetTableRecordsQuery } from '../../store/services/alphaTruckingApi';
 import IndeterminateCheckbox from './tableUtilities/IndeterminateCheckbox';
 import { handelAddTableWithMultipleRecords } from '../../store/features/globalStateSlice';
 import { useEffectOnce } from 'react-use';
+import { handelAddInitialState } from '../../store/features/viewsSlice';
 
 export default function Table({
   tableData,
   tableModel,
+  tableView,
   modifiedArrayOfObject,
   multipleRecordLinksArray,
 }) {
@@ -21,6 +21,10 @@ export default function Table({
     data: modifiedArrayOfObject,
   });
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(handelAddInitialState(tableView));
+  }, [tableView]);
 
   useEffectOnce(() => {
     console.log(
@@ -144,28 +148,26 @@ export default function Table({
   const linkedRecordIdAndDataMap = new Map();
   // console.log(data);
   data.forEach((ele) => {
-    console.log(ele);
+    // console.log(ele);
     ele?.data.forEach(({ id, data }) => {
       // console.log(id, data);
       linkedRecordIdAndDataMap.set(id, data);
     });
   });
 
-  for (let [key, value] of linkedRecordIdAndDataMap) {
-    console.log(key, value);
-  }
+  // for (let [key, value] of linkedRecordIdAndDataMap) {
+  //   console.log(key, value);
+  // }
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className='relative overflow-hidden'>
-        <TableComponents
-          toggle={toggle}
-          defaultColumns={defaultColumns}
-          data={tableDataModified}
-          setData={setTableDataModified}
-          // tableConditions={model}
-        />
-      </div>
-    </DndProvider>
+    <div className='relative overflow-hidden'>
+      <TableComponents
+        toggle={toggle}
+        defaultColumns={defaultColumns}
+        data={tableDataModified}
+        setData={setTableDataModified}
+        // tableConditions={model}
+      />
+    </div>
   );
 }

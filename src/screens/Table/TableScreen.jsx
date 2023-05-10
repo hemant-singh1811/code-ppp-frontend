@@ -9,20 +9,17 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { handelAddInitialState } from '../../store/features/viewsSlice';
 import Table from '../../components/Table/Table';
+import { initSocket } from '../../store/features/sockets/SocketWebDataSlice';
 
 let multipleRecordLinksArray = [];
 
 export default function TableScreen() {
+  const dispatch = useDispatch();
   const { selectedTableId } = useSelector((state) => state.globalState);
 
-  const dispatch = useDispatch();
-
-  let { data, error, isFetching, refetch, isSuccess } =
-    useGetTableDataQuery(selectedTableId);
-
-  let modelResult = useGetModelQuery(selectedTableId);
-
-  const getSavedViewApi = useGetSavedViewQuery({
+  let getTableDataApi = useGetTableDataQuery(selectedTableId);
+  let getModalApi = useGetModelQuery(selectedTableId);
+  const getViewsApi = useGetSavedViewQuery({
     data: { table_id: selectedTableId },
   });
 
@@ -30,38 +27,51 @@ export default function TableScreen() {
 
   const RecordIdArrayWithTableIdMap = new Map(); // table id -> multiple record [] of a particular column
 
+  useEffect(() => dispatch(initSocket()), [dispatch]);
+
   useEffect(() => {
-    refetch(selectedTableId);
-    modelResult.refetch(selectedTableId);
+    getTableDataApi.refetch(selectedTableId);
+    getModalApi.refetch(selectedTableId);
+    getViewsApi.refetch({
+      data: { table_id: selectedTableId },
+    });
   }, [selectedTableId]);
 
   useEffect(() => {
-    if (getSavedViewApi.isSuccess) {
-      console.log('GET SAVED VIEW MODAL:', getSavedViewApi.data);
-      dispatch(handelAddInitialState(getSavedViewApi.data));
+    if (getViewsApi.isSuccess) {
+      console.log('GET SAVED VIEW MODAL:', getViewsApi.data);
     }
-  }, [getSavedViewApi.isSuccess]);
+  }, [getViewsApi.isSuccess]);
 
   useEffect(() => {
-    if (modelResult.data) {
-      console.log('GET MODAL:', modelResult.data);
+    if (getModalApi.data) {
+      console.log('GET MODAL:', getModalApi.data);
     }
-  }, [modelResult.isSuccess]);
-  useEffect(() => {
-    if (data) {
-      console.log('GET DATA:', data);
-    }
-  }, [isSuccess]);
+  }, [getModalApi.isSuccess]);
 
-  if (isFetching || modelResult?.isFetching || getSavedViewApi.isFetching) {
+  useEffect(() => {
+    if (getTableDataApi.data) {
+      console.log('GET DATA:', getTableDataApi.data);
+    }
+  }, [getTableDataApi.isSuccess]);
+
+  if (
+    getTableDataApi.isFetching ||
+    getModalApi?.isFetching ||
+    getViewsApi.isFetching
+  ) {
     return <Loading />;
   }
-  if (error || modelResult?.error || getSavedViewApi.error) {
-    return <Error error={error} />;
+  if (getTableDataApi.error || getModalApi?.error || getViewsApi.error) {
+    return (
+      <Error
+        error={getTableDataApi.error || getModalApi?.error || getViewsApi.error}
+      />
+    );
   }
 
   // stores the linked model in the map by linked  table keys and model as values
-  multipleRecordLinksArray = modelResult.data
+  multipleRecordLinksArray = getModalApi.data
     .map(({ data }) => {
       if (data.field_type === 'multipleRecordLinks') {
         multipleRecordLinksMap.set(data?.linked_rec?.tableid, data);
@@ -75,7 +85,7 @@ export default function TableScreen() {
   for (let [key, value] of multipleRecordLinksMap.entries()) {
     const uniqueRecordIdSet = new Set();
     // console.log(data);
-    data.map(({ data }) => {
+    getTableDataApi.data.map(({ data }) => {
       if (Array.isArray(data[value?.field_name])) {
         data[value?.field_name].map((item) => {
           // console.log(item);
@@ -98,11 +108,11 @@ export default function TableScreen() {
     });
   }
 
-  // return <></>;
   return (
     <Table
-      tableData={data}
-      tableModel={modelResult.data}
+      tableView={getViewsApi.data}
+      tableData={getTableDataApi.data}
+      tableModel={getModalApi.data}
       modifiedArrayOfObject={modifiedArrayOfObject}
       multipleRecordLinksArray={multipleRecordLinksArray}
     />

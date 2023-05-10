@@ -63,13 +63,23 @@ const viewsSlice = createSlice({
       });
     },
     handelAddInitialState: (state, { payload }) => {
-      payload?.sharedview?.map((ele, i) => {
-        if (i === 0) {
-          state.selectedView.name = ele?.metadata?.name;
-          state.selectedView.id = ele?.metadata?.views_id;
-          state.selectedView.model = ele?.model;
-        }
-      });
+      // console.log('handelAddInitialState called');
+      if (payload?.sharedview)
+        payload?.sharedview?.map((ele, i) => {
+          if (i === 0) {
+            state.selectedView.name = ele?.metadata?.name;
+            state.selectedView.id = ele?.metadata?.views_id;
+            state.selectedView.model = ele?.model;
+          }
+        });
+      if (payload?.personalview)
+        payload?.sharedview?.map((ele, i) => {
+          if (i === 0) {
+            state.selectedView.name = ele?.metadata?.name;
+            state.selectedView.id = ele?.metadata?.views_id;
+            state.selectedView.model = ele?.model;
+          }
+        });
       state.views = [
         {
           title: 'Personal Views',
