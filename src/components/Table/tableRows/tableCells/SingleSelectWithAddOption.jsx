@@ -161,7 +161,12 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
 
   return (
     <Popover className='flex h-full items-center rounded-md text-[#4d4d4d] p-0.5 px-2 text-lg  cursor-pointer relative '>
-      <Popover.Button className='flex items-center font-medium outline-none'>
+      <Popover.Button
+        className={`relative select-none h-full  z-0 flex items-start  border-transparent border rounded-sm w-[calc(100%_-_14px)] ${
+          SingleSelectToggle && 'border-blue-500'
+        }`}
+        // className='flex items-center font-medium outline-none'
+      >
         <div
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -171,15 +176,27 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
             setSearchTerm('');
           }}
           className='flex h-full w-full items-center p-1  '>
-          <div
+          <div className=' w-full rounded-md cursor-pointer flex items-center pr-1 justify-between '>
+            {options?.map(({ name, color, bgcolor }, i) => {
+              if (selectedOption?.includes(name) && name !== '')
+                return (
+                  <div
+                    key={i}
+                    className={`rounded-3xl px-2 text-[13px] truncate w-fit bg-opacity-20`}
+                    style={{ background: bgcolor, color: color }}>
+                    {name}
+                  </div>
+                );
+            })}
+          </div>
+          {/* <div
+            // style={{backdropFilter}}
             className={`relative select-none h-full  z-0 flex items-start  border-transparent border rounded-sm w-[calc(100%_-_14px)] ${
               SingleSelectToggle && 'border-blue-500'
             }`}
             ref={singleSelectRef}>
-            {/* {SingleSelectToggle && (
-
-          )} */}
-          </div>
+            {selectedOption}
+          </div> */}
         </div>
 
         <div className='min-w-4 h-4 flex'>
