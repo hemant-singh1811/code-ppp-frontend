@@ -1,19 +1,27 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { useDetectOutsideClick } from '../../../../utilities/customHooks/useDetectOutsideClick';
-import { useSelector } from 'react-redux';
-import { TableContext } from '../../tableComponents/TableComponents';
-import { colorPallet } from '../../../../utilities/colorPallet';
-import { Popover, Transition } from '@headlessui/react';
+import React, {
+  Fragment,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { useDetectOutsideClick } from "../../../../utilities/customHooks/useDetectOutsideClick";
+import { useSelector } from "react-redux";
+import { TableContext } from "../../tableComponents/TableComponents";
+import { colorPallet } from "../../../../utilities/colorPallet";
+import { Popover, Transition } from "@headlessui/react";
+import { useClickAway } from "react-use";
 
 function SingleSelectWithAddOption({ columnData, rowData, cell }) {
-  const { columns, setColumns, table } = useContext(TableContext);
+  const { columns, setColumns, table, activeNumberOfLines, activeRowHeight } =
+    useContext(TableContext);
   const socket = useSelector((state) => state.socketWebData.socket);
   // Create a ref that we add to the element for which we want to detect outside clicks
   const singleSelectRef = React.useRef();
   // Call hook passing in the ref and a function to call on outside click
   useDetectOutsideClick(singleSelectRef, () => setSingleSelectToggle(false));
 
-  let newOptions = [{ name: '' }];
+  let newOptions = [{ name: "" }];
   if (Array.isArray(columnData?.options)) {
     newOptions = columnData?.options;
   }
@@ -22,20 +30,12 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     (state) => state.globalState
   );
 
-  const [isFocused, setIsFocused] = React.useState(false);
-
-  const handleFocus = () => {
-    setIsFocused(true);
-  };
-
-  const handleBlur = () => {
-    setIsFocused(false);
-  };
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const [SingleSelectToggle, setSingleSelectToggle] = React.useState(false);
   const [selectedOption, setSelectedOption] = React.useState(rowData || []);
   const [options, setOptions] = useState(newOptions);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [bgColorAndTextColor, setBgColorAndTextColor] = useState(
     getRandomColor()
   );
@@ -103,7 +103,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
 
     rowData = [searchTerm];
     setSelectedOption([searchTerm]);
-    setSearchTerm('');
+    setSearchTerm("");
     setSingleSelectToggle(!SingleSelectToggle);
     rowCopy[cell?.column.id] = rowData;
 
@@ -120,12 +120,12 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
       field_id: cell.column.columnDef.field_id,
     };
 
-    socket.emit('updatemetadata', obj, (response) => {
-      console.log('socket response: ' + JSON.stringify(response));
+    socket.emit("updatemetadata", obj, (response) => {
+      console.log("socket response: " + JSON.stringify(response));
     });
 
-    socket.emit('updatedata', rowObj, (response) => {
-      console.log('res : ', response);
+    socket.emit("updatedata", rowObj, (response) => {
+      console.log("res : ", response);
     });
 
     setBgColorAndTextColor(getRandomColor());
@@ -149,8 +149,8 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     rowCopy[cell?.column.id] = rowData;
     table.options.meta?.updateData(cell.row.index, cell.column.id, [name]);
     // console.log(rowObj)
-    socket.emit('updatedata', rowObj, (response) => {
-      console.log('res : ', response);
+    socket.emit("updatedata", rowObj, (response) => {
+      console.log("res : ", response);
     });
     setSingleSelectToggle(!SingleSelectToggle);
   }
@@ -159,131 +159,161 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     setOptions(columnData?.options);
   }, [columns]);
 
-  return (
-    <Popover className='flex h-full items-center rounded-md text-[#4d4d4d] p-0.5 px-2 text-lg  cursor-pointer relative '>
-      <Popover.Button
-        className={`relative select-none h-full  z-0 flex items-start  border-transparent border rounded-sm w-[calc(100%_-_14px)] ${
-          SingleSelectToggle && 'border-blue-500'
-        }`}
-        // className='flex items-center font-medium outline-none'
-      >
-        <div
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          style={{ background: isFocused && 'red' }}
-          onClick={() => {
-            setSingleSelectToggle(!SingleSelectToggle);
-            setSearchTerm('');
-          }}
-          className='flex h-full w-full items-center p-1  '>
-          <div className=' w-full rounded-md cursor-pointer flex items-center pr-1 justify-between '>
-            {options?.map(({ name, color, bgcolor }, i) => {
-              if (selectedOption?.includes(name) && name !== '')
-                return (
-                  <div
-                    key={i}
-                    className={`rounded-3xl px-2 text-[13px] truncate w-fit bg-opacity-20`}
-                    style={{ background: bgcolor, color: color }}>
-                    {name}
-                  </div>
-                );
-            })}
-          </div>
-          {/* <div
-            // style={{backdropFilter}}
-            className={`relative select-none h-full  z-0 flex items-start  border-transparent border rounded-sm w-[calc(100%_-_14px)] ${
-              SingleSelectToggle && 'border-blue-500'
-            }`}
-            ref={singleSelectRef}>
-            {selectedOption}
-          </div> */}
-        </div>
+  function handleDoubleClick() {
+    setIsEditMode(true);
+  }
 
-        <div className='min-w-4 h-4 flex'>
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 24 24'
-            strokeWidth={1.5}
-            stroke='currentColor'
-            className='min-w-4 h-4 text-blue-500 ml-auto'>
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              d='M19.5 8.25l-7.5 7.5-7.5-7.5'
-            />
-          </svg>
-        </div>
-      </Popover.Button>
-      <Transition
-        className='bg-white'
-        as={Fragment}
-        enter='transition ease-out duration-200'
-        enterFrom='opacity-0 translate-y-1'
-        enterTo='opacity-100 translate-y-0'
-        leave='transition ease-in duration-150'
-        leaveFrom='opacity-100 translate-y-0'
-        leaveTo='opacity-0 translate-y-1'>
-        <Popover.Panel className='absolute  left-0 z-[3] bg-white   max-h-[calc(100vh/_.5)] rounded-md  shadow-custom '>
-          <div
-            className='absolute -left-1 top-7 w-full  bg-white rounded-md shadow-lg min-w-[200px] border  overflow-x-hidden'
-            style={{ zIndex: 100 }}>
-            <input
-              type='text'
-              name='search option'
-              id=''
-              placeholder='find an option'
-              className='w-full outline-none p-2'
-              onChange={(e) => setSearchTerm(e.target.value)}
-              value={searchTerm}
-              autoComplete={'off'}
-              autoFocus
-            />
-            <div className='max-h-[300px]  overflow-y-auto'>
-              {options
-                ?.filter(({ name }) => name?.includes(searchTerm))
-                .map(({ color, name, bgcolor }, i) => {
-                  return (
-                    <div
-                      onClick={() => updateOption(name)}
-                      key={i}
-                      className='p-2 hover:bg-blue-100 flex min-h-[30px] w-full'>
-                      {name && (
+  const ref = useRef(null);
+  useClickAway(ref, () => {
+    setIsEditMode(false);
+  });
+
+  return (
+    <div ref={ref}>
+      <Popover
+        style={{
+          height: activeRowHeight,
+        }}
+        className="flex h-full items-center rounded-md text-[#4d4d4d]  text-lg  cursor-pointer relative "
+      >
+        {({ open, close }) => (
+          <>
+            <Popover.Button
+              onClick={() => {
+                setSingleSelectToggle(!SingleSelectToggle);
+                setSearchTerm("");
+                handleDoubleClick();
+              }}
+              className={`relative select-none h-full w-full  z-0 flex items-center  border-transparent border rounded-sm  outline-none border-none`}
+              style={{
+                boxShadow: isEditMode && "0 0 0px 2px inset #166ee1",
+              }}
+            >
+              <div
+                className={`flex h-full  p-0.5 pt-[3px] pl-1  items-start ${
+                  isEditMode ? "w-[calc(100%_-_16px)]" : "w-full"
+                }`}
+              >
+                <div className=" w-full rounded-md cursor-pointer flex items-center pr-1 justify-between ">
+                  {options?.map(({ name, color, bgcolor }, i) => {
+                    if (selectedOption?.includes(name) && name !== "")
+                      return (
                         <div
-                          onClick={() => setSearchTerm('')}
+                          key={i}
+                          className={`rounded-3xl px-2 text-[13px] truncate w-fit bg-opacity-20`}
                           style={{ background: bgcolor, color: color }}
-                          className={`rounded-xl px-2 truncate`}>
+                        >
                           {name}
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
-              {options?.filter(({ name }) => name === searchTerm).length ===
-                0 && (
+                      );
+                  })}
+                </div>
+              </div>
+              {isEditMode && (
+                <div className="min-w-4 h-4 flex ">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="min-w-4 h-4 text-blue-500 ml-auto"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                    />
+                  </svg>
+                </div>
+              )}
+            </Popover.Button>
+            <Transition
+              className="bg-white"
+              as={Fragment}
+              enter="transition ease-out duration-200"
+              enterFrom="opacity-0 translate-y-1"
+              enterTo="opacity-100 translate-y-0"
+              leave="transition ease-in duration-150"
+              leaveFrom="opacity-100 translate-y-0"
+              leaveTo="opacity-0 translate-y-1"
+            >
+              <Popover.Panel className="absolute  left-0 z-[3] bg-yellow-400   h-full rounded-md  shadow-custom ">
                 <div
-                  onClick={addNewOption}
-                  className='p-2 hover:bg-blue-100 flex truncate'>
-                  <div className='truncate flex'>
-                    Add New Option:
-                    {searchTerm && (
-                      <span
-                        style={{
-                          background: bgColorAndTextColor.background,
-                          color: bgColorAndTextColor.color,
+                  className="absolute -left-1 top-8 w-full  bg-white rounded-md shadow-lg min-w-[200px] border  overflow-x-hidden"
+                  style={{ zIndex: 100 }}
+                >
+                  <input
+                    type="text"
+                    name="search option"
+                    id=""
+                    placeholder="find an option"
+                    className="w-full outline-none p-2"
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    value={searchTerm}
+                    autoComplete={"off"}
+                    autoFocus
+                  />
+                  <div className="max-h-[300px]  overflow-y-auto">
+                    {options
+                      ?.filter(({ name }) => name?.includes(searchTerm))
+                      .map(({ color, name, bgcolor }, i) => {
+                        return (
+                          <div
+                            onClick={() => {
+                              updateOption(name);
+                              close();
+                            }}
+                            key={i}
+                            className="p-2 hover:bg-blue-100 flex min-h-[30px] w-full"
+                          >
+                            {name && (
+                              <div
+                                onClick={() => {
+                                  setSearchTerm("");
+                                }}
+                                style={{ background: bgcolor, color: color }}
+                                className={`rounded-xl px-2 truncate`}
+                              >
+                                {name}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    {options?.filter(({ name }) => name === searchTerm)
+                      .length === 0 && (
+                      <div
+                        onClick={(e) => {
+                          addNewOption(e);
+                          close();
                         }}
-                        className={`rounded-xl px-2 ml-1 truncate`}>
-                        {searchTerm}
-                      </span>
+                        className="p-2 hover:bg-blue-100 flex truncate"
+                      >
+                        <div className="truncate flex">
+                          Add New Option:
+                          {searchTerm && (
+                            <span
+                              style={{
+                                background: bgColorAndTextColor.background,
+                                color: bgColorAndTextColor.color,
+                              }}
+                              className={`rounded-xl px-2 ml-1 truncate`}
+                            >
+                              {searchTerm}
+                            </span>
+                          )}
+                        </div>
+                      </div>
                     )}
                   </div>
                 </div>
-              )}
-            </div>
-          </div>
-        </Popover.Panel>
-      </Transition>
-    </Popover>
+              </Popover.Panel>
+            </Transition>
+          </>
+        )}
+      </Popover>
+    </div>
   );
 }
 

@@ -1,18 +1,15 @@
-import React, { useContext, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { TableContext } from '../../tableComponents/TableComponents';
+import React, { useContext, useState } from "react";
+import { useSelector } from "react-redux";
+import { TableContext } from "../../tableComponents/TableComponents";
 
 export default function SingleLineTextCell({ cell }) {
   const socket = useSelector((state) => state.socketWebData.socket);
-  const [value, setValue] = useState(cell?.getValue() || '');
+  const [value, setValue] = useState(cell?.getValue() || "");
   const [isEditMode, setIsEditMode] = useState(false);
-  const { table, activeRowHeight, activeNumberOfLines } =
-    useContext(TableContext);
+  const { table, activeNumberOfLines } = useContext(TableContext);
   const { selectedBaseId, selectedTableId } = useSelector(
     (state) => state.globalState
   );
-
-  console.log(activeRowHeight, activeNumberOfLines);
 
   function handleDoubleClick() {
     setIsEditMode(true);
@@ -42,29 +39,37 @@ export default function SingleLineTextCell({ cell }) {
         field_id: cell.column.columnDef.field_id,
       };
 
-      socket.emit('updatedata', rowObj, (response) => {
-        console.log('res : ', response);
+      socket.emit("updatedata", rowObj, (response) => {
+        console.log("res : ", response);
       });
     }
   }
 
   return isEditMode ? (
     <input
-      type='text'
+      type="text"
       value={value}
       onChange={handleChange}
       onBlur={handleBlur}
       autoFocus
       style={{
-        // paddingBottom: activeRowHeight === 128 ? 100 : activeRowHeight === 88 : 80 ,
-        boxShadow: '0 0 0px 2px inset #166ee1',
+        paddingBottom:
+          activeNumberOfLines === 4
+            ? 102
+            : activeNumberOfLines === 3
+            ? 62
+            : activeNumberOfLines === 2
+            ? 30
+            : activeNumberOfLines === 1 && 4,
+        boxShadow: "0 0 0px 2px inset #166ee1",
       }}
-      className='w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  '
+      className="w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  "
     />
   ) : (
     <div
-      className='text-left w-full h-full break-words truncate  px-2 p-1'
-      onClick={handleDoubleClick}>
+      className={`overflow-hidden text-left w-full h-full break-words truncate px-2 p-1`}
+      onClick={handleDoubleClick}
+    >
       {value}
     </div>
   );
