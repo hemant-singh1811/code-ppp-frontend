@@ -169,7 +169,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   });
 
   return (
-    <div ref={ref}>
+    <div>
       <Popover
         style={{
           height: activeRowHeight,
@@ -184,9 +184,10 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
                 setSearchTerm("");
                 handleDoubleClick();
               }}
-              className={`relative select-none h-full w-full  z-0 flex items-center  border-transparent border rounded-sm  outline-none border-none`}
+              className={`relative select-none h-full w-full bg-transparent z-0 flex items-center  border-transparent border rounded-sm  outline-none border-none`}
               style={{
-                boxShadow: isEditMode && "0 0 0px 2px inset #166ee1",
+                boxShadow: open && "0 0 0px 2px inset #166ee1",
+                background: open ? "white" : "transparent",
               }}
             >
               <div
@@ -209,7 +210,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
                   })}
                 </div>
               </div>
-              {isEditMode && (
+              {open && (
                 <div className="min-w-4 h-4 flex ">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

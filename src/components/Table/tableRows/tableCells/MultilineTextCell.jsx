@@ -69,12 +69,13 @@ export default function MultilineTextCell({ cell }) {
       tabIndex={0}
       style={{
         border: isEditMode && "2px solid #166ee1",
+        background: isEditMode ? "white" : "transparent",
       }}
       className={`${
         isEditMode
           ? "w-full px-2 p-1 h-[155px] bg-white z-[1000] relative text-left overflow-auto"
-          : `text-left w-full h-full overflow-hidden px-2 p-1  truncate-multiline webkitLineClamp${activeNumberOfLines}`
-      } outline-none rounded-sm border-2 border-transparent select-none py-0 pt-0.5`}
+          : `text-left w-full  h-full overflow-hidden px-2 p-1  truncate-multiline webkitLineClamp${activeNumberOfLines}`
+      } outline-none rounded-sm bg-transparent border-2 border-transparent select-none py-0 pt-0.5`}
     ></div>
   );
 }
