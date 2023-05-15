@@ -40,7 +40,7 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
     setIsOpen(true);
   }
 
-  const renderFile = (file, i) => {
+  function RenderFile({ file, i }) {
     switch (file?.type.split("/")[0]) {
       case "image":
         return (
@@ -167,20 +167,20 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
           // </object>
         );
     }
-  };
+  }
 
   return (
     <div
-      className="h-full overflow-hidden select-none"
+      className="h-full overflow-hidden select-none rounded"
+      style={{
+        // boxShadow: "0 0 0px 2px inset #166ee1",
+        border: isChildVisible && "2px solid #166ee1",
+      }}
       onFocus={() => handleFocus()}
       onBlur={() => handleBlur()}
     >
       <div
-        className="flex h-full w-full items-center  px-1 gap-1 p-0.5  py-1 "
-        style={{
-          boxShadow: isChildVisible && "0 0 0px 2px inset #166ee1",
-          pointerEvents: "none",
-        }}
+        className="flex h-full w-full items-center  px-1 gap-0.5 p-0.5 rounded "
         tabIndex="1"
       >
         {/* //add new record */}
@@ -203,7 +203,8 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
           </div>
         )}
 
-        {Array.isArray(rowData) && rowData.map((ele, i) => renderFile(ele, i))}
+        {Array.isArray(rowData) &&
+          rowData.map((ele, i) => <RenderFile file={ele} i={i} key={i} />)}
       </div>
 
       <Transition appear show={isOpen} as={Fragment}>
