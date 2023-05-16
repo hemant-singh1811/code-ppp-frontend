@@ -52,7 +52,7 @@ export default function MultilineTextCell({ cell }) {
     }
   }
   useEffect(() => {
-    multiLineTextRef.current.innerHTML = cell?.getValue().trim() || "";
+    multiLineTextRef.current.innerHTML = cell?.getValue()?.trim() || "";
   }, []);
 
   return (

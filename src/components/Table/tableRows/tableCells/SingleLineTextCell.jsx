@@ -27,7 +27,7 @@ export default function SingleLineTextCell({ cell }) {
     if (cell.getValue() !== value) {
       table.options.meta?.updateData(cell.row.index, cell.column.id, value);
 
-      let newRowPart = { [cell?.column.id]: value };
+      let newRowPart = { [cell?.column.columnDef.field_id]: value };
 
       let rowObj = {
         base_id: selectedBaseId,
@@ -47,7 +47,7 @@ export default function SingleLineTextCell({ cell }) {
 
   return isEditMode ? (
     <input
-      type="text"
+      type='text'
       value={value}
       onChange={handleChange}
       onBlur={handleBlur}
@@ -63,7 +63,7 @@ export default function SingleLineTextCell({ cell }) {
             : activeNumberOfLines === 1 && 4,
         boxShadow: "0 0 0px 2px inset #166ee1",
       }}
-      className="w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  "
+      className='w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  '
     />
   ) : (
     <div

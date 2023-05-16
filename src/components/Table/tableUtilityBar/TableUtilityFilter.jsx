@@ -1,34 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { useDetectOutsideClick } from '../../../utilities/customHooks/useDetectOutsideClick';
-import CustomFilterInput from './CustomFilterInput';
-import { Popover, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
+import React, { useEffect, useState } from "react";
+import CustomFilterInput from "./CustomFilterInput";
+import { Popover, Transition } from "@headlessui/react";
+import { Fragment } from "react";
 
 export default function TableUtilityFilter({ table }) {
   const [filterConditions, setFilterConditions] = useState([]);
-  // Create a ref that we add to the element for which we want to detect outside clicks
-  const filterRef = React.useRef();
-  // Call hook passing in the ref and a function to call on outside click
-  const [filterToggle, setFilterToggle] = React.useState(false);
-  useDetectOutsideClick(filterRef, () => setFilterToggle(false));
 
   const addConditions = () => {
     let firstType = table.getHeaderGroups()[0]?.headers[0]?.column?.id;
     if (filterConditions.length < 1) {
       setFilterConditions([
         {
-          type: firstType || '',
-          operator: 'contains',
-          value: '',
+          type: firstType || "",
+          operator: "contains",
+          value: "",
+          columnId: "",
           id: Date.now(),
         },
       ]);
     } else {
       setFilterConditions((prevArray) => {
         let newValue = {
-          type: firstType || '',
-          operator: 'contains',
-          value: '',
+          type: firstType || "",
+          operator: "contains",
+          value: "",
           id: Date.now(),
         };
         return [...prevArray, newValue];
@@ -44,6 +39,7 @@ export default function TableUtilityFilter({ table }) {
   };
 
   let updatedFilters = filterConditions.map((ele) => {
+    console.log(ele);
     return {
       id: ele.type,
       value: ele.value.trim(),
@@ -57,8 +53,9 @@ export default function TableUtilityFilter({ table }) {
   return (
     <Popover
       className={`flex items-center hover:bg-black hover:bg-opacity-10 rounded-md text-[#4d4d4d] p-0.5 px-2 text-lg cursor-pointer relative ${
-        filterConditions.length !== 0 && 'bg-[#e1d5f9]'
-      }`}>
+        filterConditions.length !== 0 && "bg-[#e1d5f9]"
+      }`}
+    >
       {({ open, close }) => (
         <>
           <Popover.Button className='flex items-center font-medium outline-none'>
@@ -68,7 +65,8 @@ export default function TableUtilityFilter({ table }) {
               viewBox='0 0 24 24'
               strokeWidth={2}
               stroke='currentColor'
-              className='w-5 h-5 pr-1'>
+              className='w-5 h-5 pr-1'
+            >
               <path
                 strokeLinecap='round'
                 strokeLinejoin='round'
@@ -85,7 +83,8 @@ export default function TableUtilityFilter({ table }) {
             enterTo='opacity-100 translate-y-0'
             leave='transition ease-in duration-150'
             leaveFrom='opacity-100 translate-y-0'
-            leaveTo='opacity-0 translate-y-1'>
+            leaveTo='opacity-0 translate-y-1'
+          >
             <Popover.Panel className='absolute top-10 left-0 z-[3] bg-white p-2 rounded-md w-[600px] max-h-96 overflow-y-auto shadow-custom '>
               Filter:
               <div className='h-[.5px] mb-2 mt-1 w-full bg-white' />
@@ -111,7 +110,8 @@ export default function TableUtilityFilter({ table }) {
               </div>
               <div
                 className='text-blue-500 hover:text-blue-700 m-2 mb-0 inline-block'
-                onClick={() => addConditions()}>
+                onClick={() => addConditions()}
+              >
                 + Add Condition
               </div>
             </Popover.Panel>

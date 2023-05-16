@@ -1,18 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import TableUtilityFilter from './TableUtilityFilter';
-import TableUtilityGrouping from './TableUtilityGrouping';
-import TableUtilityHideFields from './TableUtilityHideFields';
-import TableUtilityRowHeight from './TableUtilityRowHeight';
-import TableUtilitySearching from './TableUtilitySearch';
-import TableUtilitySort from './TableUtilitySort';
-import { TableContext } from '../tableComponents/TableComponents';
-import TableUtilityViews from './tableViews/TableUtilityViews';
+import React, { useContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import TableUtilityFilter from "./TableUtilityFilter";
+import TableUtilityGrouping from "./TableUtilityGrouping";
+import TableUtilityHideFields from "./TableUtilityHideFields";
+import TableUtilityRowHeight from "./TableUtilityRowHeight";
+import TableUtilitySearching from "./TableUtilitySearch";
+import TableUtilitySort from "./TableUtilitySort";
+import { TableContext } from "../tableComponents/TableComponents";
+import TableUtilityViews from "./tableViews/TableUtilityViews";
 import {
   handelUpdateModel,
   handleUpdateSelectedViews,
-} from '../../../store/features/viewsSlice';
-import TableUtilityColor from './TableUtilityColor';
+} from "../../../store/features/viewsSlice";
+import TableUtilityColor from "./TableUtilityColor";
 
 export default function TableUtilityBar() {
   const { table } = useContext(TableContext);

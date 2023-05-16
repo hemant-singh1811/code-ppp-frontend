@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export default function CustomFilterInput({
   table,
@@ -12,12 +12,13 @@ export default function CustomFilterInput({
   const handleInputChange = (type, value, id) => {
     setFilterConditions((prev) => {
       return prev.map((ele) => {
+        console.log(ele, id);
         if (ele.id === id) {
-          if (type === 'type') {
+          if (type === "type") {
             ele.type = value;
-          } else if (type === 'operator') {
+          } else if (type === "operator") {
             ele.operator = value;
-          } else if (type === 'value') {
+          } else if (type === "value") {
             ele.value = value;
           }
         }
@@ -31,13 +32,14 @@ export default function CustomFilterInput({
         <select
           placeholder='Select a type'
           value={type}
-          onChange={(e) => handleInputChange('type', e.target.value, id)}
-          className='block w-60 p-2  bg-white border border-gray-300 rounded-tl-md rounded-bl-md outline-none appearance-none hover:bg-gray-100 text-base'>
+          onChange={(e) => handleInputChange("type", e.target.value, id)}
+          className='block w-60 p-2  bg-white border border-gray-300 rounded-tl-md rounded-bl-md outline-none appearance-none hover:bg-gray-100 text-base'
+        >
           {table.getHeaderGroups().map((headerGroup) =>
             headerGroup.headers.map((header, i) => {
               return (
                 !header.column.columnDef?.hiddenInConditions && (
-                  <option key={i}>{header.column.id}</option>
+                  <option key={i}>{header.column.columnDef.field_name}</option>
                 )
               );
             })
@@ -45,29 +47,32 @@ export default function CustomFilterInput({
         </select>
         <select
           value={operator}
-          onChange={(e) => handleInputChange('operator', e.target.value, id)}
+          onChange={(e) => handleInputChange("operator", e.target.value, id)}
           placeholder='Select a condition'
-          className='block w-60 p-2  bg-white border border-gray-300 outline-none appearance-none   hover:bg-gray-100 text-base'>
+          className='block w-60 p-2  bg-white border border-gray-300 outline-none appearance-none   hover:bg-gray-100 text-base'
+        >
           <option>Contains</option>
           {/* <option>Does Not Contains</option> */}
         </select>
         <input
           value={value}
-          onChange={(e) => handleInputChange('value', e.target.value, id)}
+          onChange={(e) => handleInputChange("value", e.target.value, id)}
           className='block w-60 p-2  bg-white border focus:outline-blue-500 border-gray-300 hover:bg-gray-100  text-base'
           type='text'
           placeholder='Enter a Value'
         />
         <div
           onClick={() => removeCondition(id)}
-          className='bg-white border border-gray-300 rounded-tr-md rounded-br-md flex items-center hover:bg-gray-100'>
+          className='bg-white border border-gray-300 rounded-tr-md rounded-br-md flex items-center hover:bg-gray-100'
+        >
           <svg
             xmlns='http://www.w3.org/2000/svg'
             fill='none'
             viewBox='0 0 24 24'
             strokeWidth={1.5}
             stroke='currentColor'
-            className='w-6 h-6 mx-2'>
+            className='w-6 h-6 mx-2'
+          >
             <path
               strokeLinecap='round'
               strokeLinejoin='round'

@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import Error from '../../components/utilities/Error';
-import Loading from '../../components/utilities/Loading';
+import React, { useEffect } from "react";
+import Error from "../../components/utilities/Error";
+import Loading from "../../components/utilities/Loading";
 import {
   useGetModelQuery,
   useGetSavedViewQuery,
   useGetTableDataQuery,
-} from '../../store/services/alphaTruckingApi';
-import { useDispatch, useSelector } from 'react-redux';
-import { handelAddInitialState } from '../../store/features/viewsSlice';
-import Table from '../../components/Table/Table';
-import { initSocket } from '../../store/features/sockets/SocketWebDataSlice';
+} from "../../store/services/alphaTruckingApi";
+import { useDispatch, useSelector } from "react-redux";
+import { handelAddInitialState } from "../../store/features/viewsSlice";
+import Table from "../../components/Table/Table";
+import { initSocket } from "../../store/features/sockets/SocketWebDataSlice";
 
 let multipleRecordLinksArray = [];
 
@@ -27,8 +27,6 @@ export default function TableScreen() {
 
   const RecordIdArrayWithTableIdMap = new Map(); // table id -> multiple record [] of a particular column
 
-  useEffect(() => dispatch(initSocket()), [dispatch]);
-
   useEffect(() => {
     getTableDataApi.refetch(selectedTableId);
     getModalApi.refetch(selectedTableId);
@@ -39,19 +37,19 @@ export default function TableScreen() {
 
   useEffect(() => {
     if (getViewsApi.isSuccess) {
-      console.log('GET SAVED VIEW MODAL:', getViewsApi.data);
+      console.log("GET SAVED VIEW MODAL:", getViewsApi.data);
     }
   }, [getViewsApi.isSuccess]);
 
   useEffect(() => {
     if (getModalApi.data) {
-      console.log('GET MODAL:', getModalApi.data);
+      console.log("GET MODAL:", getModalApi.data);
     }
   }, [getModalApi.isSuccess]);
 
   useEffect(() => {
     if (getTableDataApi.data) {
-      console.log('GET DATA:', getTableDataApi.data);
+      console.log("GET DATA:", getTableDataApi.data);
     }
   }, [getTableDataApi.isSuccess]);
 
@@ -73,7 +71,7 @@ export default function TableScreen() {
   // stores the linked model in the map by linked  table keys and model as values
   multipleRecordLinksArray = getModalApi.data
     .map(({ data }) => {
-      if (data.field_type === 'multipleRecordLinks') {
+      if (data.field_type === "multipleRecordLinks") {
         multipleRecordLinksMap.set(data?.linked_rec?.tableid, data);
         return data;
       }

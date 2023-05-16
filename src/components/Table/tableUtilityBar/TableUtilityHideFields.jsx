@@ -64,8 +64,8 @@ export default function TableUtilityHideFields({ table }) {
               {table
                 .getAllLeafColumns()
                 .filter((column) =>
-                  column.id
-                    .toLowerCase()
+                  column.columnDef?.field_name
+                    ?.toLowerCase()
                     .includes(searchInput.toLowerCase().trim())
                 )
                 .map((column, i) => {
@@ -95,7 +95,9 @@ export default function TableUtilityHideFields({ table }) {
             pointer-events-none inline-block h-[8px] w-[8px] transform top-0 rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
                           />
                         </Switch>
-                        <div className="capitalize truncate">{column.id}</div>
+                        <div className="capitalize truncate">
+                          {column.columnDef.field_name}
+                        </div>
                       </label>
                     )
                   );
