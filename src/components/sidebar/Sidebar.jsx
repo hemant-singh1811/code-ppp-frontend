@@ -65,7 +65,7 @@ export default function Sidebar() {
       createMenusByBase =
         data?.map((item) => {
           return {
-            title: item?.basemetadata?.name || "Undefined Table",
+            title: item?.baseMetaData?.baseName || "Undefined Table",
             icons: (
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -76,13 +76,13 @@ export default function Sidebar() {
                 <path d='M160 896V256h640v640H160Zm40-433.846h560V296H200v166.154Zm199.923 196.923h160.154V502.154H399.923v156.923Zm0 196.923h160.154V699.077H399.923V856ZM200 659.077h159.923V502.154H200v156.923Zm400.077 0H760V502.154H600.077v156.923ZM200 856h159.923V699.077H200V856Zm400.077 0H760V699.077H600.077V856Z' />
               </svg>
             ),
-            baseId: item?.baseid || "baseId",
-            subMenu: item?.tablemetadata?.map((ele, i) => {
+            baseId: item?.baseId || "baseId",
+            subMenu: item?.tableMetaData?.map((ele, i) => {
               return {
-                title: ele?.table_name,
-                to: item?.baseid + "/" + ele?.table_id,
-                tableId: ele?.table_id,
-                baseId: item?.baseid || "baseId",
+                title: ele?.tableName,
+                to: item?.baseId + "/" + ele?.tableId,
+                tableId: ele?.tableId,
+                baseId: item?.baseId || "baseId",
               };
             }),
           };
@@ -100,10 +100,10 @@ export default function Sidebar() {
       });
       createMenusByBase = createMenusByBase.map((ele) => {
         ele.subMenu = ele.subMenu.sort((a, b) => {
-          if (a.title.toLowerCase() < b.title.toLowerCase()) {
+          if (a?.title?.toLowerCase() < b?.title?.toLowerCase()) {
             return -1;
           }
-          if (a.title.toLowerCase() > b.title.toLowerCase()) {
+          if (a?.title?.toLowerCase() > b?.title?.toLowerCase()) {
             return 1;
           }
           return 0;

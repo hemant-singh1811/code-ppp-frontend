@@ -39,7 +39,7 @@ export default function CustomFilterInput({
             headerGroup.headers.map((header, i) => {
               return (
                 !header.column.columnDef?.hiddenInConditions && (
-                  <option key={i}>{header.column.columnDef.field_name}</option>
+                  <option key={i}>{header.column.columnDef.fieldName}</option>
                 )
               );
             })

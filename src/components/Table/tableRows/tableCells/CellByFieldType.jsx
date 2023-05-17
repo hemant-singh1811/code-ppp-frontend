@@ -19,7 +19,7 @@ import DefaultSelectCell from "./DefaultSelectCell";
 
 export default function CellByFieldType({
   hiddenInConditions,
-  field_type,
+  fieldType,
   cell,
   row,
 }) {
@@ -33,7 +33,7 @@ export default function CellByFieldType({
       />
     );
   }
-  switch (field_type) {
+  switch (fieldType) {
     case "singleSelect": //array
       return Array.isArray(cell?.getValue()) ||
         cell?.getValue() === "" ||
@@ -44,7 +44,7 @@ export default function CellByFieldType({
           rowData={cell?.getValue()}
         />
       ) : (
-        <div className="w-full h-full overflow-hidden">
+        <div className='w-full h-full overflow-hidden'>
           {console.log(
             "not getting array in single select",
             typeof cell?.getValue()
@@ -53,7 +53,7 @@ export default function CellByFieldType({
         </div>
       );
 
-    case "multipleSelects": //array
+    case "multipleSelect": //array
       return Array.isArray(cell?.getValue()) ||
         cell?.getValue() === "" ||
         cell?.getValue() === undefined ? (
@@ -63,7 +63,7 @@ export default function CellByFieldType({
           rowData={cell?.getValue()}
         />
       ) : (
-        <div className="w-full h-full overflow-hidden">
+        <div className='w-full h-full overflow-hidden'>
           {console.warn("not getting array in multi select", cell?.getValue())}
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </div>
@@ -94,7 +94,7 @@ export default function CellByFieldType({
 
     // pending components
 
-    case "multipleAttachments": //array
+    case "attachments": //array
       return (
         <MultipleAttachmentsTableCell cell={cell} rowData={cell?.getValue()} />
       );
@@ -127,12 +127,12 @@ export default function CellByFieldType({
     case "button": //string
       return <ButtonCell cell={cell} />;
 
-    case "multipleRecordLinks": //string
+    case "linkedRecords": //string
       return <MultipleRecordLinksCell cell={cell} rowData={cell?.getValue()} />;
 
     default:
       return (
-        <div className="w-full h-full overflow-hidden flex items-center justify-center bg-transparent">
+        <div className='w-full h-full overflow-hidden flex items-center justify-center bg-transparent'>
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </div>
       );

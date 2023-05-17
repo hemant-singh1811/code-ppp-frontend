@@ -1,15 +1,15 @@
-import React, { useRef, useState } from 'react';
-import { useEffect } from 'react';
-import { useContext } from 'react';
-import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
-import { useAddTableRowMutation } from '../../../store/services/alphaTruckingApi';
-import { useDetectOutsideClick } from '../../../utilities/customHooks/useDetectOutsideClick';
-import { TableContext } from '../tableComponents/TableComponents';
-import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
-import { storage } from '../../../firebase';
-import SingleSelectWithAddOption from '../tableRows/tableCells/SingleSelectWithAddOption';
+import React, { useRef, useState } from "react";
+import { useEffect } from "react";
+import { useContext } from "react";
+import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { useAddTableRowMutation } from "../../../store/services/alphaTruckingApi";
+import { useDetectOutsideClick } from "../../../utilities/customHooks/useDetectOutsideClick";
+import { TableContext } from "../tableComponents/TableComponents";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { storage } from "../../../firebase";
+import SingleSelectWithAddOption from "../tableRows/tableCells/SingleSelectWithAddOption";
 
 export default function AddRowTable() {
   const location = useLocation();
@@ -51,7 +51,7 @@ export default function AddRowTable() {
   });
 
   columns?.map((ele) => {
-    fieldsMapTempTesting.add(ele?.field_type);
+    fieldsMapTempTesting.add(ele?.fieldType);
   });
 
   // for (let [key] of fieldsMapTempTesting) {
@@ -67,14 +67,14 @@ export default function AddRowTable() {
     const file = e.target.files[0];
     let file_name = file.name;
     const reader = new FileReader();
-    let parts = file_name.split('.');
+    let parts = file_name.split(".");
     let fileType = parts[parts.length - 1];
     file_name = file_name.slice(0, file_name.length - fileType.length - 1);
     file_name = `${file_name}.${fileType}`;
     reader.readAsDataURL(file);
     setSubmitButton(true);
 
-    reader.addEventListener('load', async (e) => {
+    reader.addEventListener("load", async (e) => {
       // let handleUploading = async () => {
       const storageRef = ref(storage, file_name);
       // 'file' comes from the Blob or File API
@@ -86,7 +86,7 @@ export default function AddRowTable() {
         // 2. Error observer, called on failure
         // 3. Completion observer, called on successful completion
         uploadTask.on(
-          'state_changed',
+          "state_changed",
           (snapshot) => {
             // Observe state change events such as progress, pause, and resume
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
@@ -95,12 +95,12 @@ export default function AddRowTable() {
               100
             ).toFixed(0);
             // console.log('Upload is ' + progress + '% done');
-            setUploadProgress('Upload is ' + progress + '% done');
+            setUploadProgress("Upload is " + progress + "% done");
             switch (snapshot.state) {
-              case 'paused':
+              case "paused":
                 // console.log('Upload is paused');
                 break;
-              case 'running':
+              case "running":
                 // console.log('Upload is running');
                 break;
             }
@@ -151,7 +151,7 @@ export default function AddRowTable() {
         // const starsRef = ref(storage, file_name);
         //   getDownloadURL(starsRef)
         //     .then((url) => {
-        //       send("", user_token, url, fileType, file_name);
+        //       send("", userToken, url, fileType, file_name);
         //     })
         //     .catch((error) => {
         //       // A full list of error codes is available at
@@ -185,10 +185,10 @@ export default function AddRowTable() {
 
   useEffect(() => {
     if (responseCreateRow.data) {
-      console.log('Create row:', responseCreateRow.data);
+      console.log("Create row:", responseCreateRow.data);
       setData([...data, responseCreateRow.data?.data]);
       setOpenAddRowToggle(false);
-      console.log('response from server', responseCreateRow.data);
+      console.log("response from server", responseCreateRow.data);
     }
   }, [responseCreateRow.isSuccess]);
 
@@ -203,11 +203,11 @@ export default function AddRowTable() {
     // console.log(fileUploadHandle)
     const updatedData = { ...data, ...fileUploadHandle };
     // console.log(updatedData)
-    console.log('sending data to server', updatedData);
+    console.log("sending data to server", updatedData);
     addRowApi({
       baseId: selectedBaseId,
       data: {
-        table_id: selectedTableId,
+        tableId: selectedTableId,
         data: updatedData,
       },
     });
@@ -216,19 +216,22 @@ export default function AddRowTable() {
   return (
     <div
       ref={addRowToggle}
-      className='absolute z-[1] flex items-center w-full bottom-0 rounded-md text-[#4d4d4d]  text-lg '>
+      className='absolute z-[1] flex items-center w-full bottom-0 rounded-md text-[#4d4d4d]  text-lg '
+    >
       <div
         onClick={() => {
           setOpenAddRowToggle(!openAddRowToggle);
         }}
-        className='text-black border-[1px] shadow-md bg-white hover:bg-blue-100 border-black   absolute bottom-3 left-3 rounded-full px-3 pl-1 h-10 flex justify-center items-center cursor-pointer '>
+        className='text-black border-[1px] shadow-md bg-white hover:bg-blue-100 border-black   absolute bottom-3 left-3 rounded-full px-3 pl-1 h-10 flex justify-center items-center cursor-pointer '
+      >
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
           viewBox='0 0 24 24'
           strokeWidth={1.5}
           stroke='currentColor'
-          className='w-5 h-5'>
+          className='w-5 h-5'
+        >
           <path
             strokeLinecap='round'
             strokeLinejoin='round'
@@ -248,27 +251,27 @@ export default function AddRowTable() {
             <div className='grid grid-cols-2 gap-y-4 gap-x-5 flex-1'>
               {columns?.map((data, i) => {
                 let FieldsType = [
-                  'multipleRecordLinks',
+                  "linkedRecords",
                   // "singleLineText",
                   // "multilineText",
-                  // "multipleAttachments",
-                  'checkbox',
-                  'singleSelect',
-                  'multipleSelects',
+                  // "attachments",
+                  "checkbox",
+                  "singleSelect",
+                  "multipleSelect",
                   // "",
                   // "date",
                   // "phoneNumber",
                   // "email",
-                  'url',
-                  'createdTime',
-                  'lastModifiedTime',
-                  'createdBy',
-                  'lastModifiedBy',
-                  'autoNumber',
-                  'button',
+                  "url",
+                  "createdTime",
+                  "lastModifiedTime",
+                  "createdBy",
+                  "lastModifiedBy",
+                  "autoNumber",
+                  "button",
                 ];
-                switch (data?.field_type) {
-                  case 'singleLineText':
+                switch (data?.fieldType) {
+                  case "singleLineText":
                     return (
                       <div key={i} className=''>
                         <div className='text-sm ml-1 mb-1'>{data?.id}</div>
@@ -282,7 +285,7 @@ export default function AddRowTable() {
                         </div>
                       </div>
                     );
-                  case 'multilineText':
+                  case "multilineText":
                     return (
                       <div key={i} className=''>
                         <div className='text-sm ml-1 mb-1'>{data?.id}</div>
@@ -297,7 +300,7 @@ export default function AddRowTable() {
                         </div>
                       </div>
                     );
-                  case 'phoneNumber':
+                  case "phoneNumber":
                     return (
                       <div key={i} className=''>
                         <div className='text-sm ml-1 mb-1'>{data?.id}</div>
@@ -311,7 +314,7 @@ export default function AddRowTable() {
                         </div>
                       </div>
                     );
-                  case 'date':
+                  case "date":
                     return (
                       <div key={i} className=''>
                         <div className='text-sm ml-1 mb-1'>{data?.id}</div>
@@ -325,7 +328,7 @@ export default function AddRowTable() {
                         </div>
                       </div>
                     );
-                  case 'multipleAttachments':
+                  case "attachments":
                     return (
                       <div key={i} className=''>
                         <div className='text-sm ml-1 mb-1'>{data?.id}</div>
@@ -349,12 +352,12 @@ export default function AddRowTable() {
                             className='text-black w-full p-1.5 py-[2.5px] bg-white px-2 rounded-md shadow-md focus:outline-blue-500'
                           />
                           <div className='m-1'>
-                            {uploadProgress === 0 ? '' : uploadProgress}
+                            {uploadProgress === 0 ? "" : uploadProgress}
                           </div>
                         </div>
                       </div>
                     );
-                  case 'url':
+                  case "url":
                     return (
                       <div key={i} className=''>
                         <div className='text-sm ml-1 mb-1'>{data?.id}</div>
@@ -368,7 +371,7 @@ export default function AddRowTable() {
                         </div>
                       </div>
                     );
-                  case 'singleSelect':
+                  case "singleSelect":
                     return (
                       <div key={i} className=''>
                         <SingleSelectWithAddOption />
@@ -383,7 +386,7 @@ export default function AddRowTable() {
                         <div className=''>
                           <input
                             {...register(data?.id)}
-                            placeholder={data?.field_type}
+                            placeholder={data?.fieldType}
                             className='text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500'
                           />
                         </div>
@@ -395,13 +398,15 @@ export default function AddRowTable() {
             <div className='flex gap-2 justify-between text-white text-xl mt-8'>
               <button
                 className='px-4 p-1 hover:bg-red-600 bg-red-400   rounded-md shadow-md'
-                onClick={() => setOpenAddRowToggle(false)}>
+                onClick={() => setOpenAddRowToggle(false)}
+              >
                 Cancel
               </button>
               <button
                 disabled={submitButton}
                 type='submit'
-                className='px-4 p-1 hover:bg-green-600 bg-green-400  rounded-md shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed'>
+                className='px-4 p-1 hover:bg-green-600 bg-green-400  rounded-md shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed'
+              >
                 Submit
               </button>
             </div>

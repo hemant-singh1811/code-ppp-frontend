@@ -1,30 +1,30 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, redirect } from 'react-router-dom';
+import React, { Fragment, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, redirect } from "react-router-dom";
 import {
   handelAddBases,
   handelAddTableInBases,
   handelRenameBases,
   handelRenameTableInBases,
-} from '../../../store/features/BasesStateSlice';
+} from "../../../store/features/BasesStateSlice";
 import {
   handelSelectedTableAndBaseId,
   handleAddToggle,
-} from '../../../store/features/globalStateSlice';
+} from "../../../store/features/globalStateSlice";
 import {
   handelAddSideBarField,
   handelAddSideBarMenu,
   handelRenameSideBarField,
   handelRenameSideBarMenu,
-} from '../../../store/features/SideBarStateSlice';
+} from "../../../store/features/SideBarStateSlice";
 import {
   useCreateBaseMutation,
   useCreateTableMutation,
   useRenameBaseMutation,
   useRenameTableMutation,
-} from '../../../store/services/alphaTruckingApi';
-import LoadingAlt from '../../utilities/LoadingAlt';
-import { Dialog, Transition } from '@headlessui/react';
+} from "../../../store/services/alphaTruckingApi";
+import LoadingAlt from "../../utilities/LoadingAlt";
+import { Dialog, Transition } from "@headlessui/react";
 
 export default function AddTable() {
   const [createTableApi, responseCreateTable] = useCreateTableMutation();
@@ -36,7 +36,6 @@ export default function AddTable() {
     (state) => state.globalState
   );
   const { bases } = useSelector((state) => state.bases);
-  const { sidebar } = useSelector((state) => state.sidebar);
   const { isOpen, type, action, name, baseId, tableId } = useSelector(
     (state) => state.globalState.addToggle
   );
@@ -44,22 +43,17 @@ export default function AddTable() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [nameInput, setNameInput] = useState(name || '');
+  const [nameInput, setNameInput] = useState(name || "");
   const [isExistNameInput, setIsExistNameInput] = useState(false);
-  const [descriptionInput, setDescriptionInput] = useState('');
-
-  // useEffect(() => {
-  //   setNameInput(name);
-  //   setDescriptionInput(name);
-  // }, [baseId || tableId]);
+  const [descriptionInput, setDescriptionInput] = useState("");
 
   useEffect(() => {
-    setNameInput(name || '');
+    setNameInput(name || "");
     // setDescriptionInput(name || '');
   }, [baseId]);
 
   useEffect(() => {
-    setNameInput(name || '');
+    setNameInput(name || "");
     // setDescriptionInput(name || '');
   }, [tableId]);
 
@@ -69,152 +63,75 @@ export default function AddTable() {
   // save all the bases names and later check if the name is already present or not
   const existingBases = new Set();
 
-  bases.map(({ baseid, tablemetadata }) => {
-    if (baseid === selectedBaseId) {
-      tablemetadata?.forEach(({ table_name }) => {
-        existingTable.add(table_name?.toLocaleLowerCase());
+  bases.map(({ baseId, tableMetaData }) => {
+    if (baseId === selectedBaseId) {
+      tableMetaData?.forEach(({ tableName }) => {
+        existingTable.add(tableName?.toLocaleLowerCase());
       });
     }
   });
 
-  bases.map(({ basemetadata }) => {
-    existingBases.add(basemetadata?.name);
+  bases.map(({ baseMetaData }) => {
+    existingBases.add(baseMetaData?.baseName);
   });
 
-  // existingTable.forEach((key) => {
-  //   console.log('Existing table name', key);
+  // existingBases.forEach((key) => {
+  //   console.log("Existing table name", key);
   // });
 
   useEffect(() => {
     if (responseCreateBase?.data) {
-      // console.log('create Base:', responseCreateBase?.data);
-      // dispatch(handelAddBases([responseCreateBase?.data]));
-      // dispatch(
-      //   handelAddSideBarMenu({
-      //     subMenu: [],
-      //     baseId: responseCreateBase?.data.baseid,
-      //     title: responseCreateBase?.data.basemetadata.name,
-      //     icons: (
-      //       <svg
-      //         xmlns='http://www.w3.org/2000/svg'
-      //         height='24'
-      //         viewBox='0 96 960 960'
-      //         width='24'>
-      //         <path d='M160 896V256h640v640H160Zm40-433.846h560V296H200v166.154Zm199.923 196.923h160.154V502.154H399.923v156.923Zm0 196.923h160.154V699.077H399.923V856ZM200 659.077h159.923V502.154H200v156.923Zm400.077 0H760V502.154H600.077v156.923ZM200 856h159.923V699.077H200V856Zm400.077 0H760V699.077H600.077V856Z' />
-      //       </svg>
-      //     ),
-      //   })
-      // );
-      dispatch(handleAddToggle({ isOpen: false, type: '' }));
-      setNameInput('');
-      setDescriptionInput('');
+      console.log("create base:", responseCreateBase?.data);
+      dispatch(handleAddToggle({ isOpen: false, type: "" }));
+      setNameInput("");
+      setDescriptionInput("");
     }
   }, [responseCreateBase.isSuccess]);
 
   useEffect(() => {
     if (responseRenameBase?.data) {
-      // console.log('Rename Base:', responseRenameBase?.data);
-      // dispatch(
-      //   handelRenameBases({
-      //     baseId: responseRenameBase?.data?.baseid,
-      //     updatedName: responseRenameBase?.data?.base_name,
-      //   })
-      // );
-      // dispatch(
-      //   handelRenameSideBarMenu({
-      //     baseId: responseRenameBase?.data?.baseid,
-      //     updatedName: responseRenameBase?.data?.base_name,
-      //   })
-      // );
-      dispatch(handleAddToggle({ isOpen: false, type: '' }));
-      setNameInput('');
-      setDescriptionInput('');
+      console.log("Rename base:", responseRenameBase?.data);
+      dispatch(handleAddToggle({ isOpen: false, type: "" }));
+      setNameInput("");
+      setDescriptionInput("");
     }
   }, [responseRenameBase.isSuccess]);
 
   useEffect(() => {
     if (responseCreateTable?.data) {
-      console.log('create Table:', responseCreateTable?.data);
-      // dispatch(
-      //   handelAddTableInBases({
-      //     baseId: selectedBaseId,
-      //     data: responseCreateTable?.data,
-      //   })
-      // );
-      // dispatch(
-      //   handelAddSideBarField({
-      //     baseId: selectedBaseId,
-      //     data: {
-      //       title: responseCreateTable?.data?.table_name,
-      //       tableId: responseCreateTable?.data?.table_id,
-      //       to: `${selectedBaseId}/${responseCreateTable?.data?.table_id}`,
-      //       baseId: selectedBaseId,
-      //     },
-      //   })
-      // );
+      console.log("create Table:", responseCreateTable?.data);
       dispatch(
         handelSelectedTableAndBaseId({
-          selectedTableId: responseCreateTable?.data?.table_id,
+          selectedTableId: responseCreateTable?.data?.tableId,
         })
       );
-      dispatch(handleAddToggle({ isOpen: false, type: '' }));
-      setNameInput('');
-      setDescriptionInput('');
-      navigate(`/${selectedBaseId}/${responseCreateTable?.data?.table_id}`);
+      dispatch(handleAddToggle({ isOpen: false, type: "" }));
+      setNameInput("");
+      setDescriptionInput("");
+      navigate(`/${selectedBaseId}/${responseCreateTable?.data?.tableId}`);
     }
   }, [responseCreateTable.isSuccess]);
 
   useEffect(() => {
     if (responseRenameTable?.data) {
-      // console.log('Rename Table:', responseRenameTable?.data);
-      // dispatch(
-      //   handelRenameTableInBases({
-      //     baseId: responseRenameTable?.data.baseid,
-      //     tableId: responseRenameTable?.data.table_id,
-      //     updatedName: responseRenameTable?.data.table_name,
-      //   })
-      // );
-      // dispatch(
-      //   handelRenameSideBarField({
-      //     baseId: responseRenameTable?.data.baseid,
-      //     tableId: responseRenameTable?.data.table_id,
-      //     updatedName: responseRenameTable?.data.table_name,
-      //   })
-      // );
-      dispatch(handleAddToggle({ isOpen: false, type: '' }));
-      setNameInput('');
-      setDescriptionInput('');
+      console.log("Rename Table:", responseRenameTable?.data);
+
+      dispatch(handleAddToggle({ isOpen: false, type: "" }));
+      setNameInput("");
+      setDescriptionInput("");
     }
   }, [responseRenameTable.isSuccess]);
-
-  // useEffect(() => {
-  //   if (responseCreateTable?.error) {
-  //     dispatch(
-  //       handelOpenModal({
-  //         heading: 'Table Creation',
-  //         error: responseCreateTable?.error?.data?.err,
-  //       })
-  //     );
-  //   }
-  //   if (responseCreateBase?.error) {
-  //     dispatch(
-  //       handelOpenModal({
-  //         heading: 'Base Creation',
-  //         error: responseCreateBase?.error?.data?.err,
-  //       })
-  //     );
-  //   }
-  // }, [responseCreateTable.isError || responseCreateBase?.error]);
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
         as='div'
         className='relative z-50'
-        onClose={() => dispatch(handleAddToggle({ isOpen: false, type: '' }))}>
+        onClose={() => dispatch(handleAddToggle({ isOpen: false, type: "" }))}
+      >
         <Transition.Child
           className={`text-black absolute bottom-[10px] z-50  w-96 rounded-md  bg-white p-4 border-gray-400 border-2 flex flex-col ${
-            mainSideBar.toggle ? 'left-[80px]' : 'left-[244px]'
+            mainSideBar.toggle ? "left-[80px]" : "left-[244px]"
           }`}
           as={Fragment}
           enter='ease-out duration-300'
@@ -222,24 +139,25 @@ export default function AddTable() {
           enterTo='opacity-100 scale-100'
           leave='ease-in duration-200'
           leaveFrom='opacity-100 scale-100'
-          leaveTo='opacity-0 scale-95'>
+          leaveTo='opacity-0 scale-95'
+        >
           <Dialog.Panel className=''>
             <div>
               <input
                 type='text'
                 placeholder={
-                  type === 'table'
-                    ? 'Table Name (Mandatory)'
-                    : type === 'base'
-                    ? 'Base Name (Mandatory)'
-                    : ''
+                  type === "table"
+                    ? "Table Name (Mandatory)"
+                    : type === "base"
+                    ? "Base Name (Mandatory)"
+                    : ""
                 }
                 className='w-full p-1 px-2 border-2 rounded-md outline-blue-500 border-[#cccecf] mb-3'
                 value={nameInput}
                 onChange={(e) => {
                   setNameInput(e.target.value);
                   switch (type) {
-                    case 'table':
+                    case "table":
                       existingTable.has(
                         e.target.value.toLocaleLowerCase().trim()
                       )
@@ -248,7 +166,7 @@ export default function AddTable() {
 
                       break;
 
-                    case 'base':
+                    case "base":
                       existingBases.has(
                         e.target.value.toLocaleLowerCase().trim()
                       )
@@ -265,7 +183,7 @@ export default function AddTable() {
 
               {isExistNameInput && (
                 <div className='text-red-700 text-sm m-1 -mt-3 -mb-2'>
-                  Please enter a unique {type === 'table' ? 'Table' : 'Base'}{' '}
+                  Please enter a unique {type === "table" ? "Table" : "Base"}{" "}
                   name
                 </div>
               )}
@@ -276,11 +194,11 @@ export default function AddTable() {
                   type='text'
                   className='px-2 p-1 w-full outline-gray-400  bg-[#f2f2f2] rounded-md'
                   placeholder={
-                    type === 'table'
-                      ? 'Describe this Table (optional)'
-                      : type === 'base'
-                      ? 'Describe this Base (optional)'
-                      : ''
+                    type === "table"
+                      ? "Describe this Table (optional)"
+                      : type === "base"
+                      ? "Describe this Base (optional)"
+                      : ""
                   }
                   value={descriptionInput}
                   onChange={(e) => setDescriptionInput(e.target.value)}
@@ -291,18 +209,20 @@ export default function AddTable() {
                 <div>
                   <div
                     className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
-                      isOpen && 'hidden'
+                      isOpen && "hidden"
                     } `}
                     onClick={() =>
-                      dispatch(handleAddToggle({ isOpen: false, type: '' }))
-                    }>
+                      dispatch(handleAddToggle({ isOpen: false, type: "" }))
+                    }
+                  >
                     <svg
                       xmlns='http://www.w3.org/2000/svg'
                       fill='none'
                       viewBox='0 0 24 24'
                       strokeWidth={1.5}
                       stroke='currentColor'
-                      className='w-6 h-6'>
+                      className='w-6 h-6'
+                    >
                       <path
                         strokeLinecap='round'
                         strokeLinejoin='round'
@@ -316,9 +236,10 @@ export default function AddTable() {
                   <div
                     className='hover:bg-gray-200 p-1.5 rounded-md px-4 cursor-pointer'
                     onClick={() => {
-                      dispatch(handleAddToggle({ isOpen: false, type: '' }));
-                      setNameInput('');
-                    }}>
+                      dispatch(handleAddToggle({ isOpen: false, type: "" }));
+                      setNameInput("");
+                    }}
+                  >
                     cancel
                   </div>
                   {
@@ -329,24 +250,24 @@ export default function AddTable() {
                         responseCreateTable.isLoading
                       }
                       onClick={() => {
-                        if (action === 'rename') {
+                        if (action === "rename") {
                           switch (type) {
-                            case 'table':
+                            case "table":
                               renameTableApi({
                                 baseId: baseId,
                                 data: {
-                                  table_id: tableId,
-                                  table_name: nameInput.trim(),
-                                  table_description: descriptionInput.trim(),
+                                  tableId: tableId,
+                                  tableName: nameInput.trim(),
+                                  tableDescription: descriptionInput.trim(),
                                 },
                               });
                               break;
-                            case 'base':
+                            case "base":
                               renameBaseApi({
                                 data: {
-                                  baseid: baseId,
-                                  base_name: nameInput.trim(),
-                                  base_description: descriptionInput.trim(),
+                                  baseId: baseId,
+                                  baseName: nameInput.trim(),
+                                  baseDescription: descriptionInput.trim(),
                                 },
                               });
                               break;
@@ -355,20 +276,20 @@ export default function AddTable() {
                           }
                         } else {
                           switch (type) {
-                            case 'table':
+                            case "table":
                               createTableApi({
                                 baseId: selectedBaseId,
                                 data: {
-                                  table_name: nameInput.trim(),
-                                  table_description: descriptionInput.trim(),
+                                  tableName: nameInput.trim(),
+                                  tableDescription: descriptionInput.trim(),
                                 },
                               });
                               break;
-                            case 'base':
+                            case "base":
                               createBaseApi({
                                 data: {
-                                  base_name: nameInput.trim(),
-                                  base_description: descriptionInput.trim(),
+                                  baseName: nameInput.trim(),
+                                  baseDescription: descriptionInput.trim(),
                                 },
                               });
                               break;
@@ -377,7 +298,8 @@ export default function AddTable() {
                           }
                         }
                       }}
-                      className='bg-blue-600 rounded-md p-1.5 px-4 min-w-[105px] min-h-[31.5px] text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400 flex items-center justify-center'>
+                      className='bg-blue-600 rounded-md p-1.5 px-4 min-w-[105px] min-h-[31.5px] text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400 flex items-center justify-center'
+                    >
                       {responseCreateTable.isLoading ||
                       responseCreateBase.isLoading ||
                       responseRenameTable.isLoading ||
@@ -387,7 +309,7 @@ export default function AddTable() {
                         </div>
                       ) : (
                         <span className='capitalize'>
-                          {action} {type === 'table' ? 'Table' : 'Base'}
+                          {action} {type === "table" ? "Table" : "Base"}
                         </span>
                       )}
                     </button>
@@ -401,3 +323,22 @@ export default function AddTable() {
     </Transition>
   );
 }
+
+// useEffect(() => {
+//   if (responseCreateTable?.error) {
+//     dispatch(
+//       handelOpenModal({
+//         heading: 'Table Creation',
+//         error: responseCreateTable?.error?.data?.err,
+//       })
+//     );
+//   }
+//   if (responseCreateBase?.error) {
+//     dispatch(
+//       handelOpenModal({
+//         heading: 'Base Creation',
+//         error: responseCreateBase?.error?.data?.err,
+//       })
+//     );
+//   }
+// }, [responseCreateTable.isError || responseCreateBase?.error]);

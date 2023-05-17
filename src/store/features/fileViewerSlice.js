@@ -24,7 +24,7 @@ const ImageViewerSlice = createSlice({
     },
     handelRemoveFiles: (state, { payload }) => {
       state.files = state.files.filter((file) => {
-        return file.id !== payload.id;
+        return file.fileId !== payload;
       });
     },
     handelUpdateFiles: (state, { payload }) => {

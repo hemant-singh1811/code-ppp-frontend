@@ -23,8 +23,8 @@ export default function TableColumnDropDown({
     addDeleteApi({
       baseId: selectedBaseId,
       data: {
-        table_id: selectedTableId,
-        field_id: columnDef?.field_id,
+        tableId: selectedTableId,
+        fieldId: columnDef?.fieldId,
       },
     });
   }
@@ -33,7 +33,7 @@ export default function TableColumnDropDown({
     if (responseDeleteColumn.data) {
       console.log("Delete Column:", responseDeleteColumn.data);
       setColumns((prev) =>
-        prev.filter((item) => item.field_id !== columnDef?.field_id)
+        prev.filter((item) => item.fieldId !== columnDef?.fieldId)
       );
     }
   }, [responseDeleteColumn.isSuccess]);
@@ -91,14 +91,14 @@ export default function TableColumnDropDown({
             Edit Field
           </div> */}
           <div
-            aria-disabled={columnDef?.is_primary}
+            aria-disabled={columnDef?.primary}
             className={`  cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center ${
-              columnDef?.is_primary
+              columnDef?.primary
                 ? "bg-gray-100 cursor-not-allowed"
                 : "hover:bg-gray-100"
             }`}
             onClick={() => {
-              if (!columnDef?.is_primary) {
+              if (!columnDef?.primary) {
                 deleteColumn();
                 setIsMenuOpen(!isMenuOpen);
               }

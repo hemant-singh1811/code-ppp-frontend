@@ -33,20 +33,20 @@ export default function MultilineTextCell({ cell }) {
         event.target.innerText
       );
 
-      let newRowPart = { [cell?.column.id]: event.target.innerText };
+      let newRowPart = event.target.innerText;
 
       let rowObj = {
-        base_id: selectedBaseId,
-        table_id: selectedTableId,
-        record_id: cell?.row?.original.id52148213343234567,
-        updated_data: newRowPart,
-        field_type: cell.column.columnDef.field_type,
-        field_name: cell.column.columnDef.field_name,
-        field_id: cell.column.columnDef.field_id,
+        baseId: selectedBaseId,
+        tableId: selectedTableId,
+        recordId: cell?.row?.original.id52148213343234567,
+        updatedData: newRowPart,
+        fieldType: cell.column.columnDef.fieldType,
+        fieldName: cell.column.columnDef.fieldName,
+        fieldId: cell.column.columnDef.fieldId,
       };
       console.log(rowObj);
 
-      socket.emit("updatedata", rowObj, (response) => {
+      socket.emit("updateData", rowObj, (response) => {
         console.log("res : ", response);
       });
     }
@@ -60,9 +60,9 @@ export default function MultilineTextCell({ cell }) {
       autoCorrect={"false"}
       ref={multiLineTextRef}
       autoFocus={true}
-      contentEditable="plaintext-only"
-      role="textbox"
-      aria-multiline="true"
+      contentEditable='plaintext-only'
+      role='textbox'
+      aria-multiline='true'
       suppressContentEditableWarning={true}
       onClick={handleDoubleClick}
       onBlur={handleBlur}

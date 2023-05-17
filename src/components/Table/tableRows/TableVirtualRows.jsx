@@ -146,7 +146,7 @@ function TableData({ activeNumberOfLines, cell, activeRowHeight, row, i }) {
             : cell.getIsPlaceholder()
             ? "#ff000042"
             : "",
-          borderLeftWidth: cell.column.columnDef?.is_primary && 0,
+          borderLeftWidth: cell.column.columnDef?.primary && 0,
         },
       }}
     >
@@ -178,7 +178,7 @@ function TableData({ activeNumberOfLines, cell, activeRowHeight, row, i }) {
         <CellByFieldType
           row={row}
           cell={cell}
-          field_type={cell.column.columnDef.field_type}
+          fieldType={cell.column.columnDef.fieldType}
         />
       ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
         // Otherwise, just render the regular cell
@@ -186,10 +186,10 @@ function TableData({ activeNumberOfLines, cell, activeRowHeight, row, i }) {
           <CellByFieldType
             cell={cell}
             row={row}
-            field_type={cell.column.columnDef.field_type}
+            fieldType={cell.column.columnDef.fieldType}
             hiddenInConditions={cell.column.columnDef.hiddenInConditions}
           />
-          {/* {console.log(cell.column.columnDef.field_type)} */}
+          {/* {console.log(cell.column.columnDef.fieldType)} */}
         </>
       )}
     </div>

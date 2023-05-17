@@ -1,9 +1,9 @@
-import React from 'react';
-import { useAddTableRowMutation } from '../../../store/services/alphaTruckingApi';
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { TableContext } from '../tableComponents/TableComponents';
-import { useContext } from 'react';
+import React from "react";
+import { useAddTableRowMutation } from "../../../store/services/alphaTruckingApi";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { TableContext } from "../tableComponents/TableComponents";
+import { useContext } from "react";
 
 export default function CreateRow() {
   const [addRowApi, responseCreateRow] = useAddTableRowMutation();
@@ -14,10 +14,10 @@ export default function CreateRow() {
 
   useEffect(() => {
     if (responseCreateRow.data) {
-      console.log('Create Row', responseCreateRow.data);
+      console.log("Create Row", responseCreateRow.data);
       let newData = {
         ...responseCreateRow.data?.data,
-        id52148213343234567: responseCreateRow.data?.metadata?.record_id,
+        id52148213343234567: responseCreateRow.data?.metaData?.recordId,
       };
       setData([...data, newData]);
     }
@@ -25,27 +25,27 @@ export default function CreateRow() {
 
   function createRow() {
     let updatedData = {};
-    columns.forEach(({ field_type, field_name }) => {
-      console.log(field_type);
-      switch (field_type) {
-        case 'singleSelect':
-          updatedData[field_name] = '';
+    columns.forEach(({ fieldType, fieldName }) => {
+      // console.log(fieldType);
+      switch (fieldType) {
+        case "singleSelect":
+          updatedData[fieldName] = "";
           break;
-        case 'multipleSelects':
-          updatedData[field_name] = '';
+        case "multipleSelect":
+          updatedData[fieldName] = "";
           break;
-        case 'multipleAttachments':
-          updatedData[field_name] = [];
+        case "attachments":
+          updatedData[fieldName] = [];
           break;
-        case 'checkbox':
-          updatedData[field_name] = false;
+        case "checkbox":
+          updatedData[fieldName] = false;
           break;
 
         case undefined:
           break;
 
         default: //string
-          updatedData[field_name] = '';
+          updatedData[fieldName] = "";
           break;
       }
     });
@@ -53,7 +53,7 @@ export default function CreateRow() {
     addRowApi({
       baseId: selectedBaseId,
       data: {
-        table_id: selectedTableId,
+        tableId: selectedTableId,
         data: updatedData,
       },
     });
@@ -62,14 +62,16 @@ export default function CreateRow() {
   return (
     <div
       className='hover:bg-gray-100 px-1 cursor-pointer h-full flex items-center justify-center'
-      onClick={createRow}>
+      onClick={createRow}
+    >
       <svg
         xmlns='http://www.w3.org/2000/svg'
         fill='none'
         viewBox='0 0 24 24'
         strokeWidth={1.5}
         stroke='currentColor'
-        className='w-5 h-5 font-thin '>
+        className='w-5 h-5 font-thin '
+      >
         <path
           strokeLinecap='round'
           strokeLinejoin='round'

@@ -9,7 +9,7 @@ export default function TableUtilityColor() {
   const { columns, selectedColorCondition, setSelectedColorCondition } =
     useContext(TableContext);
   colorsSupportedField = columns.filter((ele) => {
-    if (ele?.field_type === "singleSelect") {
+    if (ele?.fieldType === "singleSelect") {
       return true;
     }
     return false;
@@ -21,7 +21,7 @@ export default function TableUtilityColor() {
       (obj, item) => item?.bgcolor && { ...obj, [item.name]: item.bgcolor },
       {}
     );
-    setSelectedColorCondition({ name: selectedColorOption.field_name, option });
+    setSelectedColorCondition({ name: selectedColorOption.fieldName, option });
   }, [columns]);
 
   const Panel = () => {
@@ -230,7 +230,7 @@ function SelectOption({
           (obj, item) => item?.bgcolor && { ...obj, [item.name]: item.bgcolor },
           {}
         );
-        setSelectedColorCondition({ name: e.field_name, option });
+        setSelectedColorCondition({ name: e.fieldName, option });
       }}
     >
       <div className='relative w-full mt-1'>

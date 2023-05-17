@@ -72,7 +72,7 @@ export default function TableUtilityGrouping({ table }) {
                                       : `👊 `}
                                   </button>
                                 ) : null}{" "}
-                                {header.column.columnDef.field_name}
+                                {header.column.columnDef.fieldName}
                               </div>
                             )}
                           </div>

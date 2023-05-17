@@ -70,7 +70,7 @@ export default function TableUtilitySort({ table }) {
                                   }}
                                 >
                                   <div className='capitalize truncate flex-1'>
-                                    {header.column.columnDef.field_name}
+                                    {header.column.columnDef.fieldName}
                                   </div>
                                 </div>
                               </label>

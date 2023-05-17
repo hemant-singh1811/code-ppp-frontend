@@ -27,19 +27,19 @@ export default function SingleLineTextCell({ cell }) {
     if (cell.getValue() !== value) {
       table.options.meta?.updateData(cell.row.index, cell.column.id, value);
 
-      let newRowPart = { [cell?.column.columnDef.field_id]: value };
+      let newRowPart = value;
 
       let rowObj = {
-        base_id: selectedBaseId,
-        table_id: selectedTableId,
-        record_id: cell?.row?.original.id52148213343234567,
-        updated_data: newRowPart,
-        field_type: cell.column.columnDef.field_type,
-        field_name: cell.column.columnDef.field_name,
-        field_id: cell.column.columnDef.field_id,
+        baseId: selectedBaseId,
+        tableId: selectedTableId,
+        recordId: cell?.row?.original.id52148213343234567,
+        updatedData: newRowPart,
+        fieldType: cell.column.columnDef.fieldType,
+        fieldName: cell.column.columnDef.fieldName,
+        fieldId: cell.column.columnDef.fieldId,
       };
 
-      socket.emit("updatedata", rowObj, (response) => {
+      socket.emit("updateData", rowObj, (response) => {
         console.log("res : ", response);
       });
     }

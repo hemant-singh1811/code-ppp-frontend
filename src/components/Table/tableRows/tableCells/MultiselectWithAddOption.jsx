@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useDetectOutsideClick } from '../../../../utilities/customHooks/useDetectOutsideClick';
-import { useSelector } from 'react-redux';
-import { TableContext } from '../../tableComponents/TableComponents';
-import { colorPallet } from '../../../../utilities/colorPallet';
+import React, { useContext, useEffect, useState } from "react";
+import { useDetectOutsideClick } from "../../../../utilities/customHooks/useDetectOutsideClick";
+import { useSelector } from "react-redux";
+import { TableContext } from "../../tableComponents/TableComponents";
+import { colorPallet } from "../../../../utilities/colorPallet";
 
 function MultiselectWithAddOption({ columnData, rowData, cell }) {
   const { columns, setColumns } = useContext(TableContext);
@@ -12,7 +12,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
   // Call hook passing in the ref and a function to call on outside click
   useDetectOutsideClick(singleSelectRef, () => setSingleSelectToggle(false));
 
-  let newOptions = [{ name: '' }];
+  let newOptions = [{ name: "" }];
   if (Array.isArray(columnData?.options)) {
     newOptions = columnData?.options;
   }
@@ -25,7 +25,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
   const [SingleSelectToggle, setSingleSelectToggle] = React.useState(false);
   const [selectedOption, setSelectedOption] = React.useState(rowData || []);
   const [options, setOptions] = useState(newOptions);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [bgColorAndTextColor, setBgColorAndTextColor] = useState(
     getRandomColor()
   );
@@ -38,17 +38,17 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
 
   function addNewOption() {
     let obj = {
-      type: columnData?.field_type,
-      field_id: columnData?.field_id,
-      table_id: selectedTableId,
+      type: columnData?.fieldType,
+      fieldId: columnData?.fieldId,
+      tableId: selectedTableId,
       obj: {
-        field_id: columnData?.field_id,
-        field_description: columnData?.field_description,
+        fieldId: columnData?.fieldId,
+        fieldDescription: columnData?.fieldDescription,
         json_field_type: columnData?.json_field_type,
-        created_at: columnData?.created_at,
-        field_type: columnData?.field_type,
-        created_by: columnData?.created_by,
-        field_name: columnData?.field_name,
+        createdAt: columnData?.createdAt,
+        fieldType: columnData?.fieldType,
+        createdBy: columnData?.createdBy,
+        fieldName: columnData?.fieldName,
         options: [
           ...options,
           {
@@ -62,7 +62,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
 
     setColumns((prev) => {
       return prev.map((data) => {
-        if (data.field_id === columnData.field_id) {
+        if (data.fieldId === columnData.fieldId) {
           data.options = [
             ...options,
             {
@@ -89,29 +89,26 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
 
     setSelectedOption([...selectedOption, searchTerm]);
 
-    setSearchTerm('');
+    setSearchTerm("");
     setSingleSelectToggle(!SingleSelectToggle);
-    rowCopy[cell?.column.id] = rowData;
-
-    let updatedRowKey = cell?.column.id;
-    let newRowPart = { [updatedRowKey]: [...selectedOption, searchTerm] };
+    rowCopy[cell?.column.columnDef.fieldId] = rowData;
 
     let rowObj = {
-      base_id: selectedBaseId,
-      table_id: selectedTableId,
-      record_id: rowCopy.id52148213343234567,
-      updated_data: newRowPart,
-      field_type: cell.column.columnDef.field_type,
-      field_name: cell.column.columnDef.field_name,
-      field_id: cell.column.columnDef.field_id,
+      baseId: selectedBaseId,
+      tableId: selectedTableId,
+      recordId: rowCopy.id52148213343234567,
+      updatedData: [...selectedOption, searchTerm],
+      fieldType: cell.column.columnDef.fieldType,
+      fieldName: cell.column.columnDef.fieldName,
+      fieldId: cell.column.columnDef.fieldId,
     };
 
-    socket.emit('updatemetadata', obj, (response) => {
-      console.log('socket response: ' + JSON.stringify(response));
+    socket.emit("updatemetadata", obj, (response) => {
+      console.log("socket response: " + JSON.stringify(response));
     });
 
-    socket.emit('updatedata', rowObj, (response) => {
-      console.log('res : ', response);
+    socket.emit("updateData", rowObj, (response) => {
+      console.log("res : ", response);
     });
 
     setBgColorAndTextColor(getRandomColor());
@@ -120,22 +117,20 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
   function updateOption(name) {
     rowData = [name];
     setSelectedOption([...selectedOption, name]);
-    let updatedRowKey = cell?.column.id;
-    let newRowPart = { [updatedRowKey]: [...selectedOption, name] };
 
     let rowObj = {
-      base_id: selectedBaseId,
-      table_id: selectedTableId,
-      record_id: rowCopy.id52148213343234567,
-      updated_data: newRowPart,
-      field_type: cell.column.columnDef.field_type,
-      field_name: cell.column.columnDef.field_name,
-      field_id: cell.column.columnDef.field_id,
+      baseId: selectedBaseId,
+      tableId: selectedTableId,
+      recordId: rowCopy.id52148213343234567,
+      updatedData: [...selectedOption, name],
+      fieldType: cell.column.columnDef.fieldType,
+      fieldName: cell.column.columnDef.fieldName,
+      fieldId: cell.column.columnDef.fieldId,
     };
-    rowCopy[cell?.column.id] = rowData;
+    rowCopy[cell?.column.columnDef.fieldId] = rowData;
 
-    socket.emit('updatedata', rowObj, (response) => {
-      console.log('res : ', response);
+    socket.emit("updateData", rowObj, (response) => {
+      console.log("res : ", response);
     });
     setSingleSelectToggle(!SingleSelectToggle);
   }
@@ -153,22 +148,21 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
       return updatedSelectedData;
     });
 
-    let updatedRowKey = cell?.column.id;
-    let newRowPart = { [updatedRowKey]: updatedSelectedData };
+    let updatedRowKey = cell?.column.columnDef.fieldId;
 
     let rowObj = {
-      base_id: selectedBaseId,
-      table_id: selectedTableId,
-      record_id: rowCopy.id52148213343234567,
-      updated_data: newRowPart,
-      field_type: cell.column.columnDef.field_type,
-      field_name: cell.column.columnDef.field_name,
-      field_id: cell.column.columnDef.field_id,
+      baseId: selectedBaseId,
+      tableId: selectedTableId,
+      recordId: rowCopy.id52148213343234567,
+      updatedData: updatedSelectedData,
+      fieldType: cell.column.columnDef.fieldType,
+      fieldName: cell.column.columnDef.fieldName,
+      fieldId: cell.column.columnDef.fieldId,
     };
-    rowCopy[cell?.column.id] = rowData;
+    rowCopy[cell?.column.columnDef.fieldId] = rowData;
 
-    socket.emit('updatedata', rowObj, (response) => {
-      console.log('res : ', response);
+    socket.emit("updateData", rowObj, (response) => {
+      console.log("res : ", response);
     });
   }
 
@@ -179,19 +173,21 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
   return (
     <div
       className={`relative select-none h-full w-full z-0 flex items-center  border-transparent border rounded-sm ${
-        SingleSelectToggle && 'border-blue-500'
+        SingleSelectToggle && "border-blue-500"
       }`}
       // className="relative select-none h-full w-full z-0"
-      ref={singleSelectRef}>
+      ref={singleSelectRef}
+    >
       <div className=' w-full rounded-md cursor-pointer flex items-center px-2 justify-between '>
         <div className='overflow-hidden flex w-full'>
           {options?.map(({ name, color, bgcolor }, i) => {
-            if (selectedOption?.includes(name) && name !== '')
+            if (selectedOption?.includes(name) && name !== "")
               return (
                 <div
                   key={i}
                   className='flex items-center rounded-3xl px-2  mr-1'
-                  style={{ background: bgcolor, color: color }}>
+                  style={{ background: bgcolor, color: color }}
+                >
                   <div className={`truncate`}>{name}</div>
                   <svg
                     onClick={() => deleteOption(name)}
@@ -200,7 +196,8 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
                     viewBox='0 0 24 24'
                     strokeWidth={1.5}
                     stroke='currentColor'
-                    className='w-4 h-4 ml-1'>
+                    className='w-4 h-4 ml-1'
+                  >
                     <path
                       strokeLinecap='round'
                       strokeLinejoin='round'
@@ -214,14 +211,15 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
         <svg
           onClick={() => {
             setSingleSelectToggle(!SingleSelectToggle);
-            setSearchTerm('');
+            setSearchTerm("");
           }}
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
           viewBox='0 0 24 24'
           strokeWidth={1.5}
           stroke='currentColor'
-          className='min-w-4  h-4 text-blue-500 ml-auto'>
+          className='min-w-4  h-4 text-blue-500 ml-auto'
+        >
           <path
             strokeLinecap='round'
             strokeLinejoin='round'
@@ -232,7 +230,8 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
       {SingleSelectToggle && (
         <div
           className='absolute -left-1 top-8 w-full max-h-[300px] bg-white rounded-md shadow-lg min-w-[200px] border  overflow-x-hidden overflow-y-auto'
-          style={{ zIndex: 100 }}>
+          style={{ zIndex: 100 }}
+        >
           <input
             type='text'
             name='search option'
@@ -241,7 +240,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
             className='w-full outline-none p-2'
             onChange={(e) => setSearchTerm(e.target.value)}
             value={searchTerm}
-            autoComplete={'off'}
+            autoComplete={"off"}
             autoFocus
           />
           <div>
@@ -252,12 +251,14 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
                   <div
                     onClick={() => updateOption(name)}
                     key={i}
-                    className='p-2 hover:bg-blue-100 flex min-h-[30px] w-full'>
+                    className='p-2 hover:bg-blue-100 flex min-h-[30px] w-full'
+                  >
                     {name && (
                       <div
-                        onClick={() => setSearchTerm('')}
+                        onClick={() => setSearchTerm("")}
                         style={{ background: bgcolor, color: color }}
-                        className={`rounded-xl px-2  truncate`}>
+                        className={`rounded-xl px-2  truncate`}
+                      >
                         {name}
                       </div>
                     )}
@@ -268,7 +269,8 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
               .length === 0 && (
               <div
                 onClick={addNewOption}
-                className='p-2 hover:bg-blue-100 flex truncate'>
+                className='p-2 hover:bg-blue-100 flex truncate'
+              >
                 <div className='truncate flex'>
                   Add New Option:
                   {searchTerm && (
@@ -277,7 +279,8 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
                         background: bgColorAndTextColor.background,
                         color: bgColorAndTextColor.color,
                       }}
-                      className={`rounded-xl px-2 ml-1 truncate`}>
+                      className={`rounded-xl px-2 ml-1 truncate`}
+                    >
                       {searchTerm}
                     </span>
                   )}

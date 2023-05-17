@@ -1,15 +1,15 @@
-import axios from 'axios';
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import axios from "axios";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 const backendURL = import.meta.env.VITE_SERVER_URL;
 
 export const registerUser = createAsyncThunk(
-  'auth/register',
+  "auth/register",
   async ({ firstName, email, password }, { rejectWithValue }) => {
     try {
       const config = {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       };
       await axios.post(
@@ -29,13 +29,13 @@ export const registerUser = createAsyncThunk(
 );
 
 export const userLogin = createAsyncThunk(
-  'auth/login',
+  "auth/login",
   async ({ email, password }, { rejectWithValue }) => {
     try {
       // configure header's Content-Type as JSON
       const config = {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       };
       const { data } = await axios.post(
@@ -43,9 +43,9 @@ export const userLogin = createAsyncThunk(
         { email, password },
         config
       );
-      if (data?.user_token) {
+      if (data?.userToken) {
         // store user's token in local storage
-        localStorage.setItem('userToken', JSON.stringify(data));
+        localStorage.setItem("userToken", JSON.stringify(data));
         return data;
       }
       return null;
@@ -61,13 +61,13 @@ export const userLogin = createAsyncThunk(
 );
 
 export const userLogout = createAsyncThunk(
-  'auth/logout',
+  "auth/logout",
   async ({ token }, { rejectWithValue }) => {
     try {
       // configure header's Content-Type as JSON
       const config = {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       };
       // const { data } = await axios.post(
@@ -76,7 +76,7 @@ export const userLogout = createAsyncThunk(
       //   config
       // );
       // store user's token in local storage
-      localStorage.removeItem('userToken');
+      localStorage.removeItem("userToken");
       return data;
     } catch (error) {
       // return custom error message from API if any

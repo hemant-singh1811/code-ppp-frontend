@@ -20,7 +20,7 @@ export default function TableScreen() {
   let getTableDataApi = useGetTableDataQuery(selectedTableId);
   let getModalApi = useGetModelQuery(selectedTableId);
   const getViewsApi = useGetSavedViewQuery({
-    data: { table_id: selectedTableId },
+    data: { tableId: selectedTableId },
   });
 
   const multipleRecordLinksMap = new Map();
@@ -31,7 +31,7 @@ export default function TableScreen() {
     getTableDataApi.refetch(selectedTableId);
     getModalApi.refetch(selectedTableId);
     getViewsApi.refetch({
-      data: { table_id: selectedTableId },
+      data: { tableId: selectedTableId },
     });
   }, [selectedTableId]);
 
@@ -71,8 +71,8 @@ export default function TableScreen() {
   // stores the linked model in the map by linked  table keys and model as values
   multipleRecordLinksArray = getModalApi.data
     .map(({ data }) => {
-      if (data.field_type === "multipleRecordLinks") {
-        multipleRecordLinksMap.set(data?.linked_rec?.tableid, data);
+      if (data.fieldType === "linkedRecords") {
+        multipleRecordLinksMap.set(data?.linkedRecord?.tableId, data);
         return data;
       }
     })
@@ -84,8 +84,8 @@ export default function TableScreen() {
     const uniqueRecordIdSet = new Set();
     // console.log(data);
     getTableDataApi.data.map(({ data }) => {
-      if (Array.isArray(data[value?.field_name])) {
-        data[value?.field_name].map((item) => {
+      if (Array.isArray(data[value?.fieldName])) {
+        data[value?.fieldName].map((item) => {
           // console.log(item);
           uniqueRecordIdSet.add(item);
         });
@@ -101,7 +101,7 @@ export default function TableScreen() {
 
   for (let [key, value] of RecordIdArrayWithTableIdMap) {
     modifiedArrayOfObject.push({
-      table_id: key,
+      tableId: key,
       record_ids: value,
     });
   }

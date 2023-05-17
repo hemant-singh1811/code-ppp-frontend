@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useAddTableColumnMutation } from '../../../store/services/alphaTruckingApi';
-import { TableContext } from '../tableComponents/TableComponents';
-import { Popover, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { useAddTableColumnMutation } from "../../../store/services/alphaTruckingApi";
+import { TableContext } from "../tableComponents/TableComponents";
+import { Popover, Transition } from "@headlessui/react";
+import { Fragment } from "react";
 
 export default function TableColumnAdd({ headers }) {
   const { columns, setColumns, table } = useContext(TableContext);
@@ -14,11 +14,11 @@ export default function TableColumnAdd({ headers }) {
   const [addColumnApi, responseCreateColumn] = useAddTableColumnMutation();
 
   const [descriptionToggle, setDescriptionToggle] = React.useState(false);
-  const [fieldNameInput, setFieldNameInput] = React.useState('');
-  const [fieldSearchInput, setFieldSearchInput] = React.useState('');
+  const [fieldNameInput, setFieldNameInput] = React.useState("");
+  const [fieldSearchInput, setFieldSearchInput] = React.useState("");
   const [isExistFieldNameInput, setIsExistFieldNameInput] =
     React.useState(false);
-  const [fieldDescriptionInput, setFieldDescriptionInput] = React.useState('');
+  const [fieldDescriptionInput, setFieldDescriptionInput] = React.useState("");
   const [selectedFieldType, setSelectedFieldType] = React.useState(undefined);
   const [selectedFieldTypeLinkedRecord, setSelectedFieldTypeLinkedRecord] =
     React.useState(undefined);
@@ -30,98 +30,99 @@ export default function TableColumnAdd({ headers }) {
   const fieldsMap = new Map();
 
   const selectedOptionDescription = {
-    'Single line text':
-      'Enter text, or prefill each new cell with a default value.',
-    'Long text': 'Enter multiple lines of text.',
-    'Look Up': 'See values from a field in a linked record.',
+    "Single line text":
+      "Enter text, or prefill each new cell with a default value.",
+    "Long text": "Enter multiple lines of text.",
+    "Look Up": "See values from a field in a linked record.",
     Attachment:
-      'Add images, documents, or other files to be viewed or downloaded.',
-    Checkbox: 'Check or uncheck to indicate status.',
-    'Single Select': 'Select one predefined option from a list.',
-    'Multiple select': 'Select one or more predefined options in a list.',
-    User: 'Add an Software user to a record.',
-    Date: 'Enter a date (e.g. 11/12/2023) or choose one from a calendar.',
-    'Phone number': 'Enter a telephone number (e.g. (415) 555-9876).',
-    Email: 'Enter an email address (e.g. andrew@example.com).',
-    URL: 'Enter a URL (e.g. demo.com or https://demo.com/universe).',
-    Number: 'Enter a number, or prefill each new cell with a default value.',
+      "Add images, documents, or other files to be viewed or downloaded.",
+    Checkbox: "Check or uncheck to indicate status.",
+    "Single Select": "Select one predefined option from a list.",
+    "Multiple select": "Select one or more predefined options in a list.",
+    User: "Add an Software user to a record.",
+    Date: "Enter a date (e.g. 11/12/2023) or choose one from a calendar.",
+    "Phone number": "Enter a telephone number (e.g. (415) 555-9876).",
+    Email: "Enter an email address (e.g. andrew@example.com).",
+    URL: "Enter a URL (e.g. demo.com or https://demo.com/universe).",
+    Number: "Enter a number, or prefill each new cell with a default value.",
     Currency:
-      'Enter a monetary amount, or prefill each new cell with a default value.',
+      "Enter a monetary amount, or prefill each new cell with a default value.",
     Percent:
-      'Enter a percentage, or prefill each new cell with a default value.',
+      "Enter a percentage, or prefill each new cell with a default value.",
     Duration:
-      'Enter a duration of time in hours, minutes or seconds (e.g. 1:23).',
-    Rating: 'Add a rating on a predefined scale.',
-    Formula: 'Compute values based on fields.',
-    'Created time': 'See the date and time each record was created.',
-    'Last modified time':
-      'See the date and time of the most recent edit to some or all fields in a record.',
-    'Created by': 'See which user created the record.',
-    'Last modified by':
-      'See which user made the most recent edit to some or all fields in a record.',
+      "Enter a duration of time in hours, minutes or seconds (e.g. 1:23).",
+    Rating: "Add a rating on a predefined scale.",
+    Formula: "Compute values based on fields.",
+    "Created time": "See the date and time each record was created.",
+    "Last modified time":
+      "See the date and time of the most recent edit to some or all fields in a record.",
+    "Created by": "See which user created the record.",
+    "Last modified by":
+      "See which user made the most recent edit to some or all fields in a record.",
     Autonumber:
-      'Automatically generate unique incremental numbers for each record.',
-    button: 'Trigger a customized action.',
+      "Automatically generate unique incremental numbers for each record.",
+    button: "Trigger a customized action.",
   };
 
   let columnType = [
-    'Link to another record',
-    'Single line text',
-    'Long text',
-    'Attachment',
-    'Checkbox',
-    'Single Select',
-    'Multiple select',
-    'User',
-    'Date',
-    'Phone number',
-    'Email',
-    'URL',
-    'Number',
-    'Currency',
-    'Percent',
-    'Duration',
-    'Rating',
-    'Formula',
-    'Rollup',
-    'Count',
-    'Lookup',
-    'Created time',
-    'Last modified time',
-    'Created by',
-    'Last modified by',
-    'Autonumber',
-    'button',
+    "Link to another record",
+    "Single line text",
+    "Long text",
+    "Attachment",
+    "Checkbox",
+    "Single Select",
+    "Multiple select",
+    "User",
+    "Date",
+    "Phone number",
+    "Email",
+    "URL",
+    "Number",
+    "Currency",
+    "Percent",
+    "Duration",
+    "Rating",
+    "Formula",
+    "Rollup",
+    "Count",
+    "Lookup",
+    "Created time",
+    "Last modified time",
+    "Created by",
+    "Last modified by",
+    "Autonumber",
+    "button",
   ];
 
   let fieldsType = [
-    'multipleRecordLinks',
-    'singleLineText',
-    'multilineText',
-    'multipleAttachments',
-    'checkbox',
-    'singleSelect',
-    'multipleSelects',
-    'user',
-    'date',
-    'phoneNumber',
-    'email',
-    'url',
-    'number',
-    'currency',
-    'percent',
-    'duration',
-    'rating',
-    'formula',
-    'rollup',
-    'count',
-    'multipleLookupValues',
-    'createdTime',
-    'lastModifiedTime',
-    'createdBy',
-    'lastModifiedBy',
-    'autoNumber',
-    'button',
+    "linkedRecords",
+    "singleLineText",
+    "multilineText",
+    "attachments",
+    "checkbox",
+    "singleSelect",
+    "multipleSelect",
+    "user",
+    "date",
+    "phoneNumber",
+    "email",
+    "url",
+    "number",
+    "currency",
+    "percent",
+    "duration",
+    "rating",
+    "formula",
+    "rollup",
+    "count",
+    "lookup",
+    "createdTime",
+    "lastModifiedTime",
+    "createdBy",
+    "lastModifiedBy",
+    "autoNumber",
+    "barcode",
+    "button",
   ];
 
   for (let i = 0; i < columnType?.length; i++) {
@@ -133,23 +134,23 @@ export default function TableColumnAdd({ headers }) {
   }
   // console.log(bases);
   bases.forEach((ele) => {
-    if (ele?.baseid === selectedBaseId) {
-      ele?.tablemetadata.forEach(({ table_id, table_name }) => {
-        tableIdMap.set(table_name, table_id);
+    if (ele?.baseId === selectedBaseId) {
+      ele?.tableMetaData.forEach(({ tableId, tableName }) => {
+        tableIdMap.set(tableName, tableId);
       });
     }
   });
 
   useEffect(() => {
     if (responseCreateColumn.data) {
-      console.log('Create column: ' + responseCreateColumn.data);
+      console.log("Create column: " + responseCreateColumn.data);
       setColumns([
         ...columns,
         {
           ...responseCreateColumn.data,
-          accessorKey: responseCreateColumn.data.field_name,
-          id: responseCreateColumn.data.field_name,
-          header: responseCreateColumn.data.field_name,
+          accessorKey: responseCreateColumn.data.fieldName,
+          id: responseCreateColumn.data.fieldName,
+          header: responseCreateColumn.data.fieldName,
         },
       ]);
       console.log(responseCreateColumn.data);
@@ -162,7 +163,8 @@ export default function TableColumnAdd({ headers }) {
         <>
           <Popover.Button
             className='outline-none w-[120px]  th bg-[#f5f5f5] h-8'
-            style={{ height: 32 }}>
+            style={{ height: 32 }}
+          >
             <div className='capitalize text-left text-lg font-normal select-none px-2 truncate w-full flex justify-center items-center cursor-pointer h-8'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -170,7 +172,8 @@ export default function TableColumnAdd({ headers }) {
                 viewBox='0 0 24 24'
                 strokeWidth={1.5}
                 stroke='currentColor'
-                className='w-6 h-6'>
+                className='w-6 h-6'
+              >
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
@@ -187,11 +190,13 @@ export default function TableColumnAdd({ headers }) {
             enterTo='opacity-100 translate-y-0'
             leave='transition ease-in duration-150'
             leaveFrom='opacity-100 translate-y-0'
-            leaveTo='opacity-0 translate-y-1'>
+            leaveTo='opacity-0 translate-y-1'
+          >
             <Popover.Panel
               className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4 border-gray-400 border-2 flex flex-col ${
-                headers.length < 3 ? 'left-0' : 'right-0'
-              }`}>
+                headers.length < 3 ? "left-0" : "right-0"
+              }`}
+            >
               <div className='h-full w-full '>
                 <input
                   type='text'
@@ -206,7 +211,7 @@ export default function TableColumnAdd({ headers }) {
                   }}
                 />
 
-                {fieldSearchInput === 'Link to another record' && (
+                {fieldSearchInput === "Link to another record" && (
                   <LinkedToAnotherRecordOptions
                     setFieldSearchInput={setFieldSearchInput}
                     setFieldNameInput={setFieldNameInput}
@@ -227,7 +232,7 @@ export default function TableColumnAdd({ headers }) {
                   </div>
                 )}
 
-                {fieldSearchInput !== 'Link to another record' && (
+                {fieldSearchInput !== "Link to another record" && (
                   <div className='max-h-[calc(100vh_/_2)] mt-2 border-[#eaebed] border-2 rounded-md  overflow-auto overflow-x-auto p-1'>
                     <input
                       type='search'
@@ -241,7 +246,7 @@ export default function TableColumnAdd({ headers }) {
                       }}
                       onClick={() => {
                         setSelectedFieldType(undefined);
-                        setFieldSearchInput('');
+                        setFieldSearchInput("");
                       }}
                     />
                     {!selectedFieldType && (
@@ -260,7 +265,8 @@ export default function TableColumnAdd({ headers }) {
                                 onClick={() => {
                                   setSelectedFieldType(field);
                                   setFieldSearchInput(field);
-                                }}>
+                                }}
+                              >
                                 {field}
                               </div>
                             );
@@ -270,7 +276,7 @@ export default function TableColumnAdd({ headers }) {
                   </div>
                 )}
 
-                {fieldSearchInput === 'Look Up' && (
+                {fieldSearchInput === "Look Up" && (
                   <LookUpOptions
                     setFieldSearchInput={setFieldSearchInput}
                     setFieldNameInput={setFieldNameInput}
@@ -308,16 +314,18 @@ export default function TableColumnAdd({ headers }) {
                   <div>
                     <div
                       className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
-                        descriptionToggle && 'hidden'
+                        descriptionToggle && "hidden"
                       } `}
-                      onClick={() => setDescriptionToggle(true)}>
+                      onClick={() => setDescriptionToggle(true)}
+                    >
                       <svg
                         xmlns='http://www.w3.org/2000/svg'
                         fill='none'
                         viewBox='0 0 24 24'
                         strokeWidth={1.5}
                         stroke='currentColor'
-                        className='w-5 h-5 mr-1'>
+                        className='w-5 h-5 mr-1'
+                      >
                         <path
                           strokeLinecap='round'
                           strokeLinejoin='round'
@@ -334,9 +342,10 @@ export default function TableColumnAdd({ headers }) {
                         close();
                         setDescriptionToggle(false);
                         setSelectedFieldType(undefined);
-                        setFieldSearchInput('');
-                        setFieldNameInput('');
-                      }}>
+                        setFieldSearchInput("");
+                        setFieldNameInput("");
+                      }}
+                    >
                       cancel
                     </div>
                     {/* {console.log(fieldNameInput)} */}
@@ -344,35 +353,35 @@ export default function TableColumnAdd({ headers }) {
                       <button
                         disabled={!fieldNameInput || isExistFieldNameInput}
                         onClick={async () => {
-                          if (fieldSearchInput === 'Link to another record') {
+                          if (fieldSearchInput === "Link to another record") {
                             addColumnApi({
-                              base_id: selectedBaseId,
+                              baseId: selectedBaseId,
                               data: {
-                                base_id: selectedBaseId,
-                                field_description: fieldDescriptionInput,
-                                field_name: fieldNameInput,
-                                field_type: fieldsMap.get(selectedFieldType),
-                                table_id: selectedTableId,
-                                linked_rec: {
-                                  baseid: selectedBaseId,
-                                  tableid: tableIdMap.get(
+                                baseId: selectedBaseId,
+                                fieldDescription: fieldDescriptionInput,
+                                fieldName: fieldNameInput,
+                                fieldType: fieldsMap.get(selectedFieldType),
+                                tableId: selectedTableId,
+                                linkedRecord: {
+                                  baseId: selectedBaseId,
+                                  tableId: tableIdMap.get(
                                     selectedFieldTypeLinkedRecord
                                   ),
-                                  selected_field_id: 'field id',
-                                  selected_field_name: 'Name',
+                                  selectedFieldId: "field id",
+                                  selectedFieldName: "Name",
                                 },
                               },
                             });
                           } else {
                             // console.log("called")
                             addColumnApi({
-                              base_id: selectedBaseId,
+                              baseId: selectedBaseId,
                               data: {
-                                table_id: selectedTableId,
-                                field_description: fieldDescriptionInput,
-                                field_name: fieldNameInput,
-                                field_type: fieldsMap.get(selectedFieldType),
-                                base_id: selectedBaseId,
+                                tableId: selectedTableId,
+                                fieldDescription: fieldDescriptionInput,
+                                fieldName: fieldNameInput,
+                                fieldType: fieldsMap.get(selectedFieldType),
+                                baseId: selectedBaseId,
                               },
                             });
                           }
@@ -380,11 +389,12 @@ export default function TableColumnAdd({ headers }) {
                           close();
                           setDescriptionToggle(false);
                           setSelectedFieldType(undefined);
-                          setFieldSearchInput('');
-                          setFieldNameInput('');
-                          setFieldDescriptionInput('');
+                          setFieldSearchInput("");
+                          setFieldNameInput("");
+                          setFieldDescriptionInput("");
                         }}
-                        className='bg-blue-600 rounded-md p-1.5 px-4 text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400'>
+                        className='bg-blue-600 rounded-md p-1.5 px-4 text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400'
+                      >
                         Create Field
                       </button>
                     )}
@@ -408,7 +418,7 @@ function LinkedToAnotherRecordOptions({
   selectedFieldTypeLinkedRecord,
 }) {
   const [fieldSearchInputLinkedRecord, setFieldSearchInputLinkedRecord] =
-    React.useState('');
+    React.useState("");
   const { bases } = useSelector((state) => state.bases);
   const { selectedBaseId, selectedTableId } = useSelector(
     (state) => state.globalState
@@ -420,20 +430,22 @@ function LinkedToAnotherRecordOptions({
         <div className='flex justify-center items-center'>
           <div
             onClick={() => {
-              setFieldSearchInput('');
-              setFieldNameInput('');
+              setFieldSearchInput("");
+              setFieldNameInput("");
               setSelectedFieldTypeLinkedRecord(undefined);
-              setFieldSearchInputLinkedRecord('');
+              setFieldSearchInputLinkedRecord("");
               setIsExistFieldNameInput(false);
               setSelectedFieldType(undefined);
             }}
-            className='flex items-center px-2 rounded-lg overflow-hidden cursor-pointer opacity-80 hover:opacity-100  '>
+            className='flex items-center px-2 rounded-lg overflow-hidden cursor-pointer opacity-80 hover:opacity-100  '
+          >
             <svg
               className='font-thin fill-blue-500 '
               xmlns='http://www.w3.org/2000/svg'
               height='20'
               viewBox='0 96 960 960'
-              width='20'>
+              width='20'
+            >
               <path d='M372 948 21 597q-5-5-7-10t-2-11q0-6 2-11t7-10l351-351q11-11 28-11t28 11q12 12 12 28.5T428 261L113 576l315 315q12 12 11.5 28.5T428 947q-12 12-28.5 12T372 948Z' />
             </svg>
             back
@@ -450,37 +462,38 @@ function LinkedToAnotherRecordOptions({
             }}
             onClick={() => {
               setSelectedFieldTypeLinkedRecord(undefined);
-              setFieldSearchInputLinkedRecord('');
+              setFieldSearchInputLinkedRecord("");
             }}
           />
         </div>
 
         {!selectedFieldTypeLinkedRecord && (
           <div className='h-4/5 overflow-auto p-1 px-1.5'>
-            {bases.map(({ baseid, tablemetadata }) => {
-              if (baseid === selectedBaseId) {
-                return tablemetadata
-                  .filter(({ table_name, table_id }) => {
+            {bases.map(({ baseId, tableMetaData }) => {
+              if (baseId === selectedBaseId) {
+                return tableMetaData
+                  .filter(({ tableName, tableId }) => {
                     return (
-                      table_name
+                      tableName
                         ?.toLowerCase()
                         ?.includes(
                           fieldSearchInputLinkedRecord.toLowerCase()
-                        ) && table_id !== selectedTableId
+                        ) && tableId !== selectedTableId
                     );
                   })
-                  .map(({ table_name }, i) => {
+                  .map(({ tableName }, i) => {
                     return (
                       <div
                         key={i}
                         className='px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md'
                         onClick={() => {
-                          setSelectedFieldTypeLinkedRecord(table_name);
+                          setSelectedFieldTypeLinkedRecord(tableName);
                           setFieldSearchInputLinkedRecord(
-                            'Link to ' + table_name
+                            "Link to " + tableName
                           );
-                        }}>
-                        {table_name}
+                        }}
+                      >
+                        {tableName}
                       </div>
                     );
                   });
@@ -504,7 +517,7 @@ function LookUpOptions({
   setSelectedFieldType,
 }) {
   const [fieldSearchInputLinkedRecord, setFieldSearchInputLinkedRecord] =
-    React.useState('');
+    React.useState("");
   const { bases } = useSelector((state) => state.bases);
   const { selectedBaseId, selectedTableId, tableWithMultipleRecords } =
     useSelector((state) => state.globalState);
@@ -525,7 +538,7 @@ function LookUpOptions({
             }}
             onClick={() => {
               setSelectedFieldTypeLinkedRecord(undefined);
-              setFieldSearchInputLinkedRecord('');
+              setFieldSearchInputLinkedRecord("");
             }}
           />
         </div>
@@ -533,21 +546,22 @@ function LookUpOptions({
         {tableWithMultipleRecords && (
           <div className='h-4/5 overflow-auto p-1 px-1.5'>
             {tableWithMultipleRecords
-              .filter(({ table_name }) => {
-                return table_name
+              .filter(({ tableName }) => {
+                return tableName
                   ?.toLowerCase()
                   ?.includes(fieldSearchInputLinkedRecord.toLowerCase());
               })
-              .map(({ table_name }, i) => {
+              .map(({ tableName }, i) => {
                 return (
                   <div
                     key={i}
                     className='px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md'
                     onClick={() => {
-                      setSelectedFieldTypeLinkedRecord(table_name);
-                      setFieldSearchInputLinkedRecord('Link to ' + table_name);
-                    }}>
-                    {table_name}
+                      setSelectedFieldTypeLinkedRecord(tableName);
+                      setFieldSearchInputLinkedRecord("Link to " + tableName);
+                    }}
+                  >
+                    {tableName}
                   </div>
                 );
               })}

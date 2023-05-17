@@ -46,13 +46,13 @@ export const initSocket = () => (dispatch, state) => {
     dispatch(setSocket({ socket: socket, isConnected: socket.connected }));
   });
 
-  socket.on("updatedata", (response) => {
+  socket.on("updateData", (response) => {
     console.log("res : ", response);
   });
 
   // if (socket) {
   console.log("join base room res sent : ");
-  socket.emit("joinBaseRoom", userInfo?.user_token, (res) => {
+  socket.emit("joinBaseRoom", userInfo?.userToken, (res) => {
     console.log("join base room res : ", res);
   });
   // }
@@ -66,8 +66,8 @@ export const initSocket = () => (dispatch, state) => {
         dispatch(
           handelAddSideBarMenu({
             subMenu: [],
-            baseId: data.baseid,
-            title: data.basemetadata.name,
+            baseId: data.baseId,
+            title: data.baseMetaData?.baseName,
             icons: (
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -84,29 +84,29 @@ export const initSocket = () => (dispatch, state) => {
       case "RENAME BASE":
         dispatch(
           handelRenameBases({
-            baseId: data?.baseid,
-            updatedName: data?.base_name,
+            baseId: data?.baseId,
+            updatedName: data?.baseName,
           })
         );
         dispatch(
           handelRenameSideBarMenu({
-            baseId: data?.baseid,
-            updatedName: data?.base_name,
+            baseId: data?.baseId,
+            updatedName: data?.baseName,
           })
         );
         break;
       case "DELETE BASE":
-        if (selectedBaseId === data?.baseid) {
+        if (selectedBaseId === data?.baseId) {
           window.location.replace("/");
         }
         dispatch(
           handelRemoveSideBarMenu({
-            baseId: data.baseid,
+            baseId: data.baseId,
           })
         );
         dispatch(
           handelRemoveBases({
-            baseId: data.baseid,
+            baseId: data.baseId,
           })
         );
         dispatch(handelCloseModal(""));
@@ -114,18 +114,18 @@ export const initSocket = () => (dispatch, state) => {
       case "CREATE TABLE":
         dispatch(
           handelAddTableInBases({
-            baseId: data.baseid,
+            baseId: data.baseId,
             data: data,
           })
         );
         dispatch(
           handelAddSideBarField({
-            baseId: data.baseid,
+            baseId: data.baseId,
             data: {
-              title: data?.table_name,
-              tableId: data?.table_id,
-              to: `${data.baseid}/${data?.table_id}`,
-              baseId: data.baseid,
+              title: data?.tableName,
+              tableId: data?.tableId,
+              to: `${data.baseId}/${data?.tableId}`,
+              baseId: data.baseId,
             },
           })
         );
@@ -133,33 +133,33 @@ export const initSocket = () => (dispatch, state) => {
       case "RENAME TABLE":
         dispatch(
           handelRenameTableInBases({
-            baseId: data?.baseid,
-            tableId: data?.table_id,
-            updatedName: data?.table_name,
+            baseId: data?.baseId,
+            tableId: data?.tableId,
+            updatedName: data?.tableName,
           })
         );
         dispatch(
           handelRenameSideBarField({
-            baseId: data?.baseid,
-            tableId: data?.table_id,
-            updatedName: data?.table_name,
+            baseId: data?.baseId,
+            tableId: data?.tableId,
+            updatedName: data?.tableName,
           })
         );
         break;
       case "DELETE TABLE":
-        if (selectedTableId === data.table_id) {
+        if (selectedTableId === data.tableId) {
           window.location.replace("/");
         }
         dispatch(
           handelRemoveSideBarField({
-            baseId: data.baseid,
-            tableId: data.table_id,
+            baseId: data.baseId,
+            tableId: data.tableId,
           })
         );
         dispatch(
           handelRemoveTableInBases({
-            baseId: data.baseid,
-            tableId: data.table_id,
+            baseId: data.baseId,
+            tableId: data.tableId,
           })
         );
         break;

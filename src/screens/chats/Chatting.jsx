@@ -1,15 +1,15 @@
-import React, { useEffect, useRef } from 'react';
-import Messages from '../../components/chats/Messages';
-import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
-import { storage } from '../../firebase';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useRef } from "react";
+import Messages from "../../components/chats/Messages";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { storage } from "../../firebase";
+import { useDispatch, useSelector } from "react-redux";
 // import ReactTextareaAutosize from "react-textarea-autosize";
-import { addMessage, updateMessage } from '../../store/features/messageSlice';
-import UniqueCharacterGenerator from '../../utilities/UniqueCharacterGenerator';
-import DateGenerator from '../../utilities/DateGenerator';
-import ReactTextareaAutosize from 'react-textarea-autosize';
+import { addMessage, updateMessage } from "../../store/features/messageSlice";
+import UniqueCharacterGenerator from "../../utilities/UniqueCharacterGenerator";
+import DateGenerator from "../../utilities/DateGenerator";
+import ReactTextareaAutosize from "react-textarea-autosize";
 
-export default function Chatting({ user_token, socket }) {
+export default function Chatting({ userToken, socket }) {
   // hooks called
   const load = useSelector((state) => state.load.load);
   const dispatch = useDispatch();
@@ -19,56 +19,56 @@ export default function Chatting({ user_token, socket }) {
   const { messages } = useSelector((state) => state.message);
   const currentDateTime = DateGenerator();
 
-  const send = (text, user_token, url, type, file_name) => {
+  const send = (text, userToken, url, type, file_name) => {
     let box = {
-      created_at: currentDateTime,
-      deletedForEveryone: '',
-      deletedForMe: '',
-      from: 'Praditya',
-      isSeen: '',
+      createdAt: currentDateTime,
+      deletedForEveryone: "",
+      deletedForMe: "",
+      from: "Praditya",
+      isSeen: "",
       seenBy: [],
       text: text,
-      to: '',
+      to: "",
       typeOfMsg: type,
-      url: url || '',
-      user_token: user_token,
-      file_name: file_name || '',
-      group_id: load?.truck_id[0] || '',
-      user_id: 'praditya',
+      url: url || "",
+      userToken: userToken,
+      file_name: file_name || "",
+      group_id: load?.truck_id[0] || "",
+      userId: "praditya",
     };
-    socket.emit('send_msg', box);
+    socket.emit("send_msg", box);
   };
 
   //input add msg
   const handleAddMessage = () => {
     const textMessage = messageInput.current.value.trim();
-    if (textMessage !== '') {
+    if (textMessage !== "") {
       dispatch(
         addMessage({
-          user_token: user_token,
-          created_at: currentDateTime,
-          deletedForEveryone: '',
-          deletedForMe: '',
-          from: 'praditya',
-          isSeen: '',
+          userToken: userToken,
+          createdAt: currentDateTime,
+          deletedForEveryone: "",
+          deletedForMe: "",
+          from: "praditya",
+          isSeen: "",
           seenBy: [],
           text: textMessage,
-          to: '',
-          typeOfMsg: 'text',
-          status: 'loading',
-          url: '',
+          to: "",
+          typeOfMsg: "text",
+          status: "loading",
+          url: "",
         })
       );
     }
-    send(messageInput.current.value, user_token, '', 'text');
-    messageInput.current.value = '';
+    send(messageInput.current.value, userToken, "", "text");
+    messageInput.current.value = "";
     messageInput.current.rows = 1;
-    messageInput.current.style.height = '40px';
+    messageInput.current.style.height = "40px";
   };
 
   function ScrollToBottom() {
     const elementRef = useRef();
-    useEffect(() => elementRef.current.scrollIntoView({ behavior: 'smooth' }));
+    useEffect(() => elementRef.current.scrollIntoView({ behavior: "smooth" }));
     return <div ref={elementRef} />;
   }
 
@@ -77,14 +77,14 @@ export default function Chatting({ user_token, socket }) {
     const file = e.target.files[0];
     let file_name = file.name;
     const reader = new FileReader();
-    let parts = file_name.split('.');
+    let parts = file_name.split(".");
     let fileType = parts[parts.length - 1];
     file_name = file_name.slice(0, file_name.length - fileType.length - 1);
     file_name = `${file_name}.${fileType}`;
     handlePickUpFileClick.current.value = null;
     reader.readAsDataURL(file);
 
-    reader.addEventListener('load', async (e) => {
+    reader.addEventListener("load", async (e) => {
       // let handleUploading = async () => {
       const storageRef = ref(storage, file_name);
       // 'file' comes from the Blob or File API
@@ -92,18 +92,18 @@ export default function Chatting({ user_token, socket }) {
         dispatch(
           addMessage({
             message_id: message_id,
-            user_token: user_token,
-            created_at: currentDateTime,
-            deletedForEveryone: '',
-            deletedForMe: '',
-            from: 'Praditya',
-            isSeen: '',
+            userToken: userToken,
+            createdAt: currentDateTime,
+            deletedForEveryone: "",
+            deletedForMe: "",
+            from: "Praditya",
+            isSeen: "",
             seenBy: [],
-            text: '',
-            to: 'ayush',
+            text: "",
+            to: "ayush",
             typeOfMsg: fileType,
             url: e.target.result,
-            status: 'uploading',
+            status: "uploading",
             uploadProgressInPercentage: 0,
             file_name: file_name,
           })
@@ -115,7 +115,7 @@ export default function Chatting({ user_token, socket }) {
         // 2. Error observer, called on failure
         // 3. Completion observer, called on successful completion
         uploadTask.on(
-          'state_changed',
+          "state_changed",
           (snapshot) => {
             // Observe state change events such as progress, pause, and resume
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
@@ -124,8 +124,8 @@ export default function Chatting({ user_token, socket }) {
             // dispatch(
             //   updateMessage({
             //     message_id: message_id,
-            //     user_token: user_token,
-            //     created_at: currentDateTime,
+            //     userToken: userToken,
+            //     createdAt: currentDateTime,
             //     deletedForEveryone: "",
             //     deletedForMe: "",
             //     from: "Praditya",
@@ -159,22 +159,22 @@ export default function Chatting({ user_token, socket }) {
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
               // console.log('File available at', downloadURL);
               // console.log(downloadURL)
-              send('', user_token, downloadURL, fileType, file_name);
+              send("", userToken, downloadURL, fileType, file_name);
               dispatch(
                 updateMessage({
                   message_id: message_id,
-                  user_token: user_token,
-                  created_at: currentDateTime,
-                  deletedForEveryone: '',
-                  deletedForMe: '',
-                  from: 'Praditya',
-                  isSeen: '',
+                  userToken: userToken,
+                  createdAt: currentDateTime,
+                  deletedForEveryone: "",
+                  deletedForMe: "",
+                  from: "Praditya",
+                  isSeen: "",
                   seenBy: [],
-                  text: '',
-                  to: 'ayush',
+                  text: "",
+                  to: "ayush",
                   typeOfMsg: fileType,
                   url: downloadURL,
-                  status: 'uploaded',
+                  status: "uploaded",
                   uploadProgressInPercentage: 100,
                   file_name: file_name,
                 })
@@ -186,7 +186,7 @@ export default function Chatting({ user_token, socket }) {
         // const starsRef = ref(storage, file_name);
         //   getDownloadURL(starsRef)
         //     .then((url) => {
-        //       send("", user_token, url, fileType, file_name);
+        //       send("", userToken, url, fileType, file_name);
         //     })
         //     .catch((error) => {
         //       // A full list of error codes is available at
@@ -251,11 +251,7 @@ export default function Chatting({ user_token, socket }) {
       >
         {messages.map((element, index) => {
           return (
-            <Messages
-              key={index}
-              messageApi={element}
-              user_token={user_token}
-            />
+            <Messages key={index} messageApi={element} userToken={userToken} />
           );
         })}
         <div ref={messagesEndRef} />
@@ -271,7 +267,7 @@ export default function Chatting({ user_token, socket }) {
             onChange={(e) => {
               if (e.target.files[0]) uploader(e);
             }}
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
           />
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -279,7 +275,8 @@ export default function Chatting({ user_token, socket }) {
             viewBox='0 0 24 24'
             strokeWidth={1.5}
             stroke='currentColor'
-            className='w-6 h-6 mb-2 cursor-pointer'>
+            className='w-6 h-6 mb-2 cursor-pointer'
+          >
             <path
               strokeLinecap='round'
               strokeLinejoin='round'
@@ -289,8 +286,9 @@ export default function Chatting({ user_token, socket }) {
         </div>
         <div
           className={`bg-white shadow-sm rounded-md w-full ${
-            messageInput.current?.rows > 3 ? 'pb-2' : 'pb-0'
-          }`}>
+            messageInput.current?.rows > 3 ? "pb-2" : "pb-0"
+          }`}
+        >
           <ReactTextareaAutosize
             maxRows={4}
             type='text'
@@ -298,13 +296,13 @@ export default function Chatting({ user_token, socket }) {
             rows={1}
             ref={messageInput}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === "Enter") {
                 if (e.keyCode == 13 && e.shiftKey) {
                   if (e.target.rows <= 4) {
                     e.target.rows = e.target.rows + 1;
                   }
                 } else {
-                  if (messageInput.current.value.trim() !== '') {
+                  if (messageInput.current.value.trim() !== "") {
                     handleAddMessage(messageInput.current);
                   }
                   e.preventDefault();
@@ -321,7 +319,8 @@ export default function Chatting({ user_token, socket }) {
           viewBox='0 0 24 24'
           fill='currentColor'
           className='w-6 h-6 mb-2'
-          onClick={() => handleAddMessage(messageInput.current)}>
+          onClick={() => handleAddMessage(messageInput.current)}
+        >
           <path d='M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z' />
         </svg>
       </div>

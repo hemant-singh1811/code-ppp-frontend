@@ -14,7 +14,7 @@ import _AllFilesMessage from "./message/_AllFilesMessage";
  *
  */
 
-export default function Messages({ messageApi, user_token }) {
+export default function Messages({ messageApi, userToken }) {
   let typeOfMessage;
   switch (messageApi.typeOfMsg) {
     case "jpg":
@@ -51,8 +51,8 @@ export default function Messages({ messageApi, user_token }) {
   }
 
   // if my user token an message token is same than the message is send by me
-  return messageApi?.user_token === user_token ? (
-    <div className="w-1/2 justify-end flex items-end pl-4 my-1">
+  return messageApi?.userToken === userToken ? (
+    <div className='w-1/2 justify-end flex items-end pl-4 my-1'>
       {typeOfMessage === "text" && (
         <_TextMessage messageApi={messageApi} type={"send"} />
       )}
@@ -73,7 +73,7 @@ export default function Messages({ messageApi, user_token }) {
       )}
     </div>
   ) : (
-    <div className="w-1/2 self-start flex items-end pr-4 my-1">
+    <div className='w-1/2 self-start flex items-end pr-4 my-1'>
       {typeOfMessage === "text" && <_TextMessage messageApi={messageApi} />}
       {typeOfMessage === "image" && <_ImageMessage messageApi={messageApi} />}
       {typeOfMessage === "video" && <_VideoMessage messageApi={messageApi} />}

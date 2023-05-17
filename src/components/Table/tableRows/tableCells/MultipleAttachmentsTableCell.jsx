@@ -171,7 +171,7 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
 
   return (
     <div
-      className='h-full overflow-hidden select-none rounded'
+      className='h-full overflow-hidden select-none rounded '
       style={{
         // boxShadow: "0 0 0px 2px inset #166ee1",
         border: isChildVisible && "2px solid #166ee1",
@@ -363,34 +363,35 @@ function FileUploadHandler({ closeModal, cell }) {
           );
           AddUrlToSendServer(downloadURL, promise);
         }
-        let newRowPart = { [cell?.column.id]: fileUploadHandleTemp };
+        let newRowPart = fileUploadHandleTemp;
+
         let rowObj = {
-          base_id: selectedBaseId,
-          table_id: selectedTableId,
-          record_id: cell?.row?.original.id52148213343234567,
-          updated_data: newRowPart,
-          field_type: cell.column.columnDef.field_type,
-          field_name: cell.column.columnDef.field_name,
-          field_id: cell.column.columnDef.field_id,
-          is_added: true,
+          baseId: selectedBaseId,
+          tableId: selectedTableId,
+          recordId: cell?.row?.original.id52148213343234567,
+          updatedData: newRowPart,
+          fieldType: cell.column.columnDef.fieldType,
+          fieldName: cell.column.columnDef.fieldName,
+          fieldId: cell.column.columnDef.fieldId,
+          added: true,
         };
 
         // console.log(cell.getValue());
 
         console.log(rowObj);
 
-        socket.emit("updatedata", rowObj, (response) => {
+        socket.emit("updateData", rowObj, (response) => {
           console.log("res : ", response);
           dispatch(handelUpdateFiles(response?.resdata));
           if (cell.getValue() === undefined) {
             table.options.meta?.updateData(
               cell.row.index,
               cell.column.id,
-              response.resdata
+              response?.resdata
             );
           } else {
             table.options.meta?.updateData(cell.row.index, cell.column.id, [
-              ...response.resdata,
+              ...response?.resdata,
               ...cell.getValue(),
             ]);
           }
@@ -444,7 +445,7 @@ function FileUploadHandler({ closeModal, cell }) {
   };
 
   return (
-    <div className='fileupload-view w-[800px]'>
+    <div className='fileupload-view w-[800px] '>
       <div className=' m-0 w-full'>
         <div className='col-md-12 w-full'>
           <div className='card w-full'>

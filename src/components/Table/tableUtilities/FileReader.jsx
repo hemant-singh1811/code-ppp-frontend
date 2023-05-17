@@ -1,13 +1,13 @@
-import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   handelRemoveFiles,
   handelToggleFilesModal,
-} from '../../../store/features/fileViewerSlice';
-import LoadingAlt from '../../utilities/LoadingAlt';
-import LazyLoadingImage from './LazyLoadingImage';
-import { useRenameTableFileMutation } from '../../../store/services/alphaTruckingApi';
+} from "../../../store/features/fileViewerSlice";
+import LoadingAlt from "../../utilities/LoadingAlt";
+import LazyLoadingImage from "./LazyLoadingImage";
+import { useRenameTableFileMutation } from "../../../store/services/alphaTruckingApi";
 const FileViewer = () => {
   const dispatch = useDispatch();
   const fileViewer = useSelector((state) => state.fileViewer);
@@ -19,15 +19,15 @@ const FileViewer = () => {
   const [files, setFiles] = useState(fileViewer.files || []);
   const [isDeleting, setIsDeleting] = useState(false);
   const [currentFileIndex, setCurrentFileIndex] = useState(fileViewer.index);
-  const [editFileName, setEditFileName] = useState('');
+  const [editFileName, setEditFileName] = useState("");
   let [isOpen, setIsOpen] = useState(false);
-  const [selectedFileIdForRename, setSelectedFileIdForRename] = useState('');
+  const [selectedFileIdForRename, setSelectedFileIdForRename] = useState("");
 
   const handleFileUpload = (e) => {
     const filesArray = Array.from(e.target.files).map((file) => {
       return {
         name: file?.name,
-        type: file?.type.split('/')[0],
+        type: file?.type.split("/")[0],
         data: URL.createObjectURL(file),
       };
     });
@@ -37,8 +37,8 @@ const FileViewer = () => {
 
   const renderFile = (file) => {
     // console.log(file?.type.split('/')[0]);
-    switch (file?.type.split('/')[0]) {
-      case 'image':
+    switch (file?.type.split("/")[0]) {
+      case "image":
         return (
           <LazyLoadingImage src={file?.url} />
           // <img
@@ -47,7 +47,7 @@ const FileViewer = () => {
           //   alt={file?.name}
           // />
         );
-      case 'video':
+      case "video":
         return (
           <video className='w-full h-auto max-h-full' controls>
             <source
@@ -59,16 +59,17 @@ const FileViewer = () => {
             Your browser does not support the video tag.
           </video>
         );
-      case 'application':
+      case "application":
         return (
           <object
             data={file.url}
             type={file.type}
-            className='w-full h-full flex items-center justify-center'>
+            className='w-full h-full flex items-center justify-center'
+          >
             <p>Unable to display file. Please download the file to view it.</p>
           </object>
         );
-      case 'audio':
+      case "audio":
         return (
           <audio controls>
             <source src={file.url} type={file?.type} />
@@ -128,7 +129,8 @@ const FileViewer = () => {
             type={file?.type}
             // width='100%'
             // height='600px'
-            className='w-full h-full flex items-center justify-center'>
+            className='w-full h-full flex items-center justify-center'
+          >
             <p>Unable to display file. Please download the file to view it.</p>
           </object>
         );
@@ -149,10 +151,10 @@ const FileViewer = () => {
 
   const handleDownloadFile = () => {
     // Create a download link for the file
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = files[currentFileIndex].url;
     link.download = files[currentFileIndex].name;
-    link.target = '_blank';
+    link.target = "_blank";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -161,29 +163,33 @@ const FileViewer = () => {
   const handleDeleteFile = (fileUploadHandleTemp) => {
     setIsDeleting(true);
     const cell = fileViewer.cell;
-    let newRowPart = { [cell?.column.id]: [fileUploadHandleTemp] };
+    let newRowPart = [fileUploadHandleTemp];
+    console.log();
+
     let rowObj = {
-      base_id: selectedBaseId,
-      table_id: selectedTableId,
-      record_id: cell?.row?.original.id52148213343234567,
-      updated_data: newRowPart,
-      field_type: cell.column.columnDef.field_type,
-      field_name: cell.column.columnDef.field_name,
-      field_id: cell.column.columnDef.field_id,
-      is_added: false,
+      baseId: selectedBaseId,
+      tableId: selectedTableId,
+      recordId: cell?.row?.original.id52148213343234567,
+      updatedData: fileUploadHandleTemp.fileId,
+      fieldType: cell.column.columnDef.fieldType,
+      fieldName: cell.column.columnDef.fieldName,
+      fieldId: cell.column.columnDef.fieldId,
+      added: false,
     };
 
-    socket.emit('updatedata', rowObj, (response) => {
-      dispatch(handelRemoveFiles({ id: fileUploadHandleTemp.id }));
+    socket.emit("updateData", rowObj, (response) => {
+      dispatch(handelRemoveFiles(fileUploadHandleTemp.fileId));
 
       // console.log(fileViewer.files);
       fileViewer.table(
         cell.row.index,
         cell.column.id,
-        fileViewer.files.filter((ele) => ele.id !== fileUploadHandleTemp.id)
+        fileViewer.files.filter(
+          (ele) => ele.fileId !== fileUploadHandleTemp.fileId
+        )
       );
 
-      console.log('res : ', response);
+      console.log("res : ", response);
       setIsDeleting(false);
       if (fileViewer.files.length <= 1) {
         closeModal();
@@ -192,7 +198,7 @@ const FileViewer = () => {
   };
 
   const handleEditFile = (ele) => {
-    setSelectedFileIdForRename(ele.id);
+    setSelectedFileIdForRename(ele.fileId);
     setEditFileName(ele.name);
     openInnerModal();
   };
@@ -200,13 +206,12 @@ const FileViewer = () => {
   const handleEditFileRename = () => {
     const cell = fileViewer.cell;
     renameFileApi({
-      base_id: selectedBaseId,
-      table_id: selectedTableId,
-      record_id: cell.row.original.id52148213343234567,
-      field_id: cell.column.columnDef.field_id,
-      file_id: selectedFileIdForRename,
-      field_name: cell.column.columnDef.field_name,
-      updated_name: editFileName.trim(),
+      baseId: selectedBaseId,
+      tableId: selectedTableId,
+      recordId: cell.row.original.id52148213343234567,
+      fieldId: cell.column.columnDef.fieldId,
+      fileId: selectedFileIdForRename,
+      updatedName: editFileName.trim(),
     });
   };
 
@@ -230,13 +235,14 @@ const FileViewer = () => {
 
   useEffect(() => {
     if (responseRenameFile.isSuccess) {
-      console.log('response Rename File', responseRenameFile.data);
+      console.log("response Rename File", responseRenameFile.data);
       const cell = fileViewer.cell;
       fileViewer.table(
         cell.row.index,
         cell.column.id,
         files.map((ele) => {
-          if (selectedFileIdForRename === ele.id) {
+          console.log(ele, editFileName, selectedFileIdForRename);
+          if (selectedFileIdForRename === ele.fileId) {
             const copyObj = { ...ele };
             copyObj.name = editFileName;
             return copyObj;
@@ -247,7 +253,7 @@ const FileViewer = () => {
 
       setFiles((prev) => {
         return prev.map((file) => {
-          if (file.id === selectedFileIdForRename) {
+          if (file.fileId === selectedFileIdForRename) {
             const copyObj = { ...file };
             copyObj.name = editFileName;
             return copyObj;
@@ -271,7 +277,8 @@ const FileViewer = () => {
             enterTo='opacity-100'
             leave='ease-in duration-200'
             leaveFrom='opacity-100'
-            leaveTo='opacity-0'>
+            leaveTo='opacity-0'
+          >
             <div className='fixed inset-0 backdrop-blur-md bg-[#0000004a]' />
           </Transition.Child>
           <div className='fixed inset-0 overflow-y-auto '>
@@ -283,20 +290,23 @@ const FileViewer = () => {
                 enterTo='opacity-100 scale-100'
                 leave='ease-in duration-200'
                 leaveFrom='opacity-100 scale-100'
-                leaveTo='opacity-0 scale-95'>
+                leaveTo='opacity-0 scale-95'
+              >
                 <Dialog.Panel className='w-full h-full '>
                   <div className='flex flex-col h-screen w-full'>
                     <div className='flex justify-start items-center bg-gray-100 p-4'>
                       <div
                         onClick={() => closeModal()}
-                        className='border-[1px] rounded-full border-black p-1 cursor-pointer'>
+                        className='border-[1px] rounded-full border-black p-1 cursor-pointer'
+                      >
                         <svg
                           xmlns='http://www.w3.org/2000/svg'
                           fill='none'
                           viewBox='0 0 24 24'
                           strokeWidth={1.5}
                           stroke='currentColor'
-                          className='w-6 h-6'>
+                          className='w-6 h-6'
+                        >
                           <path
                             strokeLinecap='round'
                             strokeLinejoin='round'
@@ -327,7 +337,8 @@ const FileViewer = () => {
                               className='text-gray-600 hover:text-gray-900 border-black border-[1px] rounded-full p-2 hover:bg-red-100 cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-100'
                               onClick={() =>
                                 handleDeleteFile(files[currentFileIndex])
-                              }>
+                              }
+                            >
                               {isDeleting ? (
                                 <LoadingAlt />
                               ) : (
@@ -337,7 +348,8 @@ const FileViewer = () => {
                                   viewBox='0 0 24 24'
                                   strokeWidth={1.5}
                                   stroke='currentColor'
-                                  className='w-6 h-6'>
+                                  className='w-6 h-6'
+                                >
                                   <path
                                     strokeLinecap='round'
                                     strokeLinejoin='round'
@@ -350,14 +362,16 @@ const FileViewer = () => {
                               className='text-gray-600 hover:text-gray-900 border-black border-[1px] rounded-full p-2 hover:bg-red-100'
                               onClick={() =>
                                 handleEditFile(files[currentFileIndex])
-                              }>
+                              }
+                            >
                               <svg
                                 xmlns='http://www.w3.org/2000/svg'
                                 fill='none'
                                 viewBox='0 0 24 24'
                                 strokeWidth={1.5}
                                 stroke='currentColor'
-                                className='w-6 h-6'>
+                                className='w-6 h-6'
+                              >
                                 <path
                                   strokeLinecap='round'
                                   strokeLinejoin='round'
@@ -367,14 +381,16 @@ const FileViewer = () => {
                             </button>
                             <button
                               className='text-gray-600 hover:text-gray-900 border-black border-[1px] rounded-full p-2 hover:bg-blue-100'
-                              onClick={handleDownloadFile}>
+                              onClick={handleDownloadFile}
+                            >
                               <svg
                                 xmlns='http://www.w3.org/2000/svg'
                                 fill='none'
                                 viewBox='0 0 24 24'
                                 strokeWidth={1.5}
                                 stroke='currentColor'
-                                className='w-6 h-6'>
+                                className='w-6 h-6'
+                              >
                                 <path
                                   strokeLinecap='round'
                                   strokeLinejoin='round'
@@ -388,17 +404,19 @@ const FileViewer = () => {
                           <button
                             className={`rounded-full p-2 bg-white shadow-lg ${
                               currentFileIndex === 0
-                                ? 'opacity-25 cursor-not-allowed'
-                                : ''
+                                ? "opacity-25 cursor-not-allowed"
+                                : ""
                             }`}
                             onClick={handlePreviousFile}
-                            disabled={currentFileIndex === 0}>
+                            disabled={currentFileIndex === 0}
+                          >
                             <svg
                               xmlns='http://www.w3.org/2000/svg'
                               className='h-6 w-6 text-gray-600'
                               fill='none'
                               viewBox='0 0 24 24'
-                              stroke='currentColor'>
+                              stroke='currentColor'
+                            >
                               <path
                                 strokeLinecap='round'
                                 strokeLinejoin='round'
@@ -411,17 +429,19 @@ const FileViewer = () => {
                           <button
                             className={`rounded-full p-2 bg-white shadow-lg ${
                               currentFileIndex === files.length - 1
-                                ? 'opacity-25 cursor-not-allowed'
-                                : ''
+                                ? "opacity-25 cursor-not-allowed"
+                                : ""
                             }`}
                             onClick={handleNextFile}
-                            disabled={currentFileIndex === files.length - 1}>
+                            disabled={currentFileIndex === files.length - 1}
+                          >
                             <svg
                               xmlns='http://www.w3.org/2000/svg'
                               className='h-6 w-6 text-gray-600'
                               fill='none'
                               viewBox='0 0 24 24'
-                              stroke='currentColor'>
+                              stroke='currentColor'
+                            >
                               <path
                                 strokeLinecap='round'
                                 strokeLinejoin='round'
@@ -450,7 +470,8 @@ const FileViewer = () => {
             enterTo='opacity-100'
             leave='ease-in duration-200'
             leaveFrom='opacity-100'
-            leaveTo='opacity-0'>
+            leaveTo='opacity-0'
+          >
             <div className='fixed inset-0 bg-black bg-opacity-25' />
           </Transition.Child>
 
@@ -463,11 +484,13 @@ const FileViewer = () => {
                 enterTo='opacity-100 scale-100'
                 leave='ease-in duration-200'
                 leaveFrom='opacity-100 scale-100'
-                leaveTo='opacity-0 scale-95'>
+                leaveTo='opacity-0 scale-95'
+              >
                 <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all'>
                   <Dialog.Title
                     as='h3'
-                    className='text-lg font-medium leading-6 text-gray-900'>
+                    className='text-lg font-medium leading-6 text-gray-900'
+                  >
                     Rename
                   </Dialog.Title>
                   <div className='mt-2'>
@@ -478,16 +501,21 @@ const FileViewer = () => {
                       onChange={(e) => {
                         setEditFileName(e.target.value);
                       }}
+                      onFocus={(e) => {
+                        e.target.select();
+                      }}
+                      autoFocus
                     />
                     <div className='mt-4 flex justify-end'>
                       <button
                         type='button'
                         className='inline-flex ml-auto min-w-[80px] justify-center rounded-md border border-transparent bg-blue-100 px-4 py-1 h-[25px] items-center text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2'
-                        onClick={() => handleEditFileRename()}>
+                        onClick={() => handleEditFileRename()}
+                      >
                         {responseRenameFile.isLoading ? (
                           <LoadingAlt />
                         ) : (
-                          'Rename'
+                          "Rename"
                         )}
                       </button>
                     </div>

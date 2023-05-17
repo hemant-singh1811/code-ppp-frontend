@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { TableContext } from '../../tableComponents/TableComponents';
-import { useRef } from 'react';
-import { useEffect } from 'react';
+import React, { useContext, useState } from "react";
+import { useSelector } from "react-redux";
+import { TableContext } from "../../tableComponents/TableComponents";
+import { useRef } from "react";
+import { useEffect } from "react";
 
 export default function CheckBox({ cell, rowData }) {
   const socket = useSelector((state) => state.socketWebData.socket);
@@ -23,20 +23,20 @@ export default function CheckBox({ cell, rowData }) {
       checkBoxRef.current.checked
     );
 
-    let newRowPart = { [cell?.column.id]: checkBoxRef.current.checked };
+    let newRowPart = checkBoxRef.current.checked;
 
     let rowObj = {
-      base_id: selectedBaseId,
-      table_id: selectedTableId,
-      record_id: cell?.row?.original.id52148213343234567,
-      updated_data: newRowPart,
-      field_type: cell.column.columnDef.field_type,
-      field_name: cell.column.columnDef.field_name,
-      field_id: cell.column.columnDef.field_id,
+      baseId: selectedBaseId,
+      tableId: selectedTableId,
+      recordId: cell?.row?.original.id52148213343234567,
+      updatedData: newRowPart,
+      fieldType: cell.column.columnDef.fieldType,
+      fieldName: cell.column.columnDef.fieldName,
+      fieldId: cell.column.columnDef.fieldId,
     };
 
-    socket.emit('updatedata', rowObj, (response) => {
-      console.log('res : ', response);
+    socket.emit("updateData", rowObj, (response) => {
+      console.log("res : ", response);
     });
   }
 

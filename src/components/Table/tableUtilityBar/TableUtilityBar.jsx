@@ -40,9 +40,9 @@ export default function TableUtilityBar() {
     //   })
     // );
     // let obj = {
-    //   user_token: userToken,
+    //   userToken: userToken,
     //   model: table.options.state,
-    //   view_id: selectedView?.id,
+    //   viewId: selectedView?.id,
     //   previousSelectedView,
     // };
     // console.log('update views', obj);

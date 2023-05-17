@@ -7,7 +7,7 @@ let userInfo = localStorage.getItem("userToken")
   : null;
 
 const userToken =
-  JSON.parse(localStorage.getItem("userToken"))?.user_token || undefined;
+  JSON.parse(localStorage.getItem("userToken"))?.userToken || undefined;
 
 const initialState = {
   loading: false,
@@ -35,7 +35,7 @@ const authSlice = createSlice({
     [userLogin.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.userInfo = payload;
-      state.userToken = payload?.user_token;
+      state.userToken = payload?.userToken;
     },
     [userLogin.rejected]: (state, { payload }) => {
       state.loading = false;

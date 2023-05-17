@@ -39,7 +39,7 @@ export default function Table({
     .map(({ id, data }) => {
       // console.log(data, id);
       return (
-        !data?.is_primary && {
+        !data?.primary && {
           accessorKey: id,
           id: id,
           header: id,
@@ -50,7 +50,7 @@ export default function Table({
     })
     .filter((ele) => ele);
   tableModel.map(({ id, data }) => {
-    if (data?.is_primary) {
+    if (data?.primary) {
       defaultColumns.unshift({
         accessorKey: id,
         id: id,
@@ -65,13 +65,13 @@ export default function Table({
   defaultColumns.unshift({
     accessorKey: "",
     id: "select",
-    is_primary: true,
+    primary: true,
     hiddenInConditions: true,
     size: 67,
     enableHiding: false,
     header: ({ table }) => (
       <IndeterminateCheckbox
-        className="-ml-[10px]"
+        className='-ml-[10px]'
         checked={table.getIsAllRowsSelected()}
         indeterminate={table.getIsSomeRowsSelected()}
         onChange={table.getToggleAllRowsSelectedHandler()}
@@ -108,8 +108,8 @@ export default function Table({
   useEffect(() => {
     if (data) {
       console.log("Get linked table Records", data);
-      // let multipleLinkedRecColumns = defaultColumns.map(({ field_type, field_name }) => {
-      //   if (field_name === "multipleRecordLinks") {
+      // let multipleLinkedRecColumns = defaultColumns.map(({ fieldType, fieldName }) => {
+      //   if (fieldName === "linkedRecords") {
       //   }
       // })
       // console.log(defaultColumns)
@@ -117,9 +117,9 @@ export default function Table({
       setTableDataModified(
         tableData.map(({ data, id }) => {
           const object = {};
-          defaultColumns.map(({ header, field_type, linked_rec }) => {
+          defaultColumns.map(({ header, fieldType, linkedRecord }) => {
             object[header] = data?.[header] || "";
-            if (field_type === "multipleRecordLinks") {
+            if (fieldType === "linkedRecords") {
               // console.log(data)
               if (Array.isArray(data?.[header])) {
                 object[header] = data?.[header].map((ele) => {
@@ -161,7 +161,7 @@ export default function Table({
   // }
 
   return (
-    <div className="relative overflow-hidden">
+    <div className='relative overflow-hidden'>
       <TableComponents
         toggle={toggle}
         defaultColumns={defaultColumns}
