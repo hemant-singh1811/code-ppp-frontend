@@ -41,7 +41,7 @@ export default function MultilineTextCell({ cell }) {
         recordId: cell?.row?.original.id52148213343234567,
         updatedData: newRowPart,
         fieldType: cell.column.columnDef.fieldType,
-        fieldName: cell.column.columnDef.fieldName,
+
         fieldId: cell.column.columnDef.fieldId,
       };
       console.log(rowObj);

@@ -58,7 +58,6 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
         createdAt: columnData?.createdAt,
         fieldType: columnData?.fieldType,
         createdBy: columnData?.createdBy,
-        fieldName: columnData?.fieldName,
         options: [
           ...options,
           {
@@ -115,7 +114,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
       recordId: rowCopy.id52148213343234567,
       updatedData: newRowPart,
       fieldType: cell.column.columnDef.fieldType,
-      fieldName: cell.column.columnDef.fieldName,
+
       fieldId: cell.column.columnDef.fieldId,
     };
 
@@ -142,7 +141,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
       recordId: rowCopy.id52148213343234567,
       updatedData: newRowPart,
       fieldType: cell.column.columnDef.fieldType,
-      fieldName: cell.column.columnDef.fieldName,
+
       fieldId: cell.column.columnDef.fieldId,
     };
     rowCopy[cell?.column.columnDef.fieldId] = rowData;
