@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   selectedView: {},
@@ -7,7 +7,7 @@ const initialState = {
 };
 
 const viewsSlice = createSlice({
-  name: 'views',
+  name: "views",
   initialState,
   reducers: {
     handleUpdateSelectedViews: (state, { payload }) => {
@@ -67,39 +67,39 @@ const viewsSlice = createSlice({
       if (payload?.sharedview)
         payload?.sharedview?.map((ele, i) => {
           if (i === 0) {
-            state.selectedView.name = ele?.metadata?.name;
-            state.selectedView.id = ele?.metadata?.views_id;
+            state.selectedView.name = ele?.metaData?.name;
+            state.selectedView.id = ele?.metaData?.views_id;
             state.selectedView.model = ele?.model;
           }
         });
       if (payload?.personalview)
         payload?.sharedview?.map((ele, i) => {
           if (i === 0) {
-            state.selectedView.name = ele?.metadata?.name;
-            state.selectedView.id = ele?.metadata?.views_id;
+            state.selectedView.name = ele?.metaData?.name;
+            state.selectedView.id = ele?.metaData?.views_id;
             state.selectedView.model = ele?.model;
           }
         });
       state.views = [
         {
-          title: 'Personal Views',
+          title: "Personal Views",
           collapsed: true,
           data: payload?.personalview?.map((ele, i) => {
             return {
-              title: ele?.metadata?.name,
+              title: ele?.metaData?.name,
               data: ele?.model,
-              id: ele?.metadata?.views_id,
+              id: ele?.metaData?.views_id,
             };
           }),
         },
         {
-          title: 'Shared Views',
+          title: "Shared Views",
           collapsed: true,
           data: payload?.sharedview?.map((ele) => {
             return {
-              title: ele?.metadata?.name,
+              title: ele?.metaData?.name,
               data: ele?.model,
-              id: ele?.metadata?.views_id,
+              id: ele?.metaData?.views_id,
             };
           }),
         },

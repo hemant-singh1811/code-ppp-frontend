@@ -14,7 +14,8 @@ export default function _AudioMessage({ messageApi, type }) {
               <div className='flex justify-center items-center relative h-10 w-10'>
                 <svg
                   className='h-10 w-10 animate-spin absolute'
-                  viewBox='3 3 18 18'>
+                  viewBox='3 3 18 18'
+                >
                   <path
                     className='fill-indigo-200'
                     d='M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z'
@@ -30,7 +31,8 @@ export default function _AudioMessage({ messageApi, type }) {
                   viewBox='0 0 24 24'
                   strokeWidth={1.5}
                   stroke='currentColor'
-                  className='w-8 h-8 bg-white rounded-full p-1  animate-pulse'>
+                  className='w-8 h-8 bg-white rounded-full p-1  animate-pulse'
+                >
                   <path
                     strokeLinecap='round'
                     strokeLinejoin='round'
@@ -42,7 +44,7 @@ export default function _AudioMessage({ messageApi, type }) {
           )}
         </div>
         <div className='text-[10px] text-gray-400 mt-1 mr-1 text-right'>
-          {messageApi.created_at}
+          {messageApi.createdAt}
         </div>
       </div>
       <img src='/demo1.jpg' className='w-10 h-10 rounded-full ' alt='' />
@@ -56,7 +58,7 @@ export default function _AudioMessage({ messageApi, type }) {
           Sorry, your browser doesn't support audio.
         </audio>
         <div className='text-[10px] text-gray-400 mt-1 ml-1'>
-          {messageApi.created_at}
+          {messageApi.createdAt}
         </div>
       </div>
     </>

@@ -1,11 +1,11 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   bases: [],
 };
 
 const BasesStateSlice = createSlice({
-  name: 'bases',
+  name: "bases",
   initialState,
   reducers: {
     // handel updates in bases state
@@ -14,14 +14,14 @@ const BasesStateSlice = createSlice({
     },
     handelRemoveBases: (state, { payload }) => {
       let updatedBases = state.bases.filter(
-        ({ baseid }) => baseid !== payload.baseId
+        ({ baseId }) => baseId !== payload.baseId
       );
       state.bases = updatedBases;
     },
     handelRenameBases: (state, { payload }) => {
       let updatedBases = state.bases.map((item) => {
-        if (item.baseid === payload.baseId) {
-          item.basemetadata.name = payload.updatedName;
+        if (item.baseId === payload.baseId) {
+          item.baseMetaData.baseName = payload.updatedName;
         }
         return item;
       });
@@ -31,8 +31,8 @@ const BasesStateSlice = createSlice({
     // handel updates in table state
     handelAddTableInBases: (state, { payload }) => {
       let updatedBases = state.bases.map((item) => {
-        if (payload.baseId === item.baseid) {
-          item.tablemetadata.push(payload.data);
+        if (payload.baseId === item.baseId) {
+          item.tableMetaData.push(payload.data);
         }
         return item;
       });
@@ -40,9 +40,9 @@ const BasesStateSlice = createSlice({
     },
     handelRemoveTableInBases: (state, { payload }) => {
       let updatedBases = state.bases.map((item) => {
-        if (payload.baseId === item.baseid) {
-          item.tablemetadata = item.tablemetadata.filter(
-            (item) => item.table_id !== payload.tableId
+        if (payload.baseId === item.baseId) {
+          item.tableMetaData = item.tableMetaData.filter(
+            (item) => item.tableId !== payload.tableId
           );
         }
         return item;
@@ -51,10 +51,10 @@ const BasesStateSlice = createSlice({
     },
     handelRenameTableInBases: (state, { payload }) => {
       let updatedBases = state.bases.map((item) => {
-        if (payload.baseId === item.baseid) {
-          item.tablemetadata = item.tablemetadata.map((ele) => {
-            if (ele.table_id === payload.tableId) {
-              ele.table_name = payload.updatedName;
+        if (payload.baseId === item.baseId) {
+          item.tableMetaData = item.tableMetaData.map((ele) => {
+            if (ele.tableId === payload.tableId) {
+              ele.tableName = payload.updatedName;
             }
             return ele;
           });

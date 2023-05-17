@@ -89,16 +89,16 @@ const defaultColumn = {
       let newRowPart = { [updatedRowKey]: updatedRowValue };
 
       let obj = {
-        base_id: selectedBaseId,
-        table_id: selectedTableId,
-        record_id: rowCopy.id52148213343234567,
-        updated_data: newRowPart,
-        field_type: columnDef.field_type,
-        field_name: columnDef.field_name,
-        field_id: columnDef.field_id,
+        baseId: selectedBaseId,
+        tableId: selectedTableId,
+        recordId: rowCopy.id52148213343234567,
+        updatedData: newRowPart,
+        fieldType: columnDef.fieldType,
+        fieldName: columnDef.fieldName,
+        fieldId: columnDef.fieldId,
       };
       console.log(obj);
-      socket.emit("updatedata", obj, (response) => {
+      socket.emit("updateData", obj, (response) => {
         console.log("res : ", response);
       });
     };

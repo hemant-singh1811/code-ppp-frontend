@@ -48,17 +48,17 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
 
   function addNewOption() {
     let obj = {
-      type: columnData?.field_type,
-      field_id: columnData?.field_id,
-      table_id: selectedTableId,
+      type: columnData?.fieldType,
+      fieldId: columnData?.fieldId,
+      tableId: selectedTableId,
       obj: {
-        field_id: columnData?.field_id,
-        field_description: columnData?.field_description,
+        fieldId: columnData?.fieldId,
+        fieldDescription: columnData?.fieldDescription,
         json_field_type: columnData?.json_field_type,
-        created_at: columnData?.created_at,
-        field_type: columnData?.field_type,
-        created_by: columnData?.created_by,
-        field_name: columnData?.field_name,
+        createdAt: columnData?.createdAt,
+        fieldType: columnData?.fieldType,
+        createdBy: columnData?.createdBy,
+        fieldName: columnData?.fieldName,
         options: [
           ...options,
           {
@@ -76,7 +76,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
 
     setColumns((prev) => {
       return prev.map((data) => {
-        if (data.field_id === columnData.field_id) {
+        if (data.fieldId === columnData.fieldId) {
           data.options = [
             ...options,
             {
@@ -105,26 +105,25 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
     setSelectedOption([searchTerm]);
     setSearchTerm("");
     setSingleSelectToggle(!SingleSelectToggle);
-    rowCopy[cell?.column.id] = rowData;
+    rowCopy[cell?.column.columnDef.fieldId] = rowData;
 
-    let updatedRowKey = cell?.column.id;
-    let newRowPart = { [updatedRowKey]: [searchTerm] };
+    let newRowPart = [searchTerm];
 
     let rowObj = {
-      base_id: selectedBaseId,
-      table_id: selectedTableId,
-      record_id: rowCopy.id52148213343234567,
-      updated_data: newRowPart,
-      field_type: cell.column.columnDef.field_type,
-      field_name: cell.column.columnDef.field_name,
-      field_id: cell.column.columnDef.field_id,
+      baseId: selectedBaseId,
+      tableId: selectedTableId,
+      recordId: rowCopy.id52148213343234567,
+      updatedData: newRowPart,
+      fieldType: cell.column.columnDef.fieldType,
+      fieldName: cell.column.columnDef.fieldName,
+      fieldId: cell.column.columnDef.fieldId,
     };
 
     socket.emit("updatemetadata", obj, (response) => {
       console.log("socket response: " + JSON.stringify(response));
     });
 
-    socket.emit("updatedata", rowObj, (response) => {
+    socket.emit("updateData", rowObj, (response) => {
       console.log("res : ", response);
     });
 
@@ -134,22 +133,22 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
   function updateOption(name) {
     rowData = [name];
     setSelectedOption([name]);
-    let updatedRowKey = cell?.column.id;
-    let newRowPart = { [updatedRowKey]: [name] };
+
+    let newRowPart = [name];
 
     let rowObj = {
-      base_id: selectedBaseId,
-      table_id: selectedTableId,
-      record_id: rowCopy.id52148213343234567,
-      updated_data: newRowPart,
-      field_type: cell.column.columnDef.field_type,
-      field_name: cell.column.columnDef.field_name,
-      field_id: cell.column.columnDef.field_id,
+      baseId: selectedBaseId,
+      tableId: selectedTableId,
+      recordId: rowCopy.id52148213343234567,
+      updatedData: newRowPart,
+      fieldType: cell.column.columnDef.fieldType,
+      fieldName: cell.column.columnDef.fieldName,
+      fieldId: cell.column.columnDef.fieldId,
     };
-    rowCopy[cell?.column.id] = rowData;
+    rowCopy[cell?.column.columnDef.fieldId] = rowData;
     table.options.meta?.updateData(cell.row.index, cell.column.id, [name]);
     // console.log(rowObj)
-    socket.emit("updatedata", rowObj, (response) => {
+    socket.emit("updateData", rowObj, (response) => {
       console.log("res : ", response);
     });
     setSingleSelectToggle(!SingleSelectToggle);
@@ -174,7 +173,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
         style={{
           height: activeRowHeight,
         }}
-        className="flex h-full items-center rounded-md text-[#4d4d4d]  text-lg  cursor-pointer relative "
+        className='flex h-full items-center rounded-md text-[#4d4d4d]  text-lg  cursor-pointer relative '
       >
         {({ open, close }) => (
           <>
@@ -195,7 +194,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
                   isEditMode ? "w-[calc(100%_-_16px)]" : "w-full"
                 }`}
               >
-                <div className=" w-full rounded-md cursor-pointer flex items-center pr-1 justify-between ">
+                <div className=' w-full rounded-md cursor-pointer flex items-center pr-1 justify-between '>
                   {options?.map(({ name, color, bgcolor }, i) => {
                     if (selectedOption?.includes(name) && name !== "")
                       return (
@@ -211,51 +210,51 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
                 </div>
               </div>
               {open && (
-                <div className="min-w-4 h-4 flex ">
+                <div className='min-w-4 h-4 flex '>
                   <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
                     strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="min-w-4 h-4 text-blue-500 ml-auto"
+                    stroke='currentColor'
+                    className='min-w-4 h-4 text-blue-500 ml-auto'
                   >
                     <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      d='M19.5 8.25l-7.5 7.5-7.5-7.5'
                     />
                   </svg>
                 </div>
               )}
             </Popover.Button>
             <Transition
-              className="bg-white"
+              className='bg-white'
               as={Fragment}
-              enter="transition ease-out duration-200"
-              enterFrom="opacity-0 translate-y-1"
-              enterTo="opacity-100 translate-y-0"
-              leave="transition ease-in duration-150"
-              leaveFrom="opacity-100 translate-y-0"
-              leaveTo="opacity-0 translate-y-1"
+              enter='transition ease-out duration-200'
+              enterFrom='opacity-0 translate-y-1'
+              enterTo='opacity-100 translate-y-0'
+              leave='transition ease-in duration-150'
+              leaveFrom='opacity-100 translate-y-0'
+              leaveTo='opacity-0 translate-y-1'
             >
-              <Popover.Panel className="absolute  left-0 z-[3] bg-yellow-400   h-full rounded-md  shadow-custom ">
+              <Popover.Panel className='absolute  left-0 z-[3] bg-yellow-400   h-full rounded-md  shadow-custom '>
                 <div
-                  className="absolute -left-1 top-8 w-full  bg-white rounded-md shadow-lg min-w-[200px] border  overflow-x-hidden"
+                  className='absolute -left-1 top-8 w-full  bg-white rounded-md shadow-lg min-w-[200px] border  overflow-x-hidden'
                   style={{ zIndex: 100 }}
                 >
                   <input
-                    type="text"
-                    name="search option"
-                    id=""
-                    placeholder="find an option"
-                    className="w-full outline-none p-2"
+                    type='text'
+                    name='search option'
+                    id=''
+                    placeholder='find an option'
+                    className='w-full outline-none p-2'
                     onChange={(e) => setSearchTerm(e.target.value)}
                     value={searchTerm}
                     autoComplete={"off"}
                     autoFocus
                   />
-                  <div className="max-h-[300px]  overflow-y-auto">
+                  <div className='max-h-[300px]  overflow-y-auto'>
                     {options
                       ?.filter(({ name }) => name?.includes(searchTerm))
                       .map(({ color, name, bgcolor }, i) => {
@@ -266,7 +265,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
                               close();
                             }}
                             key={i}
-                            className="p-2 hover:bg-blue-100 flex min-h-[30px] w-full"
+                            className='p-2 hover:bg-blue-100 flex min-h-[30px] w-full'
                           >
                             {name && (
                               <div
@@ -289,9 +288,9 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
                           addNewOption(e);
                           close();
                         }}
-                        className="p-2 hover:bg-blue-100 flex truncate"
+                        className='p-2 hover:bg-blue-100 flex truncate'
                       >
-                        <div className="truncate flex">
+                        <div className='truncate flex'>
                           Add New Option:
                           {searchTerm && (
                             <span

@@ -4,25 +4,25 @@ import React, {
   useEffect,
   useReducer,
   useState,
-} from 'react';
-import { useDetectOutsideClick } from '../../../../utilities/customHooks/useDetectOutsideClick';
-import { TableContext } from '../../tableComponents/TableComponents';
+} from "react";
+import { useDetectOutsideClick } from "../../../../utilities/customHooks/useDetectOutsideClick";
+import { TableContext } from "../../tableComponents/TableComponents";
 import {
   useCreateViewMutation,
   useDeleteViewMutation,
-} from '../../../../store/services/alphaTruckingApi';
-import { useDispatch, useSelector } from 'react-redux';
-import Error from '../../../utilities/Error';
+} from "../../../../store/services/alphaTruckingApi";
+import { useDispatch, useSelector } from "react-redux";
+import Error from "../../../utilities/Error";
 import {
   handelRemoveView,
   handelToggleView,
   handelUpdateModel,
   handleAddViews,
   handleUpdateSelectedViews,
-} from '../../../../store/features/viewsSlice';
-import { handelViewsToggle } from '../../../../store/features/globalStateSlice';
-import LoadingAlt from '../../../utilities/LoadingAlt';
-import { Transition } from '@headlessui/react';
+} from "../../../../store/features/viewsSlice";
+import { handelViewsToggle } from "../../../../store/features/globalStateSlice";
+import LoadingAlt from "../../../utilities/LoadingAlt";
+import { Transition } from "@headlessui/react";
 
 export default function TableUtilityViews() {
   const dispatch = useDispatch();
@@ -32,14 +32,16 @@ export default function TableUtilityViews() {
         className='flex items-center font-medium'
         onClick={() => {
           dispatch(handelViewsToggle());
-        }}>
+        }}
+      >
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
           viewBox='0 0 24 24'
           strokeWidth={2}
           stroke='currentColor'
-          className='w-5 h-5 pr-1'>
+          className='w-5 h-5 pr-1'
+        >
           <path
             strokeLinecap='round'
             strokeLinejoin='round'
@@ -56,7 +58,7 @@ export const ViewsComponent = () => {
   const { views } = useSelector((state) => state.views);
 
   const [createToggle, setCreateToggle] = useState(true);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const dispatch = useDispatch();
 
   return (
@@ -69,7 +71,8 @@ export const ViewsComponent = () => {
             viewBox='0 0 24 24'
             strokeWidth={1.5}
             stroke='currentColor'
-            className='w-4 h-4  absolute  ml-4 fill-[rgb(68, 68, 68)]  '>
+            className='w-4 h-4  absolute  ml-4 fill-[rgb(68, 68, 68)]  '
+          >
             <path
               strokeLinecap='round'
               strokeLinejoin='round'
@@ -94,7 +97,8 @@ export const ViewsComponent = () => {
                     className='flex justify-between items-center p-2 rounded cursor-pointer hover:bg-slate-100'
                     onClick={() => {
                       dispatch(handelToggleView(title));
-                    }}>
+                    }}
+                  >
                     <div className='font-medium text-lg'>{title}</div>
                     <div className='flex items-center gap-1'>
                       <span>
@@ -105,7 +109,8 @@ export const ViewsComponent = () => {
                             viewBox='0 0 24 24'
                             strokeWidth={1.5}
                             stroke='currentColor'
-                            className='w-5 h-5'>
+                            className='w-5 h-5'
+                          >
                             <path
                               strokeLinecap='round'
                               strokeLinejoin='round'
@@ -119,7 +124,8 @@ export const ViewsComponent = () => {
                             viewBox='0 0 24 24'
                             strokeWidth={1.5}
                             stroke='currentColor'
-                            className='w-5 h-5'>
+                            className='w-5 h-5'
+                          >
                             <path
                               strokeLinecap='round'
                               strokeLinejoin='round'
@@ -164,7 +170,8 @@ export const ViewsComponent = () => {
       <div className='border-t-[1px] border-[#e8e8e8] pt-2 mx-2 '>
         <div
           className='flex justify-between p-2 cursor-pointer'
-          onClick={() => setCreateToggle(!createToggle)}>
+          onClick={() => setCreateToggle(!createToggle)}
+        >
           <div className='text-xl  font-medium'>Create...</div>
           <span>
             {createToggle ? (
@@ -174,7 +181,8 @@ export const ViewsComponent = () => {
                 viewBox='0 0 24 24'
                 strokeWidth={1.5}
                 stroke='currentColor'
-                className='w-5 h-5'>
+                className='w-5 h-5'
+              >
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
@@ -188,7 +196,8 @@ export const ViewsComponent = () => {
                 viewBox='0 0 24 24'
                 strokeWidth={1.5}
                 stroke='currentColor'
-                className='w-5 h-5'>
+                className='w-5 h-5'
+              >
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
@@ -204,7 +213,8 @@ export const ViewsComponent = () => {
               return (
                 <div
                   key={i}
-                  className='flex justify-between items-center p-2 rounded-md  cursor-pointer'>
+                  className='flex justify-between items-center p-2 rounded-md  cursor-pointer'
+                >
                   <div className='flex items-center gap-2'>
                     <svg
                       xmlns='http://www.w3.org/2000/svg'
@@ -212,7 +222,8 @@ export const ViewsComponent = () => {
                       viewBox='0 0 24 24'
                       strokeWidth={1}
                       stroke='currentColor'
-                      className='w-5 h-5'>
+                      className='w-5 h-5'
+                    >
                       <path
                         strokeLinecap='round'
                         strokeLinejoin='round'
@@ -291,8 +302,9 @@ function TableViewsPopUpMenuToolkit({ title, id, model }) {
       }}
       ref={viewsMenu}
       className={`flex items-center justify-between p-2 rounded cursor-pointer my-1 hover:bg-slate-100 relative ${
-        selectedView?.id === id && 'bg-blue-300 hover:bg-blue-400'
-      }`}>
+        selectedView?.id === id && "bg-blue-300 hover:bg-blue-400"
+      }`}
+    >
       <div className='font-medium ml-7 text-base truncate'>{title}</div>
       <svg
         xmlns='http://www.w3.org/2000/svg'
@@ -304,7 +316,8 @@ function TableViewsPopUpMenuToolkit({ title, id, model }) {
         onClick={(e) => {
           e.stopPropagation();
           setIsMenuToggle(!isMenuToggle);
-        }}>
+        }}
+      >
         <path
           strokeLinecap='round'
           strokeLinejoin='round'
@@ -321,24 +334,28 @@ function TableViewsPopUpMenuToolkit({ title, id, model }) {
         enterTo='opacity-100 translate-x-0'
         leave='transition ease-in duration-150'
         leaveFrom='opacity-100 translate-x-0'
-        leaveTo='opacity-0 -translate-x-2'>
+        leaveTo='opacity-0 -translate-x-2'
+      >
         <div
           style={{ left: 242, top: position.y }}
-          className='absolute w-56 top-0 -right-[250px] bg-white p-2  z-50 rounded  border-gray-400 border-[.5px] shadow-md'>
+          className='absolute w-56 top-0 -right-[250px] bg-white p-2  z-50 rounded  border-gray-400 border-[.5px] shadow-md'
+        >
           <div
             className='flex items-center p-2 rounded cursor-pointer hover:bg-slate-100'
             onClick={(e) => {
               setIsMenuToggle(!isMenuToggle);
               deleteViewApi({ tableId: selectedTableId, viewId: id });
               e.stopPropagation();
-            }}>
+            }}
+          >
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
               viewBox='0 0 24 24'
               strokeWidth={1.5}
               stroke='currentColor'
-              className='w-5 h-5'>
+              className='w-5 h-5'
+            >
               <path
                 strokeLinecap='round'
                 strokeLinejoin='round'
@@ -370,9 +387,9 @@ function TableViewsAddToolkit({ views }) {
   const [isMenuToggle, setIsMenuToggle] = React.useState(false);
   useDetectOutsideClick(viewsMenu, () => setIsMenuToggle(false));
 
-  const [createViewInput, setCreateViewInput] = useState('');
+  const [createViewInput, setCreateViewInput] = useState("");
   const [handelErrorOnInput, setHandelErrorOnInput] = useState(false);
-  const [viewType, setViewType] = useState('Shared View');
+  const [viewType, setViewType] = useState("Shared View");
   const alreadyCreatedViewsSet = new Set();
 
   views?.forEach(({ data }) => {
@@ -383,16 +400,16 @@ function TableViewsAddToolkit({ views }) {
 
   useEffect(() => {
     if (responseCreateView?.data) {
-      console.log('Created view Res:', responseCreateView?.data);
+      console.log("Created view Res:", responseCreateView?.data);
       dispatch(
         handleAddViews({
-          type: viewType === 'Shared View' ? 'Shared Views' : 'Personal Views',
+          type: viewType === "Shared View" ? "Shared Views" : "Personal Views",
           viewTitle: createViewInput.trim(),
           id: responseCreateView?.data?.viewid,
           model: table.options.state,
         })
       );
-      setCreateViewInput('');
+      setCreateViewInput("");
       setIsMenuToggle(!isMenuToggle);
     }
   }, [responseCreateView.isSuccess]);
@@ -400,8 +417,8 @@ function TableViewsAddToolkit({ views }) {
   const createView = () => {
     createViewApi({
       name: createViewInput.trim(),
-      table_id: selectedTableId,
-      base_id: selectedBaseId,
+      tableId: selectedTableId,
+      baseId: selectedBaseId,
       model: table.options.state,
       view_type: viewType,
     });
@@ -425,7 +442,8 @@ function TableViewsAddToolkit({ views }) {
         strokeWidth={1.5}
         stroke='currentColor'
         className='w-5 h-5 hover:bg-[#f4f4f4]'
-        onClick={() => setIsMenuToggle(!isMenuToggle)}>
+        onClick={() => setIsMenuToggle(!isMenuToggle)}
+      >
         <path
           strokeLinecap='round'
           strokeLinejoin='round'
@@ -441,7 +459,8 @@ function TableViewsAddToolkit({ views }) {
         enterTo='opacity-100 translate-x-0'
         leave='transition ease-in duration-400'
         leaveFrom='opacity-100 translate-x-0'
-        leaveTo='opacity-0 -translate-x-2'>
+        leaveTo='opacity-0 -translate-x-2'
+      >
         <div className='absolute w-96 -bottom-4 left-16 bg-white p-4 z-50 shadow-lg border-gray-200 rounded border cursor-auto transition-all'>
           <input
             onChange={(e) => onChangeInput(e)}
@@ -460,8 +479,8 @@ function TableViewsAddToolkit({ views }) {
           <div className='flex items-center justify-between pr-10 mt-2'>
             <div className='flex items-center'>
               <input
-                checked={viewType === 'Shared View' ? true : false}
-                onChange={() => setViewType('Shared View')}
+                checked={viewType === "Shared View" ? true : false}
+                onChange={() => setViewType("Shared View")}
                 id='default-radio-1'
                 type='radio'
                 name='default-radio'
@@ -469,14 +488,15 @@ function TableViewsAddToolkit({ views }) {
               />
               <label
                 htmlFor='default-radio-1'
-                className='ml-2 text-sm font-medium text-gray-900 '>
+                className='ml-2 text-sm font-medium text-gray-900 '
+              >
                 Collaborative View
               </label>
             </div>
             <div className='flex items-center'>
               <input
-                checked={viewType === 'personal' ? true : false}
-                onChange={() => setViewType('personal')}
+                checked={viewType === "personal" ? true : false}
+                onChange={() => setViewType("personal")}
                 id='default-radio-2'
                 type='radio'
                 name='default-radio'
@@ -484,7 +504,8 @@ function TableViewsAddToolkit({ views }) {
               />
               <label
                 htmlFor='default-radio-2'
-                className='ml-2 text-sm font-medium text-gray-900 '>
+                className='ml-2 text-sm font-medium text-gray-900 '
+              >
                 Personal View
               </label>
             </div>
@@ -493,19 +514,21 @@ function TableViewsAddToolkit({ views }) {
           <div className='flex justify-end gap-2 mt-8'>
             <button
               className='rounded hover:bg-gray-200 p-1 px-3 text-lg'
-              onClick={() => setIsMenuToggle(!isMenuToggle)}>
+              onClick={() => setIsMenuToggle(!isMenuToggle)}
+            >
               Cancel
             </button>
             <button
               onClick={() => createView()}
               className={`rounded bg-blue-600 p-1 px-3 text-white text-lg disabled:bg-gray-400 min-w-[140px] flex justify-center items-center ${
-                responseCreateView.isLoading && 'bg-gray-400'
+                responseCreateView.isLoading && "bg-gray-400"
               } `}
-              disabled={createViewInput == '' ? true : handelErrorOnInput}>
+              disabled={createViewInput == "" ? true : handelErrorOnInput}
+            >
               {responseCreateView.isLoading ? (
                 <LoadingAlt />
               ) : (
-                'Create New View'
+                "Create New View"
               )}
             </button>
           </div>
@@ -555,9 +578,9 @@ function TableViewsAddToolkit({ views }) {
 //     collapsed: true,
 //     data: views?.personalview?.map((ele, i) => {
 //       return {
-//         title: ele?.metadata?.name,
+//         title: ele?.metaData?.name,
 //         data: ele?.model,
-//         id: ele?.metadata?.views_id,
+//         id: ele?.metaData?.views_id,
 //       };
 //     }),
 //   },
@@ -566,9 +589,9 @@ function TableViewsAddToolkit({ views }) {
 //     collapsed: true,
 //     data: views?.sharedview?.map((ele) => {
 //       return {
-//         title: ele?.metadata?.name,
+//         title: ele?.metaData?.name,
 //         data: ele?.model,
-//         id: ele?.metadata?.views_id,
+//         id: ele?.metaData?.views_id,
 //       };
 //     }),
 //   },

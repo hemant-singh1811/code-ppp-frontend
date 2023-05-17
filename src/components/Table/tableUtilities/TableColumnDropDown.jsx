@@ -23,8 +23,8 @@ export default function TableColumnDropDown({
     addDeleteApi({
       baseId: selectedBaseId,
       data: {
-        table_id: selectedTableId,
-        field_id: columnDef?.field_id,
+        tableId: selectedTableId,
+        fieldId: columnDef?.fieldId,
       },
     });
   }
@@ -33,7 +33,7 @@ export default function TableColumnDropDown({
     if (responseDeleteColumn.data) {
       console.log("Delete Column:", responseDeleteColumn.data);
       setColumns((prev) =>
-        prev.filter((item) => item.field_id !== columnDef?.field_id)
+        prev.filter((item) => item.fieldId !== columnDef?.fieldId)
       );
     }
   }, [responseDeleteColumn.isSuccess]);
@@ -42,37 +42,37 @@ export default function TableColumnDropDown({
     <>
       <button
         onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="border-none outline-none h-full mr-2"
+        className='border-none outline-none h-full mr-2'
       >
-        <div className="text-gray-400 -mr-2 cursor-pointer hover:text-blue-800  flex">
+        <div className='text-gray-400 -mr-2 cursor-pointer hover:text-blue-800  flex'>
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
             strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-5 h-5 inline-block my-auto"
+            stroke='currentColor'
+            className='w-5 h-5 inline-block my-auto'
           >
             <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              d='M19.5 8.25l-7.5 7.5-7.5-7.5'
             />
           </svg>
         </div>
       </button>
       <Transition
         show={isMenuOpen}
-        className="bg-white"
+        className='bg-white'
         as={Fragment}
-        enter="transition ease-out duration-200"
-        enterFrom="opacity-0 translate-y-1"
-        enterTo="opacity-100 translate-y-0"
-        leave="transition ease-in duration-150"
-        leaveFrom="opacity-100 translate-y-0"
-        leaveTo="opacity-0 translate-y-1"
+        enter='transition ease-out duration-200'
+        enterFrom='opacity-0 translate-y-1'
+        enterTo='opacity-100 translate-y-0'
+        leave='transition ease-in duration-150'
+        leaveFrom='opacity-100 translate-y-0'
+        leaveTo='opacity-0 translate-y-1'
       >
-        <Popover.Panel className="text-black absolute top-[28px] z-20 w-56 rounded-md left-0 p-2 flex flex-col shadow-custom bg-white">
+        <Popover.Panel className='text-black absolute top-[28px] z-20 w-56 rounded-md left-0 p-2 flex flex-col shadow-custom bg-white'>
           {/* <div className="hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center ">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -91,31 +91,31 @@ export default function TableColumnDropDown({
             Edit Field
           </div> */}
           <div
-            aria-disabled={columnDef?.is_primary}
+            aria-disabled={columnDef?.primary}
             className={`  cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center ${
-              columnDef?.is_primary
+              columnDef?.primary
                 ? "bg-gray-100 cursor-not-allowed"
                 : "hover:bg-gray-100"
             }`}
             onClick={() => {
-              if (!columnDef?.is_primary) {
+              if (!columnDef?.primary) {
                 deleteColumn();
                 setIsMenuOpen(!isMenuOpen);
               }
             }}
           >
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
               strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-4 h-4  text-lg font-light mr-4"
+              stroke='currentColor'
+              className='w-4 h-4  text-lg font-light mr-4'
             >
               <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0'
               />
             </svg>
             Delete Field

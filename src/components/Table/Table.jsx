@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
-import TableComponents from './tableComponents/TableComponents';
-import { useDispatch, useSelector } from 'react-redux';
-import Loading from '../utilities/Loading';
-import Error from '../utilities/Error';
-import { useGetTableRecordsQuery } from '../../store/services/alphaTruckingApi';
-import IndeterminateCheckbox from './tableUtilities/IndeterminateCheckbox';
-import { handelAddTableWithMultipleRecords } from '../../store/features/globalStateSlice';
-import { useEffectOnce } from 'react-use';
-import { handelAddInitialState } from '../../store/features/viewsSlice';
+import React, { useEffect } from "react";
+import TableComponents from "./tableComponents/TableComponents";
+import { useDispatch, useSelector } from "react-redux";
+import Loading from "../utilities/Loading";
+import Error from "../utilities/Error";
+import { useGetTableRecordsQuery } from "../../store/services/alphaTruckingApi";
+import IndeterminateCheckbox from "./tableUtilities/IndeterminateCheckbox";
+import { handelAddTableWithMultipleRecords } from "../../store/features/globalStateSlice";
+import { useEffectOnce } from "react-use";
+import { handelAddInitialState } from "../../store/features/viewsSlice";
 
 export default function Table({
   tableData,
@@ -28,7 +28,7 @@ export default function Table({
 
   useEffectOnce(() => {
     console.log(
-      'array of multiple Linked records send to server:',
+      "array of multiple Linked records send to server:",
       modifiedArrayOfObject
     );
   });
@@ -37,11 +37,12 @@ export default function Table({
   let defaultColumns = [];
   defaultColumns = tableModel
     .map(({ id, data }) => {
+      // console.log(data, id);
       return (
-        !data?.is_primary && {
-          accessorKey: data?.field_name,
-          id: data?.field_name,
-          header: data?.field_name,
+        !data?.primary && {
+          accessorKey: id,
+          id: id,
+          header: id,
           minSize: 100,
           ...data,
         }
@@ -49,11 +50,11 @@ export default function Table({
     })
     .filter((ele) => ele);
   tableModel.map(({ id, data }) => {
-    if (data?.is_primary) {
+    if (data?.primary) {
       defaultColumns.unshift({
-        accessorKey: data?.field_name,
-        id: data?.field_name,
-        header: data?.field_name,
+        accessorKey: id,
+        id: id,
+        header: id,
         enableHiding: false,
         minSize: 100,
         ...data,
@@ -62,9 +63,9 @@ export default function Table({
   });
 
   defaultColumns.unshift({
-    accessorKey: '',
-    id: 'select',
-    is_primary: true,
+    accessorKey: "",
+    id: "select",
+    primary: true,
     hiddenInConditions: true,
     size: 67,
     enableHiding: false,
@@ -106,9 +107,9 @@ export default function Table({
 
   useEffect(() => {
     if (data) {
-      console.log('Get linked table Records', data);
-      // let multipleLinkedRecColumns = defaultColumns.map(({ field_type, field_name }) => {
-      //   if (field_name === "multipleRecordLinks") {
+      console.log("Get linked table Records", data);
+      // let multipleLinkedRecColumns = defaultColumns.map(({ fieldType, fieldName }) => {
+      //   if (fieldName === "linkedRecords") {
       //   }
       // })
       // console.log(defaultColumns)
@@ -116,9 +117,9 @@ export default function Table({
       setTableDataModified(
         tableData.map(({ data, id }) => {
           const object = {};
-          defaultColumns.map(({ header, field_type, linked_rec }) => {
-            object[header] = data?.[header] || '';
-            if (field_type === 'multipleRecordLinks') {
+          defaultColumns.map(({ header, fieldType, linkedRecord }) => {
+            object[header] = data?.[header] || "";
+            if (fieldType === "linkedRecords") {
               // console.log(data)
               if (Array.isArray(data?.[header])) {
                 object[header] = data?.[header].map((ele) => {

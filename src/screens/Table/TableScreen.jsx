@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import Error from '../../components/utilities/Error';
-import Loading from '../../components/utilities/Loading';
+import React, { useEffect } from "react";
+import Error from "../../components/utilities/Error";
+import Loading from "../../components/utilities/Loading";
 import {
   useGetModelQuery,
   useGetSavedViewQuery,
   useGetTableDataQuery,
-} from '../../store/services/alphaTruckingApi';
-import { useDispatch, useSelector } from 'react-redux';
-import { handelAddInitialState } from '../../store/features/viewsSlice';
-import Table from '../../components/Table/Table';
-import { initSocket } from '../../store/features/sockets/SocketWebDataSlice';
+} from "../../store/services/alphaTruckingApi";
+import { useDispatch, useSelector } from "react-redux";
+import { handelAddInitialState } from "../../store/features/viewsSlice";
+import Table from "../../components/Table/Table";
+import { initSocket } from "../../store/features/sockets/SocketWebDataSlice";
 
 let multipleRecordLinksArray = [];
 
@@ -20,38 +20,36 @@ export default function TableScreen() {
   let getTableDataApi = useGetTableDataQuery(selectedTableId);
   let getModalApi = useGetModelQuery(selectedTableId);
   const getViewsApi = useGetSavedViewQuery({
-    data: { table_id: selectedTableId },
+    data: { tableId: selectedTableId },
   });
 
   const multipleRecordLinksMap = new Map();
 
   const RecordIdArrayWithTableIdMap = new Map(); // table id -> multiple record [] of a particular column
 
-  useEffect(() => dispatch(initSocket()), [dispatch]);
-
   useEffect(() => {
     getTableDataApi.refetch(selectedTableId);
     getModalApi.refetch(selectedTableId);
     getViewsApi.refetch({
-      data: { table_id: selectedTableId },
+      data: { tableId: selectedTableId },
     });
   }, [selectedTableId]);
 
   useEffect(() => {
     if (getViewsApi.isSuccess) {
-      console.log('GET SAVED VIEW MODAL:', getViewsApi.data);
+      console.log("GET SAVED VIEW MODAL:", getViewsApi.data);
     }
   }, [getViewsApi.isSuccess]);
 
   useEffect(() => {
     if (getModalApi.data) {
-      console.log('GET MODAL:', getModalApi.data);
+      console.log("GET MODAL:", getModalApi.data);
     }
   }, [getModalApi.isSuccess]);
 
   useEffect(() => {
     if (getTableDataApi.data) {
-      console.log('GET DATA:', getTableDataApi.data);
+      console.log("GET DATA:", getTableDataApi.data);
     }
   }, [getTableDataApi.isSuccess]);
 
@@ -73,8 +71,8 @@ export default function TableScreen() {
   // stores the linked model in the map by linked  table keys and model as values
   multipleRecordLinksArray = getModalApi.data
     .map(({ data }) => {
-      if (data.field_type === 'multipleRecordLinks') {
-        multipleRecordLinksMap.set(data?.linked_rec?.tableid, data);
+      if (data.fieldType === "linkedRecords") {
+        multipleRecordLinksMap.set(data?.linkedRecord?.tableId, data);
         return data;
       }
     })
@@ -86,8 +84,8 @@ export default function TableScreen() {
     const uniqueRecordIdSet = new Set();
     // console.log(data);
     getTableDataApi.data.map(({ data }) => {
-      if (Array.isArray(data[value?.field_name])) {
-        data[value?.field_name].map((item) => {
+      if (Array.isArray(data[value?.fieldName])) {
+        data[value?.fieldName].map((item) => {
           // console.log(item);
           uniqueRecordIdSet.add(item);
         });
@@ -103,7 +101,7 @@ export default function TableScreen() {
 
   for (let [key, value] of RecordIdArrayWithTableIdMap) {
     modifiedArrayOfObject.push({
-      table_id: key,
+      tableId: key,
       record_ids: value,
     });
   }

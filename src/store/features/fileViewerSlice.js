@@ -1,15 +1,15 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   files: [],
   isOpen: false,
   index: 0,
-  cell: '',
-  table: '',
+  cell: "",
+  table: "",
 };
 
 const ImageViewerSlice = createSlice({
-  name: 'fileViewer',
+  name: "fileViewer",
   initialState,
   reducers: {
     handelAddFiles: (state, { payload }) => {
@@ -24,11 +24,12 @@ const ImageViewerSlice = createSlice({
     },
     handelRemoveFiles: (state, { payload }) => {
       state.files = state.files.filter((file) => {
-        return file.id !== payload.id;
+        return file.fileId !== payload;
       });
     },
     handelUpdateFiles: (state, { payload }) => {
-      state.files = [...state.files, ...payload];
+      console.log(payload);
+      // state.files = [...state.files, ...payload];
     },
   },
 });

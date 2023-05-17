@@ -1,19 +1,19 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 
 const dataAdapter = createEntityAdapter();
 
 export const alphaTruckingApi = createApi({
-  reducerPath: 'alphaTruckingApi',
+  reducerPath: "alphaTruckingApi",
   baseQuery: fetchBaseQuery({
     // base url of backend API
     baseUrl: import.meta.env.VITE_SERVER_URL,
     // prepareHeaders is used to configure the header of every request and gives access to getState which we use to include the token from the store
     prepareHeaders: (headers, state) => {
-      const token = state.getState().auth?.userInfo?.user_token;
+      const token = state.getState().auth?.userInfo?.userToken;
       if (token) {
         // include token in req header
-        headers.set('authorization', `Bearer ${token}`);
+        headers.set("authorization", `Bearer ${token}`);
         // headers.set('method', 'POST');
         return headers;
       }
@@ -23,8 +23,8 @@ export const alphaTruckingApi = createApi({
   endpoints: (builder) => ({
     GetLoad: builder.query({
       query: () => ({
-        url: '/API/V1/getload',
-        method: 'POST',
+        url: "/API/V1/getLoad",
+        method: "POST",
       }),
     }),
 
@@ -32,25 +32,25 @@ export const alphaTruckingApi = createApi({
 
     GetSavedView: builder.query({
       query: (payload) => ({
-        url: 'API/V1/getsavedviewmodel',
-        body: payload.data, // {table_id}
-        method: 'POST',
+        url: "API/V1/getSavedViewModel",
+        body: payload.data, // {tableId}
+        method: "POST",
       }),
     }),
 
     CreateView: builder.mutation({
       query: (payload) => ({
-        url: `API/V1/createnewview`,
-        body: payload, // {name , model , table_id}
-        method: 'POST',
+        url: `API/V1/createView`,
+        body: payload, // {name , model , tableId}
+        method: "POST",
       }),
     }),
 
     DeleteView: builder.mutation({
       query: (payload) => ({
-        url: `API/V1/deleteview/${payload.tableId}`,
-        body: { view_id: payload.viewId }, // {view_id:''}
-        method: 'DELETE',
+        url: `API/V1/deleteView/${payload.tableId}`,
+        body: { viewId: payload.viewId }, // {viewId:''}
+        method: "DELETE",
       }),
     }),
 
@@ -58,47 +58,47 @@ export const alphaTruckingApi = createApi({
 
     GetBases: builder.query({
       query: () => ({
-        url: '/API/V1/bases',
-        method: 'POST',
+        url: "/API/V1/getBases",
+        method: "POST",
         // transformResponse: (response) => response.data,
       }),
     }),
 
-    // this is used to get columns and metadata
+    // this is used to get columns and metaData
     GetModel: builder.query({
       query: (tableId) => ({
-        url: `/API/V1/getmodel/${tableId}`,
-        method: 'POST',
+        url: `/API/V1/getModel/${tableId}`,
+        method: "POST",
         // transformResponse: (response) => response.data,
       }),
     }),
 
     GetTableData: builder.query({
       query: (tableId) => ({
-        url: `/API/V1/getdata/${tableId}`,
-        method: 'POST',
+        url: `/API/V1/getData/${tableId}`,
+        method: "POST",
         // transformResponse: (response) => response.data,
       }),
     }),
 
     GetModelData: builder.mutation({
       query: (tableId) => ({
-        url: `/API/V1/getmodel/${tableId}`,
-        method: 'POST',
+        url: `/API/V1/getModel/${tableId}`,
+        method: "POST",
       }),
     }),
 
     GetTableDataPart: builder.mutation({
       query: (tableId) => ({
-        url: `/API/V1/getdata/${tableId}`,
-        method: 'POST',
+        url: `/API/V1/getData/${tableId}`,
+        method: "POST",
       }),
     }),
 
     GetTableRecords: builder.query({
       query: (payload) => ({
-        url: `API/V1/getrecords`,
-        method: 'POST',
+        url: `API/V1/getRecords`,
+        method: "POST",
         body: payload.data,
       }),
     }),
@@ -106,46 +106,46 @@ export const alphaTruckingApi = createApi({
     // table api
     CreateTable: builder.mutation({
       query: (payload) => ({
-        url: `API/V1/createtable/${payload.baseId}`,
+        url: `API/V1/createTable/${payload.baseId}`,
         body: payload.data,
-        method: 'PUT',
+        method: "PUT",
       }),
     }),
 
     DeleteTable: builder.mutation({
       query: (payload) => ({
-        url: `API/V1/deletetable/${payload.baseId}`,
-        body: payload.data, //table_id
-        method: 'DELETE',
+        url: `API/V1/deleteTable/${payload.baseId}`,
+        body: payload.data, //tableId
+        method: "DELETE",
       }),
     }),
 
     RenameTable: builder.mutation({
       query: (payload) => ({
-        url: `API/V1/tablerename/${payload.baseId}`,
-        body: payload.data, //table_id
-        method: 'PUT',
+        url: `API/V1/tableRename/${payload.baseId}`,
+        body: payload.data, //tableId
+        method: "PUT",
       }),
     }),
 
     RenameTableFile: builder.mutation({
       query: (payload) => ({
         url: `API/V1/renameTableFile`,
-        body: payload, //table_id
-        method: 'PATCH',
+        body: payload, //tableId
+        method: "PATCH",
       }),
     }),
     // {
-    // "table_id":"tbl2lFS8fwFz5pEjx",
-    // "table_name":"changed table nam1e"
+    // "tableId":"tbl2lFS8fwFz5pEjx",
+    // "tableName":"changed table nam1e"
     // }
 
     // base api
     CreateBase: builder.mutation({
       query: (payload) => ({
-        url: `API/V1/createbase`,
+        url: `API/V1/createBase`,
         body: payload.data,
-        method: 'POST',
+        method: "POST",
       }),
     }),
 
@@ -153,15 +153,15 @@ export const alphaTruckingApi = createApi({
       query: (payload) => ({
         url: `API/V1/deleteBase`,
         body: payload.data, //baseId
-        method: 'DELETE',
+        method: "DELETE",
       }),
     }),
 
     RenameBase: builder.mutation({
       query: (payload) => ({
-        url: `API/V1/baserename`,
+        url: `API/V1/baseRename`,
         body: payload.data,
-        method: 'PATCH',
+        method: "PATCH",
       }),
     }),
 
@@ -169,9 +169,9 @@ export const alphaTruckingApi = createApi({
 
     AddTableRow: builder.mutation({
       query: (payload) => ({
-        url: `API/V1/adddata/${payload.baseId}`,
-        body: payload.data, // field id is required to add a row; like this:- {"field_id":"fldzmC9cdc4LgvYGI"}
-        method: 'PUT',
+        url: `API/V1/addData/${payload.baseId}`,
+        body: payload.data, // field id is required to add a row; like this:- {"fieldId":"fldzmC9cdc4LgvYGI"}
+        method: "PUT",
       }),
     }),
 
@@ -179,24 +179,24 @@ export const alphaTruckingApi = createApi({
 
     AddTableColumn: builder.mutation({
       query: (payload) => ({
-        url: `API/V1/addcolumn/${payload.base_id}`,
+        url: `API/V1/addColumn/${payload.baseId}`,
         body: payload,
-        method: 'PUT',
+        method: "PUT",
       }),
     }),
 
     DeleteTableColumn: builder.mutation({
       query: (payload) => ({
-        url: `API/V1/remcolumn/${payload.baseId}`,
-        body: payload.data, // field id is required to delete a column; like this:- {"field_id":"fldzmC9cdc4LgvYGI"}
-        method: 'DELETE',
+        url: `API/V1/removeColumn/${payload.baseId}`,
+        body: payload.data, // field id is required to delete a column; like this:- {"fieldId":"fldzmC9cdc4LgvYGI"}
+        method: "DELETE",
       }),
     }),
   }),
 });
 
 const dataSlice = createSlice({
-  name: 'data',
+  name: "data",
   initialState: dataAdapter.getInitialState(),
   reducers: {},
   // extraReducers: (builder) => {
@@ -298,7 +298,6 @@ export const {
   useGetTableDataQuery,
   useGetLoadQuery,
   useGetSavedViewQuery,
-  // useGetTableRecordsQuery,
 } = alphaTruckingApi;
 
 export default dataSlice.reducer;
