@@ -17,7 +17,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
   const { columns, setColumns } = useContext(TableContext);
 
   columns.forEach((element) => {
-    if (element.fieldName === cell?.column?.id) {
+    if (element.fieldId === cell?.column?.id) {
       fetchedTableId = element?.linkedRecord?.tableId;
       linkedRecord = element?.linkedRecord;
     }
@@ -94,7 +94,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
       linkedRecord: linkedRecord,
       added: true,
       fieldType: cell.column.columnDef.fieldType,
-      fieldName: cell.column.columnDef.fieldName,
+
       fieldId: cell.column.columnDef.fieldId,
     };
     console.log(rowObj);
@@ -123,7 +123,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
 
     let rowObj = {
       fieldType: cell.column.columnDef.fieldType,
-      fieldName: cell.column.columnDef.fieldName,
+
       fieldId: cell.column.columnDef.fieldId,
       baseId: selectedBaseId,
       tableId: selectedTableId,
@@ -151,9 +151,9 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
       );
       responseGetModelData?.data.forEach(({ data }) => {
         if (data?.primary) {
-          setPrimaryData(data.fieldName);
+          setPrimaryData(data.fieldId);
         } else {
-          fetchedTableColumnsTemp.push(data.fieldName);
+          fetchedTableColumnsTemp.push(data.fieldId);
         }
       });
 
@@ -209,10 +209,10 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
               >
                 <div className='h-full w-max'>
                   {ele?.data?.hasOwnProperty(
-                    cell.column.columnDef.linkedRecord.selectedFieldName
+                    cell.column.columnDef.linkedRecord.selectedFieldId
                   ) &&
                     ele.data[
-                      cell.column.columnDef.linkedRecord.selectedFieldName
+                      cell.column.columnDef.linkedRecord.selectedFieldId
                     ]}
                 </div>
                 {isChildVisible && (
@@ -272,7 +272,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       type='text'
-                      className='p-4 pl-7 border-b-2 border-b-gray-300  focus:border-transparent focus:border-b-blue-500 focus:outline-none'
+                      className='p-4 pl-8 border-b-2 border-b-gray-300  focus:border-transparent  focus:border-b-blue-500 focus:outline-none relative z-10'
                       name=''
                       id=''
                       autoFocus
@@ -281,7 +281,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
                     <svg
                       onClick={closeModal}
                       xmlns='http://www.w3.org/2000/svg'
-                      className='cursor-pointer hover:fill-blue-500 absolute right-0 top-0 bottom-0 my-auto font-thin fill-gray-400'
+                      className='cursor-pointer hover:fill-blue-500 absolute right-0 top-0 bottom-0 my-auto font-thin fill-gray-400 z-20 '
                       height='24'
                       viewBox='0 96 960 960'
                       width='24'

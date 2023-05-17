@@ -172,7 +172,7 @@ const FileViewer = () => {
       recordId: cell?.row?.original.id52148213343234567,
       updatedData: fileUploadHandleTemp.fileId,
       fieldType: cell.column.columnDef.fieldType,
-      fieldName: cell.column.columnDef.fieldName,
+
       fieldId: cell.column.columnDef.fieldId,
       added: false,
     };

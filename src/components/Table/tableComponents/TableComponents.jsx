@@ -93,7 +93,6 @@ const defaultColumn = {
         recordId: rowCopy.id52148213343234567,
         updatedData: newRowPart,
         fieldType: columnDef.fieldType,
-        fieldName: columnDef.fieldName,
         fieldId: columnDef.fieldId,
       };
       console.log(obj);
