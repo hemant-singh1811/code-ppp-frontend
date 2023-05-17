@@ -1,17 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-  search: '',
+  search: "",
   filter: [
     {
-      name: 'Booked',
+      name: "Booked",
       isSelected: true,
     },
     {
-      name: 'In Transit',
+      name: "In Transit",
       isSelected: true,
     },
     {
-      name: 'Kent Yard',
+      name: "Kent Yard",
       isSelected: true,
     },
   ],
@@ -20,29 +20,34 @@ const initialState = {
     width: 280,
   },
   addToggle: {
-    type: '',
+    type: "",
     isOpen: false,
-    action: '',
-    baseId: '',
-    tableId: '',
-    name: '',
+    action: "",
+    baseId: "",
+    tableId: "",
+    name: "",
   },
   createTableBaseId: undefined,
-  selectedTableId: undefined || window.location.pathname.split('/')[2],
-  selectedBaseId: undefined || window.location.pathname.split('/')[1],
+  selectedTableId: undefined || window.location.pathname.split("/")[2],
+  selectedBaseId: undefined || window.location.pathname.split("/")[1],
   modal: {
     isOpen: false,
     content: {
-      heading: '',
-      description: '',
-      action: '',
-      icon: '',
-      color: '',
-      baseId: '',
-      target: '',
-      tableId: '',
-      name: '',
+      heading: "",
+      description: "",
+      action: "",
+      icon: "",
+      color: "",
+      baseId: "",
+      target: "",
+      tableId: "",
+      name: "",
     },
+  },
+  formModal: {
+    isOpen: false,
+    data: {},
+    columns: [],
   },
   tableWithMultipleRecords: [],
   isViewsOpen: false,
@@ -54,7 +59,7 @@ const initialState = {
 };
 
 const globalStateSlice = createSlice({
-  name: 'globalState',
+  name: "globalState",
   initialState,
   reducers: {
     onChangeSearch: (state, { payload }) => {
@@ -118,6 +123,12 @@ const globalStateSlice = createSlice({
     handelHoverRow: (state, { payload }) => {
       state.rowsUtility.hoveredRow = payload;
     },
+    handleFormModal: (state, { payload }) => {
+      state.formModal.isOpen = payload.isOpen;
+      state.formModal.data = payload.data;
+      state.formModal.columns = payload.columns;
+      state.formModal.index = payload.id;
+    },
   },
 });
 
@@ -133,6 +144,7 @@ export const {
   handelAddTableWithMultipleRecords,
   handelViewsToggle,
   handelHoverRow,
+  handleFormModal,
 } = globalStateSlice.actions;
 
 export default globalStateSlice.reducer;

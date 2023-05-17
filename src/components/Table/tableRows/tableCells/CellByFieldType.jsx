@@ -23,6 +23,7 @@ export default function CellByFieldType({
   cell,
   row,
 }) {
+  //console.log("CellByFieldType ", hiddenInConditions, field_type, cell, row);
   if (hiddenInConditions) {
     return (
       <DefaultSelectCell
