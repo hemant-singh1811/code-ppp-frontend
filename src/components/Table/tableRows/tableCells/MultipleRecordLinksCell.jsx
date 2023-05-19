@@ -82,19 +82,15 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
     // rowData = [ele];
 
     let updatedRowKey = cell?.column.columnDef.fieldId;
-    let newRowPart = { [updatedRowKey]: ele.id };
-    // let newRowPart = { [updatedRowKey]: [...selectedRowRecordId, ele.id] };
-    // let oldRowPart = { [updatedRowKey]: selectedRowData };
 
     let rowObj = {
       baseId: selectedBaseId,
       tableId: selectedTableId,
       recordId: rowCopy.id52148213343234567,
-      updatedData: newRowPart,
+      updatedData: ele?.id,
       linkedRecord: linkedRecord,
       added: true,
       fieldType: cell.column.columnDef.fieldType,
-
       fieldId: cell.column.columnDef.fieldId,
     };
     console.log(rowObj);
@@ -111,16 +107,6 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
 
     setSelectedRowData((prev) => prev.filter((id) => id !== ele));
 
-    let updatedRowKey = cell?.column.columnDef.fieldId;
-
-    let selectedRowRecordId = updatedSelectedRowData.map(
-      ({ recordId }) => recordId
-    );
-
-    let newRowPart = { [updatedRowKey]: ele?.recordId };
-    // let newRowPart = { [updatedRowKey]: selectedRowRecordId };
-    // let oldRowPart = { [updatedRowKey]: selectedRowData };
-
     let rowObj = {
       fieldType: cell.column.columnDef.fieldType,
 
@@ -128,15 +114,13 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
       baseId: selectedBaseId,
       tableId: selectedTableId,
       recordId: rowCopy.id52148213343234567,
-      // linked_table_id: fetchedTableId,
-      updatedData: newRowPart,
-      // old_data: oldRowPart,
+      updatedData: ele?.recordId,
       linkedRecord: linkedRecord,
       added: false,
     };
     console.log(rowObj);
 
-    // // console.log(rowObj)
+    // console.log(rowObj)
     socket.emit("updateData", rowObj, (response) => {
       console.log("res : ", response);
     });
@@ -181,7 +165,6 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
         {/* //add new record */}
         {isChildVisible && (
           <div
-            // type="button"
             onClick={() => {
               openModal();
               getTableDataApi(fetchedTableId);

@@ -108,19 +108,12 @@ export default function Table({
   useEffect(() => {
     if (data) {
       console.log("Get linked table Records", data);
-      // let multipleLinkedRecColumns = defaultColumns.map(({ fieldType, fieldName }) => {
-      //   if (fieldName === "linkedRecords") {
-      //   }
-      // })
-      // console.log(defaultColumns)
-
       setTableDataModified(
         tableData.map(({ data, id }) => {
           const object = {};
-          defaultColumns.map(({ header, fieldType, linkedRecord }) => {
+          defaultColumns.map(({ header, fieldType }) => {
             object[header] = data?.[header] || "";
             if (fieldType === "linkedRecords") {
-              // console.log(data)
               if (Array.isArray(data?.[header])) {
                 object[header] = data?.[header].map((ele) => {
                   return {
@@ -147,11 +140,9 @@ export default function Table({
   }
 
   const linkedRecordIdAndDataMap = new Map();
-  // console.log(data);
+
   data.forEach((ele) => {
-    // console.log(ele);
     ele?.data.forEach(({ id, data }) => {
-      // console.log(id, data);
       linkedRecordIdAndDataMap.set(id, data);
     });
   });

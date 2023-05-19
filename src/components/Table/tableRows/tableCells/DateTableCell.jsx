@@ -7,7 +7,7 @@ import moment from "moment/moment";
 
 export default function DateTableCell({ cell }) {
   const socket = useSelector((state) => state.socketWebData.socket);
-  const [value, setValue] = useState(cell?.getValue());
+  const [value, setValue] = useState(cell && cell?.getValue());
   const { table, activeNumberOfLines, activeRowHeight } =
     useContext(TableContext);
   const { selectedBaseId, selectedTableId } = useSelector(
