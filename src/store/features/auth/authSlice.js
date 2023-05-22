@@ -6,13 +6,12 @@ let userInfo = localStorage.getItem("userToken")
   ? JSON.parse(localStorage.getItem("userToken"))
   : null;
 
-const userToken =
-  JSON.parse(localStorage.getItem("userToken"))?.userToken || undefined;
+// const userToken =
+//   JSON.parse(localStorage.getItem("userToken"))?.userToken || undefined;
 
 const initialState = {
   loading: false,
   userInfo: userInfo,
-  userToken: userToken,
   error: null,
   success: false,
 };

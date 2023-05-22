@@ -4,6 +4,8 @@ import { useAddTableColumnMutation } from "../../../store/services/alphaTrucking
 import { TableContext } from "../tableComponents/TableComponents";
 import { Popover, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import getSvg from "./getSvg";
+import SelectWithSearch from "./SelectWithSearch";
 
 export default function TableColumnAdd({ headers }) {
   const { columns, setColumns, table } = useContext(TableContext);
@@ -91,6 +93,7 @@ export default function TableColumnAdd({ headers }) {
     "Created by",
     "Last modified by",
     "Autonumber",
+    "barcode",
     "button",
   ];
 
@@ -261,13 +264,14 @@ export default function TableColumnAdd({ headers }) {
                             return (
                               <div
                                 key={i}
-                                className='px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md'
                                 onClick={() => {
                                   setSelectedFieldType(field);
                                   setFieldSearchInput(field);
                                 }}
+                                className='flex items-center px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md'
                               >
-                                {field}
+                                {getSvg(fieldsType[i])}
+                                <div className='ml-2'>{field}</div>
                               </div>
                             );
                           })}
@@ -276,7 +280,7 @@ export default function TableColumnAdd({ headers }) {
                   </div>
                 )}
 
-                {fieldSearchInput === "Look Up" && (
+                {fieldSearchInput === "Lookup" && (
                   <LookUpOptions
                     setFieldSearchInput={setFieldSearchInput}
                     setFieldNameInput={setFieldNameInput}
@@ -522,10 +526,27 @@ function LookUpOptions({
   const { selectedBaseId, selectedTableId, tableWithMultipleRecords } =
     useSelector((state) => state.globalState);
 
+  const [selectedItem, setSelectedItem] = useState("");
+
+  const [selectedTableForLookUp, setSelectedTableForLookUp] =
+    useState(undefined);
+
+  const uniqueTablesMap = new Map();
+
+  tableWithMultipleRecords.map((ele) => {
+    uniqueTablesMap.set(ele.linkedRecord.tableName, ele);
+  });
+
+  // convert map to array
+  const uniqueTablesArray = Array.from(uniqueTablesMap.values());
+
+  console.log(uniqueTablesArray);
+
+  console.log("tableWithMultipleRecords", tableWithMultipleRecords);
   return (
     <>
-      <div className='max-h-[calc(100vh_/_2)] mt-2 border-[#eaebed] border-2 rounded-md  overflow-auto overflow-x-auto'>
-        <div className='flex justify-center items-center'>
+      {/* <div className='max-h-[calc(100vh_/_2)] mt-2 border-[#eaebed] border-2 rounded-md '> */}
+      {/* <div className='flex justify-center items-center'>
           <input
             type='search'
             name=''
@@ -537,37 +558,43 @@ function LookUpOptions({
               setFieldSearchInputLinkedRecord(e.target.value);
             }}
             onClick={() => {
-              setSelectedFieldTypeLinkedRecord(undefined);
+              setSelectedTableForLookUp(undefined);
               setFieldSearchInputLinkedRecord("");
             }}
           />
-        </div>
-        {console.log(tableWithMultipleRecords)}
-        {tableWithMultipleRecords && (
-          <div className='h-4/5 overflow-auto p-1 px-1.5'>
-            {tableWithMultipleRecords
-              .filter(({ tableName }) => {
-                return tableName
-                  ?.toLowerCase()
-                  ?.includes(fieldSearchInputLinkedRecord.toLowerCase());
-              })
-              .map(({ tableName }, i) => {
-                return (
-                  <div
-                    key={i}
-                    className='px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md'
-                    onClick={() => {
-                      setSelectedFieldTypeLinkedRecord(tableName);
-                      setFieldSearchInputLinkedRecord("Link to " + tableName);
-                    }}
-                  >
-                    {tableName}
-                  </div>
-                );
-              })}
-          </div>
-        )}
-      </div>
+        </div> */}
+      {/* <SelectWithSearch
+          // data={tableWithMultipleRecords}
+          // placeholder={"Choose a Field in this Table"}
+          // selectedItem={selectedItem}
+          // setSelectedItem={setSelectedItem}
+          // isLinkedRecord={true}
+        /> */}
+      {/* <div className='h-4/5 overflow-auto p-1 px-1.5'>
+          {uniqueTablesArray
+            .filter(({ linkedRecord }) => {
+              return linkedRecord.tableName
+                ?.toLowerCase()
+                ?.includes(fieldSearchInputLinkedRecord.toLowerCase());
+            })
+            .map(({ linkedRecord }, i) => {
+              return (
+                <div
+                  key={i}
+                  className='px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md'
+                  onClick={() => {
+                    setSelectedTableForLookUp(linkedRecord.tableName);
+                    setFieldSearchInputLinkedRecord(
+                      "Link to " + linkedRecord.tableName
+                    );
+                  }}
+                >
+                  {linkedRecord.tableName}
+                </div>
+              );
+            })}
+        </div> */}
+      {/* </div> */}
       {fieldSearchInputLinkedRecord && (
         <div className='mt-3'>
           Link to records in the {fieldSearchInputLinkedRecord} table.

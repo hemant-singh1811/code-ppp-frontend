@@ -73,6 +73,14 @@ export const alphaTruckingApi = createApi({
       }),
     }),
 
+    GetMultiModel: builder.query({
+      query: (tableId) => ({
+        url: `/API/V1/getTableModel/${tableId}`,
+        method: "POST",
+        // transformResponse: (response) => response.data,
+      }),
+    }),
+
     GetTableData: builder.query({
       query: (tableId) => ({
         url: `/API/V1/getData/${tableId}`,
@@ -295,6 +303,7 @@ export const {
   useGetTableRecordsQuery,
   useGetBasesQuery,
   useGetModelQuery,
+  useGetMultiModelQuery,
   useGetTableDataQuery,
   useGetLoadQuery,
   useGetSavedViewQuery,
