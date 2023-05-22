@@ -71,7 +71,7 @@ export default function Table({
     enableHiding: false,
     header: ({ table }) => (
       <IndeterminateCheckbox
-        className='-ml-[10px]'
+        className="-ml-[10px]"
         checked={table.getIsAllRowsSelected()}
         indeterminate={table.getIsSomeRowsSelected()}
         onChange={table.getToggleAllRowsSelectedHandler()}
@@ -161,7 +161,7 @@ export default function Table({
   // }
 
   return (
-    <div className='relative overflow-hidden'>
+    <div className="relative overflow-hidden">
       <TableComponents
         toggle={toggle}
         defaultColumns={defaultColumns}
