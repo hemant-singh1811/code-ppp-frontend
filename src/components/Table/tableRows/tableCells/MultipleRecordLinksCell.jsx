@@ -14,7 +14,7 @@ let linkedRecord = undefined;
 let fetchedTableColumnsTemp = [];
 
 export default function MultipleRecordLinksCell({ cell, rowData }) {
-  const { columns, setColumns } = useContext(TableContext);
+  const { columns, setColumns, table } = useContext(TableContext);
 
   columns.forEach((element) => {
     if (element.fieldId === cell?.column?.id) {
@@ -27,6 +27,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
   // [linkedRecord?.selectedFieldName]
 
   const socket = useSelector((state) => state.socketWebData.socket);
+  const userToken = useSelector((state) => state.auth.userInfo?.userToken);
 
   const [getTableDataApi, responseGetTableData] =
     useGetTableDataPartMutation(fetchedTableId);
@@ -75,53 +76,55 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
       { data: ele.data, recordId: ele.id },
     ]);
 
-    // let selectedRowRecordId = selectedRowData.map((ele) => {
-
-    //   return ele.recordId;
-    // });
-    // rowData = [ele];
-
-    let updatedRowKey = cell?.column.columnDef.fieldId;
-
     let rowObj = {
-      baseId: selectedBaseId,
-      tableId: selectedTableId,
-      recordId: rowCopy.id52148213343234567,
-      updatedData: ele?.id,
-      linkedRecord: linkedRecord,
-      added: true,
-      fieldType: cell.column.columnDef.fieldType,
-      fieldId: cell.column.columnDef.fieldId,
+      userToken: userToken,
+      data: {
+        baseId: selectedBaseId,
+        tableId: selectedTableId,
+        recordId: rowCopy.id52148213343234567,
+        updatedData: ele?.id,
+        linkedRecord: linkedRecord,
+        added: true,
+        fieldType: cell.column.columnDef.fieldType,
+        fieldId: cell.column.columnDef.fieldId,
+      },
     };
-    console.log(rowObj);
 
     socket.emit("updateData", rowObj, (response) => {
+      table.options.meta?.updateData(
+        cell.row.index,
+        cell.column.id,
+        ele?.id,
+        response.metaData
+      );
       console.log("res : ", response);
     });
   }
 
   function removeSelectedRow(ele) {
-    console.log(ele);
-
-    let updatedSelectedRowData = selectedRowData?.filter((id) => id !== ele);
-
     setSelectedRowData((prev) => prev.filter((id) => id !== ele));
 
     let rowObj = {
-      fieldType: cell.column.columnDef.fieldType,
-
-      fieldId: cell.column.columnDef.fieldId,
-      baseId: selectedBaseId,
-      tableId: selectedTableId,
-      recordId: rowCopy.id52148213343234567,
-      updatedData: ele?.recordId,
-      linkedRecord: linkedRecord,
-      added: false,
+      userToken: userToken,
+      data: {
+        fieldType: cell.column.columnDef.fieldType,
+        fieldId: cell.column.columnDef.fieldId,
+        baseId: selectedBaseId,
+        tableId: selectedTableId,
+        recordId: rowCopy.id52148213343234567,
+        updatedData: ele?.recordId,
+        linkedRecord: linkedRecord,
+        added: false,
+      },
     };
-    console.log(rowObj);
 
-    // console.log(rowObj)
     socket.emit("updateData", rowObj, (response) => {
+      table.options.meta?.updateData(
+        cell.row.index,
+        cell.column.id,
+        ele?.recordId,
+        response.metaData
+      );
       console.log("res : ", response);
     });
   }

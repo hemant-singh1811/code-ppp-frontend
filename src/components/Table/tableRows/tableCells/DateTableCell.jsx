@@ -14,6 +14,7 @@ export default function DateTableCell({ cell }) {
     (state) => state.globalState
   );
   const [isEditMode, setIsEditMode] = useState(false);
+  const userToken = useSelector((state) => state.auth.userInfo?.userToken);
 
   const options = {
     static: true,
@@ -33,20 +34,29 @@ export default function DateTableCell({ cell }) {
   function handelOnChange([date]) {
     setValue(date);
 
-    table.options.meta?.updateData(cell.row.index, cell.column.id, date);
     let newRowPart = date;
 
     let rowObj = {
-      baseId: selectedBaseId,
-      tableId: selectedTableId,
-      recordId: cell?.row?.original.id52148213343234567,
-      updatedData: newRowPart,
-      fieldType: cell.column.columnDef.fieldType,
+      userToken: userToken,
+      data: {
+        baseId: selectedBaseId,
+        tableId: selectedTableId,
+        recordId: cell?.row?.original.id52148213343234567,
+        updatedData: newRowPart,
+        fieldType: cell.column.columnDef.fieldType,
 
-      fieldId: cell.column.columnDef.fieldId,
+        fieldId: cell.column.columnDef.fieldId,
+      },
     };
 
     socket.emit("updateData", rowObj, (response) => {
+      table.options.meta?.updateData(
+        cell.row.index,
+        cell.column.id,
+        date,
+        response.metaData
+      );
+
       console.log("res : ", response);
     });
   }

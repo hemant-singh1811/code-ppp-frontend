@@ -12,6 +12,7 @@ const FileViewer = () => {
   const dispatch = useDispatch();
   const fileViewer = useSelector((state) => state.fileViewer);
   const socket = useSelector((state) => state.socketWebData.socket);
+  const userToken = useSelector((state) => state.auth.userInfo?.userToken);
   const { selectedBaseId, selectedTableId } = useSelector(
     (state) => state.globalState
   );
@@ -20,7 +21,7 @@ const FileViewer = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [currentFileIndex, setCurrentFileIndex] = useState(fileViewer.index);
   const [editFileName, setEditFileName] = useState("");
-  let [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedFileIdForRename, setSelectedFileIdForRename] = useState("");
 
   const handleFileUpload = (e) => {
@@ -163,22 +164,29 @@ const FileViewer = () => {
   const handleDeleteFile = (fileUploadHandleTemp) => {
     setIsDeleting(true);
     const cell = fileViewer.cell;
-    let newRowPart = [fileUploadHandleTemp];
-    console.log();
 
     let rowObj = {
-      baseId: selectedBaseId,
-      tableId: selectedTableId,
-      recordId: cell?.row?.original.id52148213343234567,
-      updatedData: fileUploadHandleTemp.fileId,
-      fieldType: cell.column.columnDef.fieldType,
-
-      fieldId: cell.column.columnDef.fieldId,
-      added: false,
+      userToken: userToken,
+      data: {
+        baseId: selectedBaseId,
+        tableId: selectedTableId,
+        recordId: cell?.row?.original.id52148213343234567,
+        updatedData: fileUploadHandleTemp.fileId,
+        fieldType: cell.column.columnDef.fieldType,
+        fieldId: cell.column.columnDef.fieldId,
+        added: false,
+      },
     };
 
     socket.emit("updateData", rowObj, (response) => {
       dispatch(handelRemoveFiles(fileUploadHandleTemp.fileId));
+
+      table.options.meta?.updateData(
+        cell.row.index,
+        cell.column.id,
+        fileUploadHandleTemp.fileId,
+        response.metaData
+      );
 
       // console.log(fileViewer.files);
       fileViewer.table(

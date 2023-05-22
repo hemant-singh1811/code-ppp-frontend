@@ -514,22 +514,9 @@ function LinkedToAnotherRecordOptions({
     </>
   );
 }
-function LookUpOptions({
-  setFieldSearchInput,
-  setFieldNameInput,
-  setIsExistFieldNameInput,
-  setSelectedFieldType,
-}) {
-  const [fieldSearchInputLinkedRecord, setFieldSearchInputLinkedRecord] =
-    React.useState("");
-  const { bases } = useSelector((state) => state.bases);
-  const { selectedBaseId, selectedTableId, tableWithMultipleRecords } =
-    useSelector((state) => state.globalState);
-
-  const [selectedItem, setSelectedItem] = useState("");
-
-  const [selectedTableForLookUp, setSelectedTableForLookUp] =
-    useState(undefined);
+function LookUpOptions() {
+  const [selectedTable, setSelectedTable] = useState("");
+  const [selectedField, setSelectedField] = useState("");
 
   const uniqueTablesMap = new Map();
 
@@ -540,65 +527,58 @@ function LookUpOptions({
   // convert map to array
   const uniqueTablesArray = Array.from(uniqueTablesMap.values());
 
-  console.log(uniqueTablesArray);
+  const selectTableData = uniqueTablesArray.map((ele) => {
+    return {
+      name: ele.linkedRecord.tableName,
+      icon: ele.fieldType,
+      data: ele,
+    };
+  });
 
-  console.log("tableWithMultipleRecords", tableWithMultipleRecords);
+  let selectFieldData = [];
+
+  if (selectedTable !== "") {
+    console.log(selectedTable);
+    selectFieldData = selectedTable.data?.linkedRecord?.model.map((ele) => {
+      return ele;
+    });
+    selectFieldData = selectFieldData.map((ele) => {
+      return {
+        name: ele.data.fieldName,
+        icon: ele.data.fieldType,
+        data: ele.data,
+      };
+    });
+    console.log(selectFieldData);
+  }
+
   return (
     <>
-      {/* <div className='max-h-[calc(100vh_/_2)] mt-2 border-[#eaebed] border-2 rounded-md '> */}
-      {/* <div className='flex justify-center items-center'>
-          <input
-            type='search'
-            name=''
-            id=''
-            className='bg-[#f0f1f3] w-full px-3 p-1.5  outline-none focus:bg-blue-50 focus:border-transparent'
-            placeholder='Find a table to link'
-            value={fieldSearchInputLinkedRecord}
-            onChange={(e) => {
-              setFieldSearchInputLinkedRecord(e.target.value);
-            }}
-            onClick={() => {
-              setSelectedTableForLookUp(undefined);
-              setFieldSearchInputLinkedRecord("");
-            }}
+      <div className='mt-2 -mb-2 text-sm'>
+        Linked record field to use for lookup
+      </div>
+      <SelectWithSearch
+        data={selectTableData}
+        placeholder={"Choose a Table in this Field"}
+        selectedItem={selectedTable}
+        setSelectedItem={setSelectedTable}
+        functionalityType='lookUp'
+      />
+
+      {selectedTable && (
+        <>
+          <div className='mt-2 -mb-2 text-sm'>
+            <span className='font-semibold'>{selectedTable.name + " "}</span>
+            field you want to look up
+          </div>
+          <SelectWithSearch
+            data={selectFieldData}
+            placeholder={"Choose a Field in this Table"}
+            selectedItem={selectedField}
+            setSelectedItem={setSelectedField}
+            functionalityType='lookUp'
           />
-        </div> */}
-      {/* <SelectWithSearch
-          // data={tableWithMultipleRecords}
-          // placeholder={"Choose a Field in this Table"}
-          // selectedItem={selectedItem}
-          // setSelectedItem={setSelectedItem}
-          // isLinkedRecord={true}
-        /> */}
-      {/* <div className='h-4/5 overflow-auto p-1 px-1.5'>
-          {uniqueTablesArray
-            .filter(({ linkedRecord }) => {
-              return linkedRecord.tableName
-                ?.toLowerCase()
-                ?.includes(fieldSearchInputLinkedRecord.toLowerCase());
-            })
-            .map(({ linkedRecord }, i) => {
-              return (
-                <div
-                  key={i}
-                  className='px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md'
-                  onClick={() => {
-                    setSelectedTableForLookUp(linkedRecord.tableName);
-                    setFieldSearchInputLinkedRecord(
-                      "Link to " + linkedRecord.tableName
-                    );
-                  }}
-                >
-                  {linkedRecord.tableName}
-                </div>
-              );
-            })}
-        </div> */}
-      {/* </div> */}
-      {fieldSearchInputLinkedRecord && (
-        <div className='mt-3'>
-          Link to records in the {fieldSearchInputLinkedRecord} table.
-        </div>
+        </>
       )}
     </>
   );

@@ -12,6 +12,7 @@ export default function MultilineTextCell({ cell }) {
   const { selectedBaseId, selectedTableId } = useSelector(
     (state) => state.globalState
   );
+  const userToken = useSelector((state) => state.auth.userInfo?.userToken);
 
   const multiLineTextRef = useRef(null);
 
@@ -27,26 +28,28 @@ export default function MultilineTextCell({ cell }) {
     // setValue(event.target.innerText);
 
     if (cell.getValue() !== event.target.innerText) {
-      table.options.meta?.updateData(
-        cell.row.index,
-        cell.column.id,
-        event.target.innerText
-      );
-
       let newRowPart = event.target.innerText;
 
       let rowObj = {
-        baseId: selectedBaseId,
-        tableId: selectedTableId,
-        recordId: cell?.row?.original.id52148213343234567,
-        updatedData: newRowPart,
-        fieldType: cell.column.columnDef.fieldType,
-
-        fieldId: cell.column.columnDef.fieldId,
+        userToken: userToken,
+        data: {
+          baseId: selectedBaseId,
+          tableId: selectedTableId,
+          recordId: cell?.row?.original.id52148213343234567,
+          updatedData: newRowPart,
+          fieldType: cell.column.columnDef.fieldType,
+          fieldId: cell.column.columnDef.fieldId,
+        },
       };
       console.log(rowObj);
 
       socket.emit("updateData", rowObj, (response) => {
+        table.options.meta?.updateData(
+          cell.row.index,
+          cell.column.id,
+          event.target.innerText,
+          response.metaData
+        );
         console.log("res : ", response);
       });
     }

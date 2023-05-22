@@ -3,66 +3,6 @@ import { useRef } from "react";
 import { useClickAway } from "react-use";
 import getSvg from "./getSvg";
 
-let data = [
-  "name",
-  "status",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-  "name",
-];
 export default function SelectWithSearch({
   placeholder,
   data,
@@ -77,20 +17,21 @@ export default function SelectWithSearch({
     setIsVisible(false);
   });
 
-  console.log("first");
-
   return (
-    <div ref={ref}>
+    <div
+      className='max-h-[calc(100vh_/_2)] mt-2 border-[#eaebed] border-2 rounded-md  cursor-pointer select-none'
+      ref={ref}
+    >
       <div
         onClick={() => {
-          setIsVisible(true);
+          setIsVisible(!isVisible);
         }}
         className='flex items-center w-full gap-1 text-black bg-white   p-1 rounded-sm relative'
       >
         {selectedItem ? (
           <>
-            {getSvg()}
-            {selectedItem}
+            {getSvg(selectedItem.icon)}
+            {selectedItem.name}
           </>
         ) : (
           <div className='ml-1'>{placeholder}</div>
@@ -123,15 +64,16 @@ export default function SelectWithSearch({
           <div className='max-h-[200px] overflow-auto p-1 px-1.5  '>
             {data
               .filter((ele) => {
-                return ele.toLowerCase().includes(search.toLowerCase());
+                return ele?.name.toLowerCase().includes(search.toLowerCase());
               })
               .map((ele, i) => {
                 return (
                   <div
                     key={i}
-                    className='px-2 p-1.5 my-1 cursor-pointer hover:bg-blue-100 rounded-md'
+                    className='px-2 p-1.5 my-1 cursor-pointer hover:bg-blue-100 rounded-md flex items-center gap-2'
                     style={{
-                      backgroundColor: selectedItem === ele && "#E5F3FF",
+                      backgroundColor:
+                        selectedItem.name === ele.name && "#E5F3FF",
                     }}
                     onClick={() => {
                       setSelectedItem(ele);
@@ -139,13 +81,14 @@ export default function SelectWithSearch({
                       setSearch("");
                     }}
                   >
-                    {ele}
+                    {getSvg(ele.icon)}
+                    {ele.name}
                   </div>
                 );
               })}
 
             {data.filter((ele) => {
-              return ele.toLowerCase().includes(search.toLowerCase());
+              return ele.name.toLowerCase().includes(search.toLowerCase());
             }).length === 0 && (
               <div className='px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md'>
                 No Data Found

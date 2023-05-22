@@ -56,6 +56,7 @@ const initialState = {
     hoveredRow: null,
     activeRow: null,
   },
+  linkedRecordsData: undefined,
 };
 
 const globalStateSlice = createSlice({

@@ -21,6 +21,7 @@ export default function Table({
     data: modifiedArrayOfObject,
   });
   const dispatch = useDispatch();
+  // console.log("first");
 
   useEffect(() => {
     dispatch(handelAddInitialState(tableView));
@@ -110,6 +111,7 @@ export default function Table({
       console.log("Get linked table Records", data);
       setTableDataModified(
         tableData.map(({ data, id }) => {
+          console.log(data);
           const object = {};
           defaultColumns.map(({ header, fieldType }) => {
             object[header] = data?.[header] || "";
@@ -125,6 +127,10 @@ export default function Table({
             }
           });
           object.id52148213343234567 = id;
+          object.createdBy = data?.createdBy;
+          object.lastModifiedBy = data?.lastModifiedBy;
+          object.lastModifiedTime = data?.lastModifiedTime;
+          object.createdTime = data?.createdTime;
 
           return object;
         })
@@ -158,6 +164,7 @@ export default function Table({
         defaultColumns={defaultColumns}
         data={tableDataModified}
         setData={setTableDataModified}
+        linkedRecordIdAndDataMap={linkedRecordIdAndDataMap}
         // tableConditions={model}
       />
     </div>

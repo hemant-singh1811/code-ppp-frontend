@@ -6,9 +6,6 @@ let userInfo = localStorage.getItem("userToken")
   ? JSON.parse(localStorage.getItem("userToken"))
   : null;
 
-// const userToken =
-//   JSON.parse(localStorage.getItem("userToken"))?.userToken || undefined;
-
 const initialState = {
   loading: false,
   userInfo: userInfo,
@@ -21,8 +18,8 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     handleLogout: (state, { payload }) => {
-      state.userToken = null;
       state.userInfo = null;
+      localStorage.removeItem("userToken");
     },
   },
   extraReducers: {
@@ -34,7 +31,6 @@ const authSlice = createSlice({
     [userLogin.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.userInfo = payload;
-      state.userToken = payload?.userToken;
     },
     [userLogin.rejected]: (state, { payload }) => {
       state.loading = false;

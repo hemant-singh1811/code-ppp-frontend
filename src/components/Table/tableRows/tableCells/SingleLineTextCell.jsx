@@ -10,6 +10,7 @@ export default function SingleLineTextCell({ cell }) {
   const { selectedBaseId, selectedTableId } = useSelector(
     (state) => state.globalState
   );
+  const userToken = useSelector((state) => state.auth.userInfo?.userToken);
 
   function handleDoubleClick() {
     setIsEditMode(true);
@@ -25,20 +26,27 @@ export default function SingleLineTextCell({ cell }) {
     setIsEditMode(false);
 
     if (cell.getValue() !== value) {
-      table.options.meta?.updateData(cell.row.index, cell.column.id, value);
-
       let newRowPart = value;
 
       let rowObj = {
-        baseId: selectedBaseId,
-        tableId: selectedTableId,
-        recordId: cell?.row?.original.id52148213343234567,
-        updatedData: newRowPart,
-        fieldType: cell.column.columnDef.fieldType,
-        fieldId: cell.column.columnDef.fieldId,
+        userToken: userToken,
+        data: {
+          baseId: selectedBaseId,
+          tableId: selectedTableId,
+          recordId: cell?.row?.original.id52148213343234567,
+          updatedData: newRowPart,
+          fieldType: cell.column.columnDef.fieldType,
+          fieldId: cell.column.columnDef.fieldId,
+        },
       };
 
       socket.emit("updateData", rowObj, (response) => {
+        table.options.meta?.updateData(
+          cell.row.index,
+          cell.column.id,
+          value,
+          response.metaData
+        );
         console.log("res : ", response);
       });
     }

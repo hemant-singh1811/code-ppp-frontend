@@ -5,7 +5,7 @@ import { TableContext } from "../../tableComponents/TableComponents";
 import { colorPallet } from "../../../../utilities/colorPallet";
 
 function MultiselectWithAddOption({ columnData, rowData, cell }) {
-  const { columns, setColumns } = useContext(TableContext);
+  const { columns, setColumns, table } = useContext(TableContext);
   const socket = useSelector((state) => state.socketWebData.socket);
   // Create a ref that we add to the element for which we want to detect outside clicks
   const singleSelectRef = React.useRef();
@@ -29,6 +29,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
   const [bgColorAndTextColor, setBgColorAndTextColor] = useState(
     getRandomColor()
   );
+  const userToken = useSelector((state) => state.auth.userInfo?.userToken);
 
   function getRandomColor() {
     return colorPallet[Math.floor(Math.random() * colorPallet.length)];
@@ -38,24 +39,21 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
 
   function addNewOption() {
     let obj = {
-      type: columnData?.fieldType,
-      fieldId: columnData?.fieldId,
-      tableId: selectedTableId,
-      obj: {
-        fieldId: columnData?.fieldId,
-        fieldDescription: columnData?.fieldDescription,
-        json_field_type: columnData?.json_field_type,
-        createdAt: columnData?.createdAt,
+      userToken: userToken,
+      data: {
         fieldType: columnData?.fieldType,
-        createdBy: columnData?.createdBy,
-        options: [
-          ...options,
-          {
-            name: searchTerm,
-            bgcolor: bgColorAndTextColor.background,
-            color: bgColorAndTextColor.color,
-          },
-        ],
+        fieldId: columnData?.fieldId,
+        tableId: selectedTableId,
+        obj: {
+          options: [
+            ...options,
+            {
+              name: searchTerm,
+              bgcolor: bgColorAndTextColor.background,
+              color: bgColorAndTextColor.color,
+            },
+          ],
+        },
       },
     };
 
@@ -93,20 +91,28 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
     rowCopy[cell?.column.columnDef.fieldId] = rowData;
 
     let rowObj = {
-      baseId: selectedBaseId,
-      tableId: selectedTableId,
-      recordId: rowCopy.id52148213343234567,
-      updatedData: [...selectedOption, searchTerm],
-      fieldType: cell.column.columnDef.fieldType,
-
-      fieldId: cell.column.columnDef.fieldId,
+      userToken: userToken,
+      data: {
+        baseId: selectedBaseId,
+        tableId: selectedTableId,
+        recordId: rowCopy.id52148213343234567,
+        updatedData: [...selectedOption, searchTerm],
+        fieldType: cell.column.columnDef.fieldType,
+        fieldId: cell.column.columnDef.fieldId,
+      },
     };
 
-    socket.emit("updatemetadata", obj, (response) => {
+    socket.emit("updateMetaData", obj, (response) => {
       console.log("socket response: " + JSON.stringify(response));
     });
 
     socket.emit("updateData", rowObj, (response) => {
+      table.options.meta?.updateData(
+        cell.row.index,
+        cell.column.id,
+        [...selectedOption, searchTerm],
+        response.metaData
+      );
       console.log("res : ", response);
     });
 
@@ -118,17 +124,25 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
     setSelectedOption([...selectedOption, name]);
 
     let rowObj = {
-      baseId: selectedBaseId,
-      tableId: selectedTableId,
-      recordId: rowCopy.id52148213343234567,
-      updatedData: [...selectedOption, name],
-      fieldType: cell.column.columnDef.fieldType,
-
-      fieldId: cell.column.columnDef.fieldId,
+      userToken: userToken,
+      data: {
+        baseId: selectedBaseId,
+        tableId: selectedTableId,
+        recordId: rowCopy.id52148213343234567,
+        updatedData: [...selectedOption, name],
+        fieldType: cell.column.columnDef.fieldType,
+        fieldId: cell.column.columnDef.fieldId,
+      },
     };
     rowCopy[cell?.column.columnDef.fieldId] = rowData;
 
     socket.emit("updateData", rowObj, (response) => {
+      table.options.meta?.updateData(
+        cell.row.index,
+        cell.column.id,
+        [...selectedOption, name],
+        response.metaData
+      );
       console.log("res : ", response);
     });
     setSingleSelectToggle(!SingleSelectToggle);
@@ -147,20 +161,26 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
       return updatedSelectedData;
     });
 
-    let updatedRowKey = cell?.column.columnDef.fieldId;
-
     let rowObj = {
-      baseId: selectedBaseId,
-      tableId: selectedTableId,
-      recordId: rowCopy.id52148213343234567,
-      updatedData: updatedSelectedData,
-      fieldType: cell.column.columnDef.fieldType,
-
-      fieldId: cell.column.columnDef.fieldId,
+      userToken: userToken,
+      data: {
+        baseId: selectedBaseId,
+        tableId: selectedTableId,
+        recordId: rowCopy.id52148213343234567,
+        updatedData: updatedSelectedData,
+        fieldType: cell.column.columnDef.fieldType,
+        fieldId: cell.column.columnDef.fieldId,
+      },
     };
     rowCopy[cell?.column.columnDef.fieldId] = rowData;
 
     socket.emit("updateData", rowObj, (response) => {
+      table.options.meta?.updateData(
+        cell.row.index,
+        cell.column.id,
+        updatedSelectedData,
+        response.metaData
+      );
       console.log("res : ", response);
     });
   }
