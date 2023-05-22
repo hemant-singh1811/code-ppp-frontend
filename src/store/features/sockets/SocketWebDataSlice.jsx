@@ -52,9 +52,13 @@ export const initSocket = () => (dispatch, state) => {
 
   // if (socket) {
   console.log("join base room res sent : ");
-  socket.emit("joinBaseRoom", userInfo?.userToken, (res) => {
-    console.log("join base room res : ", res);
-  });
+  socket.emit(
+    "joinBaseRoom",
+    { userToken: userInfo?.userToken, data: {} },
+    (res) => {
+      console.log("join base room res : ", res);
+    }
+  );
   // }
 
   socket.on("UpdatedBaseData", ({ action, data }) => {

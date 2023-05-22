@@ -10,7 +10,9 @@ import {
   getGroupedRowModel,
   getExpandedRowModel,
 } from "@tanstack/react-table";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffectOnce } from "react-use";
+import { handelLinkedRecordsData } from "../../../store/features/globalStateSlice";
 
 export const TableContext = React.createContext();
 
@@ -71,6 +73,7 @@ const defaultColumn = {
     const { selectedBaseId, selectedTableId } = useSelector(
       (state) => state.globalState
     );
+    const userToken = useSelector((state) => state.auth.userInfo?.userToken);
 
     // console.log(row._valuesCache)
     // We need to keep and update the state of the cell normally
@@ -78,7 +81,6 @@ const defaultColumn = {
     // console.log(id)
     // When the input is blurred, we'll call our table meta's updateData function
     const onBlur = (e) => {
-      table.options.meta?.updateData(index, id, value);
       let rowCopy = original;
       rowCopy[id] = e.target.value;
 
@@ -88,15 +90,19 @@ const defaultColumn = {
       let newRowPart = { [updatedRowKey]: updatedRowValue };
 
       let obj = {
-        baseId: selectedBaseId,
-        tableId: selectedTableId,
-        recordId: rowCopy.id52148213343234567,
-        updatedData: newRowPart,
-        fieldType: columnDef.fieldType,
-        fieldId: columnDef.fieldId,
+        userToken: userToken,
+        data: {
+          baseId: selectedBaseId,
+          tableId: selectedTableId,
+          recordId: rowCopy.id52148213343234567,
+          updatedData: newRowPart,
+          fieldType: columnDef.fieldType,
+          fieldId: columnDef.fieldId,
+        },
       };
       console.log(obj);
       socket.emit("updateData", obj, (response) => {
+        table.options.meta?.updateData(index, id, value, response.metaData);
         console.log("res : ", response);
       });
     };
@@ -131,7 +137,9 @@ export default function TableComponents({
   data,
   toggle,
   setData,
+  linkedRecordIdAndDataMap,
 }) {
+  const dispatch = useDispatch();
   const { selectedView } = useSelector((state) => state.views);
   const [columns, setColumns] = useState(() => [...defaultColumns]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -211,8 +219,8 @@ export default function TableComponents({
   const [columnPinning, setColumnPinning] = useState({});
   // const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
   const table = useReactTable({
-    //onChange
-    columnResizeMode: "onEnd",
+    //onChange "onEnd"
+    columnResizeMode: "onChange",
     state: {
       columnOrder,
       globalFilter,
@@ -246,7 +254,7 @@ export default function TableComponents({
     // autoResetPageIndex,
     // Provide our updateData function to our table meta
     meta: {
-      updateData: (rowIndex, columnId, value) => {
+      updateData: (rowIndex, columnId, value, metaData) => {
         // Skip age index reset until after next rerender
         // skipAutoResetPageIndex();
         setData((old) =>
@@ -255,6 +263,8 @@ export default function TableComponents({
               return {
                 ...old[rowIndex],
                 [columnId]: value,
+                lastModifiedBy: metaData?.lastModifiedBy,
+                lastModifiedTime: metaData?.lastModifiedTime,
               };
             }
             return row;
@@ -266,6 +276,24 @@ export default function TableComponents({
     // debugHeaders: true,
     // debugColumns: true,
   });
+
+  useEffect(() => {
+    function mapToObject(map) {
+      const obj = {};
+
+      for (let [key, value] of map) {
+        obj[key] = value;
+      }
+
+      return obj;
+    }
+
+    const linkedRecData = mapToObject(linkedRecordIdAndDataMap);
+
+    // write code to extract data form map to object in javascript
+
+    dispatch(handelLinkedRecordsData(linkedRecData));
+  }, []);
 
   // useEffect(() => {
   //   if (selectedView && Object.keys(selectedView?.model).length > 0) {

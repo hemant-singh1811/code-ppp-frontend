@@ -1,17 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-  search: '',
+  search: "",
   filter: [
     {
-      name: 'Booked',
+      name: "Booked",
       isSelected: true,
     },
     {
-      name: 'In Transit',
+      name: "In Transit",
       isSelected: true,
     },
     {
-      name: 'Kent Yard',
+      name: "Kent Yard",
       isSelected: true,
     },
   ],
@@ -20,28 +20,28 @@ const initialState = {
     width: 280,
   },
   addToggle: {
-    type: '',
+    type: "",
     isOpen: false,
-    action: '',
-    baseId: '',
-    tableId: '',
-    name: '',
+    action: "",
+    baseId: "",
+    tableId: "",
+    name: "",
   },
   createTableBaseId: undefined,
-  selectedTableId: undefined || window.location.pathname.split('/')[2],
-  selectedBaseId: undefined || window.location.pathname.split('/')[1],
+  selectedTableId: undefined || window.location.pathname.split("/")[2],
+  selectedBaseId: undefined || window.location.pathname.split("/")[1],
   modal: {
     isOpen: false,
     content: {
-      heading: '',
-      description: '',
-      action: '',
-      icon: '',
-      color: '',
-      baseId: '',
-      target: '',
-      tableId: '',
-      name: '',
+      heading: "",
+      description: "",
+      action: "",
+      icon: "",
+      color: "",
+      baseId: "",
+      target: "",
+      tableId: "",
+      name: "",
     },
   },
   tableWithMultipleRecords: [],
@@ -51,10 +51,11 @@ const initialState = {
     hoveredRow: null,
     activeRow: null,
   },
+  linkedRecordsData: undefined,
 };
 
 const globalStateSlice = createSlice({
-  name: 'globalState',
+  name: "globalState",
   initialState,
   reducers: {
     onChangeSearch: (state, { payload }) => {
@@ -118,6 +119,9 @@ const globalStateSlice = createSlice({
     handelHoverRow: (state, { payload }) => {
       state.rowsUtility.hoveredRow = payload;
     },
+    handelLinkedRecordsData: (state, { payload }) => {
+      state.linkedRecordsData = payload;
+    },
   },
 });
 
@@ -133,6 +137,7 @@ export const {
   handelAddTableWithMultipleRecords,
   handelViewsToggle,
   handelHoverRow,
+  handelLinkedRecordsData,
 } = globalStateSlice.actions;
 
 export default globalStateSlice.reducer;

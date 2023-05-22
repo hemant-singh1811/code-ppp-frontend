@@ -7,9 +7,8 @@ import Aside from "../aside/Aside";
 const socket = io(import.meta.env.VITE_SERVER_URL);
 
 export default function Chats() {
-  let userToken = useSelector((state) => state.user.userToken);
+  let userToken = useSelector((state) => state.auth.userInfo?.userToken);
 
-  //"fghfjkjglksjlfjkljflewjriowejrlkewnlrkjhoi423uoi4u2304u23094uj3oriuiou";
   const dispatch = useDispatch();
   useEffect(() => {
     try {

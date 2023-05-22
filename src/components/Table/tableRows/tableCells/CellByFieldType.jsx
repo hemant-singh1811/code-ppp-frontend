@@ -16,6 +16,7 @@ import ButtonCell from "./ButtonCell";
 import MultipleRecordLinksCell from "./MultipleRecordLinksCell";
 import MultipleAttachmentsTableCell from "./MultipleAttachmentsTableCell";
 import DefaultSelectCell from "./DefaultSelectCell";
+import CreatedByCell from "./CreatedByCell";
 
 export default function CellByFieldType({
   hiddenInConditions,
@@ -123,6 +124,7 @@ export default function CellByFieldType({
 
     case "createdBy": //string
       return <ModifiedAndCreatedCell type={"createdBy"} cell={cell} />;
+      return <CreatedByCell cell={cell} rowData={cell?.getValue()} />;
 
     case "button": //string
       return <ButtonCell cell={cell} />;

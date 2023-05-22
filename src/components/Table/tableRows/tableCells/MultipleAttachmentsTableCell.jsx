@@ -252,6 +252,7 @@ function FileUploadHandler({ closeModal, cell }) {
   const { selectedBaseId, selectedTableId } = useSelector(
     (state) => state.globalState
   );
+  const userToken = useSelector((state) => state.auth.userInfo?.userToken);
   const dispatch = useDispatch();
 
   const [submitButton, setSubmitButton] = useState(false);
@@ -366,19 +367,21 @@ function FileUploadHandler({ closeModal, cell }) {
         let newRowPart = fileUploadHandleTemp;
 
         let rowObj = {
-          baseId: selectedBaseId,
-          tableId: selectedTableId,
-          recordId: cell?.row?.original.id52148213343234567,
-          updatedData: newRowPart,
-          fieldType: cell.column.columnDef.fieldType,
-
-          fieldId: cell.column.columnDef.fieldId,
-          added: true,
+          userToken: userToken,
+          data: {
+            baseId: selectedBaseId,
+            tableId: selectedTableId,
+            recordId: cell?.row?.original.id52148213343234567,
+            updatedData: newRowPart,
+            fieldType: cell.column.columnDef.fieldType,
+            fieldId: cell.column.columnDef.fieldId,
+            added: true,
+          },
         };
 
         // console.log(cell.getValue());
 
-        console.log(rowObj);
+        // console.log(rowObj);
 
         socket.emit("updateData", rowObj, (response) => {
           console.log("res : ", response);
@@ -387,13 +390,16 @@ function FileUploadHandler({ closeModal, cell }) {
             table.options.meta?.updateData(
               cell.row.index,
               cell.column.id,
-              response?.resdata
+              response?.resdata,
+              response.metaData
             );
           } else {
-            table.options.meta?.updateData(cell.row.index, cell.column.id, [
-              ...response?.resdata,
-              ...cell.getValue(),
-            ]);
+            table.options.meta?.updateData(
+              cell.row.index,
+              cell.column.id,
+              [...response?.resdata, ...cell.getValue()],
+              response.metaData
+            );
           }
           closeModal();
           setSubmitButton(false);
