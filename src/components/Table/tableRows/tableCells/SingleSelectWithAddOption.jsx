@@ -195,7 +195,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
               }}
             >
               <div
-                className={`flex h-full  p-0.5 pt-[3px] pl-1  items-start ${
+                className={`flex h-full  p-0.5 pt-[2px] pl-1  items-start ${
                   isEditMode ? "w-[calc(100%_-_16px)]" : "w-full"
                 }`}
               >

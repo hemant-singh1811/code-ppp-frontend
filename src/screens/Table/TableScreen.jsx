@@ -6,15 +6,12 @@ import {
   useGetSavedViewQuery,
   useGetTableDataQuery,
 } from "../../store/services/alphaTruckingApi";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Table from "../../components/Table/Table";
-import { handelAddInitialState } from "../../store/features/viewsSlice";
-import { initSocket } from "../../store/features/sockets/SocketWebDataSlice";
 
 let multipleRecordLinksArray = [];
 
 export default function TableScreen() {
-  const dispatch = useDispatch();
   const { selectedTableId } = useSelector((state) => state.globalState);
 
   let getTableDataApi = useGetTableDataQuery(selectedTableId);
@@ -78,15 +75,11 @@ export default function TableScreen() {
     })
     .filter((data) => data); // removes empty array
 
-  // console.log(multipleRecordLinksArray);
-
   for (let [key, value] of multipleRecordLinksMap.entries()) {
     const uniqueRecordIdSet = new Set();
-    // console.log(data);
     getTableDataApi.data.map(({ data }) => {
       if (Array.isArray(data[value?.fieldId])) {
         data[value?.fieldId].map((item) => {
-          // console.log(item);
           uniqueRecordIdSet.add(item);
         });
       }

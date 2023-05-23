@@ -18,12 +18,7 @@ import MultipleAttachmentsTableCell from "./MultipleAttachmentsTableCell";
 import DefaultSelectCell from "./DefaultSelectCell";
 import CreatedByCell from "./CreatedByCell";
 
-export default function CellByFieldType({
-  hiddenInConditions,
-  fieldType,
-  cell,
-  row,
-}) {
+export function CellByFieldType({ hiddenInConditions, fieldType, cell, row }) {
   if (hiddenInConditions) {
     return (
       <DefaultSelectCell
@@ -140,3 +135,5 @@ export default function CellByFieldType({
       );
   }
 }
+
+export default React.memo(CellByFieldType);

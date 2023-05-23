@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { rankItem } from "@tanstack/match-sorter-utils";
 import TableUtilityBar from "../tableUtilityBar/TableUtilityBar";
 import CustomTable from "./CustomTable";
@@ -11,7 +11,6 @@ import {
   getExpandedRowModel,
 } from "@tanstack/react-table";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffectOnce } from "react-use";
 import { handelLinkedRecordsData } from "../../../store/features/globalStateSlice";
 
 export const TableContext = React.createContext();
@@ -272,9 +271,9 @@ export default function TableComponents({
         );
       },
     },
-    // debugTable: true,
-    // debugHeaders: true,
-    // debugColumns: true,
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
   });
 
   useEffect(() => {

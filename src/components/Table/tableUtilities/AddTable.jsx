@@ -240,7 +240,7 @@ export default function AddTable() {
                       setNameInput("");
                     }}
                   >
-                    cancel
+                    Cancel
                   </div>
                   {
                     <button
