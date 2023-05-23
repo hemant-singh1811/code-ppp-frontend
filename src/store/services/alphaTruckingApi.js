@@ -179,7 +179,7 @@ export const alphaTruckingApi = createApi({
       query: (payload) => ({
         url: `API/V1/addData/${payload.baseId}`,
         body: payload.data, // field id is required to add a row; like this:- {"fieldId":"fldzmC9cdc4LgvYGI"}
-        method: "PUT",
+        method: "POST",
       }),
     }),
 

@@ -298,6 +298,7 @@ export default function TableColumnAdd({ headers }) {
                 {fieldSearchInput === "Number" && <NumberOptions />}
                 {fieldSearchInput === "Currency" && <CurrencyOptions />}
                 {fieldSearchInput === "Percent" && <PercentOptions />}
+                {fieldSearchInput === "Duration" && <DurationOptions />}
 
                 {selectedFieldType && (
                   <div className='m-1 text-sm'>
@@ -864,6 +865,72 @@ function PercentOptions() {
       </div>
 
       <div className='mt-2 -mb-2 text-sm'>Precision</div>
+      <SelectWithSearch
+        data={decimalPrecisionData}
+        placeholder={"Choose a type of value in this Field"}
+        selectedItem={selectedPrecisionType}
+        setSelectedItem={setSelectedPrecisionType}
+      />
+    </>
+  );
+}
+function DurationOptions() {
+  const [decimalPrecisionData, setDecimalPrecisionData] = useState([
+    {
+      name: "1",
+      icon: "",
+      data: "1",
+    },
+    {
+      name: "1.0",
+      icon: "",
+      data: "1.0",
+    },
+    {
+      name: "1.00",
+      icon: "",
+      data: "1.00",
+    },
+    {
+      name: "1.000",
+      icon: "",
+      data: "1.000",
+    },
+    {
+      name: "1.0000",
+      icon: "",
+      data: "1.0000",
+    },
+    {
+      name: "1.00000",
+      icon: "",
+      data: "1.00000",
+    },
+    {
+      name: "1.000000",
+      icon: "",
+      data: "1.000000",
+    },
+    {
+      name: "1.0000000",
+      icon: "",
+      data: "1.0000000",
+    },
+    {
+      name: "1.00000000",
+      icon: "",
+      data: "1.00000000",
+    },
+  ]);
+
+  const [selectedPrecisionType, setSelectedPrecisionType] = useState(
+    decimalPrecisionData[0]
+  );
+  const [currencyValue, setCurrencyValue] = useState("$");
+
+  return (
+    <>
+      <div className='mt-2 -mb-2 text-sm'>Duration Format</div>
       <SelectWithSearch
         data={decimalPrecisionData}
         placeholder={"Choose a type of value in this Field"}
