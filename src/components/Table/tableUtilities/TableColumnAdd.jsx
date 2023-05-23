@@ -8,7 +8,7 @@ import getSvg from "./getSvg";
 import SelectWithSearch from "./SelectWithSearch";
 
 export default function TableColumnAdd({ headers }) {
-  const { columns, setColumns, table } = useContext(TableContext);
+  const { columns, setColumns } = useContext(TableContext);
   const { selectedTableId, selectedBaseId } = useSelector(
     (state) => state.globalState
   );
@@ -63,6 +63,7 @@ export default function TableColumnAdd({ headers }) {
       "See which user made the most recent edit to some or all fields in a record.",
     Autonumber:
       "Automatically generate unique incremental numbers for each record.",
+    barcode: "See barcodes scanned from the TMS app.",
     button: "Trigger a customized action.",
   };
 
@@ -204,8 +205,9 @@ export default function TableColumnAdd({ headers }) {
                 <input
                   type='text'
                   placeholder='Field Name (Mandatory)'
-                  className='w-full p-1 px-2  rounded-md outline-blue-500 shadow-inner border-[1px]'
+                  className='w-full  p-1.5  rounded-md  outline-none shadow-input focus:border-blue-500 border-2 border-transparent '
                   value={fieldNameInput}
+                  autoFocus
                   onChange={(e) => {
                     setFieldNameInput(e.target.value);
                     existingColumns.get(e.target.value.toLocaleLowerCase())
@@ -236,24 +238,33 @@ export default function TableColumnAdd({ headers }) {
                 )}
 
                 {fieldSearchInput !== "Link to another record" && (
-                  <div className='max-h-[calc(100vh_/_2)] mt-2 border-[#eaebed] border-2 rounded-md  overflow-auto overflow-x-auto p-1'>
-                    <input
-                      type='search'
-                      name=''
-                      id=''
-                      className='bg-[#f0f1f3] w-full px-3 p-1.5  outline-none focus:bg-blue-50'
-                      placeholder='Find a field type'
-                      value={fieldSearchInput}
-                      onChange={(e) => {
-                        setFieldSearchInput(e.target.value);
-                      }}
-                      onClick={() => {
-                        setSelectedFieldType(undefined);
-                        setFieldSearchInput("");
-                      }}
-                    />
+                  <div className='max-h-[calc(100vh_/_2)] mt-2  rounded-md  shadow-input overflow-auto overflow-x-auto '>
+                    <div className='relative ' tabIndex={-1}>
+                      <div className='absolute left-3 top-1/2 transform -translate-y-1/2 z-50 '>
+                        {fieldsMap.get(fieldSearchInput)
+                          ? getSvg(fieldsMap.get(fieldSearchInput))
+                          : getSvg("search")}
+                      </div>
+                      <input
+                        type='search'
+                        className=' w-full px-2  outline-none py-2 pl-11 bg-transparent relative z-10 focus:bg-sky-50  '
+                        placeholder='Find a field type'
+                        value={fieldSearchInput}
+                        onChange={(e) => {
+                          setFieldSearchInput(e.target.value);
+                        }}
+                        onClick={() => {
+                          setSelectedFieldType(undefined);
+                          setFieldSearchInput("");
+                        }}
+                      />
+
+                      <div className='absolute right-3 top-1/2 transform -translate-y-1/2 z-50 cursor-pointer'>
+                        {fieldsMap.get(fieldSearchInput) && getSvg("arrowDown")}
+                      </div>
+                    </div>
                     {!selectedFieldType && (
-                      <div className='h-4/5 overflow-auto p-1 px-1.5  mb-1'>
+                      <div className='h-4/5 overflow-auto p-1 border-t-[1px]  mb-1'>
                         {columnType
                           .filter((ele) => {
                             return ele
@@ -275,6 +286,16 @@ export default function TableColumnAdd({ headers }) {
                               </div>
                             );
                           })}
+
+                        {columnType.filter((ele) => {
+                          return ele
+                            .toLowerCase()
+                            .includes(fieldSearchInput.toLowerCase());
+                        }) <= 0 && (
+                          <dvi className='ml-1 flex gap-2 mt-2'>
+                            {getSvg()} No Options found
+                          </dvi>
+                        )}
                       </div>
                     )}
                   </div>
@@ -301,7 +322,7 @@ export default function TableColumnAdd({ headers }) {
                 {fieldSearchInput === "Duration" && <DurationOptions />}
 
                 {selectedFieldType && (
-                  <div className='m-1 text-sm'>
+                  <div className='m-1 text-sm '>
                     {selectedOptionDescription[selectedFieldType]}
                   </div>
                 )}
@@ -435,8 +456,8 @@ function LinkedToAnotherRecordOptions({
 
   return (
     <>
-      <div className='max-h-[calc(100vh_/_2)] mt-2 border-[#eaebed] border-2 rounded-md  overflow-auto overflow-x-auto'>
-        <div className='flex justify-center items-center'>
+      <div className='max-h-[calc(100vh_/_2)] mt-2 shadow-input rounded-md  overflow-auto overflow-x-auto'>
+        <div className='flex justify-center items-center border-b-[1px]'>
           <div
             onClick={() => {
               setFieldSearchInput("");
@@ -508,6 +529,25 @@ function LinkedToAnotherRecordOptions({
                   });
               }
             })}
+            {bases.map(({ baseId, tableMetaData }) => {
+              if (baseId === selectedBaseId) {
+                return (
+                  tableMetaData.filter(({ tableName, tableId }) => {
+                    return (
+                      tableName
+                        ?.toLowerCase()
+                        ?.includes(
+                          fieldSearchInputLinkedRecord.toLowerCase()
+                        ) && tableId !== selectedTableId
+                    );
+                  }).length <= 0 && (
+                    <div className='py-2 text-center'>
+                      No Tables Available in the base to link
+                    </div>
+                  )
+                );
+              }
+            })}
           </div>
         )}
       </div>
@@ -519,6 +559,7 @@ function LinkedToAnotherRecordOptions({
     </>
   );
 }
+
 function LookUpOptions() {
   const [selectedTable, setSelectedTable] = useState("");
   const [selectedField, setSelectedField] = useState("");
@@ -874,68 +915,49 @@ function PercentOptions() {
     </>
   );
 }
-function DurationOptions() {
-  const [decimalPrecisionData, setDecimalPrecisionData] = useState([
-    {
-      name: "1",
-      icon: "",
-      data: "1",
-    },
-    {
-      name: "1.0",
-      icon: "",
-      data: "1.0",
-    },
-    {
-      name: "1.00",
-      icon: "",
-      data: "1.00",
-    },
-    {
-      name: "1.000",
-      icon: "",
-      data: "1.000",
-    },
-    {
-      name: "1.0000",
-      icon: "",
-      data: "1.0000",
-    },
-    {
-      name: "1.00000",
-      icon: "",
-      data: "1.00000",
-    },
-    {
-      name: "1.000000",
-      icon: "",
-      data: "1.000000",
-    },
-    {
-      name: "1.0000000",
-      icon: "",
-      data: "1.0000000",
-    },
-    {
-      name: "1.00000000",
-      icon: "",
-      data: "1.00000000",
-    },
-  ]);
 
-  const [selectedPrecisionType, setSelectedPrecisionType] = useState(
-    decimalPrecisionData[0]
-  );
-  const [currencyValue, setCurrencyValue] = useState("$");
+function DurationOptions() {
+  const [selectedDurationFormat, setSelectedDurationFormat] = useState({
+    name: "h:mm (e.g. 1:23)",
+    icon: "",
+    data: "h:mm",
+  });
+  const durationFormatData = [
+    {
+      name: "h:mm (e.g. 1:23)",
+      icon: "",
+      data: "h:mm",
+    },
+    {
+      name: "h:mm:ss (e.g. 1:23:40)",
+      icon: "",
+      data: "h:mm:ss",
+    },
+    {
+      name: "h:mm:ss.s (e.g. 1:23:40.0)",
+      icon: "",
+      data: "h:mm:ss.s",
+    },
+    {
+      name: "h:mm:ss.ss (e.g. 1:23:40.00)",
+      icon: "",
+      data: "h:mm:ss.ss",
+    },
+    {
+      name: "h:mm:ss.sss (e.g. 1:23:40.000)",
+      icon: "",
+      data: "h:mm:ss.sss",
+    },
+  ];
 
   return (
     <>
       <div className='mt-2 -mb-2 text-sm'>Duration Format</div>
       <SelectWithSearch
-        data={decimalPrecisionData}
+        data={durationFormatData}
         placeholder={"Choose a type of value in this Field"}
-        selectedItem={selectedPrecisionType}
-        setSelectedItem={setSelectedPrecisionType}
+        selectedItem={selectedDurationFormat}
+        setSelectedItem={setSelectedDurationFormat}
       />
     </>
   );
