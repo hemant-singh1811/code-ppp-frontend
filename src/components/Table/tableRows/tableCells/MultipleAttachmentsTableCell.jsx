@@ -563,7 +563,7 @@ function FileUploadHandler({ closeModal, cell }) {
                       onClick={() => CancelUploadAll()}
                       className='btn bg-red-500 text-white form-submit cursor-pointer'
                     >
-                      cancel
+                      Cancel
                     </div>
                   </div>
                 </form>

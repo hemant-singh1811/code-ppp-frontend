@@ -18,13 +18,7 @@ import MultipleAttachmentsTableCell from "./MultipleAttachmentsTableCell";
 import DefaultSelectCell from "./DefaultSelectCell";
 import CreatedByCell from "./CreatedByCell";
 
-export default function CellByFieldType({
-  hiddenInConditions,
-  fieldType,
-  cell,
-  row,
-}) {
-  //console.log("CellByFieldType ", hiddenInConditions, field_type, cell, row);
+export function CellByFieldType({ hiddenInConditions, fieldType, cell, row }) {
   if (hiddenInConditions) {
     return (
       <DefaultSelectCell
@@ -46,7 +40,7 @@ export default function CellByFieldType({
           rowData={cell?.getValue()}
         />
       ) : (
-        <div className='w-full h-full overflow-hidden'>
+        <div className="w-full h-full overflow-hidden">
           {console.log(
             "not getting array in single select",
             typeof cell?.getValue()
@@ -65,7 +59,7 @@ export default function CellByFieldType({
           rowData={cell?.getValue()}
         />
       ) : (
-        <div className='w-full h-full overflow-hidden'>
+        <div className="w-full h-full overflow-hidden">
           {console.warn("not getting array in multi select", cell?.getValue())}
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </div>
@@ -135,9 +129,11 @@ export default function CellByFieldType({
 
     default:
       return (
-        <div className='w-full h-full overflow-hidden flex items-center justify-center bg-transparent'>
+        <div className="w-full h-full overflow-hidden flex items-center justify-center bg-transparent">
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </div>
       );
   }
 }
+
+export default React.memo(CellByFieldType);

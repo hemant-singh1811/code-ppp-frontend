@@ -111,7 +111,6 @@ export default function Table({
       console.log("Get linked table Records", data);
       setTableDataModified(
         tableData.map(({ data, id }) => {
-          console.log(data);
           const object = {};
           defaultColumns.map(({ header, fieldType }) => {
             object[header] = data?.[header] || "";

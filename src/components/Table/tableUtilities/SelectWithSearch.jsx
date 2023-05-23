@@ -16,21 +16,29 @@ export default function SelectWithSearch({
   useClickAway(ref, () => {
     setIsVisible(false);
   });
+  // ${
+  //   isVisible &&
+  //   "border-blue-500 border-t-blue-500 border-l-blue-500 border-r-blue-500"
+  //   }
 
   return (
     <div
-      className='max-h-[calc(100vh_/_2)] mt-2 border-[#eaebed] border-2 rounded-md  cursor-pointer select-none'
+      className={`max-h-[calc(100vh_/_2)] mt-2   rounded-md  cursor-pointer select-none 
+      
+        `}
       ref={ref}
     >
       <div
         onClick={() => {
           setIsVisible(!isVisible);
         }}
-        className='flex items-center w-full gap-1 text-black bg-white   p-1 rounded-sm relative'
+        className={`flex items-center border-2 w-full gap-1 text-black bg-white   p-1 rounded-md relative ${
+          isVisible && "border-blue-500"
+        } `}
       >
         {selectedItem ? (
           <>
-            {getSvg(selectedItem.icon)}
+            {selectedItem.icon && getSvg(selectedItem.icon)}
             {selectedItem.name}
           </>
         ) : (
@@ -48,9 +56,9 @@ export default function SelectWithSearch({
       </div>
 
       {isVisible && (
-        <>
+        <div className='border-[#eaebed] border-2 rounded-md'>
           <input
-            className='bg-white w-full px-2 p-1.5 outline-none border-t-2'
+            className='bg-white w-full px-2 p-1.5 outline-none '
             placeholder='Find a Field'
             value={search}
             onChange={(e) => {
@@ -81,7 +89,7 @@ export default function SelectWithSearch({
                       setSearch("");
                     }}
                   >
-                    {getSvg(ele.icon)}
+                    {selectedItem.icon && getSvg(ele.icon)}
                     {ele.name}
                   </div>
                 );
@@ -95,7 +103,7 @@ export default function SelectWithSearch({
               </div>
             )}
           </div>
-        </>
+        </div>
       )}
     </div>
   );

@@ -196,7 +196,7 @@ export default function TableColumnAdd({ headers }) {
             leaveTo='opacity-0 translate-y-1'
           >
             <Popover.Panel
-              className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4 border-gray-400 border-2 flex flex-col ${
+              className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4  shadow-custom flex flex-col ${
                 headers.length < 3 ? "left-0" : "right-0"
               }`}
             >
@@ -204,7 +204,7 @@ export default function TableColumnAdd({ headers }) {
                 <input
                   type='text'
                   placeholder='Field Name (Mandatory)'
-                  className='w-full p-1 px-2 border-2 rounded-md outline-blue-500 border-[#cccecf]'
+                  className='w-full p-1 px-2  rounded-md outline-blue-500 shadow-inner border-[1px]'
                   value={fieldNameInput}
                   onChange={(e) => {
                     setFieldNameInput(e.target.value);
@@ -295,6 +295,11 @@ export default function TableColumnAdd({ headers }) {
                   />
                 )}
 
+                {fieldSearchInput === "Number" && <NumberOptions />}
+                {fieldSearchInput === "Currency" && <CurrencyOptions />}
+                {fieldSearchInput === "Percent" && <PercentOptions />}
+                {fieldSearchInput === "Duration" && <DurationOptions />}
+
                 {selectedFieldType && (
                   <div className='m-1 text-sm'>
                     {selectedOptionDescription[selectedFieldType]}
@@ -350,7 +355,7 @@ export default function TableColumnAdd({ headers }) {
                         setFieldNameInput("");
                       }}
                     >
-                      cancel
+                      Cancel
                     </div>
                     {/* {console.log(fieldNameInput)} */}
                     {selectedFieldType && (
@@ -520,12 +525,12 @@ function LookUpOptions() {
 
   const uniqueTablesMap = new Map();
 
-  tableWithMultipleRecords.map((ele) => {
+  tableWithMultipleRecords?.map((ele) => {
     uniqueTablesMap.set(ele.linkedRecord.tableName, ele);
   });
 
   // convert map to array
-  const uniqueTablesArray = Array.from(uniqueTablesMap.values());
+  const uniqueTablesArray = Array.from(uniqueTablesMap.values()) || [];
 
   const selectTableData = uniqueTablesArray.map((ele) => {
     return {
@@ -549,8 +554,9 @@ function LookUpOptions() {
         data: ele.data,
       };
     });
-    console.log(selectFieldData);
   }
+
+  console.log(selectTableData);
 
   return (
     <>
@@ -580,6 +586,357 @@ function LookUpOptions() {
           />
         </>
       )}
+    </>
+  );
+}
+
+function NumberOptions() {
+  const decimalData = [
+    {
+      name: "Decimal (1.0)",
+      icon: "",
+      data: "decimal",
+    },
+    {
+      name: "Integer (2)",
+      icon: "",
+      data: "integer",
+    },
+  ];
+  const decimalPrecisionData = [
+    {
+      name: "1.0",
+      icon: "",
+      data: "1.0",
+    },
+    {
+      name: "1.00",
+      icon: "",
+      data: "1.00",
+    },
+    {
+      name: "1.000",
+      icon: "",
+      data: "1.000",
+    },
+    {
+      name: "1.0000",
+      icon: "",
+      data: "1.0000",
+    },
+    {
+      name: "1.00000",
+      icon: "",
+      data: "1.00000",
+    },
+    {
+      name: "1.000000",
+      icon: "",
+      data: "1.000000",
+    },
+    {
+      name: "1.0000000",
+      icon: "",
+      data: "1.0000000",
+    },
+    {
+      name: "1.00000000",
+      icon: "",
+      data: "1.00000000",
+    },
+  ];
+
+  const [selectedNumberType, setSelectedNumberType] = useState("");
+  const [selectedPrecisionType, setSelectedPrecisionType] = useState("");
+
+  return (
+    <>
+      <SelectWithSearch
+        data={decimalData}
+        placeholder={"Choose a type of value in this Field"}
+        selectedItem={selectedNumberType}
+        setSelectedItem={setSelectedNumberType}
+      />
+
+      {selectedNumberType?.data === "decimal" && (
+        <>
+          <div className='mt-2 -mb-2 text-sm'>Precision</div>
+          <SelectWithSearch
+            data={decimalPrecisionData}
+            placeholder={"Choose a type of value in this Field"}
+            selectedItem={selectedPrecisionType}
+            setSelectedItem={setSelectedPrecisionType}
+          />
+        </>
+      )}
+    </>
+  );
+}
+
+function CurrencyOptions() {
+  const [decimalPrecisionData, setDecimalPrecisionData] = useState([
+    {
+      name: "$1",
+      icon: "",
+      data: "$1",
+    },
+    {
+      name: "$1.0",
+      icon: "",
+      data: "$1.0",
+    },
+    {
+      name: "$1.00",
+      icon: "",
+      data: "$1.00",
+    },
+    {
+      name: "$1.000",
+      icon: "",
+      data: "$1.000",
+    },
+    {
+      name: "$1.0000",
+      icon: "",
+      data: "$1.0000",
+    },
+    {
+      name: "$1.00000",
+      icon: "",
+      data: "$1.00000",
+    },
+    {
+      name: "$1.000000",
+      icon: "",
+      data: "$1.000000",
+    },
+    {
+      name: "$1.0000000",
+      icon: "",
+      data: "$1.0000000",
+    },
+    {
+      name: "$1.00000000",
+      icon: "",
+      data: "$1.00000000",
+    },
+  ]);
+
+  const [selectedPrecisionType, setSelectedPrecisionType] = useState(
+    decimalPrecisionData[0]
+  );
+  const [currencyValue, setCurrencyValue] = useState("$");
+
+  return (
+    <>
+      <div className='relative mt-2 '>
+        <input
+          value={currencyValue}
+          onChange={(e) => {
+            let value = 1;
+            setCurrencyValue(e.target.value);
+
+            let tempPrecisionData = decimalPrecisionData.map((_, i) => {
+              return {
+                name: e.target.value + (i === 0 ? 1 : value.toFixed(i)),
+                icon: "",
+                data: e.target.value + (i === 0 ? 1 : value.toFixed(i)),
+              };
+            });
+
+            if (tempPrecisionData)
+              setSelectedPrecisionType(tempPrecisionData[0]);
+
+            setDecimalPrecisionData(tempPrecisionData);
+          }}
+          className='flex items-center border-2  w-full gap-1 text-black bg-white  outline-none focus:border-blue-500 p-1 rounded-md relative'
+        />
+
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          height='20'
+          viewBox='0 96 960 960'
+          width='20'
+          className='absolute z-10  right-1 top-1/2 transform -translate-y-1/2 '
+        >
+          <path d='M480 708 256 484l34-34 190 190 190-190 34 34-224 224Z' />
+        </svg>
+      </div>
+
+      <div className='mt-2 -mb-2 text-sm'>Precision</div>
+      <SelectWithSearch
+        data={decimalPrecisionData}
+        placeholder={"Choose a type of value in this Field"}
+        selectedItem={selectedPrecisionType}
+        setSelectedItem={setSelectedPrecisionType}
+      />
+    </>
+  );
+}
+
+function PercentOptions() {
+  const [decimalPrecisionData, setDecimalPrecisionData] = useState([
+    {
+      name: "1",
+      icon: "",
+      data: "1",
+    },
+    {
+      name: "1.0",
+      icon: "",
+      data: "1.0",
+    },
+    {
+      name: "1.00",
+      icon: "",
+      data: "1.00",
+    },
+    {
+      name: "1.000",
+      icon: "",
+      data: "1.000",
+    },
+    {
+      name: "1.0000",
+      icon: "",
+      data: "1.0000",
+    },
+    {
+      name: "1.00000",
+      icon: "",
+      data: "1.00000",
+    },
+    {
+      name: "1.000000",
+      icon: "",
+      data: "1.000000",
+    },
+    {
+      name: "1.0000000",
+      icon: "",
+      data: "1.0000000",
+    },
+    {
+      name: "1.00000000",
+      icon: "",
+      data: "1.00000000",
+    },
+  ]);
+
+  const [selectedPrecisionType, setSelectedPrecisionType] = useState(
+    decimalPrecisionData[0]
+  );
+  const [currencyValue, setCurrencyValue] = useState("$");
+
+  return (
+    <>
+      <div className='relative mt-2 '>
+        <input
+          value={currencyValue}
+          onChange={(e) => {
+            let value = 1;
+            setCurrencyValue(e.target.value);
+
+            let tempPrecisionData = decimalPrecisionData.map((_, i) => {
+              return {
+                name: e.target.value + (i === 0 ? 1 : value.toFixed(i)),
+                icon: "",
+                data: e.target.value + (i === 0 ? 1 : value.toFixed(i)),
+              };
+            });
+
+            if (tempPrecisionData)
+              setSelectedPrecisionType(tempPrecisionData[0]);
+
+            setDecimalPrecisionData(tempPrecisionData);
+          }}
+          className='flex items-center border-2  w-full gap-1 text-black bg-white  outline-none focus:border-blue-500 p-1 rounded-md relative'
+        />
+
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          height='20'
+          viewBox='0 96 960 960'
+          width='20'
+          className='absolute z-10  right-1 top-1/2 transform -translate-y-1/2 '
+        >
+          <path d='M480 708 256 484l34-34 190 190 190-190 34 34-224 224Z' />
+        </svg>
+      </div>
+
+      <div className='mt-2 -mb-2 text-sm'>Precision</div>
+      <SelectWithSearch
+        data={decimalPrecisionData}
+        placeholder={"Choose a type of value in this Field"}
+        selectedItem={selectedPrecisionType}
+        setSelectedItem={setSelectedPrecisionType}
+      />
+    </>
+  );
+}
+function DurationOptions() {
+  const [decimalPrecisionData, setDecimalPrecisionData] = useState([
+    {
+      name: "1",
+      icon: "",
+      data: "1",
+    },
+    {
+      name: "1.0",
+      icon: "",
+      data: "1.0",
+    },
+    {
+      name: "1.00",
+      icon: "",
+      data: "1.00",
+    },
+    {
+      name: "1.000",
+      icon: "",
+      data: "1.000",
+    },
+    {
+      name: "1.0000",
+      icon: "",
+      data: "1.0000",
+    },
+    {
+      name: "1.00000",
+      icon: "",
+      data: "1.00000",
+    },
+    {
+      name: "1.000000",
+      icon: "",
+      data: "1.000000",
+    },
+    {
+      name: "1.0000000",
+      icon: "",
+      data: "1.0000000",
+    },
+    {
+      name: "1.00000000",
+      icon: "",
+      data: "1.00000000",
+    },
+  ]);
+
+  const [selectedPrecisionType, setSelectedPrecisionType] = useState(
+    decimalPrecisionData[0]
+  );
+  const [currencyValue, setCurrencyValue] = useState("$");
+
+  return (
+    <>
+      <div className='mt-2 -mb-2 text-sm'>Duration Format</div>
+      <SelectWithSearch
+        data={decimalPrecisionData}
+        placeholder={"Choose a type of value in this Field"}
+        selectedItem={selectedPrecisionType}
+        setSelectedItem={setSelectedPrecisionType}
+      />
     </>
   );
 }

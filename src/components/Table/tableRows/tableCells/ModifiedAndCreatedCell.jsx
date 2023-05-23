@@ -1,14 +1,14 @@
 import React from "react";
 
-export default function ModifiedAndCreatedCell({ cell, type }) {
+export function ModifiedAndCreatedCell({ cell, type }) {
   switch (type) {
     case "lastModifiedBy":
       return (
         <div className=' flex items-start w-full h-full text-left px-2 p-1'>
           <div
             style={{
-              background: cell.row.original.lastModifiedBy.background,
-              color: cell.row.original.lastModifiedBy.color,
+              background: cell.row.original.lastModifiedBy?.background,
+              color: cell.row.original.lastModifiedBy?.color,
             }}
             className='w-6 h-6 rounded-full flex items-center justify-center relative z-10'
           >
@@ -22,9 +22,11 @@ export default function ModifiedAndCreatedCell({ cell, type }) {
         </div>
       );
     case "lastModifiedTime":
+      // console.log(cell.row.original?.lastModifiedTime);
       let lastModifiedTime;
       if (cell.row.original?.lastModifiedTime) {
         lastModifiedTime = new Date(cell.row.original?.lastModifiedTime);
+        // lastModifiedTime = convertDate(cell.row.original?.lastModifiedTime);
       }
       return (
         <div className=' flex items-start w-full h-full text-left px-2 p-1'>
@@ -39,8 +41,8 @@ export default function ModifiedAndCreatedCell({ cell, type }) {
         <div className=' flex items-start w-full h-full text-left px-2 p-1'>
           <div
             style={{
-              background: cell.row.original.createdBy.background,
-              color: cell.row.original.createdBy.color,
+              background: cell.row.original.createdBy?.background,
+              color: cell.row.original.createdBy?.color,
             }}
             className='w-6 h-6 rounded-full flex items-center justify-center relative z-10'
           >
@@ -52,7 +54,7 @@ export default function ModifiedAndCreatedCell({ cell, type }) {
         </div>
       );
     case "createdTime":
-      console.log(cell.row.original?.createdTime);
+      // console.log(cell.row.original?.createdTime);
       const createdTime = new Date(cell.row.original?.createdTime);
       return (
         <div className=' flex items-start w-full h-full text-left px-2 p-1'>
@@ -66,6 +68,17 @@ export default function ModifiedAndCreatedCell({ cell, type }) {
     default:
       break;
   }
-
-  // return <div>{type}</div>;
 }
+
+function convertDate(time) {
+  if (typeof time == "string") {
+    return "";
+  }
+
+  let dateInMillis = time * 1000;
+  let date = new Date(dateInMillis);
+
+  return date;
+}
+
+export default React.memo(ModifiedAndCreatedCell);
