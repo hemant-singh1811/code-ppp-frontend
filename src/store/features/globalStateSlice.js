@@ -130,6 +130,9 @@ const globalStateSlice = createSlice({
       state.formModal.columns = payload.columns;
       state.formModal.index = payload.id;
     },
+    handelLinkedRecordsData: (state, { payload }) => {
+      state.linkedRecordsData = payload;
+    },
   },
 });
 
@@ -146,6 +149,7 @@ export const {
   handelViewsToggle,
   handelHoverRow,
   handleFormModal,
+  handelLinkedRecordsData,
 } = globalStateSlice.actions;
 
 export default globalStateSlice.reducer;
