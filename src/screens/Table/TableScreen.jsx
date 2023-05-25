@@ -95,7 +95,7 @@ export default function TableScreen() {
   for (let [key, value] of RecordIdArrayWithTableIdMap) {
     modifiedArrayOfObject.push({
       tableId: key,
-      record_ids: value,
+      recordIds: value,
     });
   }
 

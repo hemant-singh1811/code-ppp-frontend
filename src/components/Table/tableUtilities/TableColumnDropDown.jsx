@@ -72,29 +72,42 @@ export default function TableColumnDropDown({
         leaveFrom='opacity-100 translate-y-0'
         leaveTo='opacity-0 translate-y-1'
       >
-        <Popover.Panel className='text-black absolute top-[28px] z-20 w-56 rounded-md left-0 p-2 flex flex-col shadow-custom bg-white'>
-          {/* <div className="hover:bg-gray-100 cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center ">
+        <Popover.Panel
+          className={`text-black absolute top-[32px] z-20 w-56 rounded-md left-0 p-2 flex flex-col gap-1 shadow-custom bg-white `}
+        >
+          <div
+            onClick={() => {
+              if (!columnDef?.primary) {
+                setIsMenuOpen(!isMenuOpen);
+              }
+            }}
+            className={` cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center  ${
+              columnDef?.primary
+                ? "bg-red-200 cursor-not-allowed"
+                : "hover:bg-gray-100"
+            }`}
+          >
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
               strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-4 h-4 text-lg font-light mr-4"
+              stroke='currentColor'
+              className='w-4 h-4 text-lg font-light mr-4'
             >
               <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125'
               />
             </svg>
             Edit Field
-          </div> */}
+          </div>
           <div
             aria-disabled={columnDef?.primary}
             className={`  cursor-pointer rounded-[4px] py-1 text-left px-4 flex items-center ${
               columnDef?.primary
-                ? "bg-gray-100 cursor-not-allowed"
+                ? "bg-red-200 cursor-not-allowed"
                 : "hover:bg-gray-100"
             }`}
             onClick={() => {
