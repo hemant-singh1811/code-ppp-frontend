@@ -17,7 +17,8 @@ export default function AsideHeaderSearch() {
               fill='none'
               stroke='currentColor'
               viewBox='0 0 24 24'
-              xmlns='http://www.w3.org/2000/svg'>
+              xmlns='http://www.w3.org/2000/svg'
+            >
               <path
                 strokeLinecap='round'
                 strokeLinejoin='round'
@@ -29,7 +30,7 @@ export default function AsideHeaderSearch() {
           <input
             type='search'
             id='default-search'
-            className='block w-full p-4 py-2 pl-10 text-sm text-black bg-white border rounded-lg'
+            className='block w-full p-4 relative z-10 py-2 pl-10 text-sm text-black  rounded-lg shadow-custom outline-none focus:border-blue-500 border-2 border-transparent'
             placeholder='Search Mockups, Logos...'
             required=''
             autoComplete='off'

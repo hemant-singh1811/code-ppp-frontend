@@ -9,9 +9,7 @@ export default function AsideBody() {
   let { data, error, isFetching } = useGetLoadQuery();
 
   const dispatch = useDispatch();
-  const { search, filter } = useSelector(
-    (state) => state.globalState
-  );
+  const { search, filter } = useSelector((state) => state.globalState);
   let dataArray = {
     alphaLionData: [],
     ironLionData: [],
@@ -148,15 +146,18 @@ export default function AsideBody() {
             <div key={index}>
               <div
                 className='flex w-full items-center justify-between mb-2 cursor-pointer'
-                onClick={() => toggle(element)}>
+                onClick={() => toggle(element)}
+              >
                 <p className='capitalize'>{element.companyName}</p>
                 <div
-                  className={`${element.collapse ? "rotate-180" : "rotate-0"}`}>
+                  className={`${element.collapse ? "rotate-180" : "rotate-0"}`}
+                >
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     viewBox='0 0 24 24'
                     fill='currentColor'
-                    className={`w-6 h-6 `}>
+                    className={`w-6 h-6 `}
+                  >
                     <path
                       fillRule='evenodd'
                       d='M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z'
@@ -306,7 +307,8 @@ function handleListData(alphaLionData, search, dispatch, filter) {
           <div
             onClick={() => dispatch(setLoad(data))}
             key={data.id}
-            className='bg-white rounded-xl cursor-pointer flex p-1  text-start overflow-hidden h-full font-semibold capitalize mb-2'>
+            className='bg-white rounded-xl cursor-pointer flex p-1  text-start overflow-hidden h-full font-semibold capitalize mb-2 text-black'
+          >
             <div className='mr-1 flex flex-1 '>
               <div className='overflow-hidden items-center justify-center flex'>
                 <img

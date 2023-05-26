@@ -1,7 +1,7 @@
-import { useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { handleFilterChange } from '../../store/features/globalStateSlice';
-import { useDetectOutsideClick } from '../../utilities/customHooks/useDetectOutsideClick';
+import { useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { handleFilterChange } from "../../store/features/globalStateSlice";
+import { useDetectOutsideClick } from "../../utilities/customHooks/useDetectOutsideClick";
 
 export default function AsideThreeDotsDropDown() {
   // Create a ref that we add to the element for which we want to detect outside clicks
@@ -19,15 +19,17 @@ export default function AsideThreeDotsDropDown() {
           <button
             onClick={() => setToggle(!toggle)}
             className={` flex w-full items-center justify-center rounded-full p-2 bg-black  text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${
-              toggle ? 'bg-opacity-100' : ''
-            }`}>
+              toggle ? "bg-opacity-100" : ""
+            }`}
+          >
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
               viewBox='0 0 24 24'
               strokeWidth={1.5}
               stroke='currentColor'
-              className='w-6 h-6'>
+              className='w-6 h-6'
+            >
               <path
                 strokeLinecap='round'
                 strokeLinejoin='round'
@@ -38,12 +40,13 @@ export default function AsideThreeDotsDropDown() {
         </div>
       </div>
       {toggle && (
-        <div className='px-1 py-1 absolute z-50 bg-white block w-[150px] left-[-110px] rounded-lg'>
+        <div className='px-1 py-1 absolute z-50 bg-white block w-[150px] shadow-custom left-[243px] rounded-lg'>
           {filter.map((element) => {
             return (
               <div
                 key={element.name}
-                className='w-full flex items-center rounded-md px-2 py-2 text-sm justify-between'>
+                className='w-full flex items-center rounded-md px-2 py-2 text-sm justify-between'
+              >
                 <div className=''>{element.name}</div>
                 <label className='inline-flex relative items-center cursor-pointer'>
                   <input

@@ -7,138 +7,142 @@ import { Fragment } from "react";
 import getSvg from "./getSvg";
 import SelectWithSearch from "./SelectWithSearch";
 
+const selectedOptionDescription = {
+  "Single line text":
+    "Enter text, or prefill each new cell with a default value.",
+  "Long text": "Enter multiple lines of text.",
+  "Look Up": "See values from a field in a linked record.",
+  Attachment:
+    "Add images, documents, or other files to be viewed or downloaded.",
+  Checkbox: "Check or uncheck to indicate status.",
+  "Single Select": "Select one predefined option from a list.",
+  "Multiple select": "Select one or more predefined options in a list.",
+  User: "Add an Software user to a record.",
+  Date: "Enter a date (e.g. 11/12/2023) or choose one from a calendar.",
+  "Phone number": "Enter a telephone number (e.g. (415) 555-9876).",
+  Email: "Enter an email address (e.g. andrew@example.com).",
+  URL: "Enter a URL (e.g. demo.com or https://demo.com/universe).",
+  Number: "Enter a number, or prefill each new cell with a default value.",
+  Currency:
+    "Enter a monetary amount, or prefill each new cell with a default value.",
+  Percent: "Enter a percentage, or prefill each new cell with a default value.",
+  Duration:
+    "Enter a duration of time in hours, minutes or seconds (e.g. 1:23).",
+  Rating: "Add a rating on a predefined scale.",
+  Formula: "Compute values based on fields.",
+  "Created time": "See the date and time each record was created.",
+  "Last modified time":
+    "See the date and time of the most recent edit to some or all fields in a record.",
+  "Created by": "See which user created the record.",
+  "Last modified by":
+    "See which user made the most recent edit to some or all fields in a record.",
+  Autonumber:
+    "Automatically generate unique incremental numbers for each record.",
+  barcode: "See barcodes scanned from the TMS app.",
+  button: "Trigger a customized action.",
+};
+
+let columnType = [
+  "Link to another record",
+  "Single line text",
+  "Long text",
+  "Attachment",
+  "Checkbox",
+  "Single Select",
+  "Multiple select",
+  "User",
+  "Date",
+  "Phone number",
+  "Email",
+  "URL",
+  "Number",
+  "Currency",
+  "Percent",
+  "Duration",
+  "Rating",
+  "Formula",
+  "Rollup",
+  "Count",
+  "Lookup",
+  "Created time",
+  "Last modified time",
+  "Created by",
+  "Last modified by",
+  "Autonumber",
+  "barcode",
+  "button",
+];
+
+let fieldsType = [
+  "linkedRecords",
+  "singleLineText",
+  "multilineText",
+  "attachments",
+  "checkbox",
+  "singleSelect",
+  "multipleSelect",
+  "user",
+  "date",
+  "phoneNumber",
+  "email",
+  "url",
+  "number",
+  "currency",
+  "percent",
+  "duration",
+  "rating",
+  "formula",
+  "rollup",
+  "count",
+  "lookup",
+  "createdTime",
+  "lastModifiedTime",
+  "createdBy",
+  "lastModifiedBy",
+  "autoNumber",
+  "barcode",
+  "button",
+];
+
 export default function TableColumnAdd({ headers }) {
   const { columns, setColumns } = useContext(TableContext);
   const { selectedTableId, selectedBaseId } = useSelector(
     (state) => state.globalState
   );
   const { bases } = useSelector((state) => state.bases);
+
   const [addColumnApi, responseCreateColumn] = useAddTableColumnMutation();
 
   const [descriptionToggle, setDescriptionToggle] = React.useState(false);
+
   const [fieldNameInput, setFieldNameInput] = React.useState("");
+
   const [fieldSearchInput, setFieldSearchInput] = React.useState("");
+
   const [isExistFieldNameInput, setIsExistFieldNameInput] =
     React.useState(false);
+
   const [fieldDescriptionInput, setFieldDescriptionInput] = React.useState("");
+
   const [selectedFieldType, setSelectedFieldType] = React.useState(undefined);
+
   const [selectedFieldTypeLinkedRecord, setSelectedFieldTypeLinkedRecord] =
     React.useState(undefined);
 
   const [fieldOptions, setFieldOptions] = useState({});
 
   const tableIdMap = new Map();
-
   const existingColumns = new Map();
-
   const fieldsMap = new Map();
-
-  const selectedOptionDescription = {
-    "Single line text":
-      "Enter text, or prefill each new cell with a default value.",
-    "Long text": "Enter multiple lines of text.",
-    "Look Up": "See values from a field in a linked record.",
-    Attachment:
-      "Add images, documents, or other files to be viewed or downloaded.",
-    Checkbox: "Check or uncheck to indicate status.",
-    "Single Select": "Select one predefined option from a list.",
-    "Multiple select": "Select one or more predefined options in a list.",
-    User: "Add an Software user to a record.",
-    Date: "Enter a date (e.g. 11/12/2023) or choose one from a calendar.",
-    "Phone number": "Enter a telephone number (e.g. (415) 555-9876).",
-    Email: "Enter an email address (e.g. andrew@example.com).",
-    URL: "Enter a URL (e.g. demo.com or https://demo.com/universe).",
-    Number: "Enter a number, or prefill each new cell with a default value.",
-    Currency:
-      "Enter a monetary amount, or prefill each new cell with a default value.",
-    Percent:
-      "Enter a percentage, or prefill each new cell with a default value.",
-    Duration:
-      "Enter a duration of time in hours, minutes or seconds (e.g. 1:23).",
-    Rating: "Add a rating on a predefined scale.",
-    Formula: "Compute values based on fields.",
-    "Created time": "See the date and time each record was created.",
-    "Last modified time":
-      "See the date and time of the most recent edit to some or all fields in a record.",
-    "Created by": "See which user created the record.",
-    "Last modified by":
-      "See which user made the most recent edit to some or all fields in a record.",
-    Autonumber:
-      "Automatically generate unique incremental numbers for each record.",
-    barcode: "See barcodes scanned from the TMS app.",
-    button: "Trigger a customized action.",
-  };
-
-  let columnType = [
-    "Link to another record",
-    "Single line text",
-    "Long text",
-    "Attachment",
-    "Checkbox",
-    "Single Select",
-    "Multiple select",
-    "User",
-    "Date",
-    "Phone number",
-    "Email",
-    "URL",
-    "Number",
-    "Currency",
-    "Percent",
-    "Duration",
-    "Rating",
-    "Formula",
-    "Rollup",
-    "Count",
-    "Lookup",
-    "Created time",
-    "Last modified time",
-    "Created by",
-    "Last modified by",
-    "Autonumber",
-    "barcode",
-    "button",
-  ];
-
-  let fieldsType = [
-    "linkedRecords",
-    "singleLineText",
-    "multilineText",
-    "attachments",
-    "checkbox",
-    "singleSelect",
-    "multipleSelect",
-    "user",
-    "date",
-    "phoneNumber",
-    "email",
-    "url",
-    "number",
-    "currency",
-    "percent",
-    "duration",
-    "rating",
-    "formula",
-    "rollup",
-    "count",
-    "lookup",
-    "createdTime",
-    "lastModifiedTime",
-    "createdBy",
-    "lastModifiedBy",
-    "autoNumber",
-    "barcode",
-    "button",
-  ];
 
   for (let i = 0; i < columnType?.length; i++) {
     fieldsMap.set(columnType[i], fieldsType[i]);
   }
 
   for (let i = 1; i < columns?.length; i++) {
-    existingColumns.set(columns[i]?.header.toLocaleLowerCase(), true);
+    existingColumns.set(columns[i]?.fieldName.toLocaleLowerCase(), true);
   }
-  // console.log(bases);
+
   bases.forEach((ele) => {
     if (ele?.baseId === selectedBaseId) {
       ele?.tableMetaData.forEach(({ tableId, tableName }) => {
@@ -215,7 +219,7 @@ export default function TableColumnAdd({ headers }) {
   }, [responseCreateColumn.isSuccess]);
 
   return (
-    <Popover className='relative'>
+    <Popover className='relative select-none'>
       {({ open, close }) => (
         <>
           <Popover.Button
@@ -258,7 +262,11 @@ export default function TableColumnAdd({ headers }) {
                 <input
                   type='text'
                   placeholder='Field Name (Mandatory)'
-                  className='w-full  p-1.5  rounded-md  outline-none shadow-input focus:border-blue-500 border-2 border-transparent '
+                  className={`w-full  p-1.5  rounded-md  outline-none shadow-input  border-2  ${
+                    isExistFieldNameInput
+                      ? "border-red-500 focus:border-red-500"
+                      : "focus:border-blue-500 border-transparent"
+                  }  `}
                   value={fieldNameInput}
                   autoFocus
                   onChange={(e) => {
@@ -454,6 +462,16 @@ export default function TableColumnAdd({ headers }) {
       )}
     </Popover>
   );
+}
+
+function GetFieldByType() {
+  switch (key) {
+    case value:
+      break;
+
+    default:
+      break;
+  }
 }
 
 function LinkedToAnotherRecordOptions({
