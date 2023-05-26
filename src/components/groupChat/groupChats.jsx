@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
-import ActiveScreen from "../../screens/chats/ActiveScreen";
+import ActiveScreen from "../../screens/groupChat/ActiveScreen";
 import { addMessage } from "../../store/features/messageSlice";
-import Aside from "../aside/Aside";
 const socket = io(import.meta.env.VITE_SERVER_URL);
 
 export default function Chats() {
@@ -12,6 +11,7 @@ export default function Chats() {
   const dispatch = useDispatch();
   useEffect(() => {
     try {
+
       socket.on("newconnect", (data) => {
         console.log("socket connected", socket.id);
       });
@@ -22,7 +22,7 @@ export default function Chats() {
       };
 
       let room = () => {
-        socket.emit("joinroom", roomId, (res) => {
+        socket.emit("joinGroupRoom", roomId, (res) => {
           console.log("join room res : ", res);
         });
       };
@@ -34,7 +34,7 @@ export default function Chats() {
       });
 
       socket.on("responseMessage", ({ message }) => {
-        // console.log(message);
+        console.log("message : ",message);
         if (message?.userToken !== userToken) {
           console.table(message);
           dispatch(
@@ -51,6 +51,10 @@ export default function Chats() {
               url: message?.url,
               userToken: message?.userToken,
               fileName: message?.fileName,
+              userName: message?.userName,
+              email: message?.email,
+              background: message?.background,
+              color: message?.color,
             })
           );
         }
@@ -59,11 +63,12 @@ export default function Chats() {
       console.log(err);
     }
   }, []);
+
   return (
     <div className='flex  h-screen overflow-hidden w-full text-black'>
-      <Aside />
       <ActiveScreen userToken={userToken} socket={socket} />
     </div>
   );
+
 }
 // {/* h-[calc(100%-68.57px)] */}

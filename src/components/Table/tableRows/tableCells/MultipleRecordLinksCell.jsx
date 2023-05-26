@@ -155,70 +155,67 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
   }, [responseGetTableData.isSuccess, responseGetModelData.isSuccess]);
 
   return (
-    <div className='h-full overflow-hidden select-none'>
-      <div
-        className='flex h-full w-full items-center  px-1 gap-1'
-        onFocus={() => handleFocus()}
-        onBlur={() => handleBlur()}
-        tabIndex='1'
-      >
-        {/* //add new record */}
-        {isChildVisible && (
-          <div
-            onClick={() => {
-              openModal();
-              getTableDataApi(fetchedTableId);
-              getModelDataApi(fetchedTableId);
-            }}
-            className='cursor-pointer  rounded-md bg-black bg-opacity-10  text-sm font-medium text-white hover:bg-opacity-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75'
+    <div
+      className='flex h-full w-full items-center overflow-hidden px-1 gap-1'
+      onFocus={() => handleFocus()}
+      onBlur={() => handleBlur()}
+      tabIndex='1'
+    >
+      {/* //add new record */}
+      {isChildVisible && (
+        <div
+          onClick={() => {
+            openModal();
+            getTableDataApi(fetchedTableId);
+            getModelDataApi(fetchedTableId);
+          }}
+          className='cursor-pointer  rounded-md bg-black bg-opacity-10  text-sm font-medium text-white hover:bg-opacity-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75'
+        >
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            className=' fill-gray-700'
+            height='24'
+            viewBox='0 96 960 960'
+            width='24'
           >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              className=' fill-gray-700'
-              height='24'
-              viewBox='0 96 960 960'
-              width='24'
-            >
-              <path d='M479.973 836q-8.512 0-14.242-5.75Q460 824.5 460 816V596H240q-8.5 0-14.25-5.758T220 575.973q0-8.512 5.75-14.242Q231.5 556 240 556h220V336q0-8.5 5.758-14.25 5.757-5.75 14.269-5.75t14.242 5.75Q500 327.5 500 336v220h220q8.5 0 14.25 5.758t5.75 14.269q0 8.512-5.75 14.242Q728.5 596 720 596H500v220q0 8.5-5.758 14.25-5.757 5.75-14.269 5.75Z' />
-            </svg>
-          </div>
-        )}
+            <path d='M479.973 836q-8.512 0-14.242-5.75Q460 824.5 460 816V596H240q-8.5 0-14.25-5.758T220 575.973q0-8.512 5.75-14.242Q231.5 556 240 556h220V336q0-8.5 5.758-14.25 5.757-5.75 14.269-5.75t14.242 5.75Q500 327.5 500 336v220h220q8.5 0 14.25 5.758t5.75 14.269q0 8.512-5.75 14.242Q728.5 596 720 596H500v220q0 8.5-5.758 14.25-5.757 5.75-14.269 5.75Z' />
+          </svg>
+        </div>
+      )}
 
-        {selectedRowData?.map((ele, i) => {
-          return (
-            ele && (
-              <div
-                key={i}
-                className='flex bg-purple-100 rounded-md items-center cursor-pointer px-1'
-              >
-                <div className='h-full w-max'>
-                  {ele?.data?.hasOwnProperty(
-                    cell.column.columnDef.linkedRecord.selectedFieldId
-                  ) &&
-                  ele.data[
-                    cell.column.columnDef.linkedRecord.selectedFieldId
-                  ] !== "" ? (
-                    ele.data[cell.column.columnDef.linkedRecord.selectedFieldId]
-                  ) : (
-                    <div className='opacity-40'>Unnamed Record</div>
-                  )}
-                </div>
-                {isChildVisible && (
-                  <svg
-                    onClick={() => removeSelectedRow(ele)}
-                    xmlns='http://www.w3.org/2000/svg'
-                    height='20'
-                    viewBox='0 96 960 960'
-                    width='20'
-                  >
-                    <path d='M480 604.308 270.154 814.154q-5.615 5.615-13.769 6-8.154.385-14.539-6T235.461 800q0-7.769 6.385-14.154L451.692 576 241.846 366.154q-5.615-5.615-6-13.769-.385-8.154 6-14.539T256 331.461q7.769 0 14.154 6.385L480 547.692l209.846-209.846q5.615-5.615 13.769-6 8.154-.385 14.539 6T724.539 352q0 7.769-6.385 14.154L508.308 576l209.846 209.846q5.615 5.615 6 13.769.385 8.154-6 14.539T704 820.539q-7.769 0-14.154-6.385L480 604.308Z' />
-                  </svg>
+      {selectedRowData?.map((ele, i) => {
+        return (
+          ele && (
+            <div
+              key={i}
+              className='flex bg-purple-100 rounded-md items-center cursor-pointer px-1'
+            >
+              <div className='h-full w-max'>
+                {ele?.data?.hasOwnProperty(
+                  cell.column.columnDef.linkedRecord.selectedFieldId
+                ) &&
+                ele.data[cell.column.columnDef.linkedRecord.selectedFieldId] !==
+                  "" ? (
+                  ele.data[cell.column.columnDef.linkedRecord.selectedFieldId]
+                ) : (
+                  <div className='opacity-75'>Unnamed Record</div>
                 )}
               </div>
-            )
-          );
-        })}
-      </div>
+              {isChildVisible && (
+                <svg
+                  onClick={() => removeSelectedRow(ele)}
+                  xmlns='http://www.w3.org/2000/svg'
+                  height='20'
+                  viewBox='0 96 960 960'
+                  width='20'
+                >
+                  <path d='M480 604.308 270.154 814.154q-5.615 5.615-13.769 6-8.154.385-14.539-6T235.461 800q0-7.769 6.385-14.154L451.692 576 241.846 366.154q-5.615-5.615-6-13.769-.385-8.154 6-14.539T256 331.461q7.769 0 14.154 6.385L480 547.692l209.846-209.846q5.615-5.615 13.769-6 8.154-.385 14.539 6T724.539 352q0 7.769-6.385 14.154L508.308 576l209.846 209.846q5.615 5.615 6 13.769.385 8.154-6 14.539T704 820.539q-7.769 0-14.154-6.385L480 604.308Z' />
+                </svg>
+              )}
+            </div>
+          )
+        );
+      })}
 
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as='div' className='relative z-10' onClose={closeModal}>

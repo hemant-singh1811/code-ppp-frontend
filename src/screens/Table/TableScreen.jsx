@@ -89,7 +89,7 @@ export default function TableScreen() {
 
     let uniqueRecordIdArray = Array.from(uniqueRecordIdSet);
 
-    console.log("uniqueRecordIdArray", uniqueRecordIdArray);
+    // console.log("uniqueRecordIdArray", uniqueRecordIdArray);
 
     RecordIdArrayWithTableIdMap.set(key, uniqueRecordIdArray);
   }

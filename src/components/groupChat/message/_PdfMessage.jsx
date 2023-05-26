@@ -1,6 +1,14 @@
 import React from "react";
+import _ProfileImage from './_ProfileImage'
+import { useSelector } from "react-redux";
 
 export default function _PdfMessage({ messageApi, type }) {
+
+  const { userInfo } = useSelector((state) => state.auth);
+ 
+  console.log("messageApi : ", messageApi);
+  console.log("userInfo : ", userInfo);
+
   return type === "send" ? (
     <>
       <div className='bg-green-50 self-end p-1 mr-1 rounded-[10px] rounded-br-[0px] relative'>
@@ -68,11 +76,18 @@ export default function _PdfMessage({ messageApi, type }) {
           {messageApi.createdAt}
         </div>
       </div>
-      <img src='/demo2.jpg' className='w-10 h-10 rounded-full ' alt='' />
+
+      {/* <img src='/demo2.jpg' className='w-10 h-10 rounded-full ' alt='' /> */}
+      <_ProfileImage profileInfo={userInfo} />
+
     </>
   ) : (
     <>
-      <img src='/demo2.jpg' className='w-10 h-10 rounded-full ' alt='' />
+                  <_ProfileImage profileInfo={messageApi} />
+
+      {/* <img src='/demo2.jpg' className='w-10 h-10 rounded-full ' alt='' /> */}
+
+
       <div className='bg-green-200 self-end p-1  ml-1 rounded-[10px] rounded-bl-[0px] '>
         <div className='flex items-center w-full relative'>
           <div className='bg-gray-200 p-1 m-1 rounded-md break-all'>

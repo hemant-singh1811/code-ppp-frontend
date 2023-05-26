@@ -65,18 +65,18 @@ export default function AddRowTable() {
   function uploader(e, fieldName) {
     // const message_id = UniqueCharacterGenerator();
     const file = e.target.files[0];
-    let file_name = file.name;
+    let fileName = file.name;
     const reader = new FileReader();
-    let parts = file_name.split(".");
+    let parts = fileName.split(".");
     let fileType = parts[parts.length - 1];
-    file_name = file_name.slice(0, file_name.length - fileType.length - 1);
-    file_name = `${file_name}.${fileType}`;
+    fileName = fileName.slice(0, fileName.length - fileType.length - 1);
+    fileName = `${fileName}.${fileType}`;
     reader.readAsDataURL(file);
     setSubmitButton(true);
 
     reader.addEventListener("load", async (e) => {
       // let handleUploading = async () => {
-      const storageRef = ref(storage, file_name);
+      const storageRef = ref(storage, fileName);
       // 'file' comes from the Blob or File API
       try {
         // const uploadTask = await uploadBytes(storageRef, file);
@@ -148,10 +148,10 @@ export default function AddRowTable() {
           }
         );
 
-        // const starsRef = ref(storage, file_name);
+        // const starsRef = ref(storage, fileName);
         //   getDownloadURL(starsRef)
         //     .then((url) => {
-        //       send("", userToken, url, fileType, file_name);
+        //       send("", userToken, url, fileType, fileName);
         //     })
         //     .catch((error) => {
         //       // A full list of error codes is available at

@@ -6,6 +6,7 @@ import ProtectedRoute from '../screens/authentication/ProtectedRoute';
 import Dashboard from '../components/dashboard/pages/Dashboard';
 import About from '../screens/about/About';
 import Chats from '../components/chats/Chats';
+import GroupChat from '../components/groupChat/groupChats';
 import PageNotFound from '../screens/PageNotFound';
 import TableScreen from '../screens/Table/TableScreen';
 import Testing from '../Testing/Testing';
@@ -19,7 +20,7 @@ export default function MainRouting() {
       component: <TableScreen />,
     },
     { path: '/chats', component: <Chats /> },
-    { path: '/group-chat', component: <Chats /> },
+    { path: '/group-chat', component: <GroupChat /> },
     { path: '/about', component: <About /> },
     { path: '/testing', component: <Testing /> },
   ];

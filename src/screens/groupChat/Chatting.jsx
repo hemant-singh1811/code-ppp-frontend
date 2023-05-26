@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import Messages from "../../components/chats/Messages";
+import Messages from "../../components/groupChat/Messages";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../firebase";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,8 +10,8 @@ import DateGenerator from "../../utilities/DateGenerator";
 import ReactTextareaAutosize from "react-textarea-autosize";
 
 export default function Chatting({ userToken, socket }) {
-  // hooks called
-  const load = useSelector((state) => state.load.load);
+  // hooks called 
+
   const dispatch = useDispatch();
   const messageInput = useRef(null);
   const mainChatRef = useRef(null);
@@ -33,12 +33,11 @@ export default function Chatting({ userToken, socket }) {
         to: "",
         typeOfMsg: type,
         url: url || "",
-        fileName: fileName || "",
-        groupId: load?.truck_id[0] || "",
+        fileName: fileName || "", 
         userId: "praditya",
       },
     };
-    socket.emit("send_msg", box, (res) => {
+    socket.emit("sendGroupMsg", box, (res) => {
       console.log("send msg res : ", res);
     });
   };
@@ -241,7 +240,7 @@ export default function Chatting({ userToken, socket }) {
   }, [messages]);
 
   return (
-    <div className='w-full flex flex-col h-[calc(100%-5.8rem)] mainChatBg bg-effect-5'>
+    <div className='w-full flex flex-col h-[calc(100%-0rem)] mainChatBg bg-effect-5'>
       <div
         ref={mainChatRef}
         id='mainChat'
@@ -258,8 +257,10 @@ export default function Chatting({ userToken, socket }) {
             <Messages key={index} messageApi={element} userToken={userToken} />
           );
         })}
+        
         <div ref={messagesEndRef} />
         {/* <ScrollToBottom /> */}
+
       </div>
       {/* {mainChatRef.current?.lastElementChild?.scrollIntoView()} */}
       <div className='flex p-1 items-end gap-1 bg-[#e7e7e6] border-t-[#DBDBDB] border-t-[1px]'>

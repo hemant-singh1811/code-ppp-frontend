@@ -1,7 +1,13 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import _ProfileImage from './_ProfileImage'
 
 export default function _AllFilesMessage({ messageApi, type }) {
+  const { userInfo } = useSelector((state) => state.auth);
+
   return type === "send" ? (
+    <>
+   
     <div className='bg-green-50 self-end p-1  ml-1 rounded-[10px] rounded-br-[0px] relative'>
       <div className='flex items-center'>
         <p className='bg-gray-200 p-1 m-1 rounded-md'>{messageApi.fileName}</p>
@@ -31,8 +37,16 @@ export default function _AllFilesMessage({ messageApi, type }) {
         {messageApi.createdAt}
       </div>
     </div>
+    <_ProfileImage profileInfo={userInfo} />
+
+    </>
   ) : (
+    
+    <>
+              <_ProfileImage profileInfo={messageApi} />
+
     <div className='bg-green-200 self-end p-1  ml-1 rounded-[10px] rounded-bl-[0px] relative'>
+      
       <div className='flex items-center'>
         <p className='bg-gray-200 p-1 m-1 rounded-md'>
           {messageApi.fileName ? messageApi.fileName : "File"}
@@ -62,5 +76,6 @@ export default function _AllFilesMessage({ messageApi, type }) {
         {messageApi.createdAt}
       </div>
     </div>
+    </>
   );
 }
