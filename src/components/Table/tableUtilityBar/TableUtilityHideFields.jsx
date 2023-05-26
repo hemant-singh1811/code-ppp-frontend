@@ -34,7 +34,7 @@ export default function TableUtilityHideFields({ table }) {
         leaveFrom='opacity-100 translate-y-0'
         leaveTo='opacity-0 translate-y-1'
       >
-        <Popover.Panel className='absolute top-10 left-0 z-[3] bg-white w-[300px] max-h-[calc(100vh/_.5)]   p-2 rounded-md overflow-y-auto shadow-custom'>
+        <Popover.Panel className='absolute top-10 left-0 z-[3] bg-white min-w-[300px] max-w-[50vw]  max-h-[90vh]  p-2 rounded-md shadow-custom'>
           <div className='relative'>
             <div className='flex items-center relative mb-4'>
               <svg
@@ -60,7 +60,7 @@ export default function TableUtilityHideFields({ table }) {
               />
             </div>
 
-            <div className=' '>
+            <div className='max-h-[60vh] overflow-y-auto  overflow-x-hidden'>
               {table
                 .getAllLeafColumns()
                 .filter((column) =>
@@ -73,7 +73,7 @@ export default function TableUtilityHideFields({ table }) {
                     !column.columnDef?.primary && (
                       <label
                         key={i}
-                        className='flex items-center text-base gap-4 p-1 hover:bg-black hover:bg-opacity-10 rounded-sm pl-2 cursor-pointer w-full'
+                        className='flex items-center text-base gap-4 p-1 hover:bg-black hover:bg-opacity-10 rounded-sm pl-2 cursor-pointer '
                       >
                         <Switch
                           checked={column.getIsVisible()}
@@ -92,10 +92,10 @@ export default function TableUtilityHideFields({ table }) {
                                 ? "translate-x-[10px]"
                                 : "translate-x-0"
                             }
-            pointer-events-none inline-block h-[8px] w-[8px] transform top-0 rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
+            pointer-events-none inline-block h-[8px] w-[8px] transform top-0 rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out `}
                           />
                         </Switch>
-                        <div className='capitalize truncate'>
+                        <div className='capitalize truncate  '>
                           {column.columnDef.fieldName}
                         </div>
                       </label>

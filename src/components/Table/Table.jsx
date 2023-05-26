@@ -110,9 +110,10 @@ export default function Table({
     if (data) {
       console.log("Get linked table Records", data);
       setTableDataModified(
-        tableData.map(({ data, id }) => {
+        tableData.map(({ data, id }, index) => {
           const object = {};
           defaultColumns.map(({ header, fieldType }) => {
+            // console.log(data?.lastModifiedBy.toString());
             object[header] = data?.[header] || "";
             if (fieldType === "linkedRecords") {
               if (Array.isArray(data?.[header])) {
@@ -123,6 +124,9 @@ export default function Table({
                   };
                 });
               }
+            }
+            if (fieldType === "autoNumber") {
+              object[header] = index + 1;
             }
           });
           object.id52148213343234567 = id;
@@ -145,7 +149,7 @@ export default function Table({
   }
 
   const linkedRecordIdAndDataMap = new Map();
-
+  // console.log(data);
   data.forEach((ele) => {
     ele?.data.forEach(({ id, data }) => {
       linkedRecordIdAndDataMap.set(id, data);

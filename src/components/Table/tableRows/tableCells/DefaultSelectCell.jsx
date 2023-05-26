@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { TableContext } from '../../tableComponents/TableComponents';
+import React, { useContext, useState } from "react";
+import { useSelector } from "react-redux";
+import { TableContext } from "../../tableComponents/TableComponents";
 
-function DefaultSelectCell({ data, indeterminate, className = '', ...rest }) {
+function DefaultSelectCell({ data, indeterminate, className = "", ...rest }) {
   const ref = React.useRef(null);
   const { rowsUtility } = useSelector((state) => state.globalState);
   const [isHover, setIsHover] = useState(false);
@@ -10,7 +10,7 @@ function DefaultSelectCell({ data, indeterminate, className = '', ...rest }) {
   const { selectedColorCondition } = useContext(TableContext);
 
   React.useEffect(() => {
-    if (typeof indeterminate === 'boolean') {
+    if (typeof indeterminate === "boolean") {
       if (ref?.current?.indeterminate) {
         ref.current.indeterminate = !rest?.checked && indeterminate;
       }
@@ -30,7 +30,7 @@ function DefaultSelectCell({ data, indeterminate, className = '', ...rest }) {
       <input
         type='checkbox'
         ref={ref}
-        className={className + ' cursor-pointer'}
+        className={className + " cursor-pointer"}
         {...rest}
       />
     );
@@ -40,7 +40,8 @@ function DefaultSelectCell({ data, indeterminate, className = '', ...rest }) {
     <div
       className='flex h-full items-start'
       onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}>
+      onMouseLeave={handleMouseLeave}
+    >
       <div className='h-full cursor-not-allowed hover:bg-gray-100 min-w-[20px]'>
         {isHover && (
           <svg
@@ -48,15 +49,17 @@ function DefaultSelectCell({ data, indeterminate, className = '', ...rest }) {
             viewBox='0 96 960 960'
             height='20'
             width='20'
-            className='fill-gray-300 my-1 '>
+            className='fill-gray-300 my-1 '
+          >
             <path d='M360 896q-33 0-56.5-23.5T280 816q0-33 23.5-56.5T360 736q33 0 56.5 23.5T440 816q0 33-23.5 56.5T360 896Zm240 0q-33 0-56.5-23.5T520 816q0-33 23.5-56.5T600 736q33 0 56.5 23.5T680 816q0 33-23.5 56.5T600 896ZM360 656q-33 0-56.5-23.5T280 576q0-33 23.5-56.5T360 496q33 0 56.5 23.5T440 576q0 33-23.5 56.5T360 656Zm240 0q-33 0-56.5-23.5T520 576q0-33 23.5-56.5T600 496q33 0 56.5 23.5T680 576q0 33-23.5 56.5T600 656ZM360 416q-33 0-56.5-23.5T280 336q0-33 23.5-56.5T360 256q33 0 56.5 23.5T440 336q0 33-23.5 56.5T360 416Zm240 0q-33 0-56.5-23.5T520 336q0-33 23.5-56.5T600 256q33 0 56.5 23.5T680 336q0 33-23.5 56.5T600 416Z' />
           </svg>
         )}
       </div>
       {data ? (
         <div
-          className='min-w-[20px] h-full  flex items-start justify-start cursor-pointer mt-1'
-          {...rest}>
+          className='min-w-[20px] h-full  flex items-start justify-start cursor-pointer pt-1'
+          {...rest}
+        >
           {!isHover && !rest.checked ? (
             <div className=''>{parseInt(data?.id) + 1}</div>
           ) : (
@@ -75,7 +78,8 @@ function DefaultSelectCell({ data, indeterminate, className = '', ...rest }) {
               selectedColorCondition?.option[
                 data.original[selectedColorCondition?.name]
               ],
-          }}></div>
+          }}
+        ></div>
       </div>
       <div className='h-full min-w-[21px] cursor-not-allowed'>
         {isHover && (
@@ -86,7 +90,8 @@ function DefaultSelectCell({ data, indeterminate, className = '', ...rest }) {
               viewBox='0 0 24 24'
               strokeWidth={1.5}
               stroke='blue'
-              className='w-3 h-3'>
+              className='w-3 h-3'
+            >
               <path
                 strokeLinecap='round'
                 strokeLinejoin='round'

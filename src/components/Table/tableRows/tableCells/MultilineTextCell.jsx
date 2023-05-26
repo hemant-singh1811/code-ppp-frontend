@@ -41,7 +41,6 @@ export default function MultilineTextCell({ cell }) {
           fieldId: cell.column.columnDef.fieldId,
         },
       };
-      console.log(rowObj);
 
       socket.emit("updateData", rowObj, (response) => {
         table.options.meta?.updateData(

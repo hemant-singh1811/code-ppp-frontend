@@ -22,7 +22,7 @@ export default function DateTableCell({ cell }) {
     dateFormat: "d-m-Y",
   };
 
-  function handleDoubleClick() {
+  function handleOnClick() {
     setIsEditMode(true);
   }
 
@@ -62,7 +62,14 @@ export default function DateTableCell({ cell }) {
   }
 
   return (
-    <div className='h-full' ref={ref}>
+    <div
+      className={`h-full ${
+        !isEditMode &&
+        "overflow-hidden text-left w-full h-full break-words truncate px-2 p-1"
+      }`}
+      ref={ref}
+      onClick={handleOnClick}
+    >
       {isEditMode ? (
         <Flatpickr
           value={value}
@@ -84,12 +91,12 @@ export default function DateTableCell({ cell }) {
           options={options}
         />
       ) : (
-        <div
-          className={`overflow-hidden text-left w-full h-full break-words truncate px-2 p-1`}
-          onClick={handleDoubleClick}
+        <
+          // className={`overflow-hidden text-left w-full h-full break-words truncate px-2 p-1`}
+          // onClick={handleOnClick}
         >
           {value && moment(value).format("DD-MM-YYYY")}
-        </div>
+        </>
       )}
     </div>
   );

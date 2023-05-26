@@ -10,6 +10,7 @@ import { TableContext } from "../tableComponents/TableComponents";
 import TableUtilityViews from "./tableViews/TableUtilityViews";
 import {
   handelUpdateModel,
+  handleAddViews,
   handleUpdateSelectedViews,
 } from "../../../store/features/viewsSlice";
 import TableUtilityColor from "./TableUtilityColor";
@@ -21,7 +22,7 @@ export default function TableUtilityBar() {
   const { selectedView, previousSelectedView } = useSelector(
     (state) => state.views
   );
-  const { userToken } = useSelector((state) => state.auth);
+  const { userInfo } = useSelector((state) => state.auth);
   let tabledata = table.options.state;
 
   useEffect(() => {
@@ -40,20 +41,18 @@ export default function TableUtilityBar() {
     //   })
     // );
     // let obj = {
-    //   userToken: userToken,
-    //   model: table.options.state,
-    //   viewId: selectedView?.id,
-    //   previousSelectedView,
+    //   userToken: userInfo.userToken,
+    //   data: {
+    //     model: table.options.state,
+    //     viewId: selectedView?.id,
+    //     previousSelectedView,
+    //   },
     // };
-    // console.log('update views', obj);
-    // if (socket.isConnected) {
-    //   socket.emit('changesaved', obj, (response) => {
-    //     console.log(
-    //       'socket response update views: ' + JSON.stringify(response)
-    //     );
-    //   });
-    // }
-    // dispatch(handleAddViews({ view: 'driver', data: tableStates }));
+    // console.log("update views", obj);
+    // socket.emit("viewChangedSaved", obj, (response) => {
+    //   console.log("socket response update views: " + JSON.stringify(response));
+    // });
+    // dispatch(handleAddViews({ view: "driver", data: tableStates }));
   }, [
     table.options.state.columnVisibility,
     table.options.state.columnSizing,

@@ -11,21 +11,20 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
     useContext(TableContext);
   const { width, height } = useWindowSize();
   let heightOverScan = ((height - 68) / activeRowHeight).toFixed();
-
   const columns = table.getAllColumns();
   const parentRef = React.useRef();
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => activeRowHeight,
-    overscan: heightOverScan,
+    overscan: 0,
   });
 
   return (
     <>
       <div
         ref={parentRef}
-        className='list transition-all text-black transition-all select-none scrollbar-hidden h-[calc(100vh_-_100px)] overflow-x-visible z-[1] relative'
+        className='list transition-all text-black  select-none scrollbar-hidden h-[calc(100vh_-_100px)] overflow-x-visible z-[1] relative'
         // style={{ overflowY: 'auto' }}//do not remove overflow auto if you remove it table virtual row will break
         style={{
           overflowX: "auto",
@@ -34,7 +33,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
         }}
       >
         <div
-          className='tbody scrollbar-hidden mb-40'
+          className='tbody scrollbar-hidden select-none mb-40'
           style={{
             height: `${rowVirtualizer.getTotalSize()}px`,
             position: "relative",
@@ -56,6 +55,15 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                   initialArray={initialArray}
                   activeNumberOfLines={activeNumberOfLines}
                 />
+                // VirtualRow(
+                //   i,
+                //   rowVirtualizer,
+                //   virtualRow,
+                //   row,
+                //   columns,
+                //   activeRowHeight,
+                //   initialArray
+                // )
               );
             })}
           <div
@@ -85,22 +93,32 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
 }
 
 function VirtualRow({
-  virtualRow,
   i,
   rowVirtualizer,
+  virtualRow,
   row,
   columns,
   activeRowHeight,
   initialArray,
-  activeNumberOfLines,
 }) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
   return (
     <div
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       key={virtualRow?.index || i}
       data-index={virtualRow.index}
       ref={rowVirtualizer.measureElement}
       tabIndex={0}
-      className={`row z-0 bg-white ${
+      className={`row z-0 bg-white select-none ${
         row?.getIsSelected() ? "hover:bg-[#f1f6ff]" : "hover:bg-[#F8F8F8]"
       } ${row?.getIsSelected() && "bg-[#f1f6ff]"}`}
       style={{
@@ -115,25 +133,26 @@ function VirtualRow({
     >
       {row?.getVisibleCells().map((cell, i) => {
         return (
-          <TableData
-            activeNumberOfLines={activeNumberOfLines}
-            cell={cell}
-            activeRowHeight={activeRowHeight}
-            row={row}
-            key={cell.id}
-            i={i}
-          />
+          // <TableData
+          //   activeNumberOfLines={activeNumberOfLines}
+          //   cell={cell}
+          //   activeRowHeight={activeRowHeight}
+          //   row={row}
+          //   key={cell.id}
+          //   i={i}
+          // />
+          TableData(cell, activeRowHeight, row, isHovered)
         );
       })}
     </div>
   );
 }
 
-function TableData({ activeNumberOfLines, cell, activeRowHeight, row, i }) {
+function TableData(cell, activeRowHeight, row, isHovered) {
   return (
     <div
       tabIndex={0}
-      className={`cell  mx-auto my-auto text-center `}
+      className={`cell mx-auto my-auto text-center select-none  `}
       key={cell.id}
       {...{
         style: {
@@ -188,6 +207,7 @@ function TableData({ activeNumberOfLines, cell, activeRowHeight, row, i }) {
             row={row}
             fieldType={cell.column.columnDef.fieldType}
             hiddenInConditions={cell.column.columnDef.hiddenInConditions}
+            isHovered={isHovered}
           />
           {/* {console.log(cell.column.columnDef.fieldType)} */}
         </>
