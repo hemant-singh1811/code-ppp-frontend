@@ -152,9 +152,10 @@ export default function TableColumnAdd({ headers }) {
         ...columns,
         {
           ...responseCreateColumn.data,
-          accessorKey: responseCreateColumn.data.fieldName,
-          id: responseCreateColumn.data.fieldName,
-          header: responseCreateColumn.data.fieldName,
+          accessorKey: responseCreateColumn.data.fieldId,
+          id: responseCreateColumn.data.fieldId,
+          header: responseCreateColumn.data.fieldId,
+          minSize: 100,
         },
       ]);
       console.log(responseCreateColumn.data);
@@ -378,32 +379,28 @@ export default function TableColumnAdd({ headers }) {
                     >
                       Cancel
                     </div>
-                    {/* {console.log(fieldNameInput)} */}
                     {selectedFieldType && (
                       <button
                         disabled={!fieldNameInput || isExistFieldNameInput}
-                        onClick={async () => {
+                        onClick={() => {
                           if (fieldSearchInput === "Link to another record") {
                             addColumnApi({
                               baseId: selectedBaseId,
                               data: {
                                 baseId: selectedBaseId,
+                                tableId: selectedTableId,
                                 fieldDescription: fieldDescriptionInput,
                                 fieldName: fieldNameInput,
                                 fieldType: fieldsMap.get(selectedFieldType),
-                                tableId: selectedTableId,
                                 linkedRecord: {
                                   baseId: selectedBaseId,
                                   tableId: tableIdMap.get(
                                     selectedFieldTypeLinkedRecord
                                   ),
-                                  selectedFieldId: "field id",
-                                  selectedFieldName: "Name",
                                 },
                               },
                             });
                           } else {
-                            // console.log("called")
                             addColumnApi({
                               baseId: selectedBaseId,
                               data: {

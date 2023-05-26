@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import { TableContext } from "../../tableComponents/TableComponents";
 
-export default function SingleLineTextCell({ cell }) {
+export default function NumberCell({ cell }) {
   const socket = useSelector((state) => state.socketWebData.socket);
   const [value, setValue] = useState(cell?.getValue() || "");
   const [isEditMode, setIsEditMode] = useState(false);
@@ -11,6 +11,7 @@ export default function SingleLineTextCell({ cell }) {
     (state) => state.globalState
   );
   const userToken = useSelector((state) => state.auth.userInfo?.userToken);
+
   function handleDoubleClick() {
     setIsEditMode(true);
   }
@@ -51,7 +52,7 @@ export default function SingleLineTextCell({ cell }) {
 
   return isEditMode ? (
     <input
-      type='text'
+      type='number'
       value={value}
       onChange={handleChange}
       onBlur={handleBlur}
@@ -67,11 +68,11 @@ export default function SingleLineTextCell({ cell }) {
             : activeNumberOfLines === 1 && 4,
         boxShadow: "0 0 0px 2px inset #166ee1",
       }}
-      className='w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  '
+      className='w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  text-right'
     />
   ) : (
     <div
-      className={`overflow-hidden text-left w-full h-full break-words truncate px-2 p-1  `}
+      className={`overflow-hidden  w-full h-full break-words truncate px-2 p-1 text-right`}
       onClick={handleDoubleClick}
     >
       {value}

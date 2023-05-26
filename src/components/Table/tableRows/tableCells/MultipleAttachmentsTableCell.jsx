@@ -40,173 +40,47 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
     setIsOpen(true);
   }
 
-  function RenderFile({ file, i }) {
-    switch (file?.type.split("/")[0]) {
-      case "image":
-        return (
-          <img
-            onClick={() => {
-              dispatch(
-                handelAddFiles({
-                  files: rowData,
-                  index: i,
-                  cell: cell,
-                  table: table.options.meta?.updateData,
-                })
-              );
-            }}
-            key={i}
-            className='h-full w-auto object-contain border  rounded-sm  cursor-pointer'
-            src={file?.url}
-            alt={file?.name}
-          />
-        );
-      case "video":
-        return (
-          <div
-            onClick={() => {
-              dispatch(
-                handelAddFiles({
-                  files: rowData,
-                  index: i,
-                  cell: cell,
-                  table: table.options.meta?.updateData,
-                })
-              );
-            }}
-            key={i}
-            className=' border h-full rounded-sm flex justify-center items-center cursor-pointer'
-          >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              strokeWidth={1.5}
-              stroke='currentColor'
-              className='w-6 h-6'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z'
-              />
-            </svg>
-          </div>
-        );
-      case "audio":
-        return (
-          <div
-            onClick={() => {
-              dispatch(
-                handelAddFiles({
-                  files: rowData,
-                  index: i,
-                  cell: cell,
-                  table: table.options.meta?.updateData,
-                })
-              );
-            }}
-            key={i}
-            className=' border h-full rounded-sm flex justify-center items-center cursor-pointer'
-          >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              strokeWidth={1.5}
-              stroke='currentColor'
-              className='w-6 h-6'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z'
-              />
-            </svg>
-          </div>
-        );
-      default:
-        return (
-          <div
-            onClick={() => {
-              dispatch(
-                handelAddFiles({
-                  files: rowData,
-                  index: i,
-                  cell: cell,
-                  table: table.options.meta?.updateData,
-                })
-              );
-            }}
-            key={i}
-            className=' border h-full rounded-sm flex justify-center items-center cursor-pointer'
-          >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              strokeWidth={1.5}
-              stroke='currentColor'
-              className='w-6 h-6 m-auto'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z'
-              />
-            </svg>
-          </div>
-
-          // <object
-          //   data={file?.url}
-          //   type={file?.type + '/'}
-          //   // width='100%'
-          //   // height='600px'
-          //   className='w-full h-full flex items-center justify-center'>
-          //   <p>Unable to display file. Please download the file to view it.</p>
-          // </object>
-        );
-    }
-  }
-
   return (
     <div
-      className='h-full overflow-hidden select-none rounded '
+      className='h-full overflow-hidden select-none  w-full px-1 pl-0.5 gap-0.5 p-0.5 rounded flex'
+      tabIndex='-1'
       style={{
-        // boxShadow: "0 0 0px 2px inset #166ee1",
+        // boxShadow: isChildVisible && "0 0 0px 2px inset #166ee1",
         border: isChildVisible && "2px solid #166ee1",
       }}
       onFocus={() => handleFocus()}
       onBlur={() => handleBlur()}
     >
-      <div
-        className='flex h-full w-full items-center  px-1 gap-0.5 p-0.5 rounded '
-        tabIndex='1'
-      >
-        {/* //add new record */}
-        {isChildVisible && (
-          <div
-            onClick={() => {
-              openModal();
-            }}
-            className='cursor-pointer rounded-md h-full bg-black bg-opacity-10 flex items-center text-sm font-medium text-white hover:bg-opacity-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75'
+      {isChildVisible && (
+        <div
+          onClick={() => {
+            openModal();
+          }}
+          className='cursor-pointer p-1 rounded-md h-full w-6 bg-black bg-opacity-10 flex items-center text-sm font-medium text-white hover:bg-opacity-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75'
+        >
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            className=' fill-gray-700'
+            height='24'
+            viewBox='0 96 960 960'
+            width='24'
           >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              className=' fill-gray-700'
-              height='24'
-              viewBox='0 96 960 960'
-              width='24'
-            >
-              <path d='M479.973 836q-8.512 0-14.242-5.75Q460 824.5 460 816V596H240q-8.5 0-14.25-5.758T220 575.973q0-8.512 5.75-14.242Q231.5 556 240 556h220V336q0-8.5 5.758-14.25 5.757-5.75 14.269-5.75t14.242 5.75Q500 327.5 500 336v220h220q8.5 0 14.25 5.758t5.75 14.269q0 8.512-5.75 14.242Q728.5 596 720 596H500v220q0 8.5-5.758 14.25-5.757 5.75-14.269 5.75Z' />
-            </svg>
-          </div>
-        )}
-
-        {Array.isArray(rowData) &&
-          rowData.map((ele, i) => <RenderFile file={ele} i={i} key={i} />)}
-      </div>
-
+            <path d='M479.973 836q-8.512 0-14.242-5.75Q460 824.5 460 816V596H240q-8.5 0-14.25-5.758T220 575.973q0-8.512 5.75-14.242Q231.5 556 240 556h220V336q0-8.5 5.758-14.25 5.757-5.75 14.269-5.75t14.242 5.75Q500 327.5 500 336v220h220q8.5 0 14.25 5.758t5.75 14.269q0 8.512-5.75 14.242Q728.5 596 720 596H500v220q0 8.5-5.758 14.25-5.757 5.75-14.269 5.75Z' />
+          </svg>
+        </div>
+      )}
+      {Array.isArray(rowData) &&
+        rowData.map((ele, i) => (
+          <RenderFile
+            isChildVisible={isChildVisible}
+            file={ele}
+            key={i}
+            i={i}
+            cell={cell}
+            table={table}
+            rowData={rowData}
+          />
+        ))}
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as='div' className='relative z-10' onClose={() => <></>}>
           <Transition.Child
@@ -387,14 +261,14 @@ function FileUploadHandler({ closeModal, cell }) {
           console.log("res : ", response);
           dispatch(handelUpdateFiles(response?.resdata));
           if (cell.getValue() === undefined) {
-            table.options.meta?.updateData(
+            table?.options?.meta?.updateData(
               cell.row.index,
               cell.column.id,
               response?.resdata,
               response.metaData
             );
           } else {
-            table.options.meta?.updateData(
+            table?.options?.meta?.updateData(
               cell.row.index,
               cell.column.id,
               [...response?.resdata, ...cell.getValue()],
@@ -626,4 +500,117 @@ function FileUploadHandler({ closeModal, cell }) {
       </div>
     </div>
   );
+}
+
+function RenderFile({ rowData, file, cell, table, i, isChildVisible }) {
+  const dispatch = useDispatch();
+  // const handelOnClick = () => {
+  //   dispatch(
+  //     handelAddFiles({
+  //       files: rowData,
+  //       index: i,
+  //       cell: cell,
+  //       table: table.options.meta?.updateData,
+  //     })
+  //   );
+  // };
+  switch (file?.type.split("/")[0]) {
+    case "image":
+      return (
+        <img
+          style={{ pointerEvents: !isChildVisible && "none" }}
+          onClick={() => {
+            dispatch(
+              handelAddFiles({
+                files: rowData,
+                index: i,
+                cell: cell,
+                table: table.options.meta?.updateData,
+              })
+            );
+          }}
+          className='h-full w-auto object-contain border  rounded-sm  cursor-pointer'
+          src={file?.url}
+          alt={file?.name}
+        />
+      );
+    case "video":
+      return (
+        <div
+          style={{ pointerEvents: !isChildVisible && "none" }}
+          // onClick={handelOnClick}
+          className=' border h-full rounded-sm flex justify-center items-center cursor-pointer'
+        >
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth={1.5}
+            stroke='currentColor'
+            className='w-6 h-6'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              d='M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z'
+            />
+          </svg>
+        </div>
+      );
+    case "audio":
+      return (
+        <div
+          style={{ pointerEvents: !isChildVisible && "none" }}
+          // onClick={handelOnClick}
+          className=' border h-full rounded-sm flex justify-center items-center cursor-pointer'
+        >
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth={1.5}
+            stroke='currentColor'
+            className='w-6 h-6'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              d='M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z'
+            />
+          </svg>
+        </div>
+      );
+    default:
+      return (
+        <div
+          style={{ pointerEvents: !isChildVisible && "none" }}
+          // onClick={handelOnClick}
+          className=' border h-full rounded-sm flex justify-center items-center cursor-pointer'
+        >
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth={1.5}
+            stroke='currentColor'
+            className='w-6 h-6 m-auto'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              d='M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z'
+            />
+          </svg>
+        </div>
+
+        // <object
+        //   data={file?.url}
+        //   type={file?.type + '/'}
+        //   // width='100%'
+        //   // height='600px'
+        //   className='w-full h-full flex items-center justify-center'>
+        //   <p>Unable to display file. Please download the file to view it.</p>
+        // </object>
+      );
+  }
 }

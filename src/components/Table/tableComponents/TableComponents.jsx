@@ -295,10 +295,10 @@ export default function TableComponents({
 
   // useEffect(() => {
   //   if (selectedView && Object.keys(selectedView?.model).length > 0) {
-  //     console.log('model:', selectedView);
+  //     console.log("model:", selectedView);
   //     table.setState(selectedView?.model);
   //   }
-  //   console.log('model updated', table.options.state);
+  //   console.log("model updated", table.options.state);
   // }, [selectedView?.model]);
 
   return (

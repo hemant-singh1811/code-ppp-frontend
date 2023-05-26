@@ -24,20 +24,7 @@ const FileViewer = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFileIdForRename, setSelectedFileIdForRename] = useState("");
 
-  const handleFileUpload = (e) => {
-    const filesArray = Array.from(e.target.files).map((file) => {
-      return {
-        name: file?.name,
-        type: file?.type.split("/")[0],
-        data: URL.createObjectURL(file),
-      };
-    });
-    setFiles(filesArray);
-    setCurrentFileIndex(0);
-  };
-
   const renderFile = (file) => {
-    // console.log(file?.type.split('/')[0]);
     switch (file?.type.split("/")[0]) {
       case "image":
         return (
@@ -181,14 +168,13 @@ const FileViewer = () => {
     socket.emit("updateData", rowObj, (response) => {
       dispatch(handelRemoveFiles(fileUploadHandleTemp.fileId));
 
-      table.options.meta?.updateData(
+      fileViewer.table?.options?.meta?.updateData(
         cell.row.index,
         cell.column.id,
         fileUploadHandleTemp.fileId,
         response.metaData
       );
 
-      // console.log(fileViewer.files);
       fileViewer.table(
         cell.row.index,
         cell.column.id,
@@ -249,7 +235,6 @@ const FileViewer = () => {
         cell.row.index,
         cell.column.id,
         files.map((ele) => {
-          console.log(ele, editFileName, selectedFileIdForRename);
           if (selectedFileIdForRename === ele.fileId) {
             const copyObj = { ...ele };
             copyObj.name = editFileName;
@@ -273,7 +258,6 @@ const FileViewer = () => {
       closeInnerModal();
     }
   }, [responseRenameFile.isSuccess]);
-
   return (
     <>
       <Transition appear show={fileViewer.isOpen} as={Fragment}>

@@ -75,10 +75,12 @@ export default function TableScreen() {
     })
     .filter((data) => data); // removes empty array
 
+  const uniqueRecordIdSet = new Set();
   for (let [key, value] of multipleRecordLinksMap.entries()) {
-    const uniqueRecordIdSet = new Set();
+    // console.log(key, value);
     getTableDataApi.data.map(({ data }) => {
       if (Array.isArray(data[value?.fieldId])) {
+        // console.log(value?.fieldId, data);
         data[value?.fieldId].map((item) => {
           uniqueRecordIdSet.add(item);
         });
@@ -87,12 +89,15 @@ export default function TableScreen() {
 
     let uniqueRecordIdArray = Array.from(uniqueRecordIdSet);
 
+    console.log("uniqueRecordIdArray", uniqueRecordIdArray);
+
     RecordIdArrayWithTableIdMap.set(key, uniqueRecordIdArray);
   }
 
   let modifiedArrayOfObject = [];
 
   for (let [key, value] of RecordIdArrayWithTableIdMap) {
+    // console.log(key, value);
     modifiedArrayOfObject.push({
       tableId: key,
       recordIds: value,

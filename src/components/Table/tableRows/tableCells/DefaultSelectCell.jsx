@@ -57,7 +57,7 @@ function DefaultSelectCell({ data, indeterminate, className = "", ...rest }) {
       </div>
       {data ? (
         <div
-          className="min-w-[20px] h-full  flex items-start justify-start cursor-pointer mt-1"
+          className="min-w-[20px] h-full  flex items-start justify-start cursor-pointer pt-1"
           {...rest}>
           {!isHover && !rest.checked ? (
             <div className="">{parseInt(data?.id) + 1}</div>
@@ -95,6 +95,7 @@ function DefaultSelectCell({ data, indeterminate, className = "", ...rest }) {
               strokeWidth={1.5}
               stroke="blue"
               className="w-3 h-3">
+              stroke='blue' className='w-3 h-3' >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"

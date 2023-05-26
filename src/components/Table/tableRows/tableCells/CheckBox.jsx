@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { TableContext } from "../../tableComponents/TableComponents";
 import { useRef } from "react";
 
-export default function CheckBox({ cell, rowData }) {
+export default function CheckBox({ cell, rowData, isHovered }) {
   const socket = useSelector((state) => state.socketWebData.socket);
   const { selectedTableId, selectedBaseId } = useSelector(
     (state) => state.globalState
@@ -36,30 +36,22 @@ export default function CheckBox({ cell, rowData }) {
         checkBoxRef.current.checked,
         response.metaData
       );
-      console.log("res : ", response);
     });
   }
 
   return (
-    <div className='w-full h-full flex items-center justify-center cursor-pointer'>
-      <input
-        ref={checkBoxRef}
-        type='checkbox'
-        className='m-auto h-auto'
-        name=''
-        id=''
-        checked={isSelected}
-        onChange={handleUpdate}
-      />
-    </div>
+    (isHovered || isSelected) && (
+      <div className='w-full h-full flex items-center justify-center cursor-pointer'>
+        <input
+          ref={checkBoxRef}
+          type='checkbox'
+          className='m-auto h-auto'
+          name=''
+          id=''
+          checked={isSelected}
+          onChange={handleUpdate}
+        />
+      </div>
+    )
   );
-  // isEditMode ? (
-  //   ) : (
-  //     <div
-  //       className="text-left w-full h-full truncate px-2 p-1"
-  //       onClick={handleDoubleClick}
-  //     >
-  //       {value}
-  //     </div>
-  //   );
 }

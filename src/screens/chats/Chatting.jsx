@@ -21,20 +21,22 @@ export default function Chatting({ userToken, socket }) {
 
   const send = (text, userToken, url, type, file_name) => {
     let box = {
-      createdAt: currentDateTime,
-      deletedForEveryone: "",
-      deletedForMe: "",
-      from: "Praditya",
-      isSeen: "",
-      seenBy: [],
-      text: text,
-      to: "",
-      typeOfMsg: type,
-      url: url || "",
       userToken: userToken,
-      file_name: file_name || "",
-      group_id: load?.truck_id[0] || "",
-      userId: "praditya",
+      data: {
+        createdAt: currentDateTime,
+        deletedForEveryone: "",
+        deletedForMe: "",
+        from: "Praditya",
+        isSeen: "",
+        seenBy: [],
+        text: text,
+        to: "",
+        typeOfMsg: type,
+        url: url || "",
+        file_name: file_name || "",
+        group_id: load?.truck_id[0] || "",
+        userId: "praditya",
+      },
     };
     socket.emit("send_msg", box);
   };

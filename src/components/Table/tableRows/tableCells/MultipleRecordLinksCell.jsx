@@ -14,17 +14,14 @@ let linkedRecord = undefined;
 let fetchedTableColumnsTemp = [];
 
 export default function MultipleRecordLinksCell({ cell, rowData }) {
-  const { columns, setColumns, table } = useContext(TableContext);
-
+  const { columns, table } = useContext(TableContext);
+  // console.log(columns);
   columns.forEach((element) => {
     if (element.fieldId === cell?.column?.id) {
       fetchedTableId = element?.linkedRecord?.tableId;
       linkedRecord = element?.linkedRecord;
     }
   });
-
-  // console.log(rowData);
-  // [linkedRecord?.selectedFieldName]
 
   const socket = useSelector((state) => state.socketWebData.socket);
   const userToken = useSelector((state) => state.auth.userInfo?.userToken);
@@ -107,10 +104,10 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
     let rowObj = {
       userToken: userToken,
       data: {
-        fieldType: cell.column.columnDef.fieldType,
-        fieldId: cell.column.columnDef.fieldId,
         baseId: selectedBaseId,
         tableId: selectedTableId,
+        fieldType: cell.column.columnDef.fieldType,
+        fieldId: cell.column.columnDef.fieldId,
         recordId: rowCopy.id52148213343234567,
         updatedData: ele?.recordId,
         linkedRecord: linkedRecord,
@@ -186,6 +183,7 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
             </svg>
           </div>
         )}
+
         {selectedRowData?.map((ele, i) => {
           return (
             ele && (
@@ -197,9 +195,13 @@ export default function MultipleRecordLinksCell({ cell, rowData }) {
                   {ele?.data?.hasOwnProperty(
                     cell.column.columnDef.linkedRecord.selectedFieldId
                   ) &&
-                    ele.data[
-                      cell.column.columnDef.linkedRecord.selectedFieldId
-                    ]}
+                  ele.data[
+                    cell.column.columnDef.linkedRecord.selectedFieldId
+                  ] !== "" ? (
+                    ele.data[cell.column.columnDef.linkedRecord.selectedFieldId]
+                  ) : (
+                    <div className='opacity-40'>Unnamed Record</div>
+                  )}
                 </div>
                 {isChildVisible && (
                   <svg
