@@ -25,6 +25,8 @@ export default function TableColumnAdd({ headers }) {
   const [selectedFieldTypeLinkedRecord, setSelectedFieldTypeLinkedRecord] =
     React.useState(undefined);
 
+  const [fieldOptions, setFieldOptions] = useState({});
+
   const tableIdMap = new Map();
 
   const existingColumns = new Map();
@@ -144,6 +146,56 @@ export default function TableColumnAdd({ headers }) {
       });
     }
   });
+
+  const onCreateField = () => {
+    if (fieldSearchInput === "Link to another record") {
+      addColumnApi({
+        baseId: selectedBaseId,
+        data: {
+          baseId: selectedBaseId,
+          tableId: selectedTableId,
+          fieldDescription: fieldDescriptionInput,
+          fieldName: fieldNameInput,
+          fieldType: fieldsMap.get(selectedFieldType),
+          linkedRecord: {
+            baseId: selectedBaseId,
+            tableId: tableIdMap.get(selectedFieldTypeLinkedRecord),
+          },
+        },
+      });
+    } else if (fieldSearchInput === "Number") {
+      console.log(fieldOptions);
+      addColumnApi({
+        baseId: selectedBaseId,
+        data: {
+          tableId: selectedTableId,
+          fieldDescription: fieldDescriptionInput,
+          fieldName: fieldNameInput,
+          fieldType: fieldsMap.get(selectedFieldType),
+          baseId: selectedBaseId,
+          fieldOptions,
+        },
+      });
+    } else {
+      addColumnApi({
+        baseId: selectedBaseId,
+        data: {
+          tableId: selectedTableId,
+          fieldDescription: fieldDescriptionInput,
+          fieldName: fieldNameInput,
+          fieldType: fieldsMap.get(selectedFieldType),
+          baseId: selectedBaseId,
+        },
+      });
+    }
+
+    close();
+    setDescriptionToggle(false);
+    setSelectedFieldType(undefined);
+    setFieldSearchInput("");
+    setFieldNameInput("");
+    setFieldDescriptionInput("");
+  };
 
   useEffect(() => {
     if (responseCreateColumn.data) {
@@ -317,7 +369,12 @@ export default function TableColumnAdd({ headers }) {
                   />
                 )}
 
-                {fieldSearchInput === "Number" && <NumberOptions />}
+                {fieldSearchInput === "Number" && (
+                  <NumberOptions
+                    fieldOptions={fieldOptions}
+                    setFieldOptions={setFieldOptions}
+                  />
+                )}
                 {fieldSearchInput === "Currency" && <CurrencyOptions />}
                 {fieldSearchInput === "Percent" && <PercentOptions />}
                 {fieldSearchInput === "Duration" && <DurationOptions />}
@@ -382,44 +439,7 @@ export default function TableColumnAdd({ headers }) {
                     {selectedFieldType && (
                       <button
                         disabled={!fieldNameInput || isExistFieldNameInput}
-                        onClick={() => {
-                          if (fieldSearchInput === "Link to another record") {
-                            addColumnApi({
-                              baseId: selectedBaseId,
-                              data: {
-                                baseId: selectedBaseId,
-                                tableId: selectedTableId,
-                                fieldDescription: fieldDescriptionInput,
-                                fieldName: fieldNameInput,
-                                fieldType: fieldsMap.get(selectedFieldType),
-                                linkedRecord: {
-                                  baseId: selectedBaseId,
-                                  tableId: tableIdMap.get(
-                                    selectedFieldTypeLinkedRecord
-                                  ),
-                                },
-                              },
-                            });
-                          } else {
-                            addColumnApi({
-                              baseId: selectedBaseId,
-                              data: {
-                                tableId: selectedTableId,
-                                fieldDescription: fieldDescriptionInput,
-                                fieldName: fieldNameInput,
-                                fieldType: fieldsMap.get(selectedFieldType),
-                                baseId: selectedBaseId,
-                              },
-                            });
-                          }
-
-                          close();
-                          setDescriptionToggle(false);
-                          setSelectedFieldType(undefined);
-                          setFieldSearchInput("");
-                          setFieldNameInput("");
-                          setFieldDescriptionInput("");
-                        }}
+                        onClick={onCreateField}
                         className='bg-blue-600 rounded-md p-1.5 px-4 text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400'
                       >
                         Create Field
@@ -628,7 +648,7 @@ function LookUpOptions() {
   );
 }
 
-function NumberOptions() {
+function NumberOptions({ fieldOptions, setFieldOptions }) {
   const decimalData = [
     {
       name: "Decimal (1.0)",
@@ -686,6 +706,25 @@ function NumberOptions() {
 
   const [selectedNumberType, setSelectedNumberType] = useState("");
   const [selectedPrecisionType, setSelectedPrecisionType] = useState("");
+
+  if (selectedNumberType) {
+    if (selectedNumberType?.data === "decimal") {
+      if (selectedPrecisionType) {
+        setFieldOptions({
+          options: {
+            fieldType: selectedNumberType,
+            fieldPrecision: selectedPrecisionType,
+          },
+        });
+      }
+    } else if (selectedNumberType?.data === "integer") {
+      setFieldOptions({
+        options: {
+          fieldType: selectedNumberType,
+        },
+      });
+    }
+  }
 
   return (
     <>

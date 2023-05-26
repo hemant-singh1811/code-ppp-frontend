@@ -13,13 +13,17 @@ export default function Chats() {
   useEffect(() => {
     try {
       socket.on("newconnect", (data) => {
-        // console.log("data received: " + JSON.stringify(data));
         console.log("socket connected", socket.id);
       });
 
+      let roomId = {
+        userToken: userToken,
+        data: {},
+      };
+
       let room = () => {
-        socket.emit("joinroom", {
-          userToken: userToken,
+        socket.emit("joinroom", roomId, (res) => {
+          console.log("join room res : ", res);
         });
       };
       room();
@@ -29,14 +33,7 @@ export default function Chats() {
         room();
       });
 
-      socket.on("room_response", (data) => {
-        console.log(data);
-      });
-      socket.on("msg_response", (data) => {
-        console.log(data);
-      });
-
-      socket.on("rec_msg", ({ message }) => {
+      socket.on("responseMessage", ({ message }) => {
         // console.log(message);
         if (message?.userToken !== userToken) {
           console.table(message);
@@ -53,7 +50,7 @@ export default function Chats() {
               typeOfMsg: message?.typeOfMsg,
               url: message?.url,
               userToken: message?.userToken,
-              file_name: message?.file_name,
+              fileName: message?.fileName,
             })
           );
         }

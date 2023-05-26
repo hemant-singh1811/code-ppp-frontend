@@ -4,7 +4,7 @@ export default function _AllFilesMessage({ messageApi, type }) {
   return type === "send" ? (
     <div className='bg-green-50 self-end p-1  ml-1 rounded-[10px] rounded-br-[0px] relative'>
       <div className='flex items-center'>
-        <p className='bg-gray-200 p-1 m-1 rounded-md'>{messageApi.file_name}</p>
+        <p className='bg-gray-200 p-1 m-1 rounded-md'>{messageApi.fileName}</p>
         <a
           // download={`${pdfName}.pdf`}
           target='_blank'
@@ -35,7 +35,7 @@ export default function _AllFilesMessage({ messageApi, type }) {
     <div className='bg-green-200 self-end p-1  ml-1 rounded-[10px] rounded-bl-[0px] relative'>
       <div className='flex items-center'>
         <p className='bg-gray-200 p-1 m-1 rounded-md'>
-          {messageApi.file_name ? messageApi.file_name : "File"}
+          {messageApi.fileName ? messageApi.fileName : "File"}
         </p>
         <a
           href={messageApi.url}

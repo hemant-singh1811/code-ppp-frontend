@@ -19,13 +19,13 @@ export default function Chatting({ userToken, socket }) {
   const { messages } = useSelector((state) => state.message);
   const currentDateTime = DateGenerator();
 
-  const send = (text, userToken, url, type, file_name) => {
+  const send = (text, userToken, url, type, fileName) => {
     let box = {
       userToken: userToken,
       data: {
         createdAt: currentDateTime,
         deletedForEveryone: "",
-        deletedForMe: "",
+        deltedForMe: "",
         from: "Praditya",
         isSeen: "",
         seenBy: [],
@@ -33,12 +33,14 @@ export default function Chatting({ userToken, socket }) {
         to: "",
         typeOfMsg: type,
         url: url || "",
-        file_name: file_name || "",
-        group_id: load?.truck_id[0] || "",
+        fileName: fileName || "",
+        groupId: load?.truck_id[0] || "",
         userId: "praditya",
       },
     };
-    socket.emit("send_msg", box);
+    socket.emit("send_msg", box, (res) => {
+      console.log("send msg res : ", res);
+    });
   };
 
   //input add msg
@@ -77,18 +79,18 @@ export default function Chatting({ userToken, socket }) {
   function uploader(e) {
     const message_id = UniqueCharacterGenerator();
     const file = e.target.files[0];
-    let file_name = file.name;
+    let fileName = file.name;
     const reader = new FileReader();
-    let parts = file_name.split(".");
+    let parts = fileName.split(".");
     let fileType = parts[parts.length - 1];
-    file_name = file_name.slice(0, file_name.length - fileType.length - 1);
-    file_name = `${file_name}.${fileType}`;
+    fileName = fileName.slice(0, fileName.length - fileType.length - 1);
+    fileName = `${fileName}.${fileType}`;
     handlePickUpFileClick.current.value = null;
     reader.readAsDataURL(file);
 
     reader.addEventListener("load", async (e) => {
       // let handleUploading = async () => {
-      const storageRef = ref(storage, file_name);
+      const storageRef = ref(storage, fileName);
       // 'file' comes from the Blob or File API
       try {
         dispatch(
@@ -107,7 +109,7 @@ export default function Chatting({ userToken, socket }) {
             url: e.target.result,
             status: "uploading",
             uploadProgressInPercentage: 0,
-            file_name: file_name,
+            fileName: fileName,
           })
         );
         // const uploadTask = await uploadBytes(storageRef, file);
@@ -139,7 +141,7 @@ export default function Chatting({ userToken, socket }) {
             //     url: e.target.result,
             //     status: "uploading",
             //     uploadProgressInPercentage: progress,
-            //     file_name: file_name,
+            //     fileName: fileName,
             //   })
             // );
             // console.log('Upload is ' + progress + '% done');
@@ -161,7 +163,7 @@ export default function Chatting({ userToken, socket }) {
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
               // console.log('File available at', downloadURL);
               // console.log(downloadURL)
-              send("", userToken, downloadURL, fileType, file_name);
+              send("", userToken, downloadURL, fileType, fileName);
               dispatch(
                 updateMessage({
                   message_id: message_id,
@@ -178,17 +180,17 @@ export default function Chatting({ userToken, socket }) {
                   url: downloadURL,
                   status: "uploaded",
                   uploadProgressInPercentage: 100,
-                  file_name: file_name,
+                  fileName: fileName,
                 })
               );
             });
           }
         );
 
-        // const starsRef = ref(storage, file_name);
+        // const starsRef = ref(storage, fileName);
         //   getDownloadURL(starsRef)
         //     .then((url) => {
-        //       send("", userToken, url, fileType, file_name);
+        //       send("", userToken, url, fileType, fileName);
         //     })
         //     .catch((error) => {
         //       // A full list of error codes is available at

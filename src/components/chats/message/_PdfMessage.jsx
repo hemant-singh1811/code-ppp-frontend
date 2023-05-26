@@ -6,7 +6,7 @@ export default function _PdfMessage({ messageApi, type }) {
       <div className='bg-green-50 self-end p-1 mr-1 rounded-[10px] rounded-br-[0px] relative'>
         <div className='flex items-center'>
           <p className='bg-gray-200 p-1 m-1 rounded-md break-all'>
-            {messageApi.file_name}
+            {messageApi.fileName}
           </p>
           {messageApi.status === "uploading" ? (
             <div className=' z-10'>
@@ -42,7 +42,7 @@ export default function _PdfMessage({ messageApi, type }) {
             </div>
           ) : (
             <a
-              download={messageApi.file_name}
+              download={messageApi.fileName}
               href={messageApi.url}
               className='bg-gray-200 p-1 m-1 ml-0 rounded-md'
               target={"_blank"}
@@ -76,10 +76,10 @@ export default function _PdfMessage({ messageApi, type }) {
       <div className='bg-green-200 self-end p-1  ml-1 rounded-[10px] rounded-bl-[0px] '>
         <div className='flex items-center w-full relative'>
           <div className='bg-gray-200 p-1 m-1 rounded-md break-all'>
-            {messageApi.file_name}
+            {messageApi.fileName}
           </div>
           <a
-            download={`${messageApi.file_name}.pdf`}
+            download={`${messageApi.fileName}.pdf`}
             target='_blank'
             href={messageApi.url}
             className='bg-gray-200 p-1 m-1 ml-0 rounded-md'
