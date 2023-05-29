@@ -13,6 +13,7 @@ import MultipleRecordLinksCell from "./MultipleRecordLinksCell";
 import MultipleAttachmentsTableCell from "./MultipleAttachmentsTableCell";
 import DefaultSelectCell from "./DefaultSelectCell";
 import NumberCell from "./NumberCell";
+import CurrencyCell from "./CurrencyCell";
 
 export function CellByFieldType({
   hiddenInConditions,
@@ -106,6 +107,9 @@ export function CellByFieldType({
 
     case "number": //string
       return <NumberCell cell={cell} />;
+
+    case "currency": //string
+      return <CurrencyCell cell={cell} />;
 
     case "multilineText": //string
       return <MultilineTextCell cell={cell} />;

@@ -104,7 +104,8 @@ let fieldsType = [
   "button",
 ];
 
-export default function TableColumnAdd({ headers }) {
+const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
+  // console.log("firstRender");
   const { columns, setColumns } = useContext(TableContext);
   const { selectedTableId, selectedBaseId } = useSelector(
     (state) => state.globalState
@@ -129,7 +130,7 @@ export default function TableColumnAdd({ headers }) {
   const [selectedFieldTypeLinkedRecord, setSelectedFieldTypeLinkedRecord] =
     React.useState(undefined);
 
-  const [fieldOptions, setFieldOptions] = useState({});
+  const [fieldOptions, setFieldOptions] = useState(null);
 
   const tableIdMap = new Map();
   const existingColumns = new Map();
@@ -152,45 +153,72 @@ export default function TableColumnAdd({ headers }) {
   });
 
   const onCreateField = () => {
-    if (fieldSearchInput === "Link to another record") {
-      addColumnApi({
-        baseId: selectedBaseId,
-        data: {
+    switch (fieldSearchInput) {
+      case "Link to another record":
+        addColumnApi({
           baseId: selectedBaseId,
-          tableId: selectedTableId,
-          fieldDescription: fieldDescriptionInput,
-          fieldName: fieldNameInput,
-          fieldType: fieldsMap.get(selectedFieldType),
-          linkedRecord: {
+          data: {
             baseId: selectedBaseId,
-            tableId: tableIdMap.get(selectedFieldTypeLinkedRecord),
+            tableId: selectedTableId,
+            fieldDescription: fieldDescriptionInput,
+            fieldName: fieldNameInput,
+            fieldType: fieldsMap.get(selectedFieldType),
+            linkedRecord: {
+              baseId: selectedBaseId,
+              tableId: tableIdMap.get(selectedFieldTypeLinkedRecord),
+            },
           },
-        },
-      });
-    } else if (fieldSearchInput === "Number") {
-      console.log(fieldOptions);
-      addColumnApi({
-        baseId: selectedBaseId,
-        data: {
+        });
+        break;
+
+      case "Number":
+        addColumnApi({
+          baseId: selectedBaseId,
+          data: {
+            tableId: selectedTableId,
+            fieldDescription: fieldDescriptionInput,
+            fieldName: fieldNameInput,
+            fieldType: fieldsMap.get(selectedFieldType),
+            baseId: selectedBaseId,
+            fieldOptions,
+          },
+        });
+        break;
+
+      case "Currency":
+        console.log({
           tableId: selectedTableId,
           fieldDescription: fieldDescriptionInput,
           fieldName: fieldNameInput,
           fieldType: fieldsMap.get(selectedFieldType),
           baseId: selectedBaseId,
-          fieldOptions,
-        },
-      });
-    } else {
-      addColumnApi({
-        baseId: selectedBaseId,
-        data: {
-          tableId: selectedTableId,
-          fieldDescription: fieldDescriptionInput,
-          fieldName: fieldNameInput,
-          fieldType: fieldsMap.get(selectedFieldType),
+          currencyFieldOptions: fieldOptions,
+        });
+        addColumnApi({
           baseId: selectedBaseId,
-        },
-      });
+          data: {
+            tableId: selectedTableId,
+            fieldDescription: fieldDescriptionInput,
+            fieldName: fieldNameInput,
+            fieldType: fieldsMap.get(selectedFieldType),
+            baseId: selectedBaseId,
+            currencyFieldOptions: fieldOptions,
+          },
+        });
+        break;
+
+      default:
+        addColumnApi({
+          baseId: selectedBaseId,
+          data: {
+            tableId: selectedTableId,
+            fieldDescription: fieldDescriptionInput,
+            fieldName: fieldNameInput,
+            fieldType: fieldsMap.get(selectedFieldType),
+            baseId: selectedBaseId,
+          },
+        });
+        break;
     }
 
     close();
@@ -254,9 +282,8 @@ export default function TableColumnAdd({ headers }) {
             leaveTo='opacity-0 translate-y-1'
           >
             <Popover.Panel
-              className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4  shadow-custom flex flex-col ${
-                headers.length < 3 ? "left-0" : "right-0"
-              }`}
+              className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4  shadow-custom flex flex-col 
+              ${headers.length < 3 ? "left-0" : "right-0"}`}
             >
               <div className='h-full w-full '>
                 <input
@@ -277,115 +304,28 @@ export default function TableColumnAdd({ headers }) {
                   }}
                 />
 
-                {fieldSearchInput === "Link to another record" && (
-                  <LinkedToAnotherRecordOptions
-                    setFieldSearchInput={setFieldSearchInput}
-                    setFieldNameInput={setFieldNameInput}
-                    setIsExistFieldNameInput={setIsExistFieldNameInput}
-                    setSelectedFieldType={setSelectedFieldType}
-                    selectedFieldTypeLinkedRecord={
-                      selectedFieldTypeLinkedRecord
-                    }
-                    setSelectedFieldTypeLinkedRecord={
-                      setSelectedFieldTypeLinkedRecord
-                    }
-                  />
-                )}
-
                 {isExistFieldNameInput && (
                   <div className='text-red-700 text-sm m-1 '>
                     Please enter a unique field name
                   </div>
                 )}
 
-                {fieldSearchInput !== "Link to another record" && (
-                  <div className='max-h-[calc(100vh_/_2)] mt-2  rounded-md  shadow-input overflow-auto overflow-x-auto '>
-                    <div className='relative ' tabIndex={-1}>
-                      <div className='absolute left-3 top-1/2 transform -translate-y-1/2 z-50 '>
-                        {fieldsMap.get(fieldSearchInput)
-                          ? getSvg(fieldsMap.get(fieldSearchInput))
-                          : getSvg("search")}
-                      </div>
-                      <input
-                        type='search'
-                        className=' w-full px-2  outline-none py-2 pl-11 bg-transparent relative z-10 focus:bg-sky-50  '
-                        placeholder='Find a field type'
-                        value={fieldSearchInput}
-                        onChange={(e) => {
-                          setFieldSearchInput(e.target.value);
-                        }}
-                        onClick={() => {
-                          setSelectedFieldType(undefined);
-                          setFieldSearchInput("");
-                        }}
-                      />
-
-                      <div className='absolute right-3 top-1/2 transform -translate-y-1/2 z-50 cursor-pointer'>
-                        {fieldsMap.get(fieldSearchInput) && getSvg("arrowDown")}
-                      </div>
-                    </div>
-                    {!selectedFieldType && (
-                      <div className='h-4/5 overflow-auto p-1 border-t-[1px]  mb-1'>
-                        {columnType
-                          .filter((ele) => {
-                            return ele
-                              .toLowerCase()
-                              .includes(fieldSearchInput.toLowerCase());
-                          })
-                          .map((field, i) => {
-                            return (
-                              <div
-                                key={i}
-                                onClick={() => {
-                                  setSelectedFieldType(field);
-                                  setFieldSearchInput(field);
-                                }}
-                                className='flex items-center px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md'
-                              >
-                                {getSvg(fieldsType[i])}
-                                <div className='ml-2'>{field}</div>
-                              </div>
-                            );
-                          })}
-
-                        {columnType.filter((ele) => {
-                          return ele
-                            .toLowerCase()
-                            .includes(fieldSearchInput.toLowerCase());
-                        }) <= 0 && (
-                          <dvi className='ml-1 flex gap-2 mt-2'>
-                            {getSvg()} No Options found
-                          </dvi>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {fieldSearchInput === "Lookup" && (
-                  <LookUpOptions
-                    setFieldSearchInput={setFieldSearchInput}
-                    setFieldNameInput={setFieldNameInput}
-                    setIsExistFieldNameInput={setIsExistFieldNameInput}
-                    setSelectedFieldType={setSelectedFieldType}
-                    selectedFieldTypeLinkedRecord={
-                      selectedFieldTypeLinkedRecord
-                    }
-                    setSelectedFieldTypeLinkedRecord={
-                      setSelectedFieldTypeLinkedRecord
-                    }
-                  />
-                )}
-
-                {fieldSearchInput === "Number" && (
-                  <NumberOptions
-                    fieldOptions={fieldOptions}
-                    setFieldOptions={setFieldOptions}
-                  />
-                )}
-                {fieldSearchInput === "Currency" && <CurrencyOptions />}
-                {fieldSearchInput === "Percent" && <PercentOptions />}
-                {fieldSearchInput === "Duration" && <DurationOptions />}
+                <GetFieldByType
+                  type={fieldSearchInput}
+                  setFieldSearchInput={setFieldSearchInput}
+                  setFieldNameInput={setFieldNameInput}
+                  setIsExistFieldNameInput={setIsExistFieldNameInput}
+                  setSelectedFieldType={setSelectedFieldType}
+                  selectedFieldTypeLinkedRecord={selectedFieldTypeLinkedRecord}
+                  setSelectedFieldTypeLinkedRecord={
+                    setSelectedFieldTypeLinkedRecord
+                  }
+                  fieldOptions={fieldOptions}
+                  setFieldOptions={setFieldOptions}
+                  fieldSearchInput={fieldSearchInput}
+                  selectedFieldType={selectedFieldType}
+                  fieldsMap={fieldsMap}
+                />
 
                 {selectedFieldType && (
                   <div className='m-1 text-sm '>
@@ -406,7 +346,7 @@ export default function TableColumnAdd({ headers }) {
                   </div>
                 )}
 
-                <div className='flex  justify-between items-center mt-8'>
+                <div className='flex justify-between items-center mt-8'>
                   <div>
                     <div
                       className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
@@ -447,7 +387,9 @@ export default function TableColumnAdd({ headers }) {
                     {selectedFieldType && (
                       <button
                         disabled={!fieldNameInput || isExistFieldNameInput}
-                        onClick={onCreateField}
+                        onClick={() => {
+                          onCreateField();
+                        }}
                         className='bg-blue-600 rounded-md p-1.5 px-4 text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400'
                       >
                         Create Field
@@ -462,15 +404,205 @@ export default function TableColumnAdd({ headers }) {
       )}
     </Popover>
   );
-}
+});
 
-function GetFieldByType() {
-  switch (key) {
-    case value:
-      break;
+function GetFieldByType({
+  type,
+  setFieldSearchInput,
+  setFieldNameInput,
+  setIsExistFieldNameInput,
+  setSelectedFieldType,
+  selectedFieldTypeLinkedRecord,
+  setSelectedFieldTypeLinkedRecord,
+  fieldOptions,
+  setFieldOptions,
+  fieldSearchInput,
+  selectedFieldType,
+  fieldsMap,
+}) {
+  let SelectedFieldOption = (
+    <div className='max-h-[calc(100vh_/_2)] mt-2  rounded-md  shadow-input overflow-auto overflow-x-auto '>
+      <div className='relative ' tabIndex={-1}>
+        <div className='absolute left-3 top-1/2 transform -translate-y-1/2 z-50 '>
+          {fieldsMap.get(fieldSearchInput)
+            ? getSvg(fieldsMap.get(fieldSearchInput))
+            : getSvg("search")}
+        </div>
+        <input
+          type='search'
+          className=' w-full px-2  outline-none py-2 pl-11 bg-transparent relative z-10 focus:bg-sky-50  '
+          placeholder='Find a field type'
+          value={fieldSearchInput}
+          onChange={(e) => {
+            setFieldSearchInput(e.target.value);
+          }}
+          onClick={() => {
+            setSelectedFieldType(undefined);
+            setFieldSearchInput("");
+          }}
+        />
+
+        <div className='absolute right-3 top-1/2 transform -translate-y-1/2 z-50 cursor-pointer'>
+          {fieldsMap.get(fieldSearchInput) && getSvg("arrowDown")}
+        </div>
+      </div>
+      {!selectedFieldType && (
+        <div className='h-4/5 overflow-auto p-1 border-t-[1px]  mb-1'>
+          {columnType
+            .filter((ele) => {
+              return ele.toLowerCase().includes(fieldSearchInput.toLowerCase());
+            })
+            .map((field, i) => {
+              return (
+                <div
+                  key={i}
+                  onClick={() => {
+                    setSelectedFieldType(field);
+                    setFieldSearchInput(field);
+                  }}
+                  className='flex items-center px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md'
+                >
+                  {getSvg(fieldsType[i])}
+                  <div className='ml-2'>{field}</div>
+                </div>
+              );
+            })}
+
+          {columnType.filter((ele) => {
+            return ele.toLowerCase().includes(fieldSearchInput.toLowerCase());
+          }) <= 0 && (
+            <dvi className='ml-1 flex gap-2 mt-2'>
+              {getSvg()} No Options found
+            </dvi>
+          )}
+        </div>
+      )}
+    </div>
+  );
+
+  console.log(fieldOptions);
+
+  switch (type) {
+    case "Link to another record":
+      return (
+        <>
+          <LinkedToAnotherRecordOptions
+            setFieldSearchInput={setFieldSearchInput}
+            setFieldNameInput={setFieldNameInput}
+            setIsExistFieldNameInput={setIsExistFieldNameInput}
+            setSelectedFieldType={setSelectedFieldType}
+            selectedFieldTypeLinkedRecord={selectedFieldTypeLinkedRecord}
+            setSelectedFieldTypeLinkedRecord={setSelectedFieldTypeLinkedRecord}
+          />
+        </>
+      );
+
+    case "Lookup":
+      return (
+        <LookUpOptions
+          setFieldSearchInput={setFieldSearchInput}
+          setFieldNameInput={setFieldNameInput}
+          setIsExistFieldNameInput={setIsExistFieldNameInput}
+          setSelectedFieldType={setSelectedFieldType}
+          selectedFieldTypeLinkedRecord={selectedFieldTypeLinkedRecord}
+          setSelectedFieldTypeLinkedRecord={setSelectedFieldTypeLinkedRecord}
+        />
+      );
+
+    case "Number":
+      return (
+        <>
+          {SelectedFieldOption}
+          <NumberOptions setFieldOptions={setFieldOptions} />
+        </>
+      );
+
+    case "Currency":
+      return (
+        <>
+          {SelectedFieldOption}
+          <CurrencyOptions setFieldOptions={setFieldOptions} />
+        </>
+      );
+    case "Percent":
+      return (
+        <>
+          {SelectedFieldOption}
+          <PercentOptions setFieldOptions={setFieldOptions} />
+        </>
+      );
+    case "Duration":
+      return (
+        <>
+          {SelectedFieldOption}
+          <DurationOptions setFieldOptions={setFieldOptions} />
+        </>
+      );
 
     default:
-      break;
+      return (
+        <div className='max-h-[calc(100vh_/_2)] mt-2  rounded-md  shadow-input overflow-auto overflow-x-auto '>
+          <div className='relative ' tabIndex={-1}>
+            <div className='absolute left-3 top-1/2 transform -translate-y-1/2 z-50 '>
+              {fieldsMap.get(fieldSearchInput)
+                ? getSvg(fieldsMap.get(fieldSearchInput))
+                : getSvg("search")}
+            </div>
+            <input
+              type='search'
+              className=' w-full px-2  outline-none py-2 pl-11 bg-transparent relative z-10 focus:bg-sky-50  '
+              placeholder='Find a field type'
+              value={fieldSearchInput}
+              onChange={(e) => {
+                setFieldSearchInput(e.target.value);
+              }}
+              onClick={() => {
+                setSelectedFieldType(undefined);
+                setFieldSearchInput("");
+              }}
+            />
+
+            <div className='absolute right-3 top-1/2 transform -translate-y-1/2 z-50 cursor-pointer'>
+              {fieldsMap.get(fieldSearchInput) && getSvg("arrowDown")}
+            </div>
+          </div>
+          {!selectedFieldType && (
+            <div className='h-4/5 overflow-auto p-1 border-t-[1px]  mb-1'>
+              {columnType
+                .filter((ele) => {
+                  return ele
+                    .toLowerCase()
+                    .includes(fieldSearchInput.toLowerCase());
+                })
+                .map((field, i) => {
+                  return (
+                    <div
+                      key={i}
+                      onClick={() => {
+                        setSelectedFieldType(field);
+                        setFieldSearchInput(field);
+                      }}
+                      className='flex items-center px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md'
+                    >
+                      {getSvg(fieldsType[i])}
+                      <div className='ml-2'>{field}</div>
+                    </div>
+                  );
+                })}
+
+              {columnType.filter((ele) => {
+                return ele
+                  .toLowerCase()
+                  .includes(fieldSearchInput.toLowerCase());
+              }) <= 0 && (
+                <dvi className='ml-1 flex gap-2 mt-2'>
+                  {getSvg()} No Options found
+                </dvi>
+              )}
+            </div>
+          )}
+        </div>
+      );
   }
 }
 
@@ -666,7 +798,115 @@ function LookUpOptions() {
   );
 }
 
-function NumberOptions({ fieldOptions, setFieldOptions }) {
+function CurrencyOptions({ setFieldOptions }) {
+  const [decimalPrecisionData, setDecimalPrecisionData] = useState([
+    {
+      name: "$1",
+      icon: "",
+      data: 0,
+    },
+    {
+      name: "$1.0",
+      icon: "",
+      data: 1,
+    },
+    {
+      name: "$1.00",
+      icon: "",
+      data: 2,
+    },
+    {
+      name: "$1.000",
+      icon: "",
+      data: 3,
+    },
+    {
+      name: "$1.0000",
+      icon: "",
+      data: 4,
+    },
+    {
+      name: "$1.00000",
+      icon: "",
+      data: 5,
+    },
+    {
+      name: "$1.000000",
+      icon: "",
+      data: 6,
+    },
+    {
+      name: "$1.0000000",
+      icon: "",
+      data: 7,
+    },
+    {
+      name: "$1.00000000",
+      icon: "",
+      data: 8,
+    },
+  ]);
+
+  const [selectedPrecisionType, setSelectedPrecisionType] = useState(
+    decimalPrecisionData[0]
+  );
+  const [currencyValue, setCurrencyValue] = useState("$");
+
+  useEffect(() => {
+    setFieldOptions({
+      currencyValue: currencyValue,
+      fieldPrecision: selectedPrecisionType.data,
+    });
+  }, [selectedPrecisionType, currencyValue]);
+
+  return (
+    <>
+      <div className='relative mt-2 '>
+        <input
+          value={currencyValue}
+          onChange={(e) => {
+            let value = 1;
+            setCurrencyValue(e.target.value);
+
+            let tempPrecisionData = decimalPrecisionData.map((_, i) => {
+              return {
+                name: e.target.value + (i === 0 ? 1 : value.toFixed(i)),
+                icon: "",
+                data: i,
+              };
+            });
+
+            if (tempPrecisionData)
+              setSelectedPrecisionType(tempPrecisionData[0]);
+
+            setDecimalPrecisionData(tempPrecisionData);
+          }}
+          className='flex items-center border-2  w-full gap-1 text-black bg-white  outline-none focus:border-blue-500 p-1 rounded-md relative'
+        />
+
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          height='20'
+          viewBox='0 96 960 960'
+          width='20'
+          className='absolute z-10  right-1 top-1/2 transform -translate-y-1/2 '
+        >
+          <path d='M480 708 256 484l34-34 190 190 190-190 34 34-224 224Z' />
+        </svg>
+      </div>
+
+      <div className='mt-2 -mb-2 text-sm'>Precision</div>
+      <SelectWithSearch
+        data={decimalPrecisionData}
+        placeholder={"Choose a type of value in this Field"}
+        selectedItem={selectedPrecisionType}
+        setSelectedItem={setSelectedPrecisionType}
+      />
+    </>
+  );
+}
+
+function NumberOptions({ setFieldOptions }) {
   const decimalData = [
     {
       name: "Decimal (1.0)",
@@ -683,66 +923,64 @@ function NumberOptions({ fieldOptions, setFieldOptions }) {
     {
       name: "1.0",
       icon: "",
-      data: "1.0",
+      data: 1,
     },
     {
       name: "1.00",
       icon: "",
-      data: "1.00",
+      data: 2,
     },
     {
       name: "1.000",
       icon: "",
-      data: "1.000",
+      data: 3,
     },
     {
       name: "1.0000",
       icon: "",
-      data: "1.0000",
+      data: 4,
     },
     {
       name: "1.00000",
       icon: "",
-      data: "1.00000",
+      data: 5,
     },
     {
       name: "1.000000",
       icon: "",
-      data: "1.000000",
+      data: 6,
     },
     {
       name: "1.0000000",
       icon: "",
-      data: "1.0000000",
+      data: 7,
     },
     {
       name: "1.00000000",
       icon: "",
-      data: "1.00000000",
+      data: 8,
     },
   ];
 
   const [selectedNumberType, setSelectedNumberType] = useState("");
   const [selectedPrecisionType, setSelectedPrecisionType] = useState("");
 
-  if (selectedNumberType) {
-    if (selectedNumberType?.data === "decimal") {
-      if (selectedPrecisionType) {
+  useEffect(() => {
+    if (selectedNumberType) {
+      if (selectedNumberType?.data === "decimal") {
+        if (selectedPrecisionType) {
+          setFieldOptions({
+            numberType: selectedNumberType.data,
+            fieldPrecision: selectedPrecisionType.data,
+          });
+        }
+      } else if (selectedNumberType?.data === "integer") {
         setFieldOptions({
-          options: {
-            fieldType: selectedNumberType,
-            fieldPrecision: selectedPrecisionType,
-          },
+          numberType: selectedNumberType.data,
         });
       }
-    } else if (selectedNumberType?.data === "integer") {
-      setFieldOptions({
-        options: {
-          fieldType: selectedNumberType,
-        },
-      });
     }
-  }
+  }, [selectedPrecisionType, selectedNumberType]);
 
   return (
     <>
@@ -768,197 +1006,62 @@ function NumberOptions({ fieldOptions, setFieldOptions }) {
   );
 }
 
-function CurrencyOptions() {
-  const [decimalPrecisionData, setDecimalPrecisionData] = useState([
-    {
-      name: "$1",
-      icon: "",
-      data: "$1",
-    },
-    {
-      name: "$1.0",
-      icon: "",
-      data: "$1.0",
-    },
-    {
-      name: "$1.00",
-      icon: "",
-      data: "$1.00",
-    },
-    {
-      name: "$1.000",
-      icon: "",
-      data: "$1.000",
-    },
-    {
-      name: "$1.0000",
-      icon: "",
-      data: "$1.0000",
-    },
-    {
-      name: "$1.00000",
-      icon: "",
-      data: "$1.00000",
-    },
-    {
-      name: "$1.000000",
-      icon: "",
-      data: "$1.000000",
-    },
-    {
-      name: "$1.0000000",
-      icon: "",
-      data: "$1.0000000",
-    },
-    {
-      name: "$1.00000000",
-      icon: "",
-      data: "$1.00000000",
-    },
-  ]);
-
-  const [selectedPrecisionType, setSelectedPrecisionType] = useState(
-    decimalPrecisionData[0]
-  );
-  const [currencyValue, setCurrencyValue] = useState("$");
-
-  return (
-    <>
-      <div className='relative mt-2 '>
-        <input
-          value={currencyValue}
-          onChange={(e) => {
-            let value = 1;
-            setCurrencyValue(e.target.value);
-
-            let tempPrecisionData = decimalPrecisionData.map((_, i) => {
-              return {
-                name: e.target.value + (i === 0 ? 1 : value.toFixed(i)),
-                icon: "",
-                data: e.target.value + (i === 0 ? 1 : value.toFixed(i)),
-              };
-            });
-
-            if (tempPrecisionData)
-              setSelectedPrecisionType(tempPrecisionData[0]);
-
-            setDecimalPrecisionData(tempPrecisionData);
-          }}
-          className='flex items-center border-2  w-full gap-1 text-black bg-white  outline-none focus:border-blue-500 p-1 rounded-md relative'
-        />
-
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          height='20'
-          viewBox='0 96 960 960'
-          width='20'
-          className='absolute z-10  right-1 top-1/2 transform -translate-y-1/2 '
-        >
-          <path d='M480 708 256 484l34-34 190 190 190-190 34 34-224 224Z' />
-        </svg>
-      </div>
-
-      <div className='mt-2 -mb-2 text-sm'>Precision</div>
-      <SelectWithSearch
-        data={decimalPrecisionData}
-        placeholder={"Choose a type of value in this Field"}
-        selectedItem={selectedPrecisionType}
-        setSelectedItem={setSelectedPrecisionType}
-      />
-    </>
-  );
-}
-
-function PercentOptions() {
-  const [decimalPrecisionData, setDecimalPrecisionData] = useState([
-    {
-      name: "1",
-      icon: "",
-      data: "1",
-    },
+function PercentOptions({ setFieldOptions }) {
+  const decimalPrecisionData = [
     {
       name: "1.0",
       icon: "",
-      data: "1.0",
+      data: 1,
     },
     {
       name: "1.00",
       icon: "",
-      data: "1.00",
+      data: 2,
     },
     {
       name: "1.000",
       icon: "",
-      data: "1.000",
+      data: 3,
     },
     {
       name: "1.0000",
       icon: "",
-      data: "1.0000",
+      data: 4,
     },
     {
       name: "1.00000",
       icon: "",
-      data: "1.00000",
+      data: 5,
     },
     {
       name: "1.000000",
       icon: "",
-      data: "1.000000",
+      data: 6,
     },
     {
       name: "1.0000000",
       icon: "",
-      data: "1.0000000",
+      data: 7,
     },
     {
       name: "1.00000000",
       icon: "",
-      data: "1.00000000",
+      data: 8,
     },
-  ]);
+  ];
 
   const [selectedPrecisionType, setSelectedPrecisionType] = useState(
     decimalPrecisionData[0]
   );
-  const [currencyValue, setCurrencyValue] = useState("$");
+
+  useEffect(() => {
+    setFieldOptions({
+      fieldPrecision: selectedPrecisionType.data,
+    });
+  }, [selectedPrecisionType]);
 
   return (
     <>
-      <div className='relative mt-2 '>
-        <input
-          value={currencyValue}
-          onChange={(e) => {
-            let value = 1;
-            setCurrencyValue(e.target.value);
-
-            let tempPrecisionData = decimalPrecisionData.map((_, i) => {
-              return {
-                name: e.target.value + (i === 0 ? 1 : value.toFixed(i)),
-                icon: "",
-                data: e.target.value + (i === 0 ? 1 : value.toFixed(i)),
-              };
-            });
-
-            if (tempPrecisionData)
-              setSelectedPrecisionType(tempPrecisionData[0]);
-
-            setDecimalPrecisionData(tempPrecisionData);
-          }}
-          className='flex items-center border-2  w-full gap-1 text-black bg-white  outline-none focus:border-blue-500 p-1 rounded-md relative'
-        />
-
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          height='20'
-          viewBox='0 96 960 960'
-          width='20'
-          className='absolute z-10  right-1 top-1/2 transform -translate-y-1/2 '
-        >
-          <path d='M480 708 256 484l34-34 190 190 190-190 34 34-224 224Z' />
-        </svg>
-      </div>
-
       <div className='mt-2 -mb-2 text-sm'>Precision</div>
       <SelectWithSearch
         data={decimalPrecisionData}
@@ -970,7 +1073,7 @@ function PercentOptions() {
   );
 }
 
-function DurationOptions() {
+function DurationOptions({ setFieldOptions }) {
   const [selectedDurationFormat, setSelectedDurationFormat] = useState({
     name: "h:mm (e.g. 1:23)",
     icon: "",
@@ -1016,3 +1119,5 @@ function DurationOptions() {
     </>
   );
 }
+
+export default TableColumnAdd;

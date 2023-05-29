@@ -23,7 +23,7 @@ export default function SelectWithSearch({
 
   return (
     <div
-      className={`max-h-[calc(100vh_/_2)] mt-2   rounded-md  cursor-pointer select-none 
+      className={`max-h-[calc(100vh_/_2)] mt-2   rounded-md   cursor-pointer select-none 
       
         `}
       ref={ref}
