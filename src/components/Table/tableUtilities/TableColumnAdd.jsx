@@ -132,6 +132,8 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
 
   const [fieldOptions, setFieldOptions] = useState(null);
 
+  const [isOpen, setIsOpen] = useState(false);
+
   const tableIdMap = new Map();
   const existingColumns = new Map();
   const fieldsMap = new Map();
@@ -186,14 +188,6 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
         break;
 
       case "Currency":
-        console.log({
-          tableId: selectedTableId,
-          fieldDescription: fieldDescriptionInput,
-          fieldName: fieldNameInput,
-          fieldType: fieldsMap.get(selectedFieldType),
-          baseId: selectedBaseId,
-          currencyFieldOptions: fieldOptions,
-        });
         addColumnApi({
           baseId: selectedBaseId,
           data: {
@@ -203,6 +197,34 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
             fieldType: fieldsMap.get(selectedFieldType),
             baseId: selectedBaseId,
             currencyFieldOptions: fieldOptions,
+          },
+        });
+        break;
+
+      case "Percent":
+        addColumnApi({
+          baseId: selectedBaseId,
+          data: {
+            tableId: selectedTableId,
+            fieldDescription: fieldDescriptionInput,
+            fieldName: fieldNameInput,
+            fieldType: fieldsMap.get(selectedFieldType),
+            baseId: selectedBaseId,
+            percentFieldOptions: fieldOptions,
+          },
+        });
+        break;
+
+      case "Duration":
+        addColumnApi({
+          baseId: selectedBaseId,
+          data: {
+            tableId: selectedTableId,
+            fieldDescription: fieldDescriptionInput,
+            fieldName: fieldNameInput,
+            fieldType: fieldsMap.get(selectedFieldType),
+            baseId: selectedBaseId,
+            durationFieldOptions: fieldOptions,
           },
         });
         break;
@@ -388,6 +410,7 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                       <button
                         disabled={!fieldNameInput || isExistFieldNameInput}
                         onClick={() => {
+                          close();
                           onCreateField();
                         }}
                         className='bg-blue-600 rounded-md p-1.5 px-4 text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400'
@@ -1009,6 +1032,11 @@ function NumberOptions({ setFieldOptions }) {
 function PercentOptions({ setFieldOptions }) {
   const decimalPrecisionData = [
     {
+      name: "1",
+      icon: "",
+      data: 0,
+    },
+    {
       name: "1.0",
       icon: "",
       data: 1,
@@ -1106,6 +1134,12 @@ function DurationOptions({ setFieldOptions }) {
       data: "h:mm:ss.sss",
     },
   ];
+
+  useEffect(() => {
+    setFieldOptions({
+      durationFormat: selectedDurationFormat.data,
+    });
+  }, [selectedDurationFormat]);
 
   return (
     <>

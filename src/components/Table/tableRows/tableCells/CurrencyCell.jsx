@@ -61,7 +61,7 @@ export default function CurrencyCell({ cell }) {
 
   return isEditMode ? (
     <input
-      type='number'
+      type='text'
       value={value}
       onChange={handleChange}
       onBlur={handleBlur}
