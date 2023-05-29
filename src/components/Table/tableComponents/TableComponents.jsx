@@ -13,6 +13,7 @@ import {
 } from "@tanstack/react-table";
 import { useDispatch, useSelector } from "react-redux";
 import { handelLinkedRecordsData } from "../../../store/features/globalStateSlice";
+import { ErrorBoundary } from "react-error-boundary";
 
 export const TableContext = React.createContext();
 
@@ -326,7 +327,11 @@ export default function TableComponents({
       <div className=" w-full  overflow-hidden h-screen text-white">
         <TableUtilityBar />
         <CustomTable />
-        {isFormOpen && <FormModal />}
+        {isFormOpen && (
+          <ErrorBoundary fallback={<div>Error</div>}>
+            <FormModal />
+          </ErrorBoundary>
+        )}
       </div>
     </TableContext.Provider>
   );

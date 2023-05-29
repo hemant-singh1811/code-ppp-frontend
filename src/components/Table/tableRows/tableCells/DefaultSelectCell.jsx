@@ -95,7 +95,6 @@ function DefaultSelectCell({ data, indeterminate, className = "", ...rest }) {
               strokeWidth={1.5}
               stroke="blue"
               className="w-3 h-3">
-              stroke='blue' className='w-3 h-3' >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
