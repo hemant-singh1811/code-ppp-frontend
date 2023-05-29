@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import { TableContext } from "../../tableComponents/TableComponents";
 
-export default function NumberCell({ cell }) {
+export default function CurrencyCell({ cell }) {
   const socket = useSelector((state) => state.socketWebData.socket);
   const [value, setValue] = useState(cell?.getValue() || "");
   const [isEditMode, setIsEditMode] = useState(false);
@@ -11,7 +11,7 @@ export default function NumberCell({ cell }) {
     (state) => state.globalState
   );
   const userToken = useSelector((state) => state.auth.userInfo?.userToken);
-  let options = cell.column.columnDef?.fieldOptions;
+  let options = cell.column.columnDef?.currencyFieldOptions;
 
   function handleDoubleClick() {
     setIsEditMode(true);
@@ -20,19 +20,19 @@ export default function NumberCell({ cell }) {
   function handleChange(event) {
     setValue(event.target.value);
   }
-
+  //   console.log(options);
   function handleBlur() {
     setIsEditMode(false);
 
     if (cell.getValue() !== value) {
       let updatedValue = value;
-      if (options?.numberType === "integer") {
-        updatedValue = Number.parseInt(value);
-      } else if (options?.numberType === "decimal") {
-        console.log(value);
-        updatedValue = parseFloat(value).toFixed(options?.fieldPrecision);
-      }
-      console.log("parse float", parseFloat(value));
+
+      //     updatedValue = Number.parseInt(value);
+      updatedValue =
+        options?.numberType +
+        (isNaN(parseFloat(value))
+          ? ""
+          : parseFloat(value).toFixed(options?.fieldPrecision));
       setValue(updatedValue);
 
       let rowObj = {
@@ -61,7 +61,7 @@ export default function NumberCell({ cell }) {
 
   return isEditMode ? (
     <input
-      type='number'
+      type='text'
       value={value}
       onChange={handleChange}
       onBlur={handleBlur}

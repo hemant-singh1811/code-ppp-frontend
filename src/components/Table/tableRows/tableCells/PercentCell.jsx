@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import { TableContext } from "../../tableComponents/TableComponents";
 
-export default function NumberCell({ cell }) {
+export default function PercentCell({ cell }) {
   const socket = useSelector((state) => state.socketWebData.socket);
   const [value, setValue] = useState(cell?.getValue() || "");
   const [isEditMode, setIsEditMode] = useState(false);
@@ -11,9 +11,9 @@ export default function NumberCell({ cell }) {
     (state) => state.globalState
   );
   const userToken = useSelector((state) => state.auth.userInfo?.userToken);
-  let options = cell.column.columnDef?.fieldOptions;
-
-  function handleDoubleClick() {
+  let options = cell.column.columnDef?.percentFieldOptions;
+  //   console.log(value);
+  function handleClick() {
     setIsEditMode(true);
   }
 
@@ -26,13 +26,10 @@ export default function NumberCell({ cell }) {
 
     if (cell.getValue() !== value) {
       let updatedValue = value;
-      if (options?.numberType === "integer") {
-        updatedValue = Number.parseInt(value);
-      } else if (options?.numberType === "decimal") {
-        console.log(value);
-        updatedValue = parseFloat(value).toFixed(options?.fieldPrecision);
-      }
-      console.log("parse float", parseFloat(value));
+
+      updatedValue = isNaN(parseFloat(value))
+        ? ""
+        : parseFloat(value).toFixed(options?.fieldPrecision) + "%";
       setValue(updatedValue);
 
       let rowObj = {
@@ -82,7 +79,7 @@ export default function NumberCell({ cell }) {
   ) : (
     <div
       className={`overflow-hidden  w-full h-full break-words truncate px-2 p-1 text-right`}
-      onClick={handleDoubleClick}
+      onClick={handleClick}
     >
       {value}
     </div>

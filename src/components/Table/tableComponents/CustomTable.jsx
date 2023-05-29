@@ -220,7 +220,7 @@ const reorderColumn = (draggedColumnId, targetColumnId, columnOrder) => {
   return [...columnOrderUpdated];
 };
 
-export default function CustomTable() {
+const CustomTable = React.memo(function CustomTable() {
   const { toggle, table } = useContext(TableContext);
   const { isViewsOpen } = useSelector((state) => state.globalState);
   const tableContainerRef = React.useRef(null);
@@ -275,4 +275,6 @@ export default function CustomTable() {
       </DndProvider>
     </div>
   );
-}
+});
+
+export default CustomTable;

@@ -13,6 +13,9 @@ import MultipleRecordLinksCell from "./MultipleRecordLinksCell";
 import MultipleAttachmentsTableCell from "./MultipleAttachmentsTableCell";
 import DefaultSelectCell from "./DefaultSelectCell";
 import NumberCell from "./NumberCell";
+import CurrencyCell from "./CurrencyCell";
+import PercentCell from "./PercentCell";
+import DurationCell from "./DurationCell";
 
 export function CellByFieldType({
   hiddenInConditions,
@@ -106,6 +109,15 @@ export function CellByFieldType({
 
     case "number": //string
       return <NumberCell cell={cell} />;
+
+    case "currency": //string
+      return <CurrencyCell cell={cell} />;
+
+    case "percent": //string
+      return <PercentCell cell={cell} />;
+
+    case "duration": //string
+      return <DurationCell cell={cell} />;
 
     case "multilineText": //string
       return <MultilineTextCell cell={cell} />;
