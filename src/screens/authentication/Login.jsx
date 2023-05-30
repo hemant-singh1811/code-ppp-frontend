@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../components/utilities/Loading";
 import { userLogin } from "../../store/features/auth/authActions";
+import axios from "axios";
 // import Modal from 'react-modal';
 // import './Modal.css'; // import your custom modal styles
 
@@ -39,6 +40,14 @@ export default function Login() {
       </div>
     );
   }
+
+  const handleGoogleLogin = async () => {
+    try {
+      window.open(`${import.meta.env.VITE_SERVER_URL}/auth/google`, "_self");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <section className="h-screen gradient-form bg-gray-200 md:h-screen w-screen">
@@ -80,8 +89,7 @@ export default function Login() {
                         />
                         <div
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute  z-50 right-2 text-xl cursor-pointer select-none"
-                        >
+                          className="absolute  z-50 right-2 text-xl cursor-pointer select-none">
                           {showPassword ? (
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -89,8 +97,7 @@ export default function Login() {
                               viewBox="0 0 24 24"
                               strokeWidth={1.5}
                               stroke="currentColor"
-                              className="w-5 h-5"
-                            >
+                              className="w-5 h-5">
                               <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -109,8 +116,7 @@ export default function Login() {
                               viewBox="0 0 24 24"
                               strokeWidth={1.5}
                               stroke="currentColor"
-                              className="w-5 h-5"
-                            >
+                              className="w-5 h-5">
                               <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -123,14 +129,20 @@ export default function Login() {
                       <div className="text-center pt-1 mb-12 pb-1">
                         <button
                           className="bg-orange-500 inline-block px-6 py-2.5 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
-                          type="submit"
-                        >
+                          type="submit">
                           Log in
                         </button>
                         {/* <a className='text-gray-500'>Forgot password?</a> */}
+                        {}
                       </div>
                       <div className="flex items-center justify-between pb-6">
                         {/* <p className='mb-0 mr-2'>Don't have an account?</p> */}
+                        <button
+                          className="bg-orange-500 inline-block px-6 py-2.5 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
+                          type="button"
+                          onClick={handleGoogleLogin}>
+                          Log in with Google
+                        </button>
                       </div>
                     </form>
                   </div>
