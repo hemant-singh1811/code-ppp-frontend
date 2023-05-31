@@ -17,11 +17,19 @@ export default function Table({
   multipleRecordLinksArray,
 }) {
   const { toggle } = useSelector((state) => state.globalState.mainSideBar);
-  const { data, isFetching, error, isSuccess } = useGetTableRecordsQuery({
-    data: modifiedArrayOfObject,
-  });
+  const { selectedTableId } = useSelector((state) => state.globalState);
+  const { data, isFetching, error, isSuccess, refetch } =
+    useGetTableRecordsQuery({
+      data: modifiedArrayOfObject,
+    });
   const dispatch = useDispatch();
   // console.log("first");
+
+  useEffect(() => {
+    refetch({
+      data: { tableId: modifiedArrayOfObject },
+    });
+  }, [selectedTableId]);
 
   useEffect(() => {
     dispatch(handelAddInitialState(tableView));
@@ -72,7 +80,7 @@ export default function Table({
     enableHiding: false,
     header: ({ table }) => (
       <IndeterminateCheckbox
-        className="-ml-[10px]"
+        className='-ml-[10px]'
         checked={table.getIsAllRowsSelected()}
         indeterminate={table.getIsSomeRowsSelected()}
         onChange={table.getToggleAllRowsSelectedHandler()}
@@ -161,7 +169,7 @@ export default function Table({
   // }
 
   return (
-    <div className="relative overflow-hidden">
+    <div className='relative overflow-hidden'>
       <TableComponents
         toggle={toggle}
         defaultColumns={defaultColumns}
