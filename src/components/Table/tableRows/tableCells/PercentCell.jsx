@@ -15,10 +15,16 @@ export default function PercentCell({ cell }) {
   //   console.log(value);
   function handleClick() {
     setIsEditMode(true);
+    console.log(value);
   }
 
   function handleChange(event) {
-    setValue(event.target.value);
+    const arr = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "%"];
+    if (arr.includes(event.target.value[event.target.value.length - 1])) {
+      setValue(event.target.value);
+    } else if (event.target.value === "") {
+      setValue(event.target.value);
+    }
   }
 
   function handleBlur() {
@@ -29,7 +35,7 @@ export default function PercentCell({ cell }) {
 
       updatedValue = isNaN(parseFloat(value))
         ? ""
-        : parseFloat(value).toFixed(options?.fieldPrecision) + "%";
+        : parseFloat(value).toFixed(options?.fieldPrecision);
       setValue(updatedValue);
 
       let rowObj = {
@@ -58,7 +64,7 @@ export default function PercentCell({ cell }) {
 
   return isEditMode ? (
     <input
-      type='number'
+      type="text"
       value={value}
       onChange={handleChange}
       onBlur={handleBlur}
@@ -74,14 +80,13 @@ export default function PercentCell({ cell }) {
             : activeNumberOfLines === 1 && 4,
         boxShadow: "0 0 0px 2px inset #166ee1",
       }}
-      className='w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  text-right'
+      className="w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  text-right"
     />
   ) : (
     <div
       className={`overflow-hidden  w-full h-full break-words truncate px-2 p-1 text-right`}
-      onClick={handleClick}
-    >
-      {value}
+      onClick={handleClick}>
+      {value ? `${value}%` : ""}
     </div>
   );
 }

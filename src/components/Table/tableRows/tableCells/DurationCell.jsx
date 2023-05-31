@@ -17,10 +17,6 @@ export default function DurationCell({ cell }) {
     setIsEditMode(true);
   }
 
-  function handleChange(event) {
-    setValue(event.target.value);
-  }
-
   const duration = (type, value) => {
     let hours = 0,
       min = 0,
@@ -97,10 +93,20 @@ export default function DurationCell({ cell }) {
     }
   }
 
+  function handleChange(event) {
+    const arr = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ":", "."];
+    if (arr.includes(event.target.value[event.target.value.length - 1])) {
+      setValue(event.target.value);
+    } else if (event.target.value === "") {
+      setValue(event.target.value);
+    } else {
+      setValue(event.target.value[event.target.value.length - 1]);
+    }
+  }
+
   return isEditMode ? (
     <input
-      type='text'
-      pattern='[0-9]*'
+      type="text"
       value={value}
       onChange={handleChange}
       onBlur={handleBlur}
@@ -116,13 +122,12 @@ export default function DurationCell({ cell }) {
             : activeNumberOfLines === 1 && 4,
         boxShadow: "0 0 0px 2px inset #166ee1",
       }}
-      className='w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  text-right'
+      className="w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  text-right"
     />
   ) : (
     <div
       className={`overflow-hidden  w-full h-full break-words truncate px-2 p-1 text-right`}
-      onClick={handleDoubleClick}
-    >
+      onClick={handleDoubleClick}>
       {value}
     </div>
   );
