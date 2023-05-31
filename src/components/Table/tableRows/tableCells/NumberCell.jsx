@@ -23,16 +23,15 @@ export default function NumberCell({ cell }) {
 
   function handleBlur() {
     setIsEditMode(false);
-
     if (cell.getValue() !== value) {
       let updatedValue = value;
       if (options?.numberType === "integer") {
         updatedValue = Number.parseInt(value);
       } else if (options?.numberType === "decimal") {
-        console.log(value);
-        updatedValue = parseFloat(value).toFixed(options?.fieldPrecision);
+        console.log("decimal Vlaue", value);
+        updatedValue =
+          value !== "" && parseFloat(value).toFixed(options?.fieldPrecision);
       }
-      console.log("parse float", parseFloat(value));
       setValue(updatedValue);
 
       let rowObj = {
@@ -61,7 +60,7 @@ export default function NumberCell({ cell }) {
 
   return isEditMode ? (
     <input
-      type='number'
+      type="number"
       value={value}
       onChange={handleChange}
       onBlur={handleBlur}
@@ -77,13 +76,12 @@ export default function NumberCell({ cell }) {
             : activeNumberOfLines === 1 && 4,
         boxShadow: "0 0 0px 2px inset #166ee1",
       }}
-      className='w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  text-right'
+      className="w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  text-right"
     />
   ) : (
     <div
       className={`overflow-hidden  w-full h-full break-words truncate px-2 p-1 text-right`}
-      onClick={handleDoubleClick}
-    >
+      onClick={handleDoubleClick}>
       {value}
     </div>
   );
