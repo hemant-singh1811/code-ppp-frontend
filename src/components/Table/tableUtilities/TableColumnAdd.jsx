@@ -30,6 +30,7 @@ const selectedOptionDescription = {
     "Enter a duration of time in hours, minutes or seconds (e.g. 1:23).",
   Rating: "Add a rating on a predefined scale.",
   Formula: "Compute values based on fields.",
+  Count: "Count the number of linked records.",
   "Created time": "See the date and time each record was created.",
   "Last modified time":
     "See the date and time of the most recent edit to some or all fields in a record.",
@@ -69,8 +70,8 @@ let columnType = [
   "Created by",
   "Last modified by",
   "Autonumber",
-  "barcode",
-  "button",
+  "Barcode",
+  "Button",
 ];
 
 let fieldsType = [
@@ -229,6 +230,48 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
         });
         break;
 
+      case "Rating":
+        addColumnApi({
+          baseId: selectedBaseId,
+          data: {
+            tableId: selectedTableId,
+            fieldDescription: fieldDescriptionInput,
+            fieldName: fieldNameInput,
+            fieldType: fieldsMap.get(selectedFieldType),
+            baseId: selectedBaseId,
+            ratingFieldOptions: fieldOptions,
+          },
+        });
+        break;
+
+      case "Button":
+        addColumnApi({
+          baseId: selectedBaseId,
+          data: {
+            tableId: selectedTableId,
+            fieldDescription: fieldDescriptionInput,
+            fieldName: fieldNameInput,
+            fieldType: fieldsMap.get(selectedFieldType),
+            baseId: selectedBaseId,
+            buttonFieldOptions: fieldOptions,
+          },
+        });
+        break;
+
+      case "Count":
+        addColumnApi({
+          baseId: selectedBaseId,
+          data: {
+            tableId: selectedTableId,
+            fieldDescription: fieldDescriptionInput,
+            fieldName: fieldNameInput,
+            fieldType: fieldsMap.get(selectedFieldType),
+            baseId: selectedBaseId,
+            countFieldOptions: fieldOptions,
+          },
+        });
+        break;
+
       default:
         addColumnApi({
           baseId: selectedBaseId,
@@ -333,6 +376,7 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                 )}
 
                 <GetFieldByType
+                  columns={columns}
                   type={fieldSearchInput}
                   setFieldSearchInput={setFieldSearchInput}
                   setFieldNameInput={setFieldNameInput}
@@ -442,6 +486,7 @@ function GetFieldByType({
   fieldSearchInput,
   selectedFieldType,
   fieldsMap,
+  columns,
 }) {
   let SelectedFieldOption = (
     <div className='max-h-[calc(100vh_/_2)] mt-2  rounded-md  shadow-input overflow-auto overflow-x-auto '>
@@ -559,6 +604,27 @@ function GetFieldByType({
         <>
           {SelectedFieldOption}
           <DurationOptions setFieldOptions={setFieldOptions} />
+        </>
+      );
+    case "Rating":
+      return (
+        <>
+          {SelectedFieldOption}
+          <RatingOptions setFieldOptions={setFieldOptions} />
+        </>
+      );
+    case "Button":
+      return (
+        <>
+          {SelectedFieldOption}
+          <ButtonOptions columns={columns} setFieldOptions={setFieldOptions} />
+        </>
+      );
+    case "Count":
+      return (
+        <>
+          {SelectedFieldOption}
+          <CountOptions columns={columns} setFieldOptions={setFieldOptions} />
         </>
       );
 
@@ -1150,6 +1216,184 @@ function DurationOptions({ setFieldOptions }) {
         selectedItem={selectedDurationFormat}
         setSelectedItem={setSelectedDurationFormat}
       />
+    </>
+  );
+}
+
+function RatingOptions({ setFieldOptions }) {
+  const [selectedRatingFormat, setSelectedRatingFormat] = useState({
+    name: "5",
+    icon: "",
+    data: 5,
+  });
+  const ratingData = [
+    {
+      name: "1",
+      icon: "",
+      data: 1,
+    },
+    {
+      name: "2",
+      icon: "",
+      data: 2,
+    },
+    {
+      name: "3",
+      icon: "",
+      data: 3,
+    },
+    {
+      name: "4",
+      icon: "",
+      data: 4,
+    },
+    {
+      name: "5",
+      icon: "",
+      data: 5,
+    },
+    {
+      name: "6",
+      icon: "",
+      data: 6,
+    },
+    {
+      name: "7",
+      icon: "",
+      data: 7,
+    },
+    {
+      name: "8",
+      icon: "",
+      data: 8,
+    },
+    {
+      name: "9",
+      icon: "",
+      data: 9,
+    },
+    {
+      name: "10",
+      icon: "",
+      data: 10,
+    },
+  ];
+
+  useEffect(() => {
+    setFieldOptions({
+      ratingFormat: selectedRatingFormat.data,
+    });
+  }, [selectedRatingFormat]);
+
+  return (
+    <>
+      <div className='mt-2 -mb-2 text-sm'>Duration Format</div>
+      <SelectWithSearch
+        data={ratingData}
+        placeholder={"Choose a type of value in this Field"}
+        selectedItem={selectedRatingFormat}
+        setSelectedItem={setSelectedRatingFormat}
+      />
+    </>
+  );
+}
+
+function ButtonOptions({ setFieldOptions, columns }) {
+  let fieldData = columns
+    .map(({ fieldName, fieldType, id }) => {
+      return {
+        name: fieldName,
+        icon: fieldType,
+        data: id,
+      };
+    })
+    .filter((ele) => ele.name);
+  const [selectedLinkedField, setSelectedLinkedField] = useState(fieldData[0]);
+
+  const [label, setLabel] = useState("Open URL");
+
+  useEffect(() => {
+    setFieldOptions({
+      selectedFieldId: selectedLinkedField?.data,
+      label: label,
+      background: "#ffffff",
+      color: "#000000",
+    });
+  }, [selectedLinkedField]);
+
+  return (
+    <>
+      <div className='mt-2 -mb-2 text-sm'>Label</div>
+      <div className='relative mt-2 '>
+        <input
+          value={label}
+          onChange={(e) => {
+            setLabel(e.target.value);
+          }}
+          className='flex items-center border-2  w-full gap-1 text-black bg-white  outline-none focus:border-blue-500 p-1 rounded-md relative'
+        />
+
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          height='20'
+          viewBox='0 96 960 960'
+          width='20'
+          className='absolute z-10  right-1 top-1/2 transform -translate-y-1/2 '
+        >
+          <path d='M480 708 256 484l34-34 190 190 190-190 34 34-224 224Z' />
+        </svg>
+      </div>
+
+      <div className='mt-2 -mb-2 text-sm'>Duration Format</div>
+      <SelectWithSearch
+        data={fieldData}
+        placeholder={"Choose a type of value in this Field"}
+        selectedItem={selectedLinkedField}
+        setSelectedItem={setSelectedLinkedField}
+      />
+    </>
+  );
+}
+
+function CountOptions({ setFieldOptions, columns }) {
+  let linkedTableData = columns
+    .map(({ fieldType, id, linkedRecord }) => {
+      if (linkedRecord) {
+        return {
+          name: linkedRecord.tableName,
+          icon: fieldType,
+          data: id,
+        };
+      }
+    })
+    .filter((ele) => ele?.name);
+  const [selectedLinkedField, setSelectedLinkedField] = useState(
+    linkedTableData[0]
+  );
+
+  useEffect(() => {
+    setFieldOptions({
+      selectedFieldId: selectedLinkedField?.data,
+    });
+  }, [selectedLinkedField]);
+
+  return (
+    <>
+      {linkedTableData.length > 0 ? (
+        <>
+          <div className='mt-2 -mb-2 text-sm'>
+            Linked record field to use for count
+          </div>
+          <SelectWithSearch
+            data={linkedTableData}
+            placeholder={"Choose a type of value in this Field"}
+            selectedItem={selectedLinkedField}
+            setSelectedItem={setSelectedLinkedField}
+          />
+        </>
+      ) : (
+        <div className='mt-2 -mb-2 text-sm'>No Linked Table Found</div>
+      )}
     </>
   );
 }
