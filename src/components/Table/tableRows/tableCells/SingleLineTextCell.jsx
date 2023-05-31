@@ -1,10 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { TableContext } from "../../tableComponents/TableComponents";
 
 export default function SingleLineTextCell({ cell }) {
+  let val = cell?.getValue();
   const socket = useSelector((state) => state.socketWebData.socket);
-  const [value, setValue] = useState(cell?.getValue() || "");
+  const [value, setValue] = useState(val || "");
   const [isEditMode, setIsEditMode] = useState(false);
   const { table, activeNumberOfLines } = useContext(TableContext);
   const { selectedBaseId, selectedTableId } = useSelector(
@@ -14,6 +15,10 @@ export default function SingleLineTextCell({ cell }) {
   function handleDoubleClick() {
     setIsEditMode(true);
   }
+
+  useEffect(() => {
+    setValue(val);
+  }, [val]);
 
   function handleChange(event) {
     setValue(event.target.value);
@@ -74,7 +79,7 @@ export default function SingleLineTextCell({ cell }) {
       className={`overflow-hidden text-left w-full h-full break-words truncate px-2 p-1  `}
       onClick={handleDoubleClick}
     >
-      {value}
+      {value || ""}
     </div>
   );
 }

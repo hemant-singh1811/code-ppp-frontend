@@ -16,6 +16,8 @@ import NumberCell from "./NumberCell";
 import CurrencyCell from "./CurrencyCell";
 import PercentCell from "./PercentCell";
 import DurationCell from "./DurationCell";
+import CountCell from "./CountCell";
+import RatingCell from "./RatingCell";
 
 export function CellByFieldType({
   hiddenInConditions,
@@ -63,7 +65,7 @@ export function CellByFieldType({
           rowData={cell?.getValue()}
         />
       ) : (
-        <div className="w-full h-full overflow-hidden">
+        <div className='w-full h-full overflow-hidden'>
           {console.log(
             "not getting array in single select",
             typeof cell?.getValue()
@@ -82,7 +84,7 @@ export function CellByFieldType({
           rowData={cell?.getValue()}
         />
       ) : (
-        <div className="w-full h-full overflow-hidden">
+        <div className='w-full h-full overflow-hidden'>
           {console.warn("not getting array in multi select", cell?.getValue())}
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </div>
@@ -119,6 +121,15 @@ export function CellByFieldType({
     case "duration": //string
       return <DurationCell cell={cell} />;
 
+    case "button": //string
+      return <ButtonCell cell={cell} />;
+
+    case "count": //string
+      return <CountCell cell={cell} />;
+
+    case "rating": //string
+      return <RatingCell cell={cell} />;
+
     case "multilineText": //string
       return <MultilineTextCell cell={cell} />;
 
@@ -151,7 +162,7 @@ export function CellByFieldType({
 
     default:
       return (
-        <div className="w-full h-full overflow-hidden flex items-center justify-center bg-transparent">
+        <div className='w-full h-full overflow-hidden flex items-center justify-center bg-transparent'>
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </div>
       );
