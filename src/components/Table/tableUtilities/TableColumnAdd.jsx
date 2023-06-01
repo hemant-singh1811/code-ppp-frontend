@@ -6,6 +6,7 @@ import { Popover, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import getSvg from "./getSvg";
 import SelectWithSearch from "./SelectWithSearch";
+import { usePopper } from "react-popper";
 
 const selectedOptionDescription = {
   "Single line text":
@@ -51,7 +52,7 @@ let columnType = [
   "Checkbox",
   "Single Select",
   "Multiple select",
-  "User",
+  // "User",
   "Date",
   "Phone number",
   "Email",
@@ -61,8 +62,8 @@ let columnType = [
   "Percent",
   "Duration",
   "Rating",
-  "Formula",
-  "Rollup",
+  // "Formula",
+  // "Rollup",
   "Count",
   "Lookup",
   "Created time",
@@ -82,7 +83,7 @@ let fieldsType = [
   "checkbox",
   "singleSelect",
   "multipleSelect",
-  "user",
+  // "user",
   "date",
   "phoneNumber",
   "email",
@@ -92,8 +93,8 @@ let fieldsType = [
   "percent",
   "duration",
   "rating",
-  "formula",
-  "rollup",
+  // "formula",
+  // "rollup",
   "count",
   "lookup",
   "createdTime",
@@ -106,7 +107,6 @@ let fieldsType = [
 ];
 
 const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
-  // console.log("firstRender");
   const { columns, setColumns } = useContext(TableContext);
   const { selectedTableId, selectedBaseId } = useSelector(
     (state) => state.globalState
@@ -133,7 +133,9 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
 
   const [fieldOptions, setFieldOptions] = useState(null);
 
-  const [isOpen, setIsOpen] = useState(false);
+  let [referenceElement, setReferenceElement] = useState();
+  let [popperElement, setPopperElement] = useState();
+  let { styles, attributes } = usePopper(referenceElement, popperElement);
 
   const tableIdMap = new Map();
   const existingColumns = new Map();
@@ -312,164 +314,175 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
   }, [responseCreateColumn.isSuccess]);
 
   return (
-    <Popover className='relative select-none'>
-      {({ open, close }) => (
-        <>
-          <Popover.Button
-            className='outline-none w-[120px]  th bg-[#f5f5f5] h-8'
-            style={{ height: 32 }}
-          >
-            <div className='capitalize text-left text-lg font-normal select-none px-2 truncate w-full flex justify-center items-center cursor-pointer h-8'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='currentColor'
-                className='w-6 h-6'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M12 4.5v15m7.5-7.5h-15'
-                />
-              </svg>
-            </div>
-          </Popover.Button>
-          <Transition
-            className='bg-white'
-            as={Fragment}
-            enter='transition ease-out duration-200'
-            enterFrom='opacity-0 translate-y-1'
-            enterTo='opacity-100 translate-y-0'
-            leave='transition ease-in duration-150'
-            leaveFrom='opacity-100 translate-y-0'
-            leaveTo='opacity-0 translate-y-1'
-          >
-            <Popover.Panel
-              className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4  shadow-custom flex flex-col 
-              ${headers.length < 3 ? "left-0" : "right-0"}`}
+    <div className='relative'>
+      <Popover className='relative select-none'>
+        {({ open, close }) => (
+          <>
+            <Popover.Button
+              onClick={() => console.log(open)}
+              ref={setReferenceElement}
+              className='outline-none w-[120px]  th bg-[#f5f5f5] h-8'
+              style={{ height: 32 }}
             >
-              <div className='h-full w-full '>
-                <input
-                  type='text'
-                  placeholder='Field Name (Mandatory)'
-                  className={`w-full  p-1.5  rounded-md  outline-none shadow-input  border-2  ${
-                    isExistFieldNameInput
-                      ? "border-red-500 focus:border-red-500"
-                      : "focus:border-blue-500 border-transparent"
-                  }  `}
-                  value={fieldNameInput}
-                  autoFocus
-                  onChange={(e) => {
-                    setFieldNameInput(e.target.value);
-                    existingColumns.get(e.target.value.toLocaleLowerCase())
-                      ? setIsExistFieldNameInput(true)
-                      : setIsExistFieldNameInput(false);
-                  }}
-                />
+              <div className='capitalize text-left text-lg font-normal select-none px-2 truncate w-full flex justify-center items-center cursor-pointer h-8'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='w-6 h-6'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M12 4.5v15m7.5-7.5h-15'
+                  />
+                </svg>
+              </div>
+            </Popover.Button>
+            <Transition
+              className='bg-white'
+              as={Fragment}
+              enter='transition ease-out duration-200'
+              enterFrom='opacity-0 translate-y-1'
+              enterTo='opacity-100 translate-y-0'
+              leave='transition ease-in duration-150'
+              leaveFrom='opacity-100 translate-y-0'
+              leaveTo='opacity-0 translate-y-1'
+            >
+              <Popover.Panel
+                ref={setPopperElement}
+                style={styles.popper}
+                {...attributes.popper}
+                className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4  shadow-custom flex flex-col 
+              ${headers.length < 3 ? "left-0" : "right-0"}`}
+              >
+                <div className='h-full w-full '>
+                  <input
+                    type='text'
+                    placeholder='Field Name (Mandatory)'
+                    className={`w-full  p-1.5  rounded-md  outline-none shadow-input  border-2  ${
+                      isExistFieldNameInput
+                        ? "border-red-500 focus:border-red-500"
+                        : "focus:border-blue-500 border-transparent"
+                    }  `}
+                    value={fieldNameInput}
+                    autoFocus
+                    onChange={(e) => {
+                      setFieldNameInput(e.target.value);
+                      existingColumns.get(e.target.value.toLocaleLowerCase())
+                        ? setIsExistFieldNameInput(true)
+                        : setIsExistFieldNameInput(false);
+                    }}
+                  />
 
-                {isExistFieldNameInput && (
-                  <div className='text-red-700 text-sm m-1 '>
-                    Please enter a unique field name
-                  </div>
-                )}
+                  {isExistFieldNameInput && (
+                    <div className='text-red-700 text-sm m-1 '>
+                      Please enter a unique field name
+                    </div>
+                  )}
 
-                <GetFieldByType
-                  columns={columns}
-                  type={fieldSearchInput}
-                  setFieldSearchInput={setFieldSearchInput}
-                  setFieldNameInput={setFieldNameInput}
-                  setIsExistFieldNameInput={setIsExistFieldNameInput}
-                  setSelectedFieldType={setSelectedFieldType}
-                  selectedFieldTypeLinkedRecord={selectedFieldTypeLinkedRecord}
-                  setSelectedFieldTypeLinkedRecord={
-                    setSelectedFieldTypeLinkedRecord
-                  }
-                  fieldOptions={fieldOptions}
-                  setFieldOptions={setFieldOptions}
-                  fieldSearchInput={fieldSearchInput}
-                  selectedFieldType={selectedFieldType}
-                  fieldsMap={fieldsMap}
-                />
+                  <GetFieldByType
+                    columns={columns}
+                    type={fieldSearchInput}
+                    setFieldSearchInput={setFieldSearchInput}
+                    setFieldNameInput={setFieldNameInput}
+                    setIsExistFieldNameInput={setIsExistFieldNameInput}
+                    setSelectedFieldType={setSelectedFieldType}
+                    selectedFieldTypeLinkedRecord={
+                      selectedFieldTypeLinkedRecord
+                    }
+                    setSelectedFieldTypeLinkedRecord={
+                      setSelectedFieldTypeLinkedRecord
+                    }
+                    fieldOptions={fieldOptions}
+                    setFieldOptions={setFieldOptions}
+                    fieldSearchInput={fieldSearchInput}
+                    selectedFieldType={selectedFieldType}
+                    fieldsMap={fieldsMap}
+                  />
 
-                {selectedFieldType && (
-                  <div className='m-1 text-sm '>
-                    {selectedOptionDescription[selectedFieldType]}
-                  </div>
-                )}
+                  {selectedFieldType && (
+                    <div className='m-1 text-sm '>
+                      {selectedOptionDescription[selectedFieldType]}
+                    </div>
+                  )}
 
-                {descriptionToggle && (
-                  <div className='mt-4'>
-                    <div className='mb-1'>Description</div>
-                    <input
-                      type='text'
-                      className='px-2 p-1 w-full outline-gray-400  bg-[#f2f2f2] rounded-sm'
-                      placeholder='Describe this field (optional)'
-                      value={fieldDescriptionInput}
-                      onChange={(e) => setFieldDescriptionInput(e.target.value)}
-                    />
-                  </div>
-                )}
+                  {descriptionToggle && (
+                    <div className='mt-4'>
+                      <div className='mb-1'>Description</div>
+                      <input
+                        type='text'
+                        className='px-2 p-1 w-full outline-gray-400  bg-[#f2f2f2] rounded-sm'
+                        placeholder='Describe this field (optional)'
+                        value={fieldDescriptionInput}
+                        onChange={(e) =>
+                          setFieldDescriptionInput(e.target.value)
+                        }
+                      />
+                    </div>
+                  )}
 
-                <div className='flex justify-between items-center mt-8'>
-                  <div>
-                    <div
-                      className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
-                        descriptionToggle && "hidden"
-                      } `}
-                      onClick={() => setDescriptionToggle(true)}
-                    >
-                      <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        fill='none'
-                        viewBox='0 0 24 24'
-                        strokeWidth={1.5}
-                        stroke='currentColor'
-                        className='w-5 h-5 mr-1'
+                  <div className='flex justify-between items-center mt-8'>
+                    <div>
+                      <div
+                        className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
+                          descriptionToggle && "hidden"
+                        } `}
+                        onClick={() => setDescriptionToggle(true)}
                       >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          d='M12 4.5v15m7.5-7.5h-15'
-                        />
-                      </svg>
-                      Add description
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          fill='none'
+                          viewBox='0 0 24 24'
+                          strokeWidth={1.5}
+                          stroke='currentColor'
+                          className='w-5 h-5 mr-1'
+                        >
+                          <path
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
+                            d='M12 4.5v15m7.5-7.5h-15'
+                          />
+                        </svg>
+                        Add description
+                      </div>
                     </div>
-                  </div>
-                  <div className='flex items-center gap-2'>
-                    <div
-                      className='hover:bg-gray-200 p-1.5 rounded-md px-4 cursor-pointer'
-                      onClick={() => {
-                        close();
-                        setDescriptionToggle(false);
-                        setSelectedFieldType(undefined);
-                        setFieldSearchInput("");
-                        setFieldNameInput("");
-                      }}
-                    >
-                      Cancel
-                    </div>
-                    {selectedFieldType && (
-                      <button
-                        disabled={!fieldNameInput || isExistFieldNameInput}
+                    <div className='flex items-center gap-2'>
+                      <div
+                        className='hover:bg-gray-200 p-1.5 rounded-md px-4 cursor-pointer'
                         onClick={() => {
                           close();
-                          onCreateField();
+                          setDescriptionToggle(false);
+                          setSelectedFieldType(undefined);
+                          setFieldSearchInput("");
+                          setFieldNameInput("");
                         }}
-                        className='bg-blue-600 rounded-md p-1.5 px-4 text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400'
                       >
-                        Create Field
-                      </button>
-                    )}
+                        Cancel
+                      </div>
+                      {selectedFieldType && (
+                        <button
+                          disabled={!fieldNameInput || isExistFieldNameInput}
+                          onClick={() => {
+                            close();
+                            onCreateField();
+                          }}
+                          className='bg-blue-600 rounded-md p-1.5 px-4 text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400'
+                        >
+                          Create Field
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Popover.Panel>
-          </Transition>
-        </>
-      )}
-    </Popover>
+              </Popover.Panel>
+            </Transition>
+          </>
+        )}
+      </Popover>
+    </div>
   );
 });
 
@@ -489,7 +502,7 @@ function GetFieldByType({
   columns,
 }) {
   let SelectedFieldOption = (
-    <div className='max-h-[calc(100vh_/_2)] mt-2  rounded-md  shadow-input overflow-auto overflow-x-auto '>
+    <div className='max-h-[calc(100vh_/_2)] mt-2  rounded-md  shadow-input  '>
       <div className='relative ' tabIndex={-1}>
         <div className='absolute left-3 top-1/2 transform -translate-y-1/2 z-50 '>
           {fieldsMap.get(fieldSearchInput)
@@ -548,21 +561,19 @@ function GetFieldByType({
     </div>
   );
 
-  console.log(fieldOptions);
+  // console.log(fieldOptions);
 
   switch (type) {
     case "Link to another record":
       return (
-        <>
-          <LinkedToAnotherRecordOptions
-            setFieldSearchInput={setFieldSearchInput}
-            setFieldNameInput={setFieldNameInput}
-            setIsExistFieldNameInput={setIsExistFieldNameInput}
-            setSelectedFieldType={setSelectedFieldType}
-            selectedFieldTypeLinkedRecord={selectedFieldTypeLinkedRecord}
-            setSelectedFieldTypeLinkedRecord={setSelectedFieldTypeLinkedRecord}
-          />
-        </>
+        <LinkedToAnotherRecordOptions
+          setFieldSearchInput={setFieldSearchInput}
+          setFieldNameInput={setFieldNameInput}
+          setIsExistFieldNameInput={setIsExistFieldNameInput}
+          setSelectedFieldType={setSelectedFieldType}
+          selectedFieldTypeLinkedRecord={selectedFieldTypeLinkedRecord}
+          setSelectedFieldTypeLinkedRecord={setSelectedFieldTypeLinkedRecord}
+        />
       );
 
     case "Lookup":
@@ -592,6 +603,7 @@ function GetFieldByType({
           <CurrencyOptions setFieldOptions={setFieldOptions} />
         </>
       );
+
     case "Percent":
       return (
         <>
@@ -599,6 +611,7 @@ function GetFieldByType({
           <PercentOptions setFieldOptions={setFieldOptions} />
         </>
       );
+
     case "Duration":
       return (
         <>
@@ -606,6 +619,7 @@ function GetFieldByType({
           <DurationOptions setFieldOptions={setFieldOptions} />
         </>
       );
+
     case "Rating":
       return (
         <>
@@ -613,6 +627,7 @@ function GetFieldByType({
           <RatingOptions setFieldOptions={setFieldOptions} />
         </>
       );
+
     case "Button":
       return (
         <>
@@ -620,6 +635,7 @@ function GetFieldByType({
           <ButtonOptions columns={columns} setFieldOptions={setFieldOptions} />
         </>
       );
+
     case "Count":
       return (
         <>
@@ -628,9 +644,31 @@ function GetFieldByType({
         </>
       );
 
+    case "Single Select":
+      return (
+        <>
+          {SelectedFieldOption}
+          <SingleAndMultiSelectOptions
+            columns={columns}
+            setFieldOptions={setFieldOptions}
+          />
+        </>
+      );
+
+    case "Multiple select":
+      return (
+        <>
+          {SelectedFieldOption}
+          <SingleAndMultiSelectOptions
+            columns={columns}
+            setFieldOptions={setFieldOptions}
+          />
+        </>
+      );
+
     default:
       return (
-        <div className='max-h-[calc(100vh_/_2)] mt-2  rounded-md  shadow-input overflow-auto overflow-x-auto '>
+        <div className='max-h-[calc(100vh_/_2)] mt-2  rounded-md  shadow-input  '>
           <div className='relative ' tabIndex={-1}>
             <div className='absolute left-3 top-1/2 transform -translate-y-1/2 z-50 '>
               {fieldsMap.get(fieldSearchInput)
@@ -656,7 +694,7 @@ function GetFieldByType({
             </div>
           </div>
           {!selectedFieldType && (
-            <div className='h-4/5 overflow-auto p-1 border-t-[1px]  mb-1'>
+            <div className='max-h-[calc(100vh_/_2.8)] overflow-auto p-1 border-t-[1px]  mb-1  overflow-x-auto'>
               {columnType
                 .filter((ele) => {
                   return ele
@@ -1167,6 +1205,10 @@ function PercentOptions({ setFieldOptions }) {
   );
 }
 
+function SingleAndMultiSelectOptions({ setFieldOptions }) {
+  return <div className='mt-2 -mb-2 text-sm'>Precision</div>;
+}
+
 function DurationOptions({ setFieldOptions }) {
   const [selectedDurationFormat, setSelectedDurationFormat] = useState({
     name: "h:mm (e.g. 1:23)",
@@ -1287,7 +1329,7 @@ function RatingOptions({ setFieldOptions }) {
 
   return (
     <>
-      <div className='mt-2 -mb-2 text-sm'>Duration Format</div>
+      <div className='mt-2 -mb-2 text-sm'>Select Rating Stars</div>
       <SelectWithSearch
         data={ratingData}
         placeholder={"Choose a type of value in this Field"}

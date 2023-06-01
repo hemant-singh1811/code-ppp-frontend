@@ -12,7 +12,7 @@ const FormComponents = ({ row, column, type }) => {
     attachments: <SingleLineText />,
     checkbox: <Checkbox row={row} column={column} />,
     multipleSelect: <SingleLineText />,
-    user: <SingleLineText />,
+    user: <SingleLineText render={"form"} />,
     date: <SingleLineText />,
     phoneNumber: <SingleLineText />,
     email: <Email row={row} column={column} />,
@@ -87,7 +87,7 @@ export const SingleLineText = ({ row, column }) => {
     <div className="w-full hover:shadow-md">
       <input
         type="text"
-        className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-blue-500 outline-blue-700"
+        className="outline-blue-700"
         value={value}
         onChange={onChange}
         onBlur={handleBlur}
@@ -100,7 +100,7 @@ export function ModifiedAndCreatedCell({ type, row }) {
   switch (type) {
     case "lastModifiedBy":
       return (
-        <div className=" flex items-start w-full h-full text-left px-2 p-1 border-gray-800">
+        <div className=" flex items-start w-full h-full text-left px-2 p-1">
           <div
             style={{
               background: row?.original.lastModifiedBy?.background,
@@ -203,7 +203,7 @@ export function MultilineTextCell({ row, column }) {
   }
   return (
     <textarea
-      className="w-full h-full outline-blue-700 placeholder:p-1 border-gray-800"
+      className="w-full h-full outline-none placeholder:p-1"
       value={value}
       onChange={changeHandler}
       onBlur={handleBlur}
@@ -253,15 +253,13 @@ export function Checkbox({ row, column }) {
     }
   }
   return (
-    <div className="border-gray-800">
-      <input
-        type="checkbox"
-        className="w-4 h-4"
-        checked={value}
-        onChange={onChange}
-        onBlur={handleBlur}
-      />
-    </div>
+    <input
+      type="checkbox"
+      className="w-4 h-4"
+      checked={value}
+      onChange={onChange}
+      onBlur={handleBlur}
+    />
   );
 }
 
@@ -308,14 +306,14 @@ export function SingleSelect({ row, column }) {
   }
   return (
     <select
-      variant="outlined"
       className="w-full h-full outline-none"
       value={value}
       onChange={onChange}
-      onBlur={handleBlur}>
-      {column?.columnDef?.options?.map((opt, index) => (
-        <option key={index} value={opt}>
-          {opt.name}
+      onBlur={handleBlur}
+      multiple={true}>
+      {column.columnDef.options.map((opt) => (
+        <option key={opt} value={opt}>
+          {opt}
         </option>
       ))}
     </select>

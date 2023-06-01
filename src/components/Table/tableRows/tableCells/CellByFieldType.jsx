@@ -20,6 +20,7 @@ import CountCell from "./CountCell";
 import RatingCell from "./RatingCell";
 
 export function CellByFieldType({
+  rowIndex,
   hiddenInConditions,
   fieldType,
   cell,
@@ -29,6 +30,7 @@ export function CellByFieldType({
   if (hiddenInConditions) {
     return (
       <DefaultSelectCell
+        rowIndex={rowIndex}
         data={row}
         checked={row?.getIsSelected()}
         indeterminate={row?.getIsSomeSelected()}
