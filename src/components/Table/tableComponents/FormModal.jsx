@@ -27,7 +27,6 @@ const FormModal = () => {
   return (
     <ErrorBoundary fallback={<div>Something went wrong</div>}>
       <div>
-        <h1>Form</h1>
         <Transition appear show={isOpen} as={Fragment}>
           <Dialog
             as="div"
@@ -43,45 +42,48 @@ const FormModal = () => {
                 <div> </div>
                 <Dialog.Panel
                   className={
-                    "flex w-5/6 h-[90vh] flex-col justify-start p-4 bg-white text-black  overflow-y-auto rounded"
+                    "flex w-[960px] h-[90vh] flex-col justify-start p-4 bg-white text-black  overflow-y-auto rounded"
                   }>
-                  <div className="flex-col justify-start ">
+                  <hr className="h-px my-6 bg-gray-500 border-0 dark:bg-gray-700" />
+                  <div className="flex-col justify-star">
                     {columns.map((column, idx) => {
                       if (idx == 0) {
                         return <div key={idx}></div>;
                       }
                       if (idx == 1) {
-                        {
-                          console.log("id ==1", column.columnDef.fieldName);
-                        }
-                        <div key={idx} className="flex flex-col p-5">
-                          <div className="w-full text-xl flex">
-                            <div className="p-2">
-                              {getSvg(column.columnDef.fieldType)}
+                        // {
+                        //   console.log("id ==1", column.columnDef.fieldName);
+                        // }
+                        return (
+                          <div key={idx} className="flex flex-col p-5 ">
+                            <div className="w-full text-xl flex">
+                              <div className="p-2">
+                                {getSvg(column.columnDef.fieldType)}
+                              </div>
+                              <div>{column.columnDef.fieldName}</div>
                             </div>
-                            <div>{column.columnDef.fieldName}</div>
+                            <div
+                              className="w-full border rounded"
+                              onClick={(e) =>
+                                e.currentTarget.classList.add(
+                                  "outline-blue-700"
+                                )
+                              }>
+                              <FormComponents
+                                row={row}
+                                column={column}
+                                type={column.columnDef.fieldType}
+                              />
+                            </div>
+                            <hr className="h-px my-6 bg-gray-500 border-0 dark:bg-gray-700" />
                           </div>
-                          <div
-                            className="w-full border rounded"
-                            onClick={(e) =>
-                              e.currentTarget.classList.add("outline-blue-700")
-                            }>
-                            <FormComponents
-                              row={row}
-                              column={column}
-                              type={column.columnDef.fieldType}
-                            />
-                          </div>
-                          <div className="w-full h-5">ssd</div>
-                        </div>;
+                        );
                       }
                       return (
                         <div
                           key={idx}
-                          className="flex flex-row sm:flex-row w-full p-5">
-                          <div
-                            className=" flex sm:w-full"
-                            style={{ flex: "3" }}>
+                          className="flex flex-col md:flex-row w-full p-5">
+                          <div className=" flex" style={{ flex: "3" }}>
                             <div>{getSvg(column.columnDef.fieldType)}</div>
                             <div>
                               <label htmlFor={column.id}>
@@ -89,9 +91,7 @@ const FormModal = () => {
                               </label>
                             </div>
                           </div>
-                          <div
-                            className="sm:w-full  text-black border rounded "
-                            style={{ flex: "7" }}>
+                          <div className="text-black " style={{ flex: "7" }}>
                             {/* {components[cell.columnDef.fieldType]} */}
                             <FormComponents
                               row={row}

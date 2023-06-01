@@ -15,7 +15,7 @@ const FormComponents = ({ row, column, type }) => {
     user: <SingleLineText />,
     date: <SingleLineText />,
     phoneNumber: <SingleLineText />,
-    email: <SingleLineText />,
+    email: <Email row={row} column={column} />,
     url: <SingleLineText />,
     number: <SingleLineText />,
     currency: <SingleLineText />,
@@ -87,7 +87,7 @@ export const SingleLineText = ({ row, column }) => {
     <div className="w-full hover:shadow-md">
       <input
         type="text"
-        className="outline-blue-700"
+        className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-blue-500 outline-blue-700"
         value={value}
         onChange={onChange}
         onBlur={handleBlur}
@@ -100,7 +100,7 @@ export function ModifiedAndCreatedCell({ type, row }) {
   switch (type) {
     case "lastModifiedBy":
       return (
-        <div className=" flex items-start w-full h-full text-left px-2 p-1">
+        <div className=" flex items-start w-full h-full text-left px-2 p-1 border-gray-800">
           <div
             style={{
               background: row?.original.lastModifiedBy?.background,
@@ -203,13 +203,13 @@ export function MultilineTextCell({ row, column }) {
   }
   return (
     <textarea
-      className="w-full h-full outline-none placeholder:p-1"
+      className="w-full h-full outline-blue-700 placeholder:p-1 border-gray-800"
       value={value}
       onChange={changeHandler}
       onBlur={handleBlur}
-      onFocus={(e) => {
-        e.target.style.outline = "blue auto 1px";
-      }}
+      // onFocus={(e) => {
+      //   e.target.style.outline = "blue auto 1px";
+      // }}
     />
   );
 }
@@ -253,13 +253,15 @@ export function Checkbox({ row, column }) {
     }
   }
   return (
-    <input
-      type="checkbox"
-      className="w-4 h-4"
-      checked={value}
-      onChange={onChange}
-      onBlur={handleBlur}
-    />
+    <div className="border-gray-800">
+      <input
+        type="checkbox"
+        className="w-4 h-4"
+        checked={value}
+        onChange={onChange}
+        onBlur={handleBlur}
+      />
+    </div>
   );
 }
 
@@ -273,7 +275,8 @@ export function SingleSelect({ row, column }) {
   const [value, setValue] = useState(row?.original[column.id] || "");
   const userToken = useSelector((state) => state.auth.userInfo?.userToken);
   const onChange = (e) => {
-    setValue(e.target.value);
+    console.log(e.target.value);
+    //setValue(e.target.value);
   };
   console.log("Single Select column", column);
   function handleBlur() {
@@ -305,18 +308,95 @@ export function SingleSelect({ row, column }) {
   }
   return (
     <select
+      variant="outlined"
       className="w-full h-full outline-none"
       value={value}
       onChange={onChange}
-      onBlur={handleBlur}
-      multiple={true}>
-      {/* {column.columnDef.options.map((opt) => (
-        <option key={opt} value={opt}>
-          {opt}
+      onBlur={handleBlur}>
+      {column?.columnDef?.options?.map((opt, index) => (
+        <option key={index} value={opt}>
+          {opt.name}
         </option>
-      ))} */}
+      ))}
     </select>
   );
 }
+
+export function Email({ row, column }) {
+  const [value, setValue] = useState(row?.original[column.id] || "");
+  //const [isValid, setIsValid] = useState(true);
+  const socket = useSelector((state) => state.socketWebData.socket);
+
+  const { selectedBaseId, selectedTableId } = useSelector(
+    (state) => state.globalState
+  );
+  const userToken = useSelector((state) => state.auth.userInfo?.userToken);
+  const { table, activeNumberOfLines } = useContext(TableContext);
+
+  function validateEmailString(emailString) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emails = emailString.split(",").map((email) => email.trim());
+
+    for (let i = 0; i < emails.length; i++) {
+      if (emails[i] === "") continue;
+      if (!emailRegex.test(emails[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+  const onChange = (e) => {
+    setValue(e.target.value);
+  };
+  function handleBlur() {
+    if (!validateEmailString(value)) {
+      console.log("invalid");
+      setIsValid(false);
+    }
+    if (row?.getValue(column.id) !== value) {
+      let newRowPart = value;
+
+      let rowObj = {
+        userToken: userToken,
+        data: {
+          baseId: selectedBaseId,
+          tableId: selectedTableId,
+          recordId: row?.original.id52148213343234567,
+          updatedData: newRowPart,
+          fieldType: column.columnDef.fieldType,
+          fieldId: column.columnDef.fieldId,
+        },
+      };
+
+      socket.emit("updateData", rowObj, (response) => {
+        table.options.meta?.updateData(
+          row.index,
+          column.id,
+          value,
+          response.metaData
+        );
+        console.log("res : ", response);
+      });
+    }
+  }
+
+  const myCLasses = `w-full h-full placeholder:p-1 border-gray-800 outline-blue-700 ${
+    validateEmailString(value) ? "" : "bg-red-400"
+  }`;
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={value}
+        onChange={onChange}
+        onBlur={handleBlur}
+        className={myCLasses}
+      />
+    </div>
+  );
+}
+
+export function PhoneNumber({ row, column }) {}
 
 export default FormComponents;
