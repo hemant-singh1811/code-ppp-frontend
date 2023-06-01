@@ -12,7 +12,7 @@ const FormComponents = ({ row, column, type }) => {
     attachments: <SingleLineText />,
     checkbox: <Checkbox row={row} column={column} />,
     multipleSelect: <SingleLineText />,
-    user: <SingleLineText />,
+    user: <SingleLineText render={"form"} />,
     date: <SingleLineText />,
     phoneNumber: <SingleLineText />,
     email: <SingleLineText />,
@@ -84,10 +84,10 @@ export const SingleLineText = ({ row, column }) => {
   }
 
   return (
-    <div className="w-full hover:shadow-md">
+    <div className='w-full hover:shadow-md'>
       <input
-        type="text"
-        className="outline-blue-700"
+        type='text'
+        className='outline-blue-700'
         value={value}
         onChange={onChange}
         onBlur={handleBlur}
@@ -100,16 +100,17 @@ export function ModifiedAndCreatedCell({ type, row }) {
   switch (type) {
     case "lastModifiedBy":
       return (
-        <div className=" flex items-start w-full h-full text-left px-2 p-1">
+        <div className=' flex items-start w-full h-full text-left px-2 p-1'>
           <div
             style={{
               background: row?.original.lastModifiedBy?.background,
               color: row?.original.lastModifiedBy?.color,
             }}
-            className="w-6 h-6 rounded-full flex items-center justify-center relative z-10">
+            className='w-6 h-6 rounded-full flex items-center justify-center relative z-10'
+          >
             {row?.original?.lastModifiedBy?.userName.slice(0, 1).toUpperCase()}
           </div>
-          <div className="capitalize text-sm px-2 pl-6 relative z-0 -ml-5 rounded-full bg-[#eee] mt-0.5">
+          <div className='capitalize text-sm px-2 pl-6 relative z-0 -ml-5 rounded-full bg-[#eee] mt-0.5'>
             {row?.original?.lastModifiedBy?.userName}
           </div>
         </div>
@@ -122,8 +123,8 @@ export function ModifiedAndCreatedCell({ type, row }) {
         // lastModifiedTime = convertDate(cell.row.original?.lastModifiedTime);
       }
       return (
-        <div className=" flex items-start w-full h-full text-left px-2 p-1">
-          <div className="capitalize text-sm px-1 flex relative z-0 truncate rounded-sm gap-4 bg-[#eee] mt-0.5">
+        <div className=' flex items-start w-full h-full text-left px-2 p-1'>
+          <div className='capitalize text-sm px-1 flex relative z-0 truncate rounded-sm gap-4 bg-[#eee] mt-0.5'>
             <span>{lastModifiedTime?.toLocaleDateString()}</span>
             <span>{lastModifiedTime?.toLocaleTimeString()}</span>
           </div>
@@ -131,16 +132,17 @@ export function ModifiedAndCreatedCell({ type, row }) {
       );
     case "createdBy":
       return (
-        <div className=" flex items-start w-full h-full text-left px-2 p-1">
+        <div className=' flex items-start w-full h-full text-left px-2 p-1'>
           <div
             style={{
               background: row?.original.createdBy?.background,
               color: row?.original.createdBy?.color,
             }}
-            className="w-6 h-6 rounded-full flex items-center justify-center relative z-10">
+            className='w-6 h-6 rounded-full flex items-center justify-center relative z-10'
+          >
             {row?.original?.createdBy?.userName.slice(0, 1).toUpperCase()}
           </div>
-          <div className="capitalize text-sm px-2 pl-6 relative z-0 -ml-5 rounded-full bg-[#eee] mt-0.5">
+          <div className='capitalize text-sm px-2 pl-6 relative z-0 -ml-5 rounded-full bg-[#eee] mt-0.5'>
             {row?.original?.createdBy?.userName}
           </div>
         </div>
@@ -149,8 +151,8 @@ export function ModifiedAndCreatedCell({ type, row }) {
       // console.log(cell.row.original?.createdTime);
       const createdTime = new Date(row?.original?.createdTime);
       return (
-        <div className=" flex items-start w-full h-full text-left px-2 p-1">
-          <div className="capitalize text-sm px-1 flex relative z-0 truncate rounded-sm gap-4 bg-[#eee] mt-0.5">
+        <div className=' flex items-start w-full h-full text-left px-2 p-1'>
+          <div className='capitalize text-sm px-1 flex relative z-0 truncate rounded-sm gap-4 bg-[#eee] mt-0.5'>
             <span>{createdTime.toLocaleDateString()}</span>
             <span>{createdTime.toLocaleTimeString()}</span>
           </div>
@@ -203,7 +205,7 @@ export function MultilineTextCell({ row, column }) {
   }
   return (
     <textarea
-      className="w-full h-full outline-none placeholder:p-1"
+      className='w-full h-full outline-none placeholder:p-1'
       value={value}
       onChange={changeHandler}
       onBlur={handleBlur}
@@ -254,8 +256,8 @@ export function Checkbox({ row, column }) {
   }
   return (
     <input
-      type="checkbox"
-      className="w-4 h-4"
+      type='checkbox'
+      className='w-4 h-4'
       checked={value}
       onChange={onChange}
       onBlur={handleBlur}
@@ -305,11 +307,12 @@ export function SingleSelect({ row, column }) {
   }
   return (
     <select
-      className="w-full h-full outline-none"
+      className='w-full h-full outline-none'
       value={value}
       onChange={onChange}
       onBlur={handleBlur}
-      multiple={true}>
+      multiple={true}
+    >
       {/* {column.columnDef.options.map((opt) => (
         <option key={opt} value={opt}>
           {opt}

@@ -14,15 +14,17 @@ export default function TableUtilityColor() {
     }
     return false;
   });
-  const [selectedColorOption, setSelectedColorOption] = useState([]);
+  const [selectedColorOption, setSelectedColorOption] = useState({});
 
   useEffect(() => {
     let option = selectedColorOption?.options?.reduce(
       (obj, item) => item?.bgcolor && { ...obj, [item.name]: item.bgcolor },
       {}
     );
-    setSelectedColorCondition({ name: selectedColorOption.fieldName, option });
+    setSelectedColorCondition({ name: selectedColorOption.fieldId, option });
   }, [columns]);
+
+  console.log(selectedColorOption);
 
   const Panel = () => {
     switch (selectType) {
@@ -34,7 +36,7 @@ export default function TableUtilityColor() {
                 onClick={() => {
                   setSelectType("");
                   setSelectedColorCondition("");
-                  setSelectedColorOption([]);
+                  setSelectedColorOption({});
                 }}
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'
@@ -87,7 +89,6 @@ export default function TableUtilityColor() {
                         />
                       </svg>
                       <div className='truncate max-w-[340px]'>{ele.name}</div>
-                      {/* <ColorPalletSelect event={ } /> */}
                     </div>
                   );
                 }
@@ -176,8 +177,16 @@ export default function TableUtilityColor() {
     }
   };
   return (
-    <Popover className='flex items-center hover:bg-black hover:bg-opacity-10 rounded-md text-[#4d4d4d] p-0.5 px-2 text-lg  cursor-pointer relative '>
-      <Popover.Button className='flex items-center font-medium outline-none'>
+    <Popover
+      className={`flex items-center rounded-md text-[#4d4d4d] p-0.5 px-2 text-lg  cursor-pointer relative ${
+        selectedColorOption?.fieldId
+          ? "bg-amber-200 hover:bg-amber-200 "
+          : "hover:bg-black hover:bg-opacity-10 "
+      }`}
+    >
+      <Popover.Button
+        className={`flex items-center font-medium  outline-none `}
+      >
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
@@ -230,7 +239,7 @@ function SelectOption({
           (obj, item) => item?.bgcolor && { ...obj, [item.name]: item.bgcolor },
           {}
         );
-        setSelectedColorCondition({ name: e.fieldName, option });
+        setSelectedColorCondition({ name: e.fieldId, option });
       }}
     >
       <div className='relative w-full mt-1'>
@@ -312,26 +321,5 @@ function SelectOption({
         </Transition>
       </div>
     </Listbox>
-  );
-}
-
-export function ColorPalletSelect(event, pallet, text) {
-  console.log(event);
-  return (
-    <div className='w-full h-full grid grid-cols-10 grid-rows-4 absolute z-50'>
-      {colorPallet.map(({ background, color }) => {
-        return (
-          <div
-            className='max-w-[100px] truncate'
-            style={{
-              background: background,
-              color: color,
-            }}
-          >
-            {text}
-          </div>
-        );
-      })}
-    </div>
   );
 }

@@ -47,7 +47,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                 <VirtualRow
                   key={i}
                   virtualRow={virtualRow}
-                  i={i}
+                  rowIndex={i}
                   row={row}
                   rowVirtualizer={rowVirtualizer}
                   columns={columns}
@@ -93,7 +93,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
 }
 
 function VirtualRow({
-  i,
+  rowIndex,
   rowVirtualizer,
   virtualRow,
   row,
@@ -114,7 +114,7 @@ function VirtualRow({
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      key={virtualRow?.index || i}
+      key={virtualRow?.index || rowIndex}
       data-index={virtualRow.index}
       ref={rowVirtualizer.measureElement}
       tabIndex={0}
@@ -127,7 +127,7 @@ function VirtualRow({
         // left: 0,
         width: `${columns[virtualRow?.index]}px`,
         height: `${activeRowHeight}px`,
-        zIndex: initialArray.length - i,
+        zIndex: initialArray.length - rowIndex,
         transform: `translateY(${virtualRow?.start}px)`,
       }}
     >
@@ -141,14 +141,14 @@ function VirtualRow({
           //   key={cell.id}
           //   i={i}
           // />
-          TableData(cell, activeRowHeight, row, isHovered)
+          TableData(cell, activeRowHeight, row, isHovered, rowIndex)
         );
       })}
     </div>
   );
 }
 
-function TableData(cell, activeRowHeight, row, isHovered) {
+function TableData(cell, activeRowHeight, row, isHovered, rowIndex) {
   return (
     <div
       tabIndex={0}
@@ -203,6 +203,7 @@ function TableData(cell, activeRowHeight, row, isHovered) {
         // Otherwise, just render the regular cell
         <>
           <CellByFieldType
+            rowIndex={rowIndex}
             cell={cell}
             row={row}
             fieldType={cell.column.columnDef.fieldType}

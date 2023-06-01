@@ -52,7 +52,7 @@ let columnType = [
   "Checkbox",
   "Single Select",
   "Multiple select",
-  "User",
+  // "User",
   "Date",
   "Phone number",
   "Email",
@@ -62,8 +62,8 @@ let columnType = [
   "Percent",
   "Duration",
   "Rating",
-  "Formula",
-  "Rollup",
+  // "Formula",
+  // "Rollup",
   "Count",
   "Lookup",
   "Created time",
@@ -83,7 +83,7 @@ let fieldsType = [
   "checkbox",
   "singleSelect",
   "multipleSelect",
-  "user",
+  // "user",
   "date",
   "phoneNumber",
   "email",
@@ -93,8 +93,8 @@ let fieldsType = [
   "percent",
   "duration",
   "rating",
-  "formula",
-  "rollup",
+  // "formula",
+  // "rollup",
   "count",
   "lookup",
   "createdTime",
@@ -107,7 +107,6 @@ let fieldsType = [
 ];
 
 const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
-  // console.log("firstRender");
   const { columns, setColumns } = useContext(TableContext);
   const { selectedTableId, selectedBaseId } = useSelector(
     (state) => state.globalState
@@ -567,16 +566,14 @@ function GetFieldByType({
   switch (type) {
     case "Link to another record":
       return (
-        <>
-          <LinkedToAnotherRecordOptions
-            setFieldSearchInput={setFieldSearchInput}
-            setFieldNameInput={setFieldNameInput}
-            setIsExistFieldNameInput={setIsExistFieldNameInput}
-            setSelectedFieldType={setSelectedFieldType}
-            selectedFieldTypeLinkedRecord={selectedFieldTypeLinkedRecord}
-            setSelectedFieldTypeLinkedRecord={setSelectedFieldTypeLinkedRecord}
-          />
-        </>
+        <LinkedToAnotherRecordOptions
+          setFieldSearchInput={setFieldSearchInput}
+          setFieldNameInput={setFieldNameInput}
+          setIsExistFieldNameInput={setIsExistFieldNameInput}
+          setSelectedFieldType={setSelectedFieldType}
+          selectedFieldTypeLinkedRecord={selectedFieldTypeLinkedRecord}
+          setSelectedFieldTypeLinkedRecord={setSelectedFieldTypeLinkedRecord}
+        />
       );
 
     case "Lookup":
@@ -606,6 +603,7 @@ function GetFieldByType({
           <CurrencyOptions setFieldOptions={setFieldOptions} />
         </>
       );
+
     case "Percent":
       return (
         <>
@@ -613,6 +611,7 @@ function GetFieldByType({
           <PercentOptions setFieldOptions={setFieldOptions} />
         </>
       );
+
     case "Duration":
       return (
         <>
@@ -620,6 +619,7 @@ function GetFieldByType({
           <DurationOptions setFieldOptions={setFieldOptions} />
         </>
       );
+
     case "Rating":
       return (
         <>
@@ -627,6 +627,7 @@ function GetFieldByType({
           <RatingOptions setFieldOptions={setFieldOptions} />
         </>
       );
+
     case "Button":
       return (
         <>
@@ -634,11 +635,34 @@ function GetFieldByType({
           <ButtonOptions columns={columns} setFieldOptions={setFieldOptions} />
         </>
       );
+
     case "Count":
       return (
         <>
           {SelectedFieldOption}
           <CountOptions columns={columns} setFieldOptions={setFieldOptions} />
+        </>
+      );
+
+    case "Single Select":
+      return (
+        <>
+          {SelectedFieldOption}
+          <SingleAndMultiSelectOptions
+            columns={columns}
+            setFieldOptions={setFieldOptions}
+          />
+        </>
+      );
+
+    case "Multiple select":
+      return (
+        <>
+          {SelectedFieldOption}
+          <SingleAndMultiSelectOptions
+            columns={columns}
+            setFieldOptions={setFieldOptions}
+          />
         </>
       );
 
@@ -1179,6 +1203,10 @@ function PercentOptions({ setFieldOptions }) {
       />
     </>
   );
+}
+
+function SingleAndMultiSelectOptions({ setFieldOptions }) {
+  return <div className='mt-2 -mb-2 text-sm'>Precision</div>;
 }
 
 function DurationOptions({ setFieldOptions }) {

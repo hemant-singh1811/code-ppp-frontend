@@ -5,7 +5,7 @@ import { Fragment } from "react";
 
 export default function TableUtilityFilter({ table }) {
   const [filterConditions, setFilterConditions] = useState([]);
-
+  console.log(filterConditions);
   const addConditions = () => {
     let firstType = table.getHeaderGroups()[0]?.headers[0]?.column?.id;
     if (filterConditions.length < 1) {
@@ -52,8 +52,10 @@ export default function TableUtilityFilter({ table }) {
 
   return (
     <Popover
-      className={`flex items-center hover:bg-black hover:bg-opacity-10 rounded-md text-[#4d4d4d] p-0.5 px-2 text-lg cursor-pointer relative ${
-        filterConditions.length !== 0 && "bg-[#e1d5f9]"
+      className={`flex items-center  rounded-md text-[#4d4d4d] p-0.5 px-2 text-lg cursor-pointer relative ${
+        filterConditions.length !== 0
+          ? "bg-[#e1d5f9]"
+          : "hover:bg-black hover:bg-opacity-10"
       }`}
     >
       {({ open, close }) => (
