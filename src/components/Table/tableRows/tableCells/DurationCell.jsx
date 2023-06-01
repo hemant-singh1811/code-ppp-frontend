@@ -17,32 +17,84 @@ export default function DurationCell({ cell }) {
     setIsEditMode(true);
   }
 
+  const getSecondsFromHHMMSS = (value) => {
+    const [str1, str2, str3] = value.split(":");
+
+    const val1 = Number(str1);
+    const val2 = Number(str2);
+    const val3 = Number(str3);
+
+    if (!isNaN(val1) && isNaN(val2) && isNaN(val3)) {
+      return val1;
+    }
+
+    if (!isNaN(val1) && !isNaN(val2) && isNaN(val3)) {
+      return val1 * 60 + val2;
+    }
+
+    if (!isNaN(val1) && !isNaN(val2) && !isNaN(val3)) {
+      return val1 * 60 * 60 + val2 * 60 + val3;
+    }
+
+    return 0;
+  };
+
+  const toHHMMSS = (secs) => {
+    let secNum = parseFloat(secs.toString(), 10);
+    let hours = Math.floor(secNum / 3600);
+    let minutes = Math.floor(secNum / 60) % 60;
+    let seconds = secNum % 60;
+    // return [hours, minutes, seconds, milliseconds]
+    //   .map((val) => (val < 10 ? `0${val}` : val))
+    //   .filter((val, index) => val !== "00" || index > 0)
+    //   .join(":")
+    //   .replace(/^0/, "0");
+    if (value === "") return value;
+    hours = hours < 10 ? `0${hours}` : hours;
+    minutes = minutes < 10 ? `0${minutes}` : minutes;
+
+    switch (options.durationFormat) {
+      case "h:mm":
+        return `${hours}:${minutes}`;
+      case "h:mm:ss":
+        return `${hours}:${minutes}:${seconds}`;
+      case "h:mm:ss.s":
+        return `${hours}:${minutes}:${seconds.toFixed(1)}`;
+      case "h:mm:ss.ss":
+        return `${hours}:${minutes}:${seconds.toFixed(2)}`;
+      case "h:mm:ss.sss":
+        return `${hours}:${minutes}:${seconds.toFixed(3)}`;
+      default:
+        return "";
+    }
+  };
+
   const duration = (type, value) => {
     //return convertTextToDuration(value);
-    let hours = 0,
-      min = 0,
-      seconds = 0;
-    if (value.includes(":")) {
-      value = value.split(":").map(Number);
-      hours = parseInt(value[0]);
-      seconds = value[2]
-        ? (value[2] % 60) +
-          (value[3] ? value[3] / Math.pow(10, value.length - 1) : 0.0)
-        : 0;
-      value[2] = parseInt(
-        value[2] ? (value[2] > 60 ? Number(value[2] / 60) : 0) : 0
-      );
-      min = parseInt(value[1] + value[2]) % 60;
-      hours = parseInt(value[0] + (value[1] + value[2]) / 60);
-    } else {
-      // hours = parseInt(value / 60);
-      // min = parseInt(value % 60);
-      // seconds = (value - parseInt(value)) * 100;
-      value = parseFloat(value);
-      hours = Math.floor(value / 3600);
-      min = Math.floor((value % 3600) / 60);
-      seconds = value % 60;
-    }
+    // let hours = 0,
+    //   min = 0,
+    //   seconds = 0;
+    // if (value.includes(":")) {
+    //   value = value.split(":").map(Number);
+    //   hours = parseInt(value[0]);
+    //   seconds = value[2]
+    //     ? (value[2] % 60) +
+    //       (value[3] ? value[3] / Math.pow(10, value.length - 1) : 0.0)
+    //     : 0;
+    //   value[2] = parseInt(
+    //     value[2] ? (value[2] > 60 ? Number(value[2] / 60) : 0) : 0
+    //   );
+    //   min = parseInt(value[1] + value[2]) % 60;
+    //   hours = parseInt(value[0] + (value[1] + value[2]) / 60);
+    // } else {
+    //   // hours = parseInt(value / 60);
+    //   // min = parseInt(value % 60);
+    //   // seconds = (value - parseInt(value)) * 100;
+    //   value = parseFloat(value);
+    //   hours = Math.floor(value / 3600);
+    //   min = Math.floor((value % 3600) / 60);
+    //   seconds = value % 60;
+    // }
     if (value === "") return value;
     switch (type) {
       case "h:mm":
@@ -60,51 +112,15 @@ export default function DurationCell({ cell }) {
     }
   };
 
-  function convertTextToDuration(text) {
-    const delimiterRegex = /[:.]/; // Regular expression to match ":" or "."
-    const parts = text.split(delimiterRegex);
-    let hours = 0;
-    let minutes = 0;
-    let seconds = 0;
-    let milliseconds = 0;
-
-    // Convert parts to integers or floats
-    if (parts.length >= 1) {
-      hours = parseInt(parts[parts.length - 4]) || 0;
-    }
-    if (parts.length >= 2) {
-      minutes = parseInt(parts[parts.length - 3]) || 0;
-    }
-    if (parts.length >= 3) {
-      seconds = parseInt(parts[parts.length - 2]) || 0;
-    }
-    if (parts.length >= 4) {
-      milliseconds = parseInt(parts[parts.length - 1]) || 0;
-    }
-
-    // Convert units to desired format
-    const totalSeconds = hours * 3600 + minutes * 60 + seconds;
-    const totalMilliseconds = totalSeconds * 1000 + milliseconds;
-
-    // Format the result as h:mm:ss.sss
-    hours = Math.floor(totalMilliseconds / 3600000);
-    minutes = Math.floor((totalMilliseconds / 60000) % 60);
-    seconds = Math.floor((totalMilliseconds / 1000) % 60);
-    milliseconds = totalMilliseconds % 1000;
-
-    const result = `${hours}:${minutes.toString().padStart(2, "0")}:${seconds
-      .toString()
-      .padStart(2, "0")}.${milliseconds.toString().padStart(3, "0")}`;
-    console.log("result : ", result);
-    return result;
-  }
-
   function handleBlur() {
     setIsEditMode(false);
 
     if (cell.getValue() !== value) {
-      let updatedValue = duration(options.durationFormat, value);
-
+      //let updatedValue = duration(options.durationFormat, value);
+      const seconds = Math.max(0, getSecondsFromHHMMSS(value));
+      const time = toHHMMSS(seconds);
+      setValue(time);
+      console.log("time", time);
       //   if (options?.numberType === "integer") {
       //     updatedValue = Number.parseInt(value);
       //   } else if (options?.numberType === "decimal") {
@@ -112,7 +128,8 @@ export default function DurationCell({ cell }) {
       //     updatedValue = parseFloat(value).toFixed(options?.fieldPrecision);
       //   }
       //   console.log("parse float", parseFloat(value));
-      setValue(updatedValue);
+
+      //setValue(updatedValue);
 
       let rowObj = {
         userToken: userToken,
@@ -120,7 +137,7 @@ export default function DurationCell({ cell }) {
           baseId: selectedBaseId,
           tableId: selectedTableId,
           recordId: cell?.row?.original.id52148213343234567,
-          updatedData: updatedValue,
+          updatedData: time,
           fieldType: cell.column.columnDef.fieldType,
           fieldId: cell.column.columnDef.fieldId,
         },
@@ -130,7 +147,7 @@ export default function DurationCell({ cell }) {
         table.options.meta?.updateData(
           cell.row.index,
           cell.column.id,
-          updatedValue,
+          time,
           response.metaData
         );
         console.log("res : ", response);
@@ -144,9 +161,6 @@ export default function DurationCell({ cell }) {
       setValue(event.target.value);
     } else if (event.target.value === "") {
       setValue("");
-    } else {
-      setValue(event.target.value[event.target.value.length - 1]);
-      console.log("else", event.target.value[event.target.value.length - 1]);
     }
   }
 
