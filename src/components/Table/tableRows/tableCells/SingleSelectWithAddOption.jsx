@@ -244,7 +244,23 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
                   id=''
                   placeholder='find an option'
                   className='w-full outline-none p-2'
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                  }}
+                  onKeyPress={(event) => {
+                    if (event.key === "Enter") {
+                      let alreadyPresentValues = options?.filter(
+                        ({ name }) => name === searchTerm
+                      );
+                      if (alreadyPresentValues.length === 0) {
+                        addNewOption(searchTerm);
+                        close();
+                      } else {
+                        updateOption(searchTerm);
+                        close();
+                      }
+                    }
+                  }}
                   value={searchTerm}
                   autoComplete={"off"}
                   autoFocus

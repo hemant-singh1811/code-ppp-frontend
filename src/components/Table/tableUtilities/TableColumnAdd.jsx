@@ -65,7 +65,7 @@ let columnType = [
   // "Formula",
   // "Rollup",
   "Count",
-  "Lookup",
+  // "Lookup",
   "Created time",
   "Last modified time",
   "Created by",
@@ -96,7 +96,7 @@ let fieldsType = [
   // "formula",
   // "rollup",
   "count",
-  "lookup",
+  // "lookup",
   "createdTime",
   "lastModifiedTime",
   "createdBy",
@@ -383,6 +383,12 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                     </div>
                   )}
 
+                  {selectedFieldType && (
+                    <div className='m-1 text-sm '>
+                      {selectedOptionDescription[selectedFieldType]}
+                    </div>
+                  )}
+
                   <GetFieldByType
                     columns={columns}
                     type={fieldSearchInput}
@@ -402,12 +408,6 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                     selectedFieldType={selectedFieldType}
                     fieldsMap={fieldsMap}
                   />
-
-                  {selectedFieldType && (
-                    <div className='m-1 text-sm '>
-                      {selectedOptionDescription[selectedFieldType]}
-                    </div>
-                  )}
 
                   {descriptionToggle && (
                     <div className='mt-4'>

@@ -16,9 +16,9 @@ export default function TableScreen() {
 
   let getTableDataApi = useGetTableDataQuery(selectedTableId);
   let getModalApi = useGetMultiModelQuery(selectedTableId);
-  const getViewsApi = useGetSavedViewQuery({
-    data: { tableId: selectedTableId },
-  });
+  // const getViewsApi = useGetSavedViewQuery({
+  //   data: { tableId: selectedTableId },
+  // });
 
   const multipleRecordLinksMap = new Map();
 
@@ -27,16 +27,16 @@ export default function TableScreen() {
   useEffect(() => {
     getTableDataApi.refetch(selectedTableId);
     getModalApi.refetch(selectedTableId);
-    getViewsApi.refetch({
-      data: { tableId: selectedTableId },
-    });
+    // getViewsApi.refetch({
+    //   data: { tableId: selectedTableId },
+    // });
   }, [selectedTableId]);
 
-  useEffect(() => {
-    if (getViewsApi.isSuccess) {
-      console.log("GET SAVED VIEW MODAL:", getViewsApi.data);
-    }
-  }, [getViewsApi.isSuccess]);
+  // useEffect(() => {
+  //   if (getViewsApi.isSuccess) {
+  //     console.log("GET SAVED VIEW MODAL:", getViewsApi.data);
+  //   }
+  // }, [getViewsApi.isSuccess]);
 
   useEffect(() => {
     if (getModalApi.data) {
@@ -52,15 +52,22 @@ export default function TableScreen() {
 
   if (
     getTableDataApi.isFetching ||
-    getModalApi?.isFetching ||
-    getViewsApi.isFetching
+    getModalApi?.isFetching
+    // getViewsApi.isFetching
   ) {
     return <Loading />;
   }
-  if (getTableDataApi.error || getModalApi?.error || getViewsApi.error) {
+  if (
+    getTableDataApi.error ||
+    getModalApi?.error
+    // getViewsApi.error
+  ) {
     return (
       <Error
-        error={getTableDataApi.error || getModalApi?.error || getViewsApi.error}
+        error={
+          getTableDataApi.error || getModalApi?.error
+          // getViewsApi.error
+        }
       />
     );
   }
@@ -106,7 +113,8 @@ export default function TableScreen() {
 
   return (
     <Table
-      tableView={getViewsApi.data}
+      // tableView={getViewsApi.data}
+      tableView={[]}
       tableData={getTableDataApi.data}
       tableModel={getModalApi.data}
       modifiedArrayOfObject={modifiedArrayOfObject}

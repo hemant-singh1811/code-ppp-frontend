@@ -50,8 +50,6 @@ export const initSocket = () => (dispatch, state) => {
     console.log("res : ", response);
   });
 
-  // if (socket) {
-  console.log("join base room res sent : ");
   socket.emit(
     "joinBaseRoom",
     { userToken: userInfo?.userToken, data: {} },
@@ -59,7 +57,6 @@ export const initSocket = () => (dispatch, state) => {
       console.log("join base room res : ", res);
     }
   );
-  // }
 
   socket.on("UpdatedBaseData", ({ action, data }) => {
     console.log("UpdatedBaseData : ", action, data);
