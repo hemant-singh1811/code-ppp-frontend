@@ -37,20 +37,17 @@ export default function CurrencyCell({ cell }) {
       setValue(event.target.value);
     } else if (event.target.value === "") {
       setValue(event.target.value);
-      console.log("empty");
     } else {
-      setValue(event.target.value);
+      //setValue(event.target.value);
     }
   }
   //   console.log(options);
   function handleBlur() {
     setIsEditMode(false);
     const val = removeExtraCharacter(value);
-    console.log("mycell", cell.getValue());
     if (cell.getValue() !== val) {
-      let updatedValue = val;
-
-      //     updatedValue = Number.parseInt(value);
+      let updatedValue = removeExtraCharacter(val);
+      console.log("isNaN", isNaN(parseFloat(val)), parseFloat(val));
       updatedValue = isNaN(parseFloat(val))
         ? ""
         : parseFloat(val).toFixed(options?.fieldPrecision);
@@ -82,7 +79,7 @@ export default function CurrencyCell({ cell }) {
   }
 
   function removeExtraCharacter(value) {
-    const inputValue = value.replace(/\D/g, ""); // Remove non-digit characters
+    const inputValue = value.replace(/[^\d.]/g, ""); //  Remove non-digit and non-dot characters
     return inputValue;
   }
 
