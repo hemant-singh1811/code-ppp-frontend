@@ -311,11 +311,11 @@ export function SingleSelect({ row, column }) {
       onChange={onChange}
       onBlur={handleBlur}
       multiple={true}>
-      {column.columnDef.options.map((opt) => (
+      {/* {column.columnDef.options.map((opt) => (
         <option key={opt} value={opt}>
           {opt}
         </option>
-      ))}
+      ))} */}
     </select>
   );
 }
@@ -379,7 +379,7 @@ export function Email({ row, column }) {
   }
 
   const myCLasses = `w-full h-full placeholder:p-1 border-gray-800 outline-blue-700 ${
-    validateEmailString(value) ? "" : "bg-red-400"
+    validateEmailString(value) ? "" : "bg-red-200"
   }`;
 
   return (
