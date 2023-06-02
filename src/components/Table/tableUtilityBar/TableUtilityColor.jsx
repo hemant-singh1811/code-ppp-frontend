@@ -24,7 +24,7 @@ export default function TableUtilityColor() {
     setSelectedColorCondition({ name: selectedColorOption.fieldId, option });
   }, [columns]);
 
-  console.log(selectedColorOption);
+  // console.log(selectedColorOption);
 
   const Panel = () => {
     switch (selectType) {

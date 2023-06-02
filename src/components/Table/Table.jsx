@@ -9,7 +9,7 @@ import { handelAddTableWithMultipleRecords } from "../../store/features/globalSt
 import { useEffectOnce } from "react-use";
 import { handelAddInitialState } from "../../store/features/viewsSlice";
 
-export default function Table({
+const Table = function Table({
   tableData,
   tableModel,
   tableView,
@@ -23,7 +23,7 @@ export default function Table({
       data: modifiedArrayOfObject,
     });
   const dispatch = useDispatch();
-  // console.log("first");
+  const linkedRecordIdAndDataMap = new Map();
 
   useEffect(() => {
     refetch({
@@ -156,7 +156,6 @@ export default function Table({
     return <Error />;
   }
 
-  const linkedRecordIdAndDataMap = new Map();
   // console.log(data);
   data.forEach((ele) => {
     ele?.data.forEach(({ id, data }) => {
@@ -180,4 +179,6 @@ export default function Table({
       />
     </div>
   );
-}
+};
+
+export default Table;

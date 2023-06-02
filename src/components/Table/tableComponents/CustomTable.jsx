@@ -17,38 +17,88 @@ const fieldName = (dataType) => {
   switch (dataType) {
     case "linkedRecords":
       return "Multiple Record Links";
+
     case "singleLineText":
       return "Single Line Text";
+
     case "multilineText":
       return "Multiline Text";
+
     case "attachments":
       return "Multiple Attachments";
+
     case "checkbox":
       return "Checkbox";
-    case "multipleSelect":
-      return "Multiple Selects";
+
     case "singleSelect":
       return "Single Select";
-    case "phoneNumber":
-      return "Phone Number";
-    case "email":
-      return "Email";
-    case "url":
-      return "Url";
-    case "createdTime":
-      return "Created Time";
-    case "lastModifiedTime":
-      return "Last Modified Time";
-    case "createdBy":
-      return "Created By";
-    case "lastModifiedBy":
-      return "Last Modified By";
-    case "autoNumber":
-      return "Auto Number";
-    case "button":
-      return "Button";
+
+    case "multipleSelect":
+      return "Multiple Selects";
+
+    case "User":
+      return "user";
+
     case "date":
       return "Date";
+
+    case "phoneNumber":
+      return "Phone Number";
+
+    case "email":
+      return "Email";
+
+    case "url":
+      return "Url";
+
+    case "number":
+      return "Number";
+
+    case "currency":
+      return "Currency";
+
+    case "percent":
+      return "Percent";
+
+    case "duration":
+      return "Duration";
+
+    case "rating":
+      return "Rating";
+
+    case "formula":
+      return "Formula";
+
+    case "rollup":
+      return "Rollup";
+
+    case "count":
+      return "Count";
+
+    case "lookup":
+      return "Lookup";
+
+    case "createdTime":
+      return "Created Time";
+
+    case "lastModifiedTime":
+      return "Last Modified Time";
+
+    case "createdBy":
+      return "Created By";
+
+    case "lastModifiedBy":
+      return "Last Modified By";
+
+    case "autoNumber":
+      return "Auto Number";
+
+    case "barcode":
+      return "Barcode";
+
+    case "button":
+      return "Button";
+
     default:
       return `${dataType}: UnSupported Field Type ⚠️`;
   }
@@ -59,6 +109,7 @@ const DraggableColumnHeader = ({ header, table, index }) => {
   const { columnOrder } = table.options.state;
   const { column } = header;
   const columnDropdownRef = React.useRef();
+  // console.log(header);
 
   // const divRef = useRef(null);
 
@@ -116,7 +167,7 @@ const DraggableColumnHeader = ({ header, table, index }) => {
   };
   // console.log(column);
   return (
-    <Popover className="" ref={buttonRef}>
+    <Popover className='' ref={buttonRef}>
       {({ open, close }) => (
         <div
           onContextMenu={handleContextMenu}
@@ -136,30 +187,33 @@ const DraggableColumnHeader = ({ header, table, index }) => {
             if (!column?.columnDef?.primary) dropRef(el);
             // divRef;
           }}
-          colSpan={header.colSpan}>
+          colSpan={header.colSpan}
+        >
           <div
             ref={!column?.columnDef?.primary ? dragRef : null}
-            className="capitalize text-lg font-normal px-2  flex justify-between item items-center h-full">
+            className='capitalize text-lg font-normal px-2  flex justify-between item items-center h-full'
+          >
             <div
               className={`flex items-center ${
                 index === 0 ? "w-full" : " w-[calc(100%_-_20px)]"
-              }`}>
+              }`}
+            >
               {index !== 0 && (
                 <div
-                  className="h-full min-w-[20px]"
+                  className='h-full min-w-[20px]'
                   onMouseEnter={() =>
                     handleMouseOver(column.columnDef.fieldType)
                   }
                   onMouseLeave={() =>
                     handleMouseLeave(column.columnDef.fieldType)
-                  }>
+                  }
+                >
                   {getSvg(column.columnDef.fieldType)}
                 </div>
               )}
               <div
-                className={`truncate w-full text-left ${
-                  index !== 0 && "ml-1"
-                }`}>
+                className={`truncate w-full text-left ${index !== 0 && "ml-1"}`}
+              >
                 {/* {console.log(header.column.columnDef)} */}
                 {header.isPlaceholder
                   ? null
@@ -172,7 +226,8 @@ const DraggableColumnHeader = ({ header, table, index }) => {
             {index !== 0 && (
               <div
                 ref={divRef}
-                className="absolute top-9 bg-white rounded-md px-2 border-2 hidden min-w-max">
+                className='absolute top-9 bg-white rounded-md px-2 border-2 hidden min-w-max'
+              >
                 {fieldName(column.columnDef.fieldType)}
               </div>
             )}
@@ -194,7 +249,8 @@ const DraggableColumnHeader = ({ header, table, index }) => {
                 onMouseDown: header.getResizeHandler(),
                 onTouchStart: header.getResizeHandler(),
               }}
-              className=" absolute z-10 w-4 h-full top-0 -right-2 resize-container flex justify-center items-center">
+              className=' absolute z-10 w-4 h-full top-0 -right-2 resize-container flex justify-center items-center'
+            >
               <div
                 {...{
                   className: `resizerHeader ${
@@ -226,11 +282,11 @@ const CustomTable = React.memo(function CustomTable() {
   const tableContainerRef = React.useRef(null);
   const { rows } = table.getRowModel();
   return (
-    <div className="flex overflow-hidden">
+    <div className='flex overflow-hidden'>
       {isViewsOpen && <ResizableSidebar />}
       <DndProvider backend={HTML5Backend}>
         <div
-          id="custom-scrollbar"
+          id='custom-scrollbar'
           className={`overflow-auto overflow-y-hidden bg-[#f7f7f7] 
        ${
          toggle
@@ -241,7 +297,8 @@ const CustomTable = React.memo(function CustomTable() {
            ? `w-[calc(100vw_-_495px)]`
            : `w-[calc(100vw_-_245px)]`
        }
-        `}>
+        `}
+        >
           <div
             ref={tableContainerRef}
             {...{
@@ -249,10 +306,11 @@ const CustomTable = React.memo(function CustomTable() {
                 width: table.getTotalSize() + 120,
               },
             }}
-            className={`divTable `}>
-            <div className="thead bg-[#f5f5f5] text-[#333333] relative z-[2]">
+            className={`divTable `}
+          >
+            <div className='thead bg-[#f5f5f5] text-[#333333] relative z-[2]'>
               {table.getHeaderGroups().map((headerGroup) => (
-                <div key={headerGroup.id} className="row">
+                <div key={headerGroup.id} className='row'>
                   {headerGroup.headers.map((header, index) => (
                     <DraggableColumnHeader
                       key={header.id}

@@ -1,16 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useDetectOutsideClick } from "../../../../utilities/customHooks/useDetectOutsideClick";
 import { useSelector } from "react-redux";
 import { TableContext } from "../../tableComponents/TableComponents";
 import { colorPallet } from "../../../../utilities/colorPallet";
+import { Popover, Transition } from "@headlessui/react";
+import { useClickAway } from "react-use";
+import { useRef } from "react";
+import { Fragment } from "react";
 
 function MultiselectWithAddOption({ columnData, rowData, cell }) {
-  const { columns, setColumns, table } = useContext(TableContext);
+  const { columns, setColumns, table, activeRowHeight } =
+    useContext(TableContext);
   const socket = useSelector((state) => state.socketWebData.socket);
-  // Create a ref that we add to the element for which we want to detect outside clicks
-  const singleSelectRef = React.useRef();
-  // Call hook passing in the ref and a function to call on outside click
-  useDetectOutsideClick(singleSelectRef, () => setSingleSelectToggle(false));
 
   let newOptions = [{ name: "" }];
   if (Array.isArray(columnData?.options)) {
@@ -22,6 +22,8 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
   const { selectedTableId, selectedBaseId } = useSelector(
     (state) => state.globalState
   );
+
+  const [isEditMode, setIsEditMode] = useState(false);
   const [SingleSelectToggle, setSingleSelectToggle] = React.useState(false);
   const [selectedOption, setSelectedOption] = React.useState(rowData || []);
   const [options, setOptions] = useState(newOptions);
@@ -185,131 +187,194 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
     });
   }
 
+  const ref = useRef(null);
+  useClickAway(ref, () => {
+    setIsEditMode(false);
+  });
+
   useEffect(() => {
     setOptions(columnData?.options);
   }, [columns]);
 
   return (
-    <div
-      className={`relative select-none h-full w-full z-0 flex items-center  border-transparent border rounded-sm ${
-        SingleSelectToggle && "border-blue-500"
-      }`}
-      // className="relative select-none h-full w-full z-0"
-      ref={singleSelectRef}
+    <Popover
+      style={{
+        height: activeRowHeight,
+      }}
+      className='flex h-full items-center rounded-md text-[#4d4d4d]  text-lg  cursor-pointer relative '
     >
-      <div className=' w-full rounded-md cursor-pointer flex items-center px-2 justify-between '>
-        <div className='overflow-hidden flex w-full'>
-          {options?.map(({ name, color, bgcolor }, i) => {
-            if (selectedOption?.includes(name) && name !== "")
-              return (
-                <div
-                  key={i}
-                  className='flex items-center rounded-3xl px-2  mr-1'
-                  style={{ background: bgcolor, color: color }}
-                >
-                  <div className={`truncate`}>{name}</div>
-                  <svg
-                    onClick={() => deleteOption(name)}
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    strokeWidth={1.5}
-                    stroke='currentColor'
-                    className='w-4 h-4 ml-1'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      d='M6 18L18 6M6 6l12 12'
-                    />
-                  </svg>
-                </div>
-              );
-          })}
-        </div>
-        <svg
-          onClick={() => {
-            setSingleSelectToggle(!SingleSelectToggle);
-            setSearchTerm("");
-          }}
-          xmlns='http://www.w3.org/2000/svg'
-          fill='none'
-          viewBox='0 0 24 24'
-          strokeWidth={1.5}
-          stroke='currentColor'
-          className='min-w-4  h-4 text-blue-500 ml-auto'
-        >
-          <path
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            d='M19.5 8.25l-7.5 7.5-7.5-7.5'
-          />
-        </svg>
-      </div>
-      {SingleSelectToggle && (
-        <div
-          className='absolute -left-1 top-8 w-full max-h-[300px] bg-white rounded-md shadow-lg min-w-[200px] border  overflow-x-hidden overflow-y-auto'
-          style={{ zIndex: 100 }}
-        >
-          <input
-            type='text'
-            name='search option'
-            id=''
-            placeholder='find an option'
-            className='w-full outline-none p-2'
-            onChange={(e) => setSearchTerm(e.target.value)}
-            value={searchTerm}
-            autoComplete={"off"}
-            autoFocus
-          />
-          <div>
-            {options
-              ?.filter(({ name }) => name?.includes(searchTerm))
-              .map(({ color, name, bgcolor }, i) => {
-                return (
-                  <div
-                    onClick={() => updateOption(name)}
-                    key={i}
-                    className='p-2 hover:bg-blue-100 flex min-h-[30px] w-full'
-                  >
-                    {name && (
+      {({ open, close }) => (
+        <>
+          <Popover.Button
+            onClick={() => {
+              setSingleSelectToggle(!SingleSelectToggle);
+              setSearchTerm("");
+              setIsEditMode(true);
+            }}
+            className={`relative select-none h-full w-full bg-transparent z-0 flex items-center  border-transparent border rounded-sm  outline-none border-none`}
+            style={{
+              boxShadow: open && "0 0 0px 2px inset #166ee1",
+              background: open ? "white" : "transparent",
+            }}
+          >
+            <div
+              className={`flex h-full  p-0.5 pt-[2px] pl-1  overflow-hidden items-start ${
+                isEditMode ? "w-[calc(100%_-_16px)]" : "w-full"
+              }`}
+            >
+              <div className=' w-full rounded-md cursor-pointer flex items-center pr-1 gap-2 flex-wrap'>
+                {options?.map(({ name, color, bgcolor }, i) => {
+                  if (selectedOption?.includes(name) && name !== "")
+                    return (
                       <div
-                        onClick={() => setSearchTerm("")}
+                        key={i}
+                        className={`flex items-center rounded-3xl px-2  mr-1 `}
                         style={{ background: bgcolor, color: color }}
-                        className={`rounded-xl px-2  truncate`}
                       >
-                        {name}
+                        <span className={`w-full truncate`}>{name}</span>
+                        <svg
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteOption(name);
+                          }}
+                          xmlns='http://www.w3.org/2000/svg'
+                          fill='none'
+                          viewBox='0 0 24 24'
+                          strokeWidth={1.5}
+                          stroke='currentColor'
+                          className='w-4 h-4 ml-1'
+                        >
+                          <path
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
+                            d='M6 18L18 6M6 6l12 12'
+                          />
+                        </svg>
                       </div>
-                    )}
-                  </div>
-                );
-              })}
-            {options?.filter(({ name }) => name?.includes(searchTerm))
-              .length === 0 && (
+                    );
+                })}
+              </div>
+            </div>
+            {open && (
+              <div className='min-w-4 h-4 flex '>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='min-w-4 h-4 text-blue-500 ml-auto'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M19.5 8.25l-7.5 7.5-7.5-7.5'
+                  />
+                </svg>
+              </div>
+            )}
+          </Popover.Button>
+          <Transition
+            className='bg-white'
+            as={Fragment}
+            enter='transition ease-out duration-200'
+            enterFrom='opacity-0 translate-y-1'
+            enterTo='opacity-100 translate-y-0'
+            leave='transition ease-in duration-150'
+            leaveFrom='opacity-100 translate-y-0'
+            leaveTo='opacity-0 translate-y-1'
+          >
+            <Popover.Panel className='absolute  left-0 z-[3] bg-yellow-400   h-full rounded-md  shadow-custom '>
               <div
-                onClick={addNewOption}
-                className='p-2 hover:bg-blue-100 flex truncate'
+                className='absolute -left-1 top-8 w-full  bg-white rounded-md shadow-lg min-w-[200px] border  overflow-x-hidden'
+                style={{ zIndex: 100 }}
               >
-                <div className='truncate flex'>
-                  Add New Option:
-                  {searchTerm && (
-                    <span
-                      style={{
-                        background: bgColorAndTextColor.background,
-                        color: bgColorAndTextColor.color,
+                <input
+                  type='text'
+                  name='search option'
+                  id=''
+                  placeholder='find an option'
+                  className='w-full outline-none p-2'
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                  }}
+                  onKeyPress={(event) => {
+                    if (event.key === "Enter") {
+                      let alreadyPresentValues = options?.filter(
+                        ({ name }) => name === searchTerm
+                      );
+                      if (alreadyPresentValues.length === 0) {
+                        addNewOption(searchTerm);
+                        close();
+                      } else {
+                        updateOption(searchTerm);
+                        close();
+                      }
+                    }
+                  }}
+                  value={searchTerm}
+                  autoComplete={"off"}
+                  autoFocus
+                />
+                <div className='max-h-[300px]  overflow-y-auto'>
+                  {options
+                    ?.filter(({ name }) => name?.includes(searchTerm))
+                    .map(({ color, name, bgcolor }, i) => {
+                      return (
+                        <div
+                          onClick={() => {
+                            updateOption(name);
+                            close();
+                          }}
+                          key={i}
+                          className='p-2 hover:bg-blue-100 flex min-h-[30px] w-full'
+                        >
+                          {name && (
+                            <div
+                              onClick={() => {
+                                setSearchTerm("");
+                              }}
+                              style={{ background: bgcolor, color: color }}
+                              className={`rounded-xl px-2 truncate`}
+                            >
+                              {name}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  {options?.filter(({ name }) => name === searchTerm).length ===
+                    0 && (
+                    <div
+                      onClick={(e) => {
+                        addNewOption(e);
+                        close();
                       }}
-                      className={`rounded-xl px-2 ml-1 truncate`}
+                      className='p-2 hover:bg-blue-100 flex truncate'
                     >
-                      {searchTerm}
-                    </span>
+                      <div className='truncate flex'>
+                        Add New Option:
+                        {searchTerm && (
+                          <span
+                            style={{
+                              background: bgColorAndTextColor.background,
+                              color: bgColorAndTextColor.color,
+                            }}
+                            className={`rounded-xl px-2 ml-1 truncate`}
+                          >
+                            {searchTerm}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>
-            )}
-          </div>
-        </div>
+            </Popover.Panel>
+          </Transition>
+        </>
       )}
-    </div>
+    </Popover>
   );
 }
 

@@ -5,7 +5,7 @@ import { Fragment } from "react";
 
 export default function TableUtilityFilter({ table }) {
   const [filterConditions, setFilterConditions] = useState([]);
-  console.log(filterConditions);
+  // console.log(filterConditions);
   const addConditions = () => {
     let firstType = table.getHeaderGroups()[0]?.headers[0]?.column?.id;
     if (filterConditions.length < 1) {

@@ -156,9 +156,6 @@ export function CellByFieldType({
     case "date": //string
       return <DateTableCell cell={cell} />;
 
-    case "button": //string
-      return <ButtonCell cell={cell} />;
-
     case "linkedRecords": //string
       return <MultipleRecordLinksCell cell={cell} rowData={cell?.getValue()} />;
 
