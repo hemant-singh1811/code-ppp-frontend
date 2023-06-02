@@ -2,9 +2,11 @@ import React from "react";
 
 export default function ButtonCell({ cell }) {
   const value =
-    cell.row?.getValue(
-      cell.column.columnDef.buttonFieldOptions.selectedFieldId
-    ) || "";
+    (cell.column.columnDef?.buttonFieldOptions?.selectedFieldId &&
+      cell.row?.getValue(
+        cell.column.columnDef?.buttonFieldOptions?.selectedFieldId
+      )) ||
+    "";
 
   function isValidURL(url) {
     // Regular expression pattern for URL validation
