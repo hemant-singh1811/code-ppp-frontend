@@ -1,11 +1,11 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   sidebar: [],
 };
 
 const SideBarStateSlice = createSlice({
-  name: 'sidebar',
+  name: "sidebar",
   initialState,
   reducers: {
     handelAddSideBar: (state, { payload }) => {
@@ -23,7 +23,12 @@ const SideBarStateSlice = createSlice({
 
     // updates on bases in side bar
     handelAddSideBarMenu: (state, { payload }) => {
-      state.sidebar = [...state.sidebar, payload];
+      let isBasePresent = state.sidebar.filter(
+        (baseId) => baseId === payload.baseId
+      );
+      if (isBasePresent.length === 0) {
+        state.sidebar = [...state.sidebar, payload];
+      }
     },
     handelRemoveSideBarMenu: (state, { payload }) => {
       let updatedSideBar = state.sidebar?.filter((item) => {

@@ -10,7 +10,12 @@ const BasesStateSlice = createSlice({
   reducers: {
     // handel updates in bases state
     handelAddBases: (state, { payload }) => {
-      state.bases = [...state.bases, ...payload];
+      let isBasePresent = state.bases.filter(
+        (baseId) => baseId === payload.baseId
+      );
+      if (isBasePresent.length === 0) {
+        state.bases = [...state.bases, ...payload];
+      }
     },
     handelRemoveBases: (state, { payload }) => {
       let updatedBases = state.bases.filter(
@@ -32,6 +37,7 @@ const BasesStateSlice = createSlice({
     handelAddTableInBases: (state, { payload }) => {
       let updatedBases = state.bases.map((item) => {
         if (payload.baseId === item.baseId) {
+          console.log(payload.data);
           item.tableMetaData.push(payload.data);
         }
         return item;

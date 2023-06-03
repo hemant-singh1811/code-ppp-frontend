@@ -9,12 +9,13 @@ import { ErrorBoundary } from "react-error-boundary";
 
 // @material-tailwind/react
 import { ThemeProvider } from "@material-tailwind/react";
+import RefreshPageModal from "./components/utilities/modal/RefreshPageModal";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <BrowserRouter basename={"/"}>
       <ThemeProvider>
-        <ErrorBoundary fallback={<div>Something went wrong</div>}>
+        <ErrorBoundary fallback={<RefreshPageModal failed={true} />}>
           <App />
         </ErrorBoundary>
       </ThemeProvider>

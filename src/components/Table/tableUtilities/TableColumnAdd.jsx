@@ -65,7 +65,7 @@ let columnType = [
   // "Formula",
   // "Rollup",
   "Count",
-  // "Lookup",
+  "Lookup",
   "Created time",
   "Last modified time",
   "Created by",
@@ -96,7 +96,7 @@ let fieldsType = [
   // "formula",
   // "rollup",
   "count",
-  // "lookup",
+  "lookup",
   "createdTime",
   "lastModifiedTime",
   "createdBy",
@@ -314,42 +314,42 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
   }, [responseCreateColumn.isSuccess]);
 
   return (
-    <div className='relative'>
-      <Popover className='relative select-none'>
+    <div className="relative">
+      <Popover className="relative select-none">
         {({ open, close }) => (
           <>
             <Popover.Button
               onClick={() => console.log(open)}
               ref={setReferenceElement}
-              className='outline-none w-[120px]  th bg-[#f5f5f5] h-8'
+              className="outline-none w-[120px]  th bg-[#f5f5f5] h-8"
               style={{ height: 32 }}
             >
-              <div className='capitalize text-left text-lg font-normal select-none px-2 truncate w-full flex justify-center items-center cursor-pointer h-8'>
+              <div className="capitalize text-left text-lg font-normal select-none px-2 truncate w-full flex justify-center items-center cursor-pointer h-8">
                 <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  fill='none'
-                  viewBox='0 0 24 24'
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
                   strokeWidth={1.5}
-                  stroke='currentColor'
-                  className='w-6 h-6'
+                  stroke="currentColor"
+                  className="w-6 h-6"
                 >
                   <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M12 4.5v15m7.5-7.5h-15'
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4.5v15m7.5-7.5h-15"
                   />
                 </svg>
               </div>
             </Popover.Button>
             <Transition
-              className='bg-white'
+              className="bg-white"
               as={Fragment}
-              enter='transition ease-out duration-200'
-              enterFrom='opacity-0 translate-y-1'
-              enterTo='opacity-100 translate-y-0'
-              leave='transition ease-in duration-150'
-              leaveFrom='opacity-100 translate-y-0'
-              leaveTo='opacity-0 translate-y-1'
+              enter="transition ease-out duration-200"
+              enterFrom="opacity-0 translate-y-1"
+              enterTo="opacity-100 translate-y-0"
+              leave="transition ease-in duration-150"
+              leaveFrom="opacity-100 translate-y-0"
+              leaveTo="opacity-0 translate-y-1"
             >
               <Popover.Panel
                 ref={setPopperElement}
@@ -358,10 +358,10 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                 className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4  shadow-custom flex flex-col 
               ${headers.length < 3 ? "left-0" : "right-0"}`}
               >
-                <div className='h-full w-full '>
+                <div className="h-full w-full ">
                   <input
-                    type='text'
-                    placeholder='Field Name (Mandatory)'
+                    type="text"
+                    placeholder="Field Name (Mandatory)"
                     className={`w-full  p-1.5  rounded-md  outline-none shadow-input  border-2  ${
                       isExistFieldNameInput
                         ? "border-red-500 focus:border-red-500"
@@ -378,13 +378,13 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                   />
 
                   {isExistFieldNameInput && (
-                    <div className='text-red-700 text-sm m-1 '>
+                    <div className="text-red-700 text-sm m-1 ">
                       Please enter a unique field name
                     </div>
                   )}
 
                   {selectedFieldType && (
-                    <div className='m-1 text-sm '>
+                    <div className="m-1 text-sm ">
                       {selectedOptionDescription[selectedFieldType]}
                     </div>
                   )}
@@ -410,12 +410,12 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                   />
 
                   {descriptionToggle && (
-                    <div className='mt-4'>
-                      <div className='mb-1'>Description</div>
+                    <div className="mt-4">
+                      <div className="mb-1">Description</div>
                       <input
-                        type='text'
-                        className='px-2 p-1 w-full outline-gray-400  bg-[#f2f2f2] rounded-sm'
-                        placeholder='Describe this field (optional)'
+                        type="text"
+                        className="px-2 p-1 w-full outline-gray-400  bg-[#f2f2f2] rounded-sm"
+                        placeholder="Describe this field (optional)"
                         value={fieldDescriptionInput}
                         onChange={(e) =>
                           setFieldDescriptionInput(e.target.value)
@@ -424,7 +424,7 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                     </div>
                   )}
 
-                  <div className='flex justify-between items-center mt-8'>
+                  <div className="flex justify-between items-center mt-8">
                     <div>
                       <div
                         className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
@@ -433,25 +433,25 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                         onClick={() => setDescriptionToggle(true)}
                       >
                         <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          fill='none'
-                          viewBox='0 0 24 24'
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
                           strokeWidth={1.5}
-                          stroke='currentColor'
-                          className='w-5 h-5 mr-1'
+                          stroke="currentColor"
+                          className="w-5 h-5 mr-1"
                         >
                           <path
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                            d='M12 4.5v15m7.5-7.5h-15'
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 4.5v15m7.5-7.5h-15"
                           />
                         </svg>
                         Add description
                       </div>
                     </div>
-                    <div className='flex items-center gap-2'>
+                    <div className="flex items-center gap-2">
                       <div
-                        className='hover:bg-gray-200 p-1.5 rounded-md px-4 cursor-pointer'
+                        className="hover:bg-gray-200 p-1.5 rounded-md px-4 cursor-pointer"
                         onClick={() => {
                           close();
                           setDescriptionToggle(false);
@@ -469,7 +469,7 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                             close();
                             onCreateField();
                           }}
-                          className='bg-blue-600 rounded-md p-1.5 px-4 text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400'
+                          className="bg-blue-600 rounded-md p-1.5 px-4 text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400"
                         >
                           Create Field
                         </button>
@@ -502,17 +502,17 @@ function GetFieldByType({
   columns,
 }) {
   let SelectedFieldOption = (
-    <div className='max-h-[calc(100vh_/_2)] mt-2  rounded-md  shadow-input  '>
-      <div className='relative ' tabIndex={-1}>
-        <div className='absolute left-3 top-1/2 transform -translate-y-1/2 z-50 '>
+    <div className="max-h-[calc(100vh_/_2)] mt-2  rounded-md  shadow-input  ">
+      <div className="relative " tabIndex={-1}>
+        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 z-50 ">
           {fieldsMap.get(fieldSearchInput)
             ? getSvg(fieldsMap.get(fieldSearchInput))
             : getSvg("search")}
         </div>
         <input
-          type='search'
-          className=' w-full px-2  outline-none py-2 pl-11 bg-transparent relative z-10 focus:bg-sky-50  '
-          placeholder='Find a field type'
+          type="search"
+          className=" w-full px-2  outline-none py-2 pl-11 bg-transparent relative z-10 focus:bg-sky-50  "
+          placeholder="Find a field type"
           value={fieldSearchInput}
           onChange={(e) => {
             setFieldSearchInput(e.target.value);
@@ -523,12 +523,12 @@ function GetFieldByType({
           }}
         />
 
-        <div className='absolute right-3 top-1/2 transform -translate-y-1/2 z-50 cursor-pointer'>
+        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 z-50 cursor-pointer">
           {fieldsMap.get(fieldSearchInput) && getSvg("arrowDown")}
         </div>
       </div>
       {!selectedFieldType && (
-        <div className='h-4/5 overflow-auto p-1 border-t-[1px]  mb-1'>
+        <div className="h-4/5 overflow-auto p-1 border-t-[1px]  mb-1">
           {columnType
             .filter((ele) => {
               return ele.toLowerCase().includes(fieldSearchInput.toLowerCase());
@@ -541,10 +541,10 @@ function GetFieldByType({
                     setSelectedFieldType(field);
                     setFieldSearchInput(field);
                   }}
-                  className='flex items-center px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md'
+                  className="flex items-center px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md"
                 >
                   {getSvg(fieldsType[i])}
-                  <div className='ml-2'>{field}</div>
+                  <div className="ml-2">{field}</div>
                 </div>
               );
             })}
@@ -552,7 +552,7 @@ function GetFieldByType({
           {columnType.filter((ele) => {
             return ele.toLowerCase().includes(fieldSearchInput.toLowerCase());
           }) <= 0 && (
-            <dvi className='ml-1 flex gap-2 mt-2'>
+            <dvi className="ml-1 flex gap-2 mt-2">
               {getSvg()} No Options found
             </dvi>
           )}
@@ -668,17 +668,17 @@ function GetFieldByType({
 
     default:
       return (
-        <div className='max-h-[calc(100vh_/_2)] mt-2  rounded-md  shadow-input  '>
-          <div className='relative ' tabIndex={-1}>
-            <div className='absolute left-3 top-1/2 transform -translate-y-1/2 z-50 '>
+        <div className="max-h-[calc(100vh_/_2)] mt-2  rounded-md  shadow-input  ">
+          <div className="relative " tabIndex={-1}>
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 z-50 ">
               {fieldsMap.get(fieldSearchInput)
                 ? getSvg(fieldsMap.get(fieldSearchInput))
                 : getSvg("search")}
             </div>
             <input
-              type='search'
-              className=' w-full px-2  outline-none py-2 pl-11 bg-transparent relative z-10 focus:bg-sky-50  '
-              placeholder='Find a field type'
+              type="search"
+              className=" w-full px-2  outline-none py-2 pl-11 bg-transparent relative z-10 focus:bg-sky-50  "
+              placeholder="Find a field type"
               value={fieldSearchInput}
               onChange={(e) => {
                 setFieldSearchInput(e.target.value);
@@ -689,12 +689,12 @@ function GetFieldByType({
               }}
             />
 
-            <div className='absolute right-3 top-1/2 transform -translate-y-1/2 z-50 cursor-pointer'>
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 z-50 cursor-pointer">
               {fieldsMap.get(fieldSearchInput) && getSvg("arrowDown")}
             </div>
           </div>
           {!selectedFieldType && (
-            <div className='max-h-[calc(100vh_/_2.8)] overflow-auto p-1 border-t-[1px]  mb-1  overflow-x-auto'>
+            <div className="max-h-[calc(100vh_/_2.8)] overflow-auto p-1 border-t-[1px]  mb-1  overflow-x-auto">
               {columnType
                 .filter((ele) => {
                   return ele
@@ -709,10 +709,10 @@ function GetFieldByType({
                         setSelectedFieldType(field);
                         setFieldSearchInput(field);
                       }}
-                      className='flex items-center px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md'
+                      className="flex items-center px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md"
                     >
                       {getSvg(fieldsType[i])}
-                      <div className='ml-2'>{field}</div>
+                      <div className="ml-2">{field}</div>
                     </div>
                   );
                 })}
@@ -722,7 +722,7 @@ function GetFieldByType({
                   .toLowerCase()
                   .includes(fieldSearchInput.toLowerCase());
               }) <= 0 && (
-                <dvi className='ml-1 flex gap-2 mt-2'>
+                <dvi className="ml-1 flex gap-2 mt-2">
                   {getSvg()} No Options found
                 </dvi>
               )}
@@ -750,8 +750,8 @@ function LinkedToAnotherRecordOptions({
 
   return (
     <>
-      <div className='max-h-[calc(100vh_/_2)] mt-2 shadow-input rounded-md  overflow-auto overflow-x-auto'>
-        <div className='flex justify-center items-center border-b-[1px]'>
+      <div className="max-h-[calc(100vh_/_2)] mt-2 shadow-input rounded-md  overflow-auto overflow-x-auto">
+        <div className="flex justify-center items-center border-b-[1px]">
           <div
             onClick={() => {
               setFieldSearchInput("");
@@ -761,25 +761,25 @@ function LinkedToAnotherRecordOptions({
               setIsExistFieldNameInput(false);
               setSelectedFieldType(undefined);
             }}
-            className='flex items-center px-2 rounded-lg overflow-hidden cursor-pointer opacity-80 hover:opacity-100  '
+            className="flex items-center px-2 rounded-lg overflow-hidden cursor-pointer opacity-80 hover:opacity-100  "
           >
             <svg
-              className='font-thin fill-blue-500 '
-              xmlns='http://www.w3.org/2000/svg'
-              height='20'
-              viewBox='0 96 960 960'
-              width='20'
+              className="font-thin fill-blue-500 "
+              xmlns="http://www.w3.org/2000/svg"
+              height="20"
+              viewBox="0 96 960 960"
+              width="20"
             >
-              <path d='M372 948 21 597q-5-5-7-10t-2-11q0-6 2-11t7-10l351-351q11-11 28-11t28 11q12 12 12 28.5T428 261L113 576l315 315q12 12 11.5 28.5T428 947q-12 12-28.5 12T372 948Z' />
+              <path d="M372 948 21 597q-5-5-7-10t-2-11q0-6 2-11t7-10l351-351q11-11 28-11t28 11q12 12 12 28.5T428 261L113 576l315 315q12 12 11.5 28.5T428 947q-12 12-28.5 12T372 948Z" />
             </svg>
             back
           </div>
           <input
-            type='search'
-            name=''
-            id=''
-            className='bg-[#f0f1f3] w-full px-3 p-1.5  outline-none focus:bg-blue-50 focus:border-transparent'
-            placeholder='Find a table to link'
+            type="search"
+            name=""
+            id=""
+            className="bg-[#f0f1f3] w-full px-3 p-1.5  outline-none focus:bg-blue-50 focus:border-transparent"
+            placeholder="Find a table to link"
             value={fieldSearchInputLinkedRecord}
             onChange={(e) => {
               setFieldSearchInputLinkedRecord(e.target.value);
@@ -792,7 +792,7 @@ function LinkedToAnotherRecordOptions({
         </div>
 
         {!selectedFieldTypeLinkedRecord && (
-          <div className='h-4/5 overflow-auto p-1 px-1.5'>
+          <div className="h-4/5 overflow-auto p-1 px-1.5">
             {bases.map(({ baseId, tableMetaData }) => {
               if (baseId === selectedBaseId) {
                 return tableMetaData
@@ -809,7 +809,7 @@ function LinkedToAnotherRecordOptions({
                     return (
                       <div
                         key={i}
-                        className='px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md'
+                        className="px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md"
                         onClick={() => {
                           setSelectedFieldTypeLinkedRecord(tableName);
                           setFieldSearchInputLinkedRecord(
@@ -835,7 +835,7 @@ function LinkedToAnotherRecordOptions({
                         ) && tableId !== selectedTableId
                     );
                   }).length <= 0 && (
-                    <div className='py-2 text-center'>
+                    <div className="py-2 text-center">
                       No Tables Available in the base to link
                     </div>
                   )
@@ -846,7 +846,7 @@ function LinkedToAnotherRecordOptions({
         )}
       </div>
       {fieldSearchInputLinkedRecord && (
-        <div className='mt-3'>
+        <div className="mt-3">
           Link to records in the {fieldSearchInputLinkedRecord} table.
         </div>
       )}
@@ -895,7 +895,7 @@ function LookUpOptions() {
 
   return (
     <>
-      <div className='mt-2 -mb-2 text-sm'>
+      <div className="mt-2 -mb-2 text-sm">
         Linked record field to use for lookup
       </div>
       <SelectWithSearch
@@ -903,13 +903,13 @@ function LookUpOptions() {
         placeholder={"Choose a Table in this Field"}
         selectedItem={selectedTable}
         setSelectedItem={setSelectedTable}
-        functionalityType='lookUp'
+        functionalityType="lookUp"
       />
 
       {selectedTable && (
         <>
-          <div className='mt-2 -mb-2 text-sm'>
-            <span className='font-semibold'>{selectedTable.name + " "}</span>
+          <div className="mt-2 -mb-2 text-sm">
+            <span className="font-semibold">{selectedTable.name + " "}</span>
             field you want to look up
           </div>
           <SelectWithSearch
@@ -917,7 +917,7 @@ function LookUpOptions() {
             placeholder={"Choose a Field in this Table"}
             selectedItem={selectedField}
             setSelectedItem={setSelectedField}
-            functionalityType='lookUp'
+            functionalityType="lookUp"
           />
         </>
       )}
@@ -988,7 +988,7 @@ function CurrencyOptions({ setFieldOptions }) {
 
   return (
     <>
-      <div className='relative mt-2 '>
+      <div className="relative mt-2 ">
         <input
           value={currencyValue}
           onChange={(e) => {
@@ -1008,21 +1008,21 @@ function CurrencyOptions({ setFieldOptions }) {
 
             setDecimalPrecisionData(tempPrecisionData);
           }}
-          className='flex items-center border-2  w-full gap-1 text-black bg-white  outline-none focus:border-blue-500 p-1 rounded-md relative'
+          className="flex items-center border-2  w-full gap-1 text-black bg-white  outline-none focus:border-blue-500 p-1 rounded-md relative"
         />
 
         <svg
-          xmlns='http://www.w3.org/2000/svg'
-          height='20'
-          viewBox='0 96 960 960'
-          width='20'
-          className='absolute z-10  right-1 top-1/2 transform -translate-y-1/2 '
+          xmlns="http://www.w3.org/2000/svg"
+          height="20"
+          viewBox="0 96 960 960"
+          width="20"
+          className="absolute z-10  right-1 top-1/2 transform -translate-y-1/2 "
         >
-          <path d='M480 708 256 484l34-34 190 190 190-190 34 34-224 224Z' />
+          <path d="M480 708 256 484l34-34 190 190 190-190 34 34-224 224Z" />
         </svg>
       </div>
 
-      <div className='mt-2 -mb-2 text-sm'>Precision</div>
+      <div className="mt-2 -mb-2 text-sm">Precision</div>
       <SelectWithSearch
         data={decimalPrecisionData}
         placeholder={"Choose a type of value in this Field"}
@@ -1120,7 +1120,7 @@ function NumberOptions({ setFieldOptions }) {
 
       {selectedNumberType?.data === "decimal" && (
         <>
-          <div className='mt-2 -mb-2 text-sm'>Precision</div>
+          <div className="mt-2 -mb-2 text-sm">Precision</div>
           <SelectWithSearch
             data={decimalPrecisionData}
             placeholder={"Choose a type of value in this Field"}
@@ -1194,7 +1194,7 @@ function PercentOptions({ setFieldOptions }) {
 
   return (
     <>
-      <div className='mt-2 -mb-2 text-sm'>Precision</div>
+      <div className="mt-2 -mb-2 text-sm">Precision</div>
       <SelectWithSearch
         data={decimalPrecisionData}
         placeholder={"Choose a type of value in this Field"}
@@ -1206,7 +1206,7 @@ function PercentOptions({ setFieldOptions }) {
 }
 
 function SingleAndMultiSelectOptions({ setFieldOptions }) {
-  return <div className='mt-2 -mb-2 text-sm'>Precision</div>;
+  return <div className="mt-2 -mb-2 text-sm">Precision</div>;
 }
 
 function DurationOptions({ setFieldOptions }) {
@@ -1251,7 +1251,7 @@ function DurationOptions({ setFieldOptions }) {
 
   return (
     <>
-      <div className='mt-2 -mb-2 text-sm'>Duration Format</div>
+      <div className="mt-2 -mb-2 text-sm">Duration Format</div>
       <SelectWithSearch
         data={durationFormatData}
         placeholder={"Choose a type of value in this Field"}
@@ -1329,7 +1329,7 @@ function RatingOptions({ setFieldOptions }) {
 
   return (
     <>
-      <div className='mt-2 -mb-2 text-sm'>Select Rating Stars</div>
+      <div className="mt-2 -mb-2 text-sm">Select Rating Stars</div>
       <SelectWithSearch
         data={ratingData}
         placeholder={"Choose a type of value in this Field"}
@@ -1365,28 +1365,28 @@ function ButtonOptions({ setFieldOptions, columns }) {
 
   return (
     <>
-      <div className='mt-2 -mb-2 text-sm'>Label</div>
-      <div className='relative mt-2 '>
+      <div className="mt-2 -mb-2 text-sm">Label</div>
+      <div className="relative mt-2 ">
         <input
           value={label}
           onChange={(e) => {
             setLabel(e.target.value);
           }}
-          className='flex items-center border-2  w-full gap-1 text-black bg-white  outline-none focus:border-blue-500 p-1 rounded-md relative'
+          className="flex items-center border-2  w-full gap-1 text-black bg-white  outline-none focus:border-blue-500 p-1 rounded-md relative"
         />
 
         <svg
-          xmlns='http://www.w3.org/2000/svg'
-          height='20'
-          viewBox='0 96 960 960'
-          width='20'
-          className='absolute z-10  right-1 top-1/2 transform -translate-y-1/2 '
+          xmlns="http://www.w3.org/2000/svg"
+          height="20"
+          viewBox="0 96 960 960"
+          width="20"
+          className="absolute z-10  right-1 top-1/2 transform -translate-y-1/2 "
         >
-          <path d='M480 708 256 484l34-34 190 190 190-190 34 34-224 224Z' />
+          <path d="M480 708 256 484l34-34 190 190 190-190 34 34-224 224Z" />
         </svg>
       </div>
 
-      <div className='mt-2 -mb-2 text-sm'>Duration Format</div>
+      <div className="mt-2 -mb-2 text-sm">Duration Format</div>
       <SelectWithSearch
         data={fieldData}
         placeholder={"Choose a type of value in this Field"}
@@ -1423,7 +1423,7 @@ function CountOptions({ setFieldOptions, columns }) {
     <>
       {linkedTableData.length > 0 ? (
         <>
-          <div className='mt-2 -mb-2 text-sm'>
+          <div className="mt-2 -mb-2 text-sm">
             Linked record field to use for count
           </div>
           <SelectWithSearch
@@ -1434,7 +1434,7 @@ function CountOptions({ setFieldOptions, columns }) {
           />
         </>
       ) : (
-        <div className='mt-2 -mb-2 text-sm'>No Linked Table Found</div>
+        <div className="mt-2 -mb-2 text-sm">No Linked Table Found</div>
       )}
     </>
   );
