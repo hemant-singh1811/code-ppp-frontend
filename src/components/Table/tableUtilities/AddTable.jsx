@@ -123,204 +123,206 @@ export default function AddTable() {
   }, [responseRenameTable.isSuccess]);
 
   return (
-    <Transition appear show={isOpen} as={Fragment}>
-      <Dialog
-        as='div'
-        className='relative z-50'
-        onClose={() => dispatch(handleAddToggle({ isOpen: false, type: "" }))}
-      >
-        <Transition.Child
-          className={`text-black absolute bottom-[10px] z-50  w-96 rounded-md  bg-white p-4 border-gray-400 border-2 flex flex-col ${
-            mainSideBar.toggle ? "left-[80px]" : "left-[244px]"
-          }`}
-          as={Fragment}
-          enter='ease-out duration-300'
-          enterFrom='opacity-0 scale-95'
-          enterTo='opacity-100 scale-100'
-          leave='ease-in duration-200'
-          leaveFrom='opacity-100 scale-100'
-          leaveTo='opacity-0 scale-95'
+    isOpen && (
+      <Transition appear show={isOpen} as={Fragment}>
+        <Dialog
+          as='div'
+          className='relative z-50'
+          onClose={() => dispatch(handleAddToggle({ isOpen: false, type: "" }))}
         >
-          <Dialog.Panel className=''>
-            <div>
-              <input
-                type='text'
-                placeholder={
-                  type === "table"
-                    ? "Table Name (Mandatory)"
-                    : type === "base"
-                    ? "Base Name (Mandatory)"
-                    : ""
-                }
-                className='w-full p-1 px-2 border-2 rounded-md outline-blue-500 border-[#cccecf] mb-3'
-                value={nameInput}
-                onChange={(e) => {
-                  setNameInput(e.target.value);
-                  switch (type) {
-                    case "table":
-                      existingTable.has(
-                        e.target.value.toLocaleLowerCase().trim()
-                      )
-                        ? setIsExistNameInput(true)
-                        : setIsExistNameInput(false);
-
-                      break;
-
-                    case "base":
-                      existingBases.has(
-                        e.target.value.toLocaleLowerCase().trim()
-                      )
-                        ? setIsExistNameInput(true)
-                        : setIsExistNameInput(false);
-
-                      break;
-
-                    default:
-                      break;
-                  }
-                }}
-              />
-
-              {isExistNameInput && (
-                <div className='text-red-700 text-sm m-1 -mt-3 -mb-2'>
-                  Please enter a unique {type === "table" ? "Table" : "Base"}{" "}
-                  name
-                </div>
-              )}
-
-              <div className='mt-4'>
-                <div className='mb-1'>Description</div>
+          <Transition.Child
+            className={`text-black absolute bottom-[10px] z-50  w-96 rounded-md  bg-white p-4 border-gray-400 border-2 flex flex-col ${
+              mainSideBar.toggle ? "left-[80px]" : "left-[244px]"
+            }`}
+            as={Fragment}
+            enter='ease-out duration-300'
+            enterFrom='opacity-0 scale-95'
+            enterTo='opacity-100 scale-100'
+            leave='ease-in duration-200'
+            leaveFrom='opacity-100 scale-100'
+            leaveTo='opacity-0 scale-95'
+          >
+            <Dialog.Panel className=''>
+              <div>
                 <input
                   type='text'
-                  className='px-2 p-1 w-full outline-gray-400  bg-[#f2f2f2] rounded-md'
                   placeholder={
                     type === "table"
-                      ? "Describe this Table (optional)"
+                      ? "Table Name (Mandatory)"
                       : type === "base"
-                      ? "Describe this Base (optional)"
+                      ? "Base Name (Mandatory)"
                       : ""
                   }
-                  value={descriptionInput}
-                  onChange={(e) => setDescriptionInput(e.target.value)}
-                />
-              </div>
+                  className='w-full p-1 px-2 border-2 rounded-md outline-blue-500 border-[#cccecf] mb-3'
+                  value={nameInput}
+                  onChange={(e) => {
+                    setNameInput(e.target.value);
+                    switch (type) {
+                      case "table":
+                        existingTable.has(
+                          e.target.value.toLocaleLowerCase().trim()
+                        )
+                          ? setIsExistNameInput(true)
+                          : setIsExistNameInput(false);
 
-              <div className='flex justify-between items-center mt-8'>
-                <div>
-                  <div
-                    className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
-                      isOpen && "hidden"
-                    } `}
-                    onClick={() =>
-                      dispatch(handleAddToggle({ isOpen: false, type: "" }))
+                        break;
+
+                      case "base":
+                        existingBases.has(
+                          e.target.value.toLocaleLowerCase().trim()
+                        )
+                          ? setIsExistNameInput(true)
+                          : setIsExistNameInput(false);
+
+                        break;
+
+                      default:
+                        break;
                     }
-                  >
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      strokeWidth={1.5}
-                      stroke='currentColor'
-                      className='w-6 h-6'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        d='M12 4.5v15m7.5-7.5h-15'
-                      />
-                    </svg>
-                    Add description
+                  }}
+                />
+
+                {isExistNameInput && (
+                  <div className='text-red-700 text-sm m-1 -mt-3 -mb-2'>
+                    Please enter a unique {type === "table" ? "Table" : "Base"}{" "}
+                    name
                   </div>
+                )}
+
+                <div className='mt-4'>
+                  <div className='mb-1'>Description</div>
+                  <input
+                    type='text'
+                    className='px-2 p-1 w-full outline-gray-400  bg-[#f2f2f2] rounded-md'
+                    placeholder={
+                      type === "table"
+                        ? "Describe this Table (optional)"
+                        : type === "base"
+                        ? "Describe this Base (optional)"
+                        : ""
+                    }
+                    value={descriptionInput}
+                    onChange={(e) => setDescriptionInput(e.target.value)}
+                  />
                 </div>
-                <div className='flex items-center gap-2 select-none'>
-                  <div
-                    className='hover:bg-gray-200 p-1.5 rounded-md px-4 cursor-pointer'
-                    onClick={() => {
-                      dispatch(handleAddToggle({ isOpen: false, type: "" }));
-                      setNameInput("");
-                    }}
-                  >
-                    Cancel
-                  </div>
-                  {
-                    <button
-                      disabled={
-                        !nameInput ||
-                        isExistNameInput ||
-                        responseCreateTable.isLoading
+
+                <div className='flex justify-between items-center mt-8'>
+                  <div>
+                    <div
+                      className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
+                        isOpen && "hidden"
+                      } `}
+                      onClick={() =>
+                        dispatch(handleAddToggle({ isOpen: false, type: "" }))
                       }
-                      onClick={() => {
-                        if (action === "rename") {
-                          switch (type) {
-                            case "table":
-                              renameTableApi({
-                                baseId: baseId,
-                                data: {
-                                  tableId: tableId,
-                                  tableName: nameInput.trim(),
-                                  tableDescription: descriptionInput.trim(),
-                                },
-                              });
-                              break;
-                            case "base":
-                              renameBaseApi({
-                                data: {
-                                  baseId: baseId,
-                                  baseName: nameInput.trim(),
-                                  baseDescription: descriptionInput.trim(),
-                                },
-                              });
-                              break;
-                            default:
-                              break;
-                          }
-                        } else {
-                          switch (type) {
-                            case "table":
-                              createTableApi({
-                                baseId: selectedBaseId,
-                                data: {
-                                  tableName: nameInput.trim(),
-                                  tableDescription: descriptionInput.trim(),
-                                },
-                              });
-                              break;
-                            case "base":
-                              createBaseApi({
-                                data: {
-                                  baseName: nameInput.trim(),
-                                  baseDescription: descriptionInput.trim(),
-                                },
-                              });
-                              break;
-                            default:
-                              break;
-                          }
-                        }
-                      }}
-                      className='bg-blue-600 rounded-md p-1.5 px-4 min-w-[105px] min-h-[31.5px] text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400 flex items-center justify-center'
                     >
-                      {responseCreateTable.isLoading ||
-                      responseCreateBase.isLoading ||
-                      responseRenameTable.isLoading ||
-                      responseRenameBase.isLoading ? (
-                        <div>
-                          <LoadingAlt />
-                        </div>
-                      ) : (
-                        <span className='capitalize'>
-                          {action} {type === "table" ? "Table" : "Base"}
-                        </span>
-                      )}
-                    </button>
-                  }
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        fill='none'
+                        viewBox='0 0 24 24'
+                        strokeWidth={1.5}
+                        stroke='currentColor'
+                        className='w-6 h-6'
+                      >
+                        <path
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          d='M12 4.5v15m7.5-7.5h-15'
+                        />
+                      </svg>
+                      Add description
+                    </div>
+                  </div>
+                  <div className='flex items-center gap-2 select-none'>
+                    <div
+                      className='hover:bg-gray-200 p-1.5 rounded-md px-4 cursor-pointer'
+                      onClick={() => {
+                        dispatch(handleAddToggle({ isOpen: false, type: "" }));
+                        setNameInput("");
+                      }}
+                    >
+                      Cancel
+                    </div>
+                    {
+                      <button
+                        disabled={
+                          !nameInput ||
+                          isExistNameInput ||
+                          responseCreateTable.isLoading
+                        }
+                        onClick={() => {
+                          if (action === "rename") {
+                            switch (type) {
+                              case "table":
+                                renameTableApi({
+                                  baseId: baseId,
+                                  data: {
+                                    tableId: tableId,
+                                    tableName: nameInput.trim(),
+                                    tableDescription: descriptionInput.trim(),
+                                  },
+                                });
+                                break;
+                              case "base":
+                                renameBaseApi({
+                                  data: {
+                                    baseId: baseId,
+                                    baseName: nameInput.trim(),
+                                    baseDescription: descriptionInput.trim(),
+                                  },
+                                });
+                                break;
+                              default:
+                                break;
+                            }
+                          } else {
+                            switch (type) {
+                              case "table":
+                                createTableApi({
+                                  baseId: selectedBaseId,
+                                  data: {
+                                    tableName: nameInput.trim(),
+                                    tableDescription: descriptionInput.trim(),
+                                  },
+                                });
+                                break;
+                              case "base":
+                                createBaseApi({
+                                  data: {
+                                    baseName: nameInput.trim(),
+                                    baseDescription: descriptionInput.trim(),
+                                  },
+                                });
+                                break;
+                              default:
+                                break;
+                            }
+                          }
+                        }}
+                        className='bg-blue-600 rounded-md p-1.5 px-4 min-w-[105px] min-h-[31.5px] text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400 flex items-center justify-center'
+                      >
+                        {responseCreateTable.isLoading ||
+                        responseCreateBase.isLoading ||
+                        responseRenameTable.isLoading ||
+                        responseRenameBase.isLoading ? (
+                          <div>
+                            <LoadingAlt />
+                          </div>
+                        ) : (
+                          <span className='capitalize'>
+                            {action} {type === "table" ? "Table" : "Base"}
+                          </span>
+                        )}
+                      </button>
+                    }
+                  </div>
                 </div>
               </div>
-            </div>
-          </Dialog.Panel>
-        </Transition.Child>
-      </Dialog>
-    </Transition>
+            </Dialog.Panel>
+          </Transition.Child>
+        </Dialog>
+      </Transition>
+    )
   );
 }
 

@@ -10,14 +10,13 @@ import { ColorPalletSelect } from "./components/utilities/popover/ColorPalletSel
 
 function App() {
   const { userInfo } = useSelector((state) => state.auth);
-  const { isOpen } = useSelector((state) => state.globalState.addToggle);
 
   return (
-    <div className='flex w-screen h-screen '>
+    <div className="flex w-screen h-screen ">
       {userInfo && <Sidebar />}
-      <div className='relative w-full flex'>
+      <div className="relative w-full flex">
         <MainRouting />
-        {isOpen && <AddTable />}
+        <AddTable />
         <FileViewer />
         <Modal />
       </div>
