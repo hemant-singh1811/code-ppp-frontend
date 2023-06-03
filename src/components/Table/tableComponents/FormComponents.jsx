@@ -7,26 +7,26 @@ import { Input, Textarea } from "@material-tailwind/react";
 const FormComponents = ({ row, column, type }) => {
   const components = {
     singleSelect: <SingleSelect row={row} column={column} />,
-    linkedRecords: <SingleLineText />,
+    linkedRecords: <SingleLineText row={row} column={column} />,
     singleLineText: <SingleLineText row={row} column={column} />,
     multilineText: <MultilineTextCell row={row} column={column} />,
-    attachments: <SingleLineText />,
+    attachments: <SingleLineText row={row} column={column} />,
     checkbox: <Checkbox row={row} column={column} />,
-    multipleSelect: <SingleLineText />,
-    user: <SingleLineText render={"form"} />,
-    date: <SingleLineText />,
-    phoneNumber: <SingleLineText />,
+    multipleSelect: <SingleLineText row={row} column={column} />,
+    user: <SingleLineText row={row} column={column} />,
+    date: <SingleLineText row={row} column={column} />,
+    phoneNumber: <SingleLineText row={row} column={column} />,
     email: <Email row={row} column={column} />,
-    url: <SingleLineText />,
-    number: <SingleLineText />,
-    currency: <SingleLineText />,
-    percent: <SingleLineText />,
-    duration: <SingleLineText />,
-    rating: <SingleLineText />,
-    formula: <SingleLineText />,
-    rollup: <SingleLineText />,
-    count: <SingleLineText />,
-    lookup: <SingleLineText />,
+    url: <SingleLineText row={row} column={column} />,
+    number: <SingleLineText row={row} column={column} />,
+    currency: <Currency row={row} column={column} />,
+    percent: <SingleLineText row={row} column={column} />,
+    duration: <SingleLineText row={row} column={column} />,
+    rating: <SingleLineText row={row} column={column} />,
+    formula: <SingleLineText row={row} column={column} />,
+    rollup: <SingleLineText row={row} column={column} />,
+    count: <SingleLineText row={row} column={column} />,
+    lookup: <SingleLineText row={row} column={column} />,
     createdTime: (
       <ModifiedAndCreatedCell type={type} column={column} row={row} />
     ),
@@ -37,9 +37,9 @@ const FormComponents = ({ row, column, type }) => {
     lastModifiedBy: (
       <ModifiedAndCreatedCell type={type} column={column} row={row} />
     ),
-    autoNumber: <SingleLineText />,
-    barcode: <SingleLineText />,
-    button: <SingleLineText />,
+    autoNumber: <SingleLineText row={row} column={column} />,
+    barcode: <SingleLineText row={row} column={column} />,
+    button: <SingleLineText row={row} column={column} />,
   };
   return <>{components[type]}</>;
 };
@@ -59,7 +59,7 @@ export const SingleLineText = ({ row, column }) => {
 
   console.log("column", column);
   function handleBlur() {
-    if (row?.getValue(column.id) !== value) {
+    if (row?.getValue(column?.id) !== value) {
       let newRowPart = value;
 
       let rowObj = {
@@ -76,8 +76,8 @@ export const SingleLineText = ({ row, column }) => {
 
       socket.emit("updateData", rowObj, (response) => {
         table.options.meta?.updateData(
-          row.index,
-          column.id,
+          row?.index,
+          column?.id,
           value,
           response.metaData
         );
@@ -90,7 +90,7 @@ export const SingleLineText = ({ row, column }) => {
     <div className="w-full hover:shadow-md">
       <Input
         type="text"
-        //label={column.columnDef.fieldName}
+        label={column?.columnDef?.fieldName || ""}
         className="outline-blue-700"
         value={value}
         onChange={onChange}
@@ -397,6 +397,116 @@ export function Email({ row, column }) {
         className={myCLasses}
       />
     </div>
+  );
+}
+
+export function Currency({ row, column }) {
+  const socket = useSelector((state) => state.socketWebData.socket);
+  const [value, setValue] = useState(row?.getValue(column?.id) || "");
+  const [isEditMode, setIsEditMode] = useState(false);
+  const { table, activeNumberOfLines } = useContext(TableContext);
+  const { selectedBaseId, selectedTableId } = useSelector(
+    (state) => state.globalState
+  );
+  const userToken = useSelector((state) => state.auth.userInfo?.userToken);
+  let options = column.columnDef?.currencyFieldOptions;
+  //console.log(options);
+
+  function handleChange(event) {
+    const arr = [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "0",
+      ".",
+      options?.currencyValue,
+    ];
+    if (arr.includes(event.target.value[event.target.value.length - 1])) {
+      setValue(event.target.value);
+    } else if (event.target.value === "") {
+      setValue(event.target.value);
+    } else {
+      //setValue(event.target.value);
+    }
+  }
+  //   console.log(options);
+  function handleBlur() {
+    setIsEditMode(false);
+    const val = removeExtraCharacter(value);
+    if (row.getValue(column.id) !== val) {
+      let updatedValue = removeExtraCharacter(val);
+      console.log("isNaN", isNaN(parseFloat(val)), parseFloat(val));
+      updatedValue = isNaN(parseFloat(val))
+        ? ""
+        : parseFloat(val).toFixed(options?.fieldPrecision);
+      console.log("updatedValue", updatedValue);
+      setValue(updatedValue);
+
+      let rowObj = {
+        userToken: userToken,
+        data: {
+          baseId: selectedBaseId,
+          tableId: selectedTableId,
+          recordId: row?.original.id52148213343234567,
+          updatedData: updatedValue,
+          fieldType: column.columnDef.fieldType,
+          fieldId: column.columnDef.fieldId,
+        },
+      };
+
+      socket.emit("updateData", rowObj, (response) => {
+        table.options.meta?.updateData(
+          row.index,
+          column.id,
+          updatedValue,
+          response.metaData
+        );
+        console.log("res : ", response);
+      });
+    }
+  }
+
+  function removeExtraCharacter(value) {
+    const inputValue = value.replace(/[^\d.]/g, ""); //  Remove non-digit and non-dot characters
+    return inputValue;
+  }
+
+  function addCommas(value) {
+    const inputValue = value.replace(/[^\d.]/g, ""); // Remove non-digit and non-dot characters
+    const parts = inputValue.split("."); // Split into integer and decimal parts
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Add commas to the integer part
+
+    // Reconstruct the value with commas and decimal point
+    const formattedValue = parts.length === 2 ? parts.join(".") : parts[0];
+    return formattedValue;
+  }
+
+  return (
+    <Input
+      type="text"
+      value={value && options?.currencyValue + addCommas(value)}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      autoFocus
+      style={{
+        paddingBottom:
+          activeNumberOfLines === 4
+            ? 102
+            : activeNumberOfLines === 3
+            ? 62
+            : activeNumberOfLines === 2
+            ? 30
+            : activeNumberOfLines === 1 && 4,
+        boxShadow: "0 0 0px 2px inset #166ee1",
+      }}
+      className="w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  text-right"
+    />
   );
 }
 
