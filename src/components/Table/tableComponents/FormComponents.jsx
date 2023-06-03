@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { TableContext } from "./TableComponents";
+import { Input, Textarea } from "@material-tailwind/react";
 
 const FormComponents = ({ row, column, type }) => {
   const components = {
@@ -55,6 +56,8 @@ export const SingleLineText = ({ row, column }) => {
   const onChange = (e) => {
     setValue(e.target.value);
   };
+
+  console.log("column", column);
   function handleBlur() {
     if (row?.getValue(column.id) !== value) {
       let newRowPart = value;
@@ -66,8 +69,8 @@ export const SingleLineText = ({ row, column }) => {
           tableId: selectedTableId,
           recordId: row?.original.id52148213343234567,
           updatedData: newRowPart,
-          fieldType: column.columnDef.fieldType,
-          fieldId: column.columnDef.fieldId,
+          fieldType: column?.columnDef?.fieldType,
+          fieldId: column?.columnDef?.fieldId,
         },
       };
 
@@ -85,8 +88,9 @@ export const SingleLineText = ({ row, column }) => {
 
   return (
     <div className="w-full hover:shadow-md">
-      <input
+      <Input
         type="text"
+        //label={column.columnDef.fieldName}
         className="outline-blue-700"
         value={value}
         onChange={onChange}
@@ -202,11 +206,12 @@ export function MultilineTextCell({ row, column }) {
     }
   }
   return (
-    <textarea
+    <Textarea
       className="w-full h-full outline-none placeholder:p-1"
       value={value}
       onChange={changeHandler}
       onBlur={handleBlur}
+
       // onFocus={(e) => {
       //   e.target.style.outline = "blue auto 1px";
       // }}
@@ -384,7 +389,7 @@ export function Email({ row, column }) {
 
   return (
     <div>
-      <input
+      <Input
         type="text"
         value={value}
         onChange={onChange}
