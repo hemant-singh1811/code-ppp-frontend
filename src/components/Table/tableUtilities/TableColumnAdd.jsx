@@ -322,8 +322,7 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
               onClick={() => console.log(open)}
               ref={setReferenceElement}
               className="outline-none w-[120px]  th bg-[#f5f5f5] h-8"
-              style={{ height: 32 }}
-            >
+              style={{ height: 32 }}>
               <div className="capitalize text-left text-lg font-normal select-none px-2 truncate w-full flex justify-center items-center cursor-pointer h-8">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -331,8 +330,7 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-6 h-6"
-                >
+                  className="w-6 h-6">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -349,15 +347,13 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
               enterTo="opacity-100 translate-y-0"
               leave="transition ease-in duration-150"
               leaveFrom="opacity-100 translate-y-0"
-              leaveTo="opacity-0 translate-y-1"
-            >
+              leaveTo="opacity-0 translate-y-1">
               <Popover.Panel
                 ref={setPopperElement}
                 style={styles.popper}
                 {...attributes.popper}
                 className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4  shadow-custom flex flex-col 
-              ${headers.length < 3 ? "left-0" : "right-0"}`}
-              >
+              ${headers.length < 3 ? "left-0" : "right-0"}`}>
                 <div className="h-full w-full ">
                   <input
                     type="text"
@@ -430,16 +426,14 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                         className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
                           descriptionToggle && "hidden"
                         } `}
-                        onClick={() => setDescriptionToggle(true)}
-                      >
+                        onClick={() => setDescriptionToggle(true)}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
                           strokeWidth={1.5}
                           stroke="currentColor"
-                          className="w-5 h-5 mr-1"
-                        >
+                          className="w-5 h-5 mr-1">
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -458,8 +452,7 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                           setSelectedFieldType(undefined);
                           setFieldSearchInput("");
                           setFieldNameInput("");
-                        }}
-                      >
+                        }}>
                         Cancel
                       </div>
                       {selectedFieldType && (
@@ -469,8 +462,7 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                             close();
                             onCreateField();
                           }}
-                          className="bg-blue-600 rounded-md p-1.5 px-4 text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400"
-                        >
+                          className="bg-blue-600 rounded-md p-1.5 px-4 text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400">
                           Create Field
                         </button>
                       )}
@@ -541,8 +533,7 @@ function GetFieldByType({
                     setSelectedFieldType(field);
                     setFieldSearchInput(field);
                   }}
-                  className="flex items-center px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md"
-                >
+                  className="flex items-center px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md">
                   {getSvg(fieldsType[i])}
                   <div className="ml-2">{field}</div>
                 </div>
@@ -709,8 +700,7 @@ function GetFieldByType({
                         setSelectedFieldType(field);
                         setFieldSearchInput(field);
                       }}
-                      className="flex items-center px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md"
-                    >
+                      className="flex items-center px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md">
                       {getSvg(fieldsType[i])}
                       <div className="ml-2">{field}</div>
                     </div>
@@ -761,15 +751,13 @@ function LinkedToAnotherRecordOptions({
               setIsExistFieldNameInput(false);
               setSelectedFieldType(undefined);
             }}
-            className="flex items-center px-2 rounded-lg overflow-hidden cursor-pointer opacity-80 hover:opacity-100  "
-          >
+            className="flex items-center px-2 rounded-lg overflow-hidden cursor-pointer opacity-80 hover:opacity-100  ">
             <svg
               className="font-thin fill-blue-500 "
               xmlns="http://www.w3.org/2000/svg"
               height="20"
               viewBox="0 96 960 960"
-              width="20"
-            >
+              width="20">
               <path d="M372 948 21 597q-5-5-7-10t-2-11q0-6 2-11t7-10l351-351q11-11 28-11t28 11q12 12 12 28.5T428 261L113 576l315 315q12 12 11.5 28.5T428 947q-12 12-28.5 12T372 948Z" />
             </svg>
             back
@@ -815,8 +803,7 @@ function LinkedToAnotherRecordOptions({
                           setFieldSearchInputLinkedRecord(
                             "Link to " + tableName
                           );
-                        }}
-                      >
+                        }}>
                         {tableName}
                       </div>
                     );
@@ -1016,8 +1003,7 @@ function CurrencyOptions({ setFieldOptions }) {
           height="20"
           viewBox="0 96 960 960"
           width="20"
-          className="absolute z-10  right-1 top-1/2 transform -translate-y-1/2 "
-        >
+          className="absolute z-10  right-1 top-1/2 transform -translate-y-1/2 ">
           <path d="M480 708 256 484l34-34 190 190 190-190 34 34-224 224Z" />
         </svg>
       </div>
@@ -1388,8 +1374,7 @@ function ButtonOptions({ setFieldOptions, columns }) {
           height="20"
           viewBox="0 96 960 960"
           width="20"
-          className="absolute z-10  right-1 top-1/2 transform -translate-y-1/2 "
-        >
+          className="absolute z-10  right-1 top-1/2 transform -translate-y-1/2 ">
           <path d="M480 708 256 484l34-34 190 190 190-190 34 34-224 224Z" />
         </svg>
       </div>

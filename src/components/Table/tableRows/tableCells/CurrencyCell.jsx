@@ -96,7 +96,7 @@ export default function CurrencyCell({ cell }) {
   return isEditMode ? (
     <input
       type="text"
-      value={value && options.currencyValue + addCommas(value)}
+      value={value && options?.currencyValue + addCommas(value)}
       onChange={handleChange}
       onBlur={handleBlur}
       autoFocus
@@ -117,7 +117,7 @@ export default function CurrencyCell({ cell }) {
     <div
       className={`overflow-hidden  w-full h-full break-words truncate px-2 p-1 text-right`}
       onClick={handleDoubleClick}>
-      {value && options.currencyValue + addCommas(value)}
+      {value && options?.currencyValue + addCommas(value)}
     </div>
   );
 }
