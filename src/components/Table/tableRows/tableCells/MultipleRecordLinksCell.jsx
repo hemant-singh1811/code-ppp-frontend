@@ -169,7 +169,7 @@ function MultipleRecordLinksCell({ cell }) {
       className="flex h-full w-full items-center overflow-hidden px-1 gap-1"
       onFocus={() => handleFocus()}
       onBlur={() => handleBlur()}
-      tabIndex="1"
+      tabIndex={-1}
     >
       {/* //add new record */}
       {isChildVisible && (

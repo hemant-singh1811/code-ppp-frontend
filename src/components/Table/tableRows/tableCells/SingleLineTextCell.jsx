@@ -56,11 +56,13 @@ export default function SingleLineTextCell({ cell }) {
 
   return isEditMode ? (
     <input
-      type='text'
+      tabIndex={-1}
+      type="text"
       value={value}
       onChange={handleChange}
       onBlur={handleBlur}
       autoFocus
+      spellCheck="false"
       style={{
         paddingBottom:
           activeNumberOfLines === 4
@@ -70,14 +72,28 @@ export default function SingleLineTextCell({ cell }) {
             : activeNumberOfLines === 2
             ? 30
             : activeNumberOfLines === 1 && 4,
-        boxShadow: "0 0 0px 2px inset #166ee1",
+        paddingTop:
+          activeNumberOfLines === 4
+            ? 2
+            : activeNumberOfLines === 3
+            ? 2
+            : activeNumberOfLines === 2
+            ? 12
+            : activeNumberOfLines === 1 && 2,
+        boxShadow: "0 0 0px 3px #166ee1",
+        zIndex: 1000,
       }}
-      className='w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  '
+      className="w-full h-full border-none flex px-2  p-1 outline-none rounded-sm  "
     />
   ) : (
     <div
-      className={`overflow-hidden text-left w-full h-full break-words truncate px-2 p-1  `}
-      onClick={handleDoubleClick}
+      tabIndex={-1}
+      className={`overflow-hidden text-left w-full h-full break-words px-2 p-1 bg-transparent  truncate-multiline webkitLineClamp${activeNumberOfLines}`}
+      onDoubleClick={handleDoubleClick}
+      style={{
+        backgroundColor: "transparent",
+        // boxShadow: "0 0 0px 4px  #166ee1",
+      }}
     >
       {value || ""}
     </div>
