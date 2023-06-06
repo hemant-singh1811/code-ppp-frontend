@@ -7,6 +7,7 @@ import { Fragment } from "react";
 import getSvg from "./getSvg";
 import SelectWithSearch from "./SelectWithSearch";
 import { usePopper } from "react-popper";
+import CheckboxPallate from "../../../utilities/checkboxPallate";
 
 const selectedOptionDescription = {
   "Single line text":
@@ -651,6 +652,17 @@ function GetFieldByType({
         <>
           {SelectedFieldOption}
           <SingleAndMultiSelectOptions
+            columns={columns}
+            setFieldOptions={setFieldOptions}
+          />
+        </>
+      );
+
+    case "Checkbox":
+      return (
+        <>
+          {SelectedFieldOption}
+          <CheckboxOptions
             columns={columns}
             setFieldOptions={setFieldOptions}
           />
@@ -1429,6 +1441,23 @@ function CountOptions({ setFieldOptions, columns }) {
       ) : (
         <div className="mt-2 -mb-2 text-sm">No Linked Table Found</div>
       )}
+    </>
+  );
+}
+
+function CheckboxOptions({ setFieldOptions, columns }) {
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    setFieldOptions({
+      checked: checked,
+    });
+  }, [checked]);
+
+  return (
+    <>
+      <div className="mt-2 -mb-2 text-sm">Default Value</div>
+      <CheckboxPallate />
     </>
   );
 }
