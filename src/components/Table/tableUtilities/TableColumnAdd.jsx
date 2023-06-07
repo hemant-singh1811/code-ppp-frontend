@@ -63,7 +63,7 @@ let columnType = [
   "Percent",
   "Duration",
   "Rating",
-  // "Formula",
+  "Formula",
   // "Rollup",
   "Count",
   "Lookup",
@@ -94,7 +94,7 @@ let fieldsType = [
   "percent",
   "duration",
   "rating",
-  // "formula",
+  "formula",
   // "rollup",
   "count",
   "lookup",
@@ -274,6 +274,21 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
           },
         });
         break;
+
+        case "Formula":
+          addColumnApi({
+            baseId: selectedBaseId,
+            data: {
+              tableId: selectedTableId,
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              fieldType: fieldsMap.get(selectedFieldType),
+              baseId: selectedBaseId,
+              formulaFieldOptions: fieldOptions,
+            },
+          });
+          break;
+
 
       default:
         addColumnApi({
@@ -668,6 +683,15 @@ function GetFieldByType({
           />
         </>
       );
+
+      case "Formula" : 
+      return (
+        <>
+          {SelectedFieldOption}
+          <FormulaOptions columns={columns} setFieldOptions={setFieldOptions}/>
+          
+        </>
+      )
 
     default:
       return (
@@ -1452,6 +1476,24 @@ function CheckboxOptions({ setFieldOptions, columns }) {
       <CheckboxPallate />
     </>
   );
+}
+
+function FormulaOptions({setFieldOptions,columns}){
+  const [value,setValue] = useState("");
+  console.log(columns);
+
+  useEffect(()=>{
+    setFieldOptions({
+      formula:value
+    })
+  },[value])
+
+  return (
+    <>
+      <div className="mt-2 mb-2">Formula</div>
+      <textarea className="w-full border rounded " placeholder="formula" value={value} onChange={(e)=>setValue(e.target.value)} />
+    </>
+  )
 }
 
 export default TableColumnAdd;

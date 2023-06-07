@@ -18,6 +18,7 @@ import PercentCell from "./PercentCell";
 import DurationCell from "./DurationCell";
 import CountCell from "./CountCell";
 import RatingCell from "./RatingCell";
+import FormulaCell from "./FormulaCell";
 
 export function CellByFieldType({
   rowIndex,
@@ -158,6 +159,9 @@ export function CellByFieldType({
 
     case "linkedRecords": //string
       return <MultipleRecordLinksCell cell={cell} rowData={cell?.getValue()} />;
+
+    case "formula":
+      return <FormulaCell cell={cell} rowData={cell?.getValue()} />
 
     default:
       return (
