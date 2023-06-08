@@ -1491,7 +1491,8 @@ function FormulaOptions({setFieldOptions,columns}){
   return (
     <>
       <div className="mt-2 mb-2">Formula</div>
-      <textarea className="w-full border rounded " placeholder="formula" value={value} onChange={(e)=>setValue(e.target.value)} />
+      <textarea className="w-full border rounded p-1 px-2" placeholder="formula" value={value} onChange={(e)=>setValue(e.target.value)} />
+      
     </>
   )
 }

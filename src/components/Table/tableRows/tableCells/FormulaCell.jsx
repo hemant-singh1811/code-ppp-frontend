@@ -5,8 +5,8 @@ import { set } from 'react-hook-form';
 const FormulaCell = ({cell,rowData}) => {
     const [value,setValue] = useState(rowData || "");
     console.log(cell);
-    //const formula = cell?.column?.columnDef?.formulaFieldOptions?.formula;
-    const formula = "Num1 + Num2";
+    const formula = cell?.column?.columnDef?.formulaFieldOptions?.formula;
+    //const formula = "Num1 + Num2";
     if(!formula){
       return <></>
     }
@@ -31,7 +31,8 @@ const FormulaCell = ({cell,rowData}) => {
       if(myMap.has(item)){
         return myMap.get(item);
       }
-      return item;
+      if(item !== "")
+        return item;
     })
     console.log(formulaArray2)
     const formulaString = formulaArray2.join('');
@@ -48,8 +49,8 @@ const FormulaCell = ({cell,rowData}) => {
       }
     },[data])
   return (
-    <div>
-        <input type='text' value={value} onChange={(e)=>setValue(e.target.value)} />
+    <div className="flex p-1 px-2 w-full truncate justify-end">
+        {value}
     </div>
   )
 }

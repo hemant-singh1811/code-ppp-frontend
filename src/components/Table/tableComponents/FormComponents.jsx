@@ -270,6 +270,7 @@ export function Checkbox({ row, column }) {
 
 export function SingleSelect({ row, column }) {
   const [options, setOptions] = useState(column?.columnDef.options || []);
+  console.log(options)
   const socket = useSelector((state) => state.socketWebData.socket);
   const { table, activeNumberOfLines } = useContext(TableContext);
   const { selectedBaseId, selectedTableId } = useSelector(
@@ -281,6 +282,22 @@ export function SingleSelect({ row, column }) {
     console.log(e.target.value);
     //setValue(e.target.value);
   };
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [textInput, setTextInput] = useState('');
+  //const options = ['Option 1', 'Option 2', 'Option 3']; // Replace with your own array
+
+  const handleFieldClick = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleTextInputChange = (e) => {
+    setTextInput(e.target.value);
+  }
   console.log("Single Select column", column);
   function handleBlur() {
     if (row?.getValue(column.id) !== value) {
@@ -310,18 +327,60 @@ export function SingleSelect({ row, column }) {
     }
   }
   return (
-    <select
-      className="w-full h-full outline-none"
-      value={value}
-      onChange={onChange}
-      onBlur={handleBlur}
-      multiple={true}>
-      {/* {column.columnDef.options.map((opt) => (
-        <option key={opt} value={opt}>
-          {opt}
-        </option>
-      ))} */}
-    </select>
+    <div className="relative">
+      <button
+        className="py-2 px-4 rounded border border-gray-300 focus:outline-none focus:border-blue-500 w-full"
+        onClick={handleFieldClick}
+      >
+        Select Field
+      </button>
+      {isOpen && (
+        <div className="absolute mt-1 bg-white rounded shadow-lg">
+          <div className="p-4">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            <input
+              type="text"
+              placeholder="Text Input"
+              value={textInput}
+              onChange={handleTextInputChange}
+              className="w-full mt-2 p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <ul>
+            { options
+              .filter((option) =>
+                option.includes(searchTerm.toLowerCase())
+              )
+              .map((option) => (
+                <li
+                  key={option}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                >
+                  {option}
+                </li>
+              ))}
+          </ul>
+        </div>
+      )}
+    </div>
+    // <select
+    //   className="w-full h-full outline-none"
+    //   value={value}
+    //   onChange={onChange}
+    //   onBlur={handleBlur}
+    //   multiple={true}>
+    //   {/* {column.columnDef.options.map((opt) => (
+    //     <option key={opt} value={opt}>
+    //       {opt}
+    //     </option>
+    //   ))} */}
+    // </select>
   );
 }
 
