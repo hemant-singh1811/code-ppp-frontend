@@ -4,22 +4,23 @@ import { useSelector } from "react-redux";
 import { TableContext } from "./TableComponents";
 import { Input, Textarea } from "@material-tailwind/react";
 
+
 const FormComponents = ({ row, column, type }) => {
   const components = {
     singleSelect: <SingleSelect row={row} column={column} />,
     linkedRecords: <SingleLineText row={row} column={column} />,
-    singleLineText: <SingleLineText row={row} column={column} />,
-    multilineText: <MultilineTextCell row={row} column={column} />,
+    singleLineText: <SingleLineText row={row} column={column} />,  //Done
+    multilineText: <MultilineTextCell row={row} column={column} />,  //Done
     attachments: <SingleLineText row={row} column={column} />,
-    checkbox: <Checkbox row={row} column={column} />,
+    checkbox: <Checkbox row={row} column={column} />, //Done
     multipleSelect: <SingleLineText row={row} column={column} />,
     user: <SingleLineText row={row} column={column} />,
     date: <SingleLineText row={row} column={column} />,
-    phoneNumber: <SingleLineText row={row} column={column} />,
-    email: <Email row={row} column={column} />,
-    url: <SingleLineText row={row} column={column} />,
-    number: <SingleLineText row={row} column={column} />,
-    currency: <Currency row={row} column={column} />,
+    phoneNumber: <SingleLineText row={row} column={column} />,  //Done
+    email: <Email row={row} column={column} />,  //Done
+    url: <SingleLineText row={row} column={column} />,  //Done
+    number: <Number row={row} column={column} />,  //Done
+    currency: <Currency row={row} column={column} />,  //Done
     percent: <SingleLineText row={row} column={column} />,
     duration: <SingleLineText row={row} column={column} />,
     rating: <SingleLineText row={row} column={column} />,
@@ -28,17 +29,17 @@ const FormComponents = ({ row, column, type }) => {
     count: <SingleLineText row={row} column={column} />,
     lookup: <SingleLineText row={row} column={column} />,
     createdTime: (
-      <ModifiedAndCreatedCell type={type} column={column} row={row} />
+      <ModifiedAndCreatedCell type={type} column={column} row={row} />  //Done
     ),
     lastModifiedTime: (
-      <ModifiedAndCreatedCell type={type} column={column} row={row} />
+      <ModifiedAndCreatedCell type={type} column={column} row={row} />  //Done
     ),
-    createdBy: <ModifiedAndCreatedCell type={type} column={column} row={row} />,
+    createdBy: <ModifiedAndCreatedCell type={type} column={column} row={row} />,  //Done
     lastModifiedBy: (
-      <ModifiedAndCreatedCell type={type} column={column} row={row} />
+      <ModifiedAndCreatedCell type={type} column={column} row={row} /> //Done
     ),
     autoNumber: <SingleLineText row={row} column={column} />,
-    barcode: <SingleLineText row={row} column={column} />,
+    barcode: <SingleLineText row={row} column={column} />,  //Done
     button: <SingleLineText row={row} column={column} />,
   };
   return <>{components[type]}</>;
@@ -57,7 +58,7 @@ export const SingleLineText = ({ row, column }) => {
     setValue(e.target.value);
   };
 
-  console.log("column", column);
+  //console.log("column", column);
   function handleBlur() {
     if (row?.getValue(column?.id) !== value) {
       let newRowPart = value;
@@ -87,11 +88,11 @@ export const SingleLineText = ({ row, column }) => {
   }
 
   return (
-    <div className="w-full hover:shadow-md">
-      <Input
+    <div className="w-full hover:shadow-md border-gray-600">
+      <input
         type="text"
-        label={column?.columnDef?.fieldName || ""}
-        className="outline-blue-700"
+        label={null}
+        className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded"
         value={value}
         onChange={onChange}
         onBlur={handleBlur}
@@ -206,9 +207,10 @@ export function MultilineTextCell({ row, column }) {
     }
   }
   return (
-    <Textarea
-      className="w-full h-full outline-none placeholder:p-1"
+    <textarea
+      className="p-1 px-2 flex-auto w-full rounded-big border border-gray-300 focus:border-blue-700 border-rounded h-auto"
       value={value}
+      autoFocus
       onChange={changeHandler}
       onBlur={handleBlur}
 
@@ -292,6 +294,7 @@ export function SingleSelect({ row, column }) {
   };
 
   const handleSearchChange = (e) => {
+    console.log("options",options);
     setSearchTerm(e.target.value);
   };
 
@@ -355,14 +358,14 @@ export function SingleSelect({ row, column }) {
           <ul>
             { options
               .filter((option) =>
-                option.includes(searchTerm.toLowerCase())
+                option?.name?.includes(searchTerm.toLowerCase())
               )
               .map((option) => (
                 <li
-                  key={option}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  key={option.name}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer z-2000"
                 >
-                  {option}
+                  {option.name}
                 </li>
               ))}
           </ul>
@@ -442,13 +445,13 @@ export function Email({ row, column }) {
     }
   }
 
-  const myCLasses = `w-full h-full placeholder:p-1 border-gray-800 outline-blue-700 ${
+  const myCLasses = `h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded ${
     validateEmailString(value) ? "" : "bg-red-200"
   }`;
 
   return (
     <div>
-      <Input
+      <input
         type="text"
         value={value}
         onChange={onChange}
@@ -547,7 +550,7 @@ export function Currency({ row, column }) {
   }
 
   return (
-    <Input
+    <input
       type="text"
       value={value && options?.currencyValue + addCommas(value)}
       onChange={handleChange}
@@ -562,13 +565,188 @@ export function Currency({ row, column }) {
             : activeNumberOfLines === 2
             ? 30
             : activeNumberOfLines === 1 && 4,
-        boxShadow: "0 0 0px 2px inset #166ee1",
+        // boxShadow: "0 0 0px 2px inset #166ee1",
       }}
-      className="w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  text-right"
+      className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left"
     />
   );
 }
 
-export function PhoneNumber({ row, column }) {}
+export function Number({row,column}) {
+  
+  const socket = useSelector((state) => state.socketWebData.socket);
+  const [value, setValue] = useState(row?.getValue(column?.id) || "");
+  const [isEditMode, setIsEditMode] = useState(false);
+  const { table, activeNumberOfLines } = useContext(TableContext);
+  const { selectedBaseId, selectedTableId } = useSelector(
+    (state) => state.globalState
+  );
+  const userToken = useSelector((state) => state.auth.userInfo?.userToken);
+  let options = column.columnDef?.numberFieldOptions;
+  //console.log(options);
+
+  function handleChange(event) {
+    const arr = [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9", 
+      "0",
+      ".",
+      options?.numberValue,
+    ];
+    if (arr.includes(event.target.value[event.target.value.length - 1])) {
+      setValue(event.target.value);
+    } else if (event.target.value === "") {
+      setValue(event.target.value);
+    } else {
+      //setValue(event.target.value);
+    }
+  }
+  //   console.log(options);
+  function handleBlur() {
+    setIsEditMode(false);
+    const val = (value);
+    if (row.getValue(column.id) !== val) {
+      let updatedValue = (val);
+      console.log("isNaN", isNaN(parseFloat(val)), parseFloat(val));
+      updatedValue = isNaN(parseFloat(val))
+        ? ""
+        : parseFloat(val).toFixed(options?.fieldPrecision);
+      console.log("updatedValue", updatedValue);
+      setValue(updatedValue);
+
+      let rowObj = {
+        userToken: userToken,
+        data: {
+          baseId: selectedBaseId,
+          tableId: selectedTableId,
+          recordId: row?.original.id52148213343234567,
+          updatedData: updatedValue,
+          fieldType: column.columnDef.fieldType,
+          fieldId: column.columnDef.fieldId,
+        },
+      };
+
+      socket.emit("updateData", rowObj, (response) => {
+        table.options.meta?.updateData(
+          row.index,
+          column.id,
+          updatedValue,
+          response.metaData
+        );
+        console.log("res : ", response);
+      });
+    }
+  }
+
+
+
+  return (
+    <input
+
+      type="text"
+      value={value}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      autoFocus
+      className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left"
+    />
+  );
+
+  
+}
+
+export function Percent({row,column}) {
+    
+    const socket = useSelector((state) => state.socketWebData.socket);
+    const [value, setValue] = useState(row?.getValue(column?.id) || "");
+    const [isEditMode, setIsEditMode] = useState(false);
+    const { table, activeNumberOfLines } = useContext(TableContext);
+    const { selectedBaseId, selectedTableId } = useSelector(
+      (state) => state.globalState
+    );
+    const userToken = useSelector((state) => state.auth.userInfo?.userToken);
+    let options = column.columnDef?.percentFieldOptions;
+    //console.log(options);
+  
+    function handleChange(event) {
+      const arr = [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8", 
+        "9",
+        "0",
+        ".",
+        options?.percentValue,
+      ];
+      if (arr.includes(event.target.value[event.target.value.length - 1])) {
+        setValue(event.target.value);
+      } else if (event.target.value === "") {
+        setValue(event.target.value);
+      } else {
+        //setValue(event.target.value);
+      }
+    }
+    //   console.log(options);
+    function handleBlur() {
+      setIsEditMode(false);
+      const val = (value);
+      if (row.getValue(column.id) !== val) {
+        let updatedValue = (val);
+        console.log("isNaN", isNaN(parseFloat(val)), parseFloat(val));
+        updatedValue = isNaN(parseFloat(val))
+          ? ""
+          : parseFloat(val).toFixed(options?.fieldPrecision);
+        console.log("updatedValue", updatedValue);
+        setValue(updatedValue);
+  
+        let rowObj = {
+          userToken: userToken,
+          data: {
+            baseId: selectedBaseId,
+            tableId: selectedTableId,
+            recordId: row?.original.id52148213343234567,
+            updatedData: updatedValue,
+            fieldType: column.columnDef.fieldType,
+            fieldId: column.columnDef.fieldId,
+          },
+        };
+  
+        socket.emit("updateData", rowObj, (response) => {
+          table.options.meta?.updateData(
+            row.index,
+            column.id,
+            updatedValue,
+            response.metaData
+          );
+          console.log("res : ", response);
+        });
+      }
+    }
+
+    return (
+      <input
+
+        type="text"
+        value={value}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        autoFocus
+        className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left"
+      />
+    );
+}
+
 
 export default FormComponents;

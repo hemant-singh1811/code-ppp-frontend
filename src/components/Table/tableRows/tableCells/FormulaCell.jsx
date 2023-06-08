@@ -40,7 +40,7 @@ const FormulaCell = ({cell,rowData}) => {
     //console.log(eval(formulaString))
     useEffect(()=>{
       try{
-        setValue(eval(formulaString))
+        setValue(Function("return "+formulaString)())
 
       }
       catch(err){

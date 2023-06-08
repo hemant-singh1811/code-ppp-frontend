@@ -8,6 +8,7 @@ import getSvg from "./getSvg";
 import SelectWithSearch from "./SelectWithSearch";
 import { usePopper } from "react-popper";
 import CheckboxPallate from "../../../utilities/checkboxPallate";
+import { set } from "react-hook-form";
 
 const selectedOptionDescription = {
   "Single line text":
@@ -1478,8 +1479,11 @@ function CheckboxOptions({ setFieldOptions, columns }) {
   );
 }
 
-function FormulaOptions({setFieldOptions,columns}){
+function FormulaOptions({setFieldOptions}){
   const [value,setValue] = useState("");
+  const [error,setError] = useState(false);
+  const [errorMessage,setErrorMessage] = useState("");
+  const {columns} = useContext(TableContext);
   console.log(columns);
 
   useEffect(()=>{
@@ -1488,11 +1492,32 @@ function FormulaOptions({setFieldOptions,columns}){
     })
   },[value])
 
+  const validate = (value)=>{
+    if(columns.some((ele)=>ele.fieldName === value)){
+      setError(false);
+      return true;
+    }
+    setError(true);
+    setErrorMessage("Invalid Column Name");
+    return false;
+  }
+
+  const onChangeHandler = (e)=>{
+    if(e.target.value === ""){
+      setError(false);
+      setValue(e.target.value);
+      return
+    }
+    validate(e.target.value);
+    setValue(e.target.value);
+    
+  }
+
   return (
     <>
       <div className="mt-2 mb-2">Formula</div>
-      <textarea className="w-full border rounded p-1 px-2" placeholder="formula" value={value} onChange={(e)=>setValue(e.target.value)} />
-      
+      <textarea className="w-full border rounded p-1 px-2" placeholder="formula" value={value} onChange={onChangeHandler} />
+      {error ? <div className="text-red-500">{errorMessage}</div> : null}
     </>
   )
 }
