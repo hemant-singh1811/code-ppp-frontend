@@ -22,7 +22,7 @@ const FormModal = () => {
   let row = tableData.table.getRowModel().rows[index];
   let columns = tableData.table.getAllColumns();
   const [showCreateField, setShowCreateField] = useState(false);
-  console.log("tableData ", columns);
+  console.log("tableData ", tableData);
 
   return (
     <ErrorBoundary fallback={<div>Something went wrong</div>}>

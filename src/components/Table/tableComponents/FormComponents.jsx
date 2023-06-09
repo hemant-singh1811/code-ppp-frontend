@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { TableContext } from "./TableComponents";
-import { Input, Textarea } from "@material-tailwind/react";
 
 
 const FormComponents = ({ row, column, type }) => {
+  
   const components = {
     singleSelect: <SingleSelect row={row} column={column} />,
     linkedRecords: <SingleLineText row={row} column={column} />,
@@ -21,12 +21,12 @@ const FormComponents = ({ row, column, type }) => {
     url: <SingleLineText row={row} column={column} />,  //Done
     number: <Number row={row} column={column} />,  //Done
     currency: <Currency row={row} column={column} />,  //Done
-    percent: <SingleLineText row={row} column={column} />,
-    duration: <SingleLineText row={row} column={column} />,
+    percent: <Percent row={row} column={column} />,  //Done
+    duration: <SingleLineText row={row} column={column} />, 
     rating: <SingleLineText row={row} column={column} />,
-    formula: <SingleLineText row={row} column={column} />,
+    formula: <Formula row={row} column={column} />, //Done
     rollup: <SingleLineText row={row} column={column} />,
-    count: <SingleLineText row={row} column={column} />,
+    count: <Count row={row} column={column} />,  //Done
     lookup: <SingleLineText row={row} column={column} />,
     createdTime: (
       <ModifiedAndCreatedCell type={type} column={column} row={row} />  //Done
@@ -38,7 +38,7 @@ const FormComponents = ({ row, column, type }) => {
     lastModifiedBy: (
       <ModifiedAndCreatedCell type={type} column={column} row={row} /> //Done
     ),
-    autoNumber: <SingleLineText row={row} column={column} />,
+    autoNumber: <AutoNumber row={row} column={column} />, //Done
     barcode: <SingleLineText row={row} column={column} />,  //Done
     button: <SingleLineText row={row} column={column} />,
   };
@@ -665,7 +665,11 @@ export function Number({row,column}) {
 export function Percent({row,column}) {
     
     const socket = useSelector((state) => state.socketWebData.socket);
-    const [value, setValue] = useState(row?.getValue(column?.id) || "");
+    const rowData = row?.getValue(column?.id).replace(/%/g, "")+"%" || "";
+    console.log("rowData", rowData);
+    const [value, setValue] = useState(rowData);
+    //console.log("value", value)
+    
     const [isEditMode, setIsEditMode] = useState(false);
     const { table, activeNumberOfLines } = useContext(TableContext);
     const { selectedBaseId, selectedTableId } = useSelector(
@@ -676,32 +680,17 @@ export function Percent({row,column}) {
     //console.log(options);
   
     function handleChange(event) {
-      const arr = [
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8", 
-        "9",
-        "0",
-        ".",
-        options?.percentValue,
-      ];
-      if (arr.includes(event.target.value[event.target.value.length - 1])) {
-        setValue(event.target.value);
-      } else if (event.target.value === "") {
-        setValue(event.target.value);
-      } else {
-        //setValue(event.target.value);
-      }
+      
+      //regex to remove alphabets and special characters except % and .
+      const regex = /[^0-9.%]+$/g;
+      const inputValue = event.target.value.replace(regex, "");
+      setValue(inputValue);
     }
     //   console.log(options);
-    function handleBlur() {
+    function handleBlur(event) {
       setIsEditMode(false);
-      const val = (value);
+      event.target.value = event.target.value.replace(/%/g, "");
+      const val = (event.target.value);
       if (row.getValue(column.id) !== val) {
         let updatedValue = (val);
         console.log("isNaN", isNaN(parseFloat(val)), parseFloat(val));
@@ -709,7 +698,7 @@ export function Percent({row,column}) {
           ? ""
           : parseFloat(val).toFixed(options?.fieldPrecision);
         console.log("updatedValue", updatedValue);
-        setValue(updatedValue);
+        setValue(updatedValue+"%");
   
         let rowObj = {
           userToken: userToken,
@@ -748,5 +737,84 @@ export function Percent({row,column}) {
     );
 }
 
+
+export function Formula({row,column}) {
+  const [value,setValue] = useState("");
+    //console.log(cell);
+    const formula = column?.columnDef?.formulaFieldOptions?.formula;
+    //const formula = "Num1 + Num2";
+    if(!formula){
+      return <div className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left"></div>
+    }
+    //console.log(formula)
+    const {columns,data } = useContext(TableContext);
+    
+    const myMap = new Map();
+    columns.forEach((column)=>{
+      if(column.fieldName){
+        myMap.set(column.fieldName,row.getValue(column.fieldId));
+        //console.log(column.fieldName,cell.row.getValue(column.fieldId))
+      }
+    })
+    
+    const myString = Array.from(myMap.keys()).join('|');
+    //console.log("myMap",myMap)
+    //console.log(myString)
+    const regexPattern = new RegExp(`(${myString})`, 'g');
+    const formulaArray = formula.split(regexPattern);
+    //console.log(formulaArray)
+    const formulaArray2 = formulaArray.map((item)=>{
+      if(myMap.has(item)){
+        return myMap.get(item);
+      }
+      if(item !== "")
+        return item;
+    })
+    //console.log(formulaArray2)
+    const formulaString = formulaArray2.join('');
+    //console.log(formulaString)
+    //console.log(eval(formulaString))
+    useEffect(()=>{
+      try{
+        setValue(Function("return "+formulaString)())
+
+      }
+      catch(err){
+        console.log(err)
+        setValue("")
+      }
+    },[data])
+  return (
+    <div className="fh-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left">
+        {value}
+    </div>
+  )
+}
+
+export function Count({ row,column }) {
+  const value =
+    row.original[
+      column.columnDef.countFieldOptions?.selectedFieldId
+    ] || "";
+
+  return (
+    <div
+      className={`overflow-hidden w-full h-10 break-words truncate px-2 p-1`}
+    >
+      {value?.length || 0}
+    </div>
+  );
+}
+
+
+export function AutoNumber({row}) {
+  const value = row?.index+1 || "";
+  return (
+    <div className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left bg-gray-100">
+      {value}
+    </div>
+  )
+
+}
 
 export default FormComponents;

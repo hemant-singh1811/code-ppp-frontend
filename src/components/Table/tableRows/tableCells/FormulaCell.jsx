@@ -4,7 +4,7 @@ import { set } from 'react-hook-form';
 
 const FormulaCell = ({cell,rowData}) => {
     const [value,setValue] = useState(rowData || "");
-    console.log(cell);
+    //console.log(cell);
     const formula = cell?.column?.columnDef?.formulaFieldOptions?.formula;
     //const formula = "Num1 + Num2";
     if(!formula){
@@ -22,7 +22,7 @@ const FormulaCell = ({cell,rowData}) => {
     })
     
     const myString = Array.from(myMap.keys()).join('|');
-    console.log("myMap",myMap)
+    //console.log("myMap",myMap)
     //console.log(myString)
     const regexPattern = new RegExp(`(${myString})`, 'g');
     const formulaArray = formula.split(regexPattern);
@@ -34,7 +34,7 @@ const FormulaCell = ({cell,rowData}) => {
       if(item !== "")
         return item;
     })
-    console.log(formulaArray2)
+    //console.log(formulaArray2)
     const formulaString = formulaArray2.join('');
     //console.log(formulaString)
     //console.log(eval(formulaString))

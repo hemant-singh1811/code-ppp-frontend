@@ -1497,8 +1497,8 @@ function FormulaOptions({setFieldOptions}){
       setError(false);
       return true;
     }
-    setError(true);
-    setErrorMessage("Invalid Column Name");
+    //setError(true);
+    //setErrorMessage("Invalid Column Name");
     return false;
   }
 
