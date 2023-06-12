@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { TableContext } from "../../tableComponents/TableComponents";
 
-export default function SingleLineTextCell({ cell, isFocused, cellRef }) {
+export default function SingleLineTextCell({ cell, isFocused }) {
   let val = cell?.getValue();
   const socket = useSelector((state) => state.socketWebData.socket);
   const [value, setValue] = useState(val || "");
@@ -58,7 +58,7 @@ export default function SingleLineTextCell({ cell, isFocused, cellRef }) {
 
   // const divRef = useRef(null);
 
-  console.log(cellRef);
+  // console.log(cellRef);
 
   // useEffect(() => {
   //   if (isFocused) {
@@ -98,15 +98,14 @@ export default function SingleLineTextCell({ cell, isFocused, cellRef }) {
     />
   ) : (
     <div
-      // ref={divRef}
-      tabIndex={isFocused ? -1 : 1}
+      // tabIndex={isFocused ? -1 : 1}
       className={`overflow-hidden outline-none text-left w-full h-full break-words px-2 p-1 bg-transparent  truncate-multiline webkitLineClamp${activeNumberOfLines}`}
-      // onDoubleClick={handleDoubleClick}
-      // style={{
-      //   backgroundColor: "transparent",
-      //   color: isFocused && "#166ee1",
-      // }}
-      // onKeyDown={handleDoubleClick}
+      onDoubleClick={handleDoubleClick}
+      style={{
+        backgroundColor: "transparent",
+        // color: isFocused && "#166ee1",
+      }}
+      onKeyDown={handleDoubleClick}
     >
       {value || ""}
     </div>

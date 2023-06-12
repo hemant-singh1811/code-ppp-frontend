@@ -173,7 +173,7 @@ function VirtualRow({
 
 function TableCell({ cell, activeRowHeight, row, isHovered, rowIndex }) {
   const [isFocused, setIsFocused] = useState(false);
-  const cellRef = useRef(null);
+  // const cellRef = useRef(null);
   return (
     <div
       onFocus={() => {
@@ -182,7 +182,7 @@ function TableCell({ cell, activeRowHeight, row, isHovered, rowIndex }) {
       onBlur={() => {
         setIsFocused(false);
       }}
-      ref={cellRef}
+      // ref={cellRef}
       tabIndex={cell.column.columnDef?.hiddenInConditions ? -1 : 1}
       className={`cell mx-auto my-auto text-center select-none  `}
       key={cell.id}
@@ -239,7 +239,7 @@ function TableCell({ cell, activeRowHeight, row, isHovered, rowIndex }) {
         // Otherwise, just render the regular cell
         <>
           <CellByFieldType
-            cellRef={cellRef}
+            // cellRef={cellRef}
             isFocused={isFocused}
             rowIndex={rowIndex}
             cell={cell}

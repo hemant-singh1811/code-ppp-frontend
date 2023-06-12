@@ -28,7 +28,6 @@ export function CellByFieldType({
   row,
   isHovered,
   isFocused,
-  cellRef,
 }) {
   if (hiddenInConditions) {
     return (
@@ -56,9 +55,7 @@ export function CellByFieldType({
     fieldType === "barcode" ||
     fieldType === "singleLineText"
   ) {
-    return (
-      <SingleLineTextCell cellRef={cellRef} isFocused={isFocused} cell={cell} />
-    );
+    return <SingleLineTextCell isFocused={isFocused} cell={cell} />;
   }
 
   switch (fieldType) {
@@ -98,23 +95,23 @@ export function CellByFieldType({
       );
 
     // case "phoneNumber": //string
-    //   return <SingleLineTextCell cellRef={cellRef} isFocused={isFocused} cell={cell} />;
+    //   return <SingleLineTextCell isFocused={isFocused} cell={cell} />;
     //   return <PhoneNumberTableCell cell={cell} />;
 
     // case "email": //string
-    //   return <SingleLineTextCell cellRef={cellRef} isFocused={isFocused} cell={cell} />;
+    //   return <SingleLineTextCell isFocused={isFocused} cell={cell} />;
     //   return <EmailTableCell cell={cell} />;
 
     // case "url": //string
-    //   return <SingleLineTextCell cellRef={cellRef} isFocused={isFocused} cell={cell} />;
+    //   return <SingleLineTextCell isFocused={isFocused} cell={cell} />;
     //   return <UrlTableCell cell={cell} />;
 
     // case "barcode": //string
-    //   return <SingleLineTextCell cellRef={cellRef} isFocused={isFocused} cell={cell} />;
+    //   return <SingleLineTextCell isFocused={isFocused} cell={cell} />;
     // // single line text cell and multi line text cell causing problems
 
     // case "singleLineText": //string
-    //   return <SingleLineTextCell cellRef={cellRef} isFocused={isFocused} cell={cell} />;
+    //   return <SingleLineTextCell isFocused={isFocused} cell={cell} />;
 
     case "number": //string
       return <NumberCell cell={cell} />;
@@ -165,7 +162,7 @@ export function CellByFieldType({
       return <MultipleRecordLinksCell cell={cell} rowData={cell?.getValue()} />;
 
     case "formula":
-      return <FormulaCell cell={cell} rowData={cell?.getValue()} />
+      return <FormulaCell cell={cell} rowData={cell?.getValue()} />;
 
     default:
       return (
