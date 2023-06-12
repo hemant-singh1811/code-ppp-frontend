@@ -62,8 +62,8 @@ export default function MultilineTextCell({ cell }) {
       autoCorrect={"false"}
       ref={multiLineTextRef}
       autoFocus={true}
-      contentEditable="true"
-      // contentEditable="plaintext-only"
+      // contentEditable="true"
+      contentEditable="plaintext-only"
       role="textbox"
       aria-multiline="true"
       suppressContentEditableWarning={true}
@@ -71,7 +71,7 @@ export default function MultilineTextCell({ cell }) {
       onBlur={handleBlur}
       tabIndex={-1}
       style={{
-        // border: isEditMode && "2px solid #166ee1",
+        boxShadow: isEditMode && "0 0 0px 3px #166ee1",
         background: isEditMode ? "white" : "transparent",
       }}
       className={`${

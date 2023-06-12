@@ -1,10 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { flexRender } from "@tanstack/react-table";
 import { TableContext } from "../tableComponents/TableComponents";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import CellByFieldType from "./tableCells/CellByFieldType";
 import CreateRow from "./CreateRow";
 import { useWindowSize } from "react-use";
+import { openMenu } from "../../../store/features/menuSlice";
+import { useDispatch } from "react-redux";
 
 export default function TableVirtualRows({ tableContainerRef, rows }) {
   let { activeRowHeight, activeNumberOfLines, table } =
@@ -93,7 +95,7 @@ function VirtualRow({
   initialArray,
 }) {
   const [isHovered, setIsHovered] = useState(false);
-
+  const dispatch = useDispatch();
   const handleMouseEnter = () => {
     setIsHovered(true);
   };
@@ -104,8 +106,27 @@ function VirtualRow({
 
   const [isFocused, setIsFocused] = useState(false);
 
+  const handleContextMenu = (event) => {
+    event.preventDefault();
+
+    const clickedX = event.clientX;
+    const clickedY = event.clientY;
+    const { innerWidth, innerHeight } = window;
+
+    const menuWidth = 150; // Adjust as needed
+    const menuHeight = 120; // Adjust as needed
+
+    const adjustedX =
+      clickedX + menuWidth > innerWidth ? innerWidth - menuWidth : clickedX;
+    const adjustedY =
+      clickedY + menuHeight > innerHeight ? innerHeight - menuHeight : clickedY;
+
+    dispatch(openMenu({ x: adjustedX - 245, y: adjustedY }));
+  };
+
   return (
     <div
+      onContextMenu={handleContextMenu}
       tabIndex={-1}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -150,16 +171,9 @@ function VirtualRow({
   );
 }
 
-const TableCell = React.memo(function TableCell({
-  cell,
-  activeRowHeight,
-  row,
-  isHovered,
-  rowIndex,
-}) {
+function TableCell({ cell, activeRowHeight, row, isHovered, rowIndex }) {
   const [isFocused, setIsFocused] = useState(false);
-
-  console.log(cell, row);
+  const cellRef = useRef(null);
   return (
     <div
       onFocus={() => {
@@ -168,11 +182,13 @@ const TableCell = React.memo(function TableCell({
       onBlur={() => {
         setIsFocused(false);
       }}
-      tabIndex={0}
+      ref={cellRef}
+      tabIndex={cell.column.columnDef?.hiddenInConditions ? -1 : 1}
       className={`cell mx-auto my-auto text-center select-none  `}
       key={cell.id}
       {...{
         style: {
+          outline: "none",
           width: cell.column.getSize(),
           height: activeRowHeight,
           background: cell.getIsGrouped()
@@ -186,8 +202,6 @@ const TableCell = React.memo(function TableCell({
           borderLeftWidth: cell.column.columnDef?.primary && 0,
           boxShadow: isFocused && "0 0 0px 2px #166ee1",
           borderRadius: isFocused && "1px",
-          // borderBottomWidth: isFocused && 0,
-          // borderLeftWidth: isFocused && 0,
         },
       }}
     >
@@ -225,6 +239,8 @@ const TableCell = React.memo(function TableCell({
         // Otherwise, just render the regular cell
         <>
           <CellByFieldType
+            cellRef={cellRef}
+            isFocused={isFocused}
             rowIndex={rowIndex}
             cell={cell}
             row={row}
@@ -236,7 +252,7 @@ const TableCell = React.memo(function TableCell({
       )}
     </div>
   );
-});
+}
 
 // let columnVirtualizer = useVirtualizer({
 //   horizontal: true,

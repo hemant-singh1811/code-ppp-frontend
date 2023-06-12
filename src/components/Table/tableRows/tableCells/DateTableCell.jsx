@@ -22,7 +22,7 @@ export default function DateTableCell({ cell }) {
     dateFormat: "d-m-Y",
   };
 
-  function handleOnClick() {
+  function handleOnDoubleClick() {
     setIsEditMode(true);
   }
 
@@ -31,7 +31,8 @@ export default function DateTableCell({ cell }) {
     setIsEditMode(false);
   });
 
-  function handelOnChange([date]) {
+  function handelOnChange(e) {
+    console.log(e.target.value);
     setValue(date);
 
     let newRowPart = date;
@@ -44,7 +45,6 @@ export default function DateTableCell({ cell }) {
         recordId: cell?.row?.original.id52148213343234567,
         updatedData: newRowPart,
         fieldType: cell.column.columnDef.fieldType,
-
         fieldId: cell.column.columnDef.fieldId,
       },
     };
@@ -63,40 +63,46 @@ export default function DateTableCell({ cell }) {
 
   return (
     <div
-      className={`h-full ${
-        !isEditMode &&
+      className={` 
         "overflow-hidden text-left w-full h-full break-words truncate px-2 p-1"
-      }`}
+      `}
       ref={ref}
-      onClick={handleOnClick}
+      onClick={handleOnDoubleClick}
     >
       {isEditMode ? (
-        <Flatpickr
-          value={value}
-          onChange={handelOnChange}
-          style={{
-            height: activeRowHeight,
-            paddingBottom:
-              activeNumberOfLines === 4
-                ? 102
-                : activeNumberOfLines === 3
-                ? 62
-                : activeNumberOfLines === 2
-                ? 30
-                : activeNumberOfLines === 1 && 4,
-            boxShadow: "0 0 0px 2px inset #166ee1",
-          }}
-          className='bg-transparent w-full h-full outline-none border-none min-h-[29px] px-2'
-          // placeholder="DD/MM/YYYY"
-          options={options}
-        />
+        <div className="flex">
+          <input
+            type="date"
+            value={value}
+            // onChange={handelOnChange}
+            style={
+              {
+                // height: activeRowHeight,
+                // paddingBottom:
+                //   activeNumberOfLines === 4
+                //     ? 102
+                //     : activeNumberOfLines === 3
+                //     ? 62
+                //     : activeNumberOfLines === 2
+                //     ? 30
+                //     : activeNumberOfLines === 1 && 4,
+              }
+            }
+            className="bg-transparent w-full h-full outline-none border-none min-h-[29px] px-2"
+            placeholder="DD/MM/YYYY"
+            options={options}
+          />
+          <input type="time" />
+          <input type="datetime-local" />
+        </div>
       ) : (
-        <
-          // className={`overflow-hidden text-left w-full h-full break-words truncate px-2 p-1`}
-          // onClick={handleOnClick}
+        <div
+          className={`overflow-hidden text-left w-full h-full break-words truncate px-2 p-1`}
+          // onClick={handleOnDoubleClick}
         >
+          {/* <Flatpickr /> */}
           {value && moment(value).format("DD-MM-YYYY")}
-        </>
+        </div>
       )}
     </div>
   );

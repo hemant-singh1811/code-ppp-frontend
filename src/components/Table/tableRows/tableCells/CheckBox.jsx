@@ -42,14 +42,15 @@ export default function CheckBox({ cell, rowData, isHovered }) {
   return (
     (isHovered || isSelected) && (
       <label
-        className="w-full h-full flex items-center justify-center cursor-pointer"
-        htmlFor={cell?.row?.original.id52148213343234567}>
+        className="w-full h-full flex items-center justify-center cursor-pointer "
+        htmlFor={cell?.row?.id + cell?.id}
+      >
         <input
           ref={checkBoxRef}
           type="checkbox"
-          className="m-auto h-auto"
+          className="m-auto h-auto cursor-pointer outline-none "
           name=""
-          id={cell?.row?.original.id52148213343234567}
+          id={cell?.row?.id + cell?.id}
           checked={isSelected}
           onChange={handleUpdate}
         />

@@ -12,7 +12,7 @@ export default function PercentCell({ cell }) {
   );
   const userToken = useSelector((state) => state.auth.userInfo?.userToken);
   let options = cell.column.columnDef?.percentFieldOptions;
-  //   console.log(value);
+
   function handleClick() {
     setIsEditMode(true);
     console.log(value);
@@ -78,14 +78,14 @@ export default function PercentCell({ cell }) {
             : activeNumberOfLines === 2
             ? 30
             : activeNumberOfLines === 1 && 4,
-        boxShadow: "0 0 0px 2px inset #166ee1",
       }}
       className="w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  text-right"
     />
   ) : (
     <div
       className={`overflow-hidden  w-full h-full break-words truncate px-2 p-1 text-right`}
-      onClick={handleClick}>
+      onClick={handleClick}
+    >
       {value ? `${value}%` : ""}
     </div>
   );

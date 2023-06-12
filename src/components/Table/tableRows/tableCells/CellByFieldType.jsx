@@ -26,6 +26,8 @@ export function CellByFieldType({
   cell,
   row,
   isHovered,
+  isFocused,
+  cellRef,
 }) {
   if (hiddenInConditions) {
     return (
@@ -53,7 +55,9 @@ export function CellByFieldType({
     fieldType === "barcode" ||
     fieldType === "singleLineText"
   ) {
-    return <SingleLineTextCell cell={cell} />;
+    return (
+      <SingleLineTextCell cellRef={cellRef} isFocused={isFocused} cell={cell} />
+    );
   }
 
   switch (fieldType) {
@@ -67,7 +71,7 @@ export function CellByFieldType({
           rowData={cell?.getValue()}
         />
       ) : (
-        <div className='w-full h-full overflow-hidden'>
+        <div className="w-full h-full overflow-hidden">
           {console.log(
             "not getting array in single select",
             typeof cell?.getValue()
@@ -86,30 +90,30 @@ export function CellByFieldType({
           rowData={cell?.getValue()}
         />
       ) : (
-        <div className='w-full h-full overflow-hidden'>
+        <div className="w-full h-full overflow-hidden">
           {console.warn("not getting array in multi select", cell?.getValue())}
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </div>
       );
 
     // case "phoneNumber": //string
-    //   return <SingleLineTextCell cell={cell} />;
+    //   return <SingleLineTextCell cellRef={cellRef} isFocused={isFocused} cell={cell} />;
     //   return <PhoneNumberTableCell cell={cell} />;
 
     // case "email": //string
-    //   return <SingleLineTextCell cell={cell} />;
+    //   return <SingleLineTextCell cellRef={cellRef} isFocused={isFocused} cell={cell} />;
     //   return <EmailTableCell cell={cell} />;
 
     // case "url": //string
-    //   return <SingleLineTextCell cell={cell} />;
+    //   return <SingleLineTextCell cellRef={cellRef} isFocused={isFocused} cell={cell} />;
     //   return <UrlTableCell cell={cell} />;
 
     // case "barcode": //string
-    //   return <SingleLineTextCell cell={cell} />;
+    //   return <SingleLineTextCell cellRef={cellRef} isFocused={isFocused} cell={cell} />;
     // // single line text cell and multi line text cell causing problems
 
     // case "singleLineText": //string
-    //   return <SingleLineTextCell cell={cell} />;
+    //   return <SingleLineTextCell cellRef={cellRef} isFocused={isFocused} cell={cell} />;
 
     case "number": //string
       return <NumberCell cell={cell} />;
@@ -161,7 +165,7 @@ export function CellByFieldType({
 
     default:
       return (
-        <div className='w-full h-full overflow-hidden flex items-center justify-center bg-transparent'>
+        <div className="w-full h-full overflow-hidden flex items-center justify-center bg-transparent">
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </div>
       );

@@ -44,10 +44,12 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
     <div
       className="h-full overflow-hidden select-none  w-full px-1 pl-0.5 gap-0.5 p-0.5 rounded flex"
       tabIndex={-1}
-      style={{
-        // boxShadow: isChildVisible && "0 0 0px 2px inset #166ee1",
-        border: isChildVisible && "2px solid #166ee1",
-      }}
+      style={
+        {
+          // boxShadow: isChildVisible && "0 0 0px 2px inset #166ee1",
+          // border: isChildVisible && "2px solid #166ee1",
+        }
+      }
       onFocus={() => handleFocus()}
       onBlur={() => handleBlur()}
     >
