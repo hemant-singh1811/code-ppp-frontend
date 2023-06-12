@@ -1,10 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { flexRender } from "@tanstack/react-table";
 import { TableContext } from "../tableComponents/TableComponents";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import CellByFieldType from "./tableCells/CellByFieldType";
 import CreateRow from "./CreateRow";
 import { useWindowSize } from "react-use";
+import { openMenu } from "../../../store/features/menuSlice";
+import { useDispatch } from "react-redux";
 
 export default function TableVirtualRows({ tableContainerRef, rows }) {
   let { activeRowHeight, activeNumberOfLines, table } =
@@ -24,7 +26,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
     <>
       <div
         ref={parentRef}
-        className='list transition-all text-black  select-none scrollbar-hidden h-[calc(100vh_-_100px)] overflow-x-visible z-[1] relative'
+        className="list transition-all text-black  select-none scrollbar-hidden h-[calc(100vh_-_100px)] overflow-x-visible z-[1] relative"
         // style={{ overflowY: 'auto' }}//do not remove overflow auto if you remove it table virtual row will break
         style={{
           overflowX: "auto",
@@ -33,7 +35,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
         }}
       >
         <div
-          className='tbody scrollbar-hidden select-none mb-40'
+          className="tbody scrollbar-hidden select-none mb-40"
           style={{
             height: `${rowVirtualizer.getTotalSize()}px`,
             position: "relative",
@@ -55,19 +57,10 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                   initialArray={initialArray}
                   activeNumberOfLines={activeNumberOfLines}
                 />
-                // VirtualRow(
-                //   i,
-                //   rowVirtualizer,
-                //   virtualRow,
-                //   row,
-                //   columns,
-                //   activeRowHeight,
-                //   initialArray
-                // )
               );
             })}
           <div
-            className='border flex items-center w-[calc(100%_-_119px)]'
+            className="border flex items-center w-[calc(100%_-_119px)]"
             style={{
               position: "absolute",
               top: 0,
@@ -85,7 +78,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
           </div>
         </div>
       </div>
-      <div className='text-black bg-orange-200'>
+      <div className="text-black bg-orange-200">
         There will be our status bar
       </div>
     </>
@@ -102,7 +95,7 @@ function VirtualRow({
   initialArray,
 }) {
   const [isHovered, setIsHovered] = useState(false);
-
+  const dispatch = useDispatch();
   const handleMouseEnter = () => {
     setIsHovered(true);
   };
@@ -110,14 +103,42 @@ function VirtualRow({
   const handleMouseLeave = () => {
     setIsHovered(false);
   };
+
+  const [isFocused, setIsFocused] = useState(false);
+
+  const handleContextMenu = (event) => {
+    event.preventDefault();
+
+    const clickedX = event.clientX;
+    const clickedY = event.clientY;
+    const { innerWidth, innerHeight } = window;
+
+    const menuWidth = 150; // Adjust as needed
+    const menuHeight = 120; // Adjust as needed
+
+    const adjustedX =
+      clickedX + menuWidth > innerWidth ? innerWidth - menuWidth : clickedX;
+    const adjustedY =
+      clickedY + menuHeight > innerHeight ? innerHeight - menuHeight : clickedY;
+
+    dispatch(openMenu({ x: adjustedX - 245, y: adjustedY }));
+  };
+
   return (
     <div
+      onContextMenu={handleContextMenu}
+      tabIndex={-1}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onFocus={() => {
+        setIsFocused(true);
+      }}
+      onBlur={() => {
+        setIsFocused(false);
+      }}
       key={virtualRow?.index || rowIndex}
       data-index={virtualRow.index}
       ref={rowVirtualizer.measureElement}
-      tabIndex={0}
       className={`row z-0 bg-white select-none ${
         row?.getIsSelected() ? "hover:bg-[#f1f6ff]" : "hover:bg-[#F8F8F8]"
       } ${row?.getIsSelected() && "bg-[#f1f6ff]"}`}
@@ -127,35 +148,47 @@ function VirtualRow({
         // left: 0,
         width: `${columns[virtualRow?.index]}px`,
         height: `${activeRowHeight}px`,
-        zIndex: initialArray.length - rowIndex,
+
+        zIndex: isFocused && 1000,
         transform: `translateY(${virtualRow?.start}px)`,
       }}
     >
       {row?.getVisibleCells().map((cell, i) => {
         return (
-          // <TableData
-          //   activeNumberOfLines={activeNumberOfLines}
-          //   cell={cell}
-          //   activeRowHeight={activeRowHeight}
-          //   row={row}
-          //   key={cell.id}
-          //   i={i}
-          // />
-          TableData(cell, activeRowHeight, row, isHovered, rowIndex)
+          <TableCell
+            cell={cell}
+            activeRowHeight={activeRowHeight}
+            row={row}
+            key={cell.id}
+            i={i}
+            isHovered={isHovered}
+            rowIndex={rowIndex}
+            isFocused={isFocused}
+          />
         );
       })}
     </div>
   );
 }
 
-function TableData(cell, activeRowHeight, row, isHovered, rowIndex) {
+function TableCell({ cell, activeRowHeight, row, isHovered, rowIndex }) {
+  const [isFocused, setIsFocused] = useState(false);
+  // const cellRef = useRef(null);
   return (
     <div
-      tabIndex={0}
+      onFocus={() => {
+        setIsFocused(true);
+      }}
+      onBlur={() => {
+        setIsFocused(false);
+      }}
+      // ref={cellRef}
+      tabIndex={cell.column.columnDef?.hiddenInConditions ? -1 : 1}
       className={`cell mx-auto my-auto text-center select-none  `}
       key={cell.id}
       {...{
         style: {
+          outline: "none",
           width: cell.column.getSize(),
           height: activeRowHeight,
           background: cell.getIsGrouped()
@@ -165,7 +198,10 @@ function TableData(cell, activeRowHeight, row, isHovered, rowIndex) {
             : cell.getIsPlaceholder()
             ? "#ff000042"
             : "",
+          zIndex: isFocused && 1000,
           borderLeftWidth: cell.column.columnDef?.primary && 0,
+          boxShadow: isFocused && "0 0 0px 2px #166ee1",
+          borderRadius: isFocused && "1px",
         },
       }}
     >
@@ -173,7 +209,7 @@ function TableData(cell, activeRowHeight, row, isHovered, rowIndex) {
         // If it's a grouped cell, add an expander and row count
         <>
           <button
-            className='flex'
+            className="flex"
             {...{
               onClick: row.getToggleExpandedHandler(),
               style: {
@@ -203,6 +239,8 @@ function TableData(cell, activeRowHeight, row, isHovered, rowIndex) {
         // Otherwise, just render the regular cell
         <>
           <CellByFieldType
+            // cellRef={cellRef}
+            isFocused={isFocused}
             rowIndex={rowIndex}
             cell={cell}
             row={row}
@@ -210,7 +248,6 @@ function TableData(cell, activeRowHeight, row, isHovered, rowIndex) {
             hiddenInConditions={cell.column.columnDef.hiddenInConditions}
             isHovered={isHovered}
           />
-          {/* {console.log(cell.column.columnDef.fieldType)} */}
         </>
       )}
     </div>

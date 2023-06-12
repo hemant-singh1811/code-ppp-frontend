@@ -201,7 +201,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
       style={{
         height: activeRowHeight,
       }}
-      className='flex h-full items-center rounded-md text-[#4d4d4d]  text-lg  cursor-pointer relative '
+      className="flex h-full items-center rounded-md text-[#4d4d4d]  text-lg  cursor-pointer relative "
     >
       {({ open, close }) => (
         <>
@@ -213,7 +213,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
             }}
             className={`relative select-none h-full w-full bg-transparent z-0 flex items-center  border-transparent border rounded-sm  outline-none border-none`}
             style={{
-              boxShadow: open && "0 0 0px 2px inset #166ee1",
+              // boxShadow: open && "0 0 0px 2px inset #166ee1",
               background: open ? "white" : "transparent",
             }}
           >
@@ -222,7 +222,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
                 isEditMode ? "w-[calc(100%_-_16px)]" : "w-full"
               }`}
             >
-              <div className=' w-full rounded-md cursor-pointer flex items-center pr-1 gap-2 flex-wrap'>
+              <div className=" w-full rounded-md cursor-pointer flex items-center pr-1 gap-2 flex-wrap">
                 {options?.map(({ name, color, bgcolor }, i) => {
                   if (selectedOption?.includes(name) && name !== "")
                     return (
@@ -237,17 +237,17 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
                             e.stopPropagation();
                             deleteOption(name);
                           }}
-                          xmlns='http://www.w3.org/2000/svg'
-                          fill='none'
-                          viewBox='0 0 24 24'
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
                           strokeWidth={1.5}
-                          stroke='currentColor'
-                          className='w-4 h-4 ml-1'
+                          stroke="currentColor"
+                          className="w-4 h-4 ml-1"
                         >
                           <path
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                            d='M6 18L18 6M6 6l12 12'
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
                           />
                         </svg>
                       </div>
@@ -256,45 +256,45 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
               </div>
             </div>
             {open && (
-              <div className='min-w-4 h-4 flex '>
+              <div className="min-w-4 h-4 flex ">
                 <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  fill='none'
-                  viewBox='0 0 24 24'
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
                   strokeWidth={1.5}
-                  stroke='currentColor'
-                  className='min-w-4 h-4 text-blue-500 ml-auto'
+                  stroke="currentColor"
+                  className="min-w-4 h-4 text-blue-500 ml-auto"
                 >
                   <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M19.5 8.25l-7.5 7.5-7.5-7.5'
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
                   />
                 </svg>
               </div>
             )}
           </Popover.Button>
           <Transition
-            className='bg-white'
+            className="bg-white"
             as={Fragment}
-            enter='transition ease-out duration-200'
-            enterFrom='opacity-0 translate-y-1'
-            enterTo='opacity-100 translate-y-0'
-            leave='transition ease-in duration-150'
-            leaveFrom='opacity-100 translate-y-0'
-            leaveTo='opacity-0 translate-y-1'
+            enter="transition ease-out duration-200"
+            enterFrom="opacity-0 translate-y-1"
+            enterTo="opacity-100 translate-y-0"
+            leave="transition ease-in duration-150"
+            leaveFrom="opacity-100 translate-y-0"
+            leaveTo="opacity-0 translate-y-1"
           >
-            <Popover.Panel className='absolute  left-0 z-[3] bg-yellow-400   h-full rounded-md  shadow-custom '>
+            <Popover.Panel className="absolute  left-0 z-[3] bg-yellow-400   h-full rounded-md  shadow-custom ">
               <div
-                className='absolute -left-1 top-8 w-full  bg-white rounded-md shadow-lg min-w-[200px] border  overflow-x-hidden'
+                className="absolute -left-1 top-8 w-full  bg-white rounded-md shadow-lg min-w-[200px] border  overflow-x-hidden"
                 style={{ zIndex: 100 }}
               >
                 <input
-                  type='text'
-                  name='search option'
-                  id=''
-                  placeholder='find an option'
-                  className='w-full outline-none p-2'
+                  type="text"
+                  name="search option"
+                  id=""
+                  placeholder="find an option"
+                  className="w-full outline-none p-2"
                   onChange={(e) => {
                     setSearchTerm(e.target.value);
                   }}
@@ -316,7 +316,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
                   autoComplete={"off"}
                   autoFocus
                 />
-                <div className='max-h-[300px]  overflow-y-auto'>
+                <div className="max-h-[300px]  overflow-y-auto">
                   {options
                     ?.filter(({ name }) => name?.includes(searchTerm))
                     .map(({ color, name, bgcolor }, i) => {
@@ -327,7 +327,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
                             close();
                           }}
                           key={i}
-                          className='p-2 hover:bg-blue-100 flex min-h-[30px] w-full'
+                          className="p-2 hover:bg-blue-100 flex min-h-[30px] w-full"
                         >
                           {name && (
                             <div
@@ -350,9 +350,9 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
                         addNewOption(e);
                         close();
                       }}
-                      className='p-2 hover:bg-blue-100 flex truncate'
+                      className="p-2 hover:bg-blue-100 flex truncate"
                     >
-                      <div className='truncate flex'>
+                      <div className="truncate flex">
                         Add New Option:
                         {searchTerm && (
                           <span

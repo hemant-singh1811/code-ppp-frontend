@@ -1112,8 +1112,16 @@ function NumberOptions({ setFieldOptions }) {
     },
   ];
 
-  const [selectedNumberType, setSelectedNumberType] = useState("");
-  const [selectedPrecisionType, setSelectedPrecisionType] = useState("");
+  const [selectedNumberType, setSelectedNumberType] = useState({
+    name: "Decimal (1.0)",
+    icon: "",
+    data: "decimal",
+  });
+  const [selectedPrecisionType, setSelectedPrecisionType] = useState({
+    name: "1.0",
+    icon: "",
+    data: 1,
+  });
 
   useEffect(() => {
     if (selectedNumberType) {

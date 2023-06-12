@@ -42,12 +42,14 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
 
   return (
     <div
-      className='h-full overflow-hidden select-none  w-full px-1 pl-0.5 gap-0.5 p-0.5 rounded flex'
-      tabIndex='-1'
-      style={{
-        // boxShadow: isChildVisible && "0 0 0px 2px inset #166ee1",
-        border: isChildVisible && "2px solid #166ee1",
-      }}
+      className="h-full overflow-hidden select-none  w-full px-1 pl-0.5 gap-0.5 p-0.5 rounded flex"
+      tabIndex={-1}
+      style={
+        {
+          // boxShadow: isChildVisible && "0 0 0px 2px inset #166ee1",
+          // border: isChildVisible && "2px solid #166ee1",
+        }
+      }
       onFocus={() => handleFocus()}
       onBlur={() => handleBlur()}
     >
@@ -56,16 +58,16 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
           onClick={() => {
             openModal();
           }}
-          className='cursor-pointer p-1 rounded-md h-full w-6 bg-black bg-opacity-10 flex items-center text-sm font-medium text-white hover:bg-opacity-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75'
+          className="cursor-pointer p-1 rounded-md h-full w-6 bg-black bg-opacity-10 flex items-center text-sm font-medium text-white hover:bg-opacity-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
         >
           <svg
-            xmlns='http://www.w3.org/2000/svg'
-            className=' fill-gray-700'
-            height='24'
-            viewBox='0 96 960 960'
-            width='24'
+            xmlns="http://www.w3.org/2000/svg"
+            className=" fill-gray-700"
+            height="24"
+            viewBox="0 96 960 960"
+            width="24"
           >
-            <path d='M479.973 836q-8.512 0-14.242-5.75Q460 824.5 460 816V596H240q-8.5 0-14.25-5.758T220 575.973q0-8.512 5.75-14.242Q231.5 556 240 556h220V336q0-8.5 5.758-14.25 5.757-5.75 14.269-5.75t14.242 5.75Q500 327.5 500 336v220h220q8.5 0 14.25 5.758t5.75 14.269q0 8.512-5.75 14.242Q728.5 596 720 596H500v220q0 8.5-5.758 14.25-5.757 5.75-14.269 5.75Z' />
+            <path d="M479.973 836q-8.512 0-14.242-5.75Q460 824.5 460 816V596H240q-8.5 0-14.25-5.758T220 575.973q0-8.512 5.75-14.242Q231.5 556 240 556h220V336q0-8.5 5.758-14.25 5.757-5.75 14.269-5.75t14.242 5.75Q500 327.5 500 336v220h220q8.5 0 14.25 5.758t5.75 14.269q0 8.512-5.75 14.242Q728.5 596 720 596H500v220q0 8.5-5.758 14.25-5.757 5.75-14.269 5.75Z" />
           </svg>
         </div>
       )}
@@ -82,31 +84,31 @@ export default function MultipleAttachmentsTableCell({ rowData, cell }) {
           />
         ))}
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as='div' className='relative z-10' onClose={() => <></>}>
+        <Dialog as="div" className="relative z-10" onClose={() => <></>}>
           <Transition.Child
             as={Fragment}
-            enter='ease-out duration-300'
-            enterFrom='opacity-0'
-            enterTo='opacity-100'
-            leave='ease-in duration-200'
-            leaveFrom='opacity-100'
-            leaveTo='opacity-0'
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
           >
-            <div className='fixed inset-0 bg-black bg-opacity-10' />
+            <div className="fixed inset-0 bg-black bg-opacity-10" />
           </Transition.Child>
 
-          <div className='fixed inset-0 overflow-y-auto'>
-            <div className='flex min-h-full items-center justify-center p-4 text-center '>
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center ">
               <Transition.Child
                 as={Fragment}
-                enter='ease-out duration-300'
-                enterFrom='opacity-0 scale-95'
-                enterTo='opacity-100 scale-100'
-                leave='ease-in duration-200'
-                leaveFrom='opacity-100 scale-100'
-                leaveTo='opacity-0 scale-95'
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className=' '>
+                <Dialog.Panel className=" ">
                   <FileUploadHandler closeModal={closeModal} cell={cell} />
                 </Dialog.Panel>
               </Transition.Child>
@@ -325,35 +327,35 @@ function FileUploadHandler({ closeModal, cell }) {
   };
 
   return (
-    <div className='fileupload-view w-[800px] '>
-      <div className=' m-0 w-full'>
-        <div className='col-md-12 w-full'>
-          <div className='card w-full'>
-            <div className='card-body w-full'>
-              <div className='kb-data-box'>
-                <div className='kb-modal-data-title'>
-                  <div className='kb-data-title'>
+    <div className="fileupload-view w-[800px] ">
+      <div className=" m-0 w-full">
+        <div className="col-md-12 w-full">
+          <div className="card w-full">
+            <div className="card-body w-full">
+              <div className="kb-data-box">
+                <div className="kb-modal-data-title">
+                  <div className="kb-data-title">
                     <h6>Multiple File Upload With Preview</h6>
                   </div>
                 </div>
                 <form onSubmit={FileUploadSubmit}>
-                  <div className='kb-file-upload'>
-                    <div className='file-upload-box'>
+                  <div className="kb-file-upload">
+                    <div className="file-upload-box">
                       <input
                         disabled={submitButton}
-                        type='file'
-                        id='fileupload'
-                        className='file-upload-input disabled:cursor-not-allowed'
+                        type="file"
+                        id="fileupload"
+                        className="file-upload-input disabled:cursor-not-allowed"
                         onChange={InputChange}
                         multiple
                       />
                       <span>
                         {/* Drag and drop or{' '} */}
-                        <span className='file-link'>Choose your files</span>
+                        <span className="file-link">Choose your files</span>
                       </span>
                     </div>
                   </div>
-                  <div className='kb-attach-box mb-3 max-h-[500px] overflow-auto'>
+                  <div className="kb-attach-box mb-3 max-h-[500px] overflow-auto">
                     {selectedFile.map((data, index) => {
                       const {
                         id,
@@ -366,31 +368,31 @@ function FileUploadHandler({ closeModal, cell }) {
                         progress,
                       } = data;
                       return (
-                        <div className='file-atc-box' key={id}>
+                        <div className="file-atc-box" key={id}>
                           {filename.match(/.(jpg|jpeg|png|gif|svg)$/i) ? (
-                            <div className='file-image'>
-                              <img src={fileimage} alt='' />
+                            <div className="file-image">
+                              <img src={fileimage} alt="" />
                             </div>
                           ) : (
-                            <div className='file-image'>
-                              <i className='far fa-file-alt'></i>
+                            <div className="file-image">
+                              <i className="far fa-file-alt"></i>
                             </div>
                           )}
-                          <div className='file-detail '>
+                          <div className="file-detail ">
                             {/* <div> */}
                             <h6>{filename}</h6>
                             <p></p>
                             <p>
                               <span>Size : {filesize}</span>
-                              <span className='ml-2'>
+                              <span className="ml-2">
                                 Modified Time : {datetime}
                               </span>
                             </p>
-                            <div className='file-actions'>
+                            <div className="file-actions">
                               {uploading ? (
-                                <div className='w-full bg-gray-200 rounded-full dark:bg-gray-700'>
+                                <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
                                   <div
-                                    className='bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full'
+                                    className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
                                     style={{ width: progress + "%" }}
                                   >
                                     {progress}%
@@ -404,8 +406,8 @@ function FileUploadHandler({ closeModal, cell }) {
                                 // </div>
 
                                 <button
-                                  type='button'
-                                  className='file-action-btn'
+                                  type="button"
+                                  className="file-action-btn"
                                   onClick={() => DeleteSelectFile(id)}
                                 >
                                   Delete
@@ -424,25 +426,25 @@ function FileUploadHandler({ closeModal, cell }) {
                       );
                     })}
                   </div>
-                  <div className='flex justify-start gap-2 flex-row-reverse'>
+                  <div className="flex justify-start gap-2 flex-row-reverse">
                     <button
                       disabled={submitButton}
-                      type='submit'
-                      className='btn bg-blue-500 text-white flex gap-2 form-submit disabled:bg-gray-500'
+                      type="submit"
+                      className="btn bg-blue-500 text-white flex gap-2 form-submit disabled:bg-gray-500"
                     >
                       {submitButton && <LoadingAlt />}
                       <div>Upload</div>
                     </button>
                     <div
                       onClick={() => CancelUploadAll()}
-                      className='btn bg-red-500 text-white form-submit cursor-pointer'
+                      className="btn bg-red-500 text-white form-submit cursor-pointer"
                     >
                       Cancel
                     </div>
                   </div>
                 </form>
                 {Files.length > 0 ? (
-                  <div className='kb-attach-box'>
+                  <div className="kb-attach-box">
                     <hr />
                     {Files.map((data, index) => {
                       const {
@@ -454,14 +456,14 @@ function FileUploadHandler({ closeModal, cell }) {
                         filesize,
                       } = data;
                       return (
-                        <div className='file-atc-box' key={index}>
+                        <div className="file-atc-box" key={index}>
                           {filename.match(/.(jpg|jpeg|png|gif|svg)$/i) ? (
-                            <div className='file-image'>
-                              <img src={fileimage} alt='' />
+                            <div className="file-image">
+                              <img src={fileimage} alt="" />
                             </div>
                           ) : (
-                            <div className='file-image'>
-                              <i className='far fa-file-alt'></i>
+                            <div className="file-image">
+                              <i className="far fa-file-alt"></i>
                             </div>
                           )}
                           {/* <div className='file-detail'>
@@ -529,7 +531,7 @@ function RenderFile({ rowData, file, cell, table, i, isChildVisible }) {
               })
             );
           }}
-          className='h-full w-auto object-contain border  rounded-sm  cursor-pointer'
+          className="h-full w-auto object-contain border  rounded-sm  cursor-pointer"
           src={file?.url}
           alt={file?.name}
         />
@@ -539,20 +541,20 @@ function RenderFile({ rowData, file, cell, table, i, isChildVisible }) {
         <div
           style={{ pointerEvents: !isChildVisible && "none" }}
           // onClick={handelOnClick}
-          className=' border h-full rounded-sm flex justify-center items-center cursor-pointer'
+          className=" border h-full rounded-sm flex justify-center items-center cursor-pointer"
         >
           <svg
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 24 24'
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
             strokeWidth={1.5}
-            stroke='currentColor'
-            className='w-6 h-6'
+            stroke="currentColor"
+            className="w-6 h-6"
           >
             <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              d='M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z'
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
             />
           </svg>
         </div>
@@ -562,20 +564,20 @@ function RenderFile({ rowData, file, cell, table, i, isChildVisible }) {
         <div
           style={{ pointerEvents: !isChildVisible && "none" }}
           // onClick={handelOnClick}
-          className=' border h-full rounded-sm flex justify-center items-center cursor-pointer'
+          className=" border h-full rounded-sm flex justify-center items-center cursor-pointer"
         >
           <svg
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 24 24'
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
             strokeWidth={1.5}
-            stroke='currentColor'
-            className='w-6 h-6'
+            stroke="currentColor"
+            className="w-6 h-6"
           >
             <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              d='M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z'
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
             />
           </svg>
         </div>
@@ -585,20 +587,20 @@ function RenderFile({ rowData, file, cell, table, i, isChildVisible }) {
         <div
           style={{ pointerEvents: !isChildVisible && "none" }}
           // onClick={handelOnClick}
-          className=' border h-full rounded-sm flex justify-center items-center cursor-pointer'
+          className=" border h-full rounded-sm flex justify-center items-center cursor-pointer"
         >
           <svg
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 24 24'
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
             strokeWidth={1.5}
-            stroke='currentColor'
-            className='w-6 h-6 m-auto'
+            stroke="currentColor"
+            className="w-6 h-6 m-auto"
           >
             <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              d='M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z'
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
             />
           </svg>
         </div>

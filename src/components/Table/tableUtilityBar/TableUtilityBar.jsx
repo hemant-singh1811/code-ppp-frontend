@@ -23,27 +23,27 @@ export default function TableUtilityBar() {
     (state) => state.views
   );
   const { userInfo } = useSelector((state) => state.auth);
-  let tabledata = table.options.state;
+  let tabledata = table?.options.state;
 
   useEffect(() => {
     // dispatch(
     //   handleUpdateSelectedViews({
     //     name: selectedView?.name,
     //     id: selectedView?.id,
-    //     model: table.options.state,
+    //     model: table?.options.state,
     //   })
     // );
     // dispatch(
     //   handelUpdateModel({
     //     name: selectedView?.name,
     //     id: selectedView?.id,
-    //     model: tabledata,
+    //     model: table?data,
     //   })
     // );
     // let obj = {
     //   userToken: userInfo.userToken,
     //   data: {
-    //     model: table.options.state,
+    //     model: table?.options.state,
     //     viewId: selectedView?.id,
     //     previousSelectedView,
     //   },
@@ -52,16 +52,16 @@ export default function TableUtilityBar() {
     // socket.emit("viewChangedSaved", obj, (response) => {
     //   console.log("socket response update views: " + JSON.stringify(response));
     // });
-    // dispatch(handleAddViews({ view: "driver", data: tableStates }));
+    // dispatch(handleAddViews({ view: "driver", data: table?States }));
   }, [
-    table.options.state.columnVisibility,
-    table.options.state.columnSizing,
-    table.options.state.columnFilters,
-    table.options.state.columnOrder,
-    table.options.state.columnVisibility,
-    table.options.state.globalFilter,
-    table.options.state.sorting,
-    table.options.state.grouping,
+    table?.options.state.columnVisibility,
+    table?.options.state.columnSizing,
+    table?.options.state.columnFilters,
+    table?.options.state.columnOrder,
+    table?.options.state.columnVisibility,
+    table?.options.state.globalFilter,
+    table?.options.state.sorting,
+    table?.options.state.grouping,
   ]);
 
   // console.log("tabledata", tabledata);
@@ -69,10 +69,10 @@ export default function TableUtilityBar() {
   // console.log(tableStates)x
 
   return (
-    <div className='flex items-center p-1  w-full justify-between  select-none bg-white border-[#c8c8c8] border-b-[1px]'>
-      <div className='flex items-center gap-2 '>
+    <div className="flex items-center p-1  w-full justify-between  select-none bg-white border-[#c8c8c8] border-b-[1px]">
+      <div className="flex items-center gap-2 ">
         <TableUtilityViews table={table} />
-        <div className='w-[.5px] bg-black h-6' />
+        <div className="w-[.5px] bg-black h-6" />
         <TableUtilityHideFields table={table} />
         <TableUtilityFilter table={table} />
         <TableUtilityGrouping table={table} />

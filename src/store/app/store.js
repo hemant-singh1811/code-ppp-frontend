@@ -10,6 +10,7 @@ import basesReducer from "../features/BasesStateSlice";
 import sidebarReducer from "../features/SideBarStateSlice";
 import fileViewerReducer from "../features/fileViewerSlice";
 import socketWebDataReducer from "../features/sockets/SocketWebDataSlice";
+import menuReducer from "../features/menuSlice";
 // import dataSliceReducer from '../services/alphaTruckingApi';
 
 const reducer = {
@@ -23,6 +24,7 @@ const reducer = {
   sidebar: sidebarReducer,
   fileViewer: fileViewerReducer,
   socketWebData: socketWebDataReducer,
+  menu: menuReducer,
   // dataSlice: dataSliceReducer,
 };
 

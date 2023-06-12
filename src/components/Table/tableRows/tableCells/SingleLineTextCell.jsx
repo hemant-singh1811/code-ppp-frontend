@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { TableContext } from "../../tableComponents/TableComponents";
 
-export default function SingleLineTextCell({ cell }) {
+export default function SingleLineTextCell({ cell, isFocused }) {
   let val = cell?.getValue();
   const socket = useSelector((state) => state.socketWebData.socket);
   const [value, setValue] = useState(val || "");
@@ -54,13 +54,26 @@ export default function SingleLineTextCell({ cell }) {
     }
   }
 
+  // console.log(isFocused);
+
+  // const divRef = useRef(null);
+
+  // console.log(cellRef);
+
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     divRef.current.focus();
+  //   }
+  // }, [isFocused]);
+
   return isEditMode ? (
     <input
-      type='text'
+      type="text"
       value={value}
       onChange={handleChange}
       onBlur={handleBlur}
       autoFocus
+      spellCheck="false"
       style={{
         paddingBottom:
           activeNumberOfLines === 4
@@ -70,14 +83,29 @@ export default function SingleLineTextCell({ cell }) {
             : activeNumberOfLines === 2
             ? 30
             : activeNumberOfLines === 1 && 4,
-        boxShadow: "0 0 0px 2px inset #166ee1",
+        paddingTop:
+          activeNumberOfLines === 4
+            ? 2
+            : activeNumberOfLines === 3
+            ? 2
+            : activeNumberOfLines === 2
+            ? 12
+            : activeNumberOfLines === 1 && 2,
+        boxShadow: "0 0 0px 3px #166ee1",
+        // zIndex: 1000,
       }}
-      className='w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  '
+      className="w-full h-full border-none flex px-2  p-1 outline-none rounded-sm  "
     />
   ) : (
     <div
-      className={`overflow-hidden text-left w-full h-full break-words truncate px-2 p-1  `}
-      onClick={handleDoubleClick}
+      // tabIndex={isFocused ? -1 : 1}
+      className={`overflow-hidden outline-none text-left w-full h-full break-words px-2 p-1 bg-transparent  truncate-multiline webkitLineClamp${activeNumberOfLines}`}
+      onDoubleClick={handleDoubleClick}
+      style={{
+        backgroundColor: "transparent",
+        // color: isFocused && "#166ee1",
+      }}
+      onKeyDown={handleDoubleClick}
     >
       {value || ""}
     </div>

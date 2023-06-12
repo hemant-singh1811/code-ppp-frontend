@@ -4,10 +4,9 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { TableContext } from "../tableComponents/TableComponents";
 import { useContext } from "react";
-import Loading from "../../utilities/Loading";
 import LoadingAlt from "../../utilities/LoadingAlt";
 
-export default function CreateRow() {
+const CreateRow = React.memo(function CreateRow() {
   const [addRowApi, responseCreateRow] = useAddTableRowMutation();
   const { selectedTableId, selectedBaseId } = useSelector(
     (state) => state.globalState
@@ -60,7 +59,6 @@ export default function CreateRow() {
       },
     });
   }
-  console.log(responseCreateRow.isLoading);
   return responseCreateRow.isLoading ? (
     <div className="w-5 h-5 ml-4">
       <LoadingAlt />
@@ -86,4 +84,6 @@ export default function CreateRow() {
       </svg>
     </div>
   );
-}
+});
+
+export default CreateRow;
