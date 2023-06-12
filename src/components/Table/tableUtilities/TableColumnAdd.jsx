@@ -8,6 +8,7 @@ import getSvg from "./getSvg";
 import SelectWithSearch from "./SelectWithSearch";
 import { usePopper } from "react-popper";
 import CheckboxPallate from "../../../utilities/checkboxPallate";
+import { set } from "react-hook-form";
 
 const selectedOptionDescription = {
   "Single line text":
@@ -63,7 +64,7 @@ let columnType = [
   "Percent",
   "Duration",
   "Rating",
-  // "Formula",
+  "Formula",
   // "Rollup",
   "Count",
   "Lookup",
@@ -94,7 +95,7 @@ let fieldsType = [
   "percent",
   "duration",
   "rating",
-  // "formula",
+  "formula",
   // "rollup",
   "count",
   "lookup",
@@ -274,6 +275,21 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
           },
         });
         break;
+
+        case "Formula":
+          addColumnApi({
+            baseId: selectedBaseId,
+            data: {
+              tableId: selectedTableId,
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              fieldType: fieldsMap.get(selectedFieldType),
+              baseId: selectedBaseId,
+              formulaFieldOptions: fieldOptions,
+            },
+          });
+          break;
+
 
       default:
         addColumnApi({
@@ -668,6 +684,15 @@ function GetFieldByType({
           />
         </>
       );
+
+      case "Formula" : 
+      return (
+        <>
+          {SelectedFieldOption}
+          <FormulaOptions columns={columns} setFieldOptions={setFieldOptions}/>
+          
+        </>
+      )
 
     default:
       return (
@@ -1460,6 +1485,49 @@ function CheckboxOptions({ setFieldOptions, columns }) {
       <CheckboxPallate />
     </>
   );
+}
+
+function FormulaOptions({setFieldOptions}){
+  const [value,setValue] = useState("");
+  const [error,setError] = useState(false);
+  const [errorMessage,setErrorMessage] = useState("");
+  const {columns} = useContext(TableContext);
+  console.log(columns);
+
+  useEffect(()=>{
+    setFieldOptions({
+      formula:value
+    })
+  },[value])
+
+  const validate = (value)=>{
+    if(columns.some((ele)=>ele.fieldName === value)){
+      setError(false);
+      return true;
+    }
+    //setError(true);
+    //setErrorMessage("Invalid Column Name");
+    return false;
+  }
+
+  const onChangeHandler = (e)=>{
+    if(e.target.value === ""){
+      setError(false);
+      setValue(e.target.value);
+      return
+    }
+    validate(e.target.value);
+    setValue(e.target.value);
+    
+  }
+
+  return (
+    <>
+      <div className="mt-2 mb-2">Formula</div>
+      <textarea className="w-full border rounded p-1 px-2" placeholder="formula" value={value} onChange={onChangeHandler} />
+      {error ? <div className="text-red-500">{errorMessage}</div> : null}
+    </>
+  )
 }
 
 export default TableColumnAdd;

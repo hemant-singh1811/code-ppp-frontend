@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { TableContext } from "../../tableComponents/TableComponents";
 
@@ -57,6 +57,10 @@ export default function NumberCell({ cell }) {
       });
     }
   }
+
+  useEffect(() => {
+    setValue(cell?.getValue() || "");
+  }, [cell]);
 
   return isEditMode ? (
     <input

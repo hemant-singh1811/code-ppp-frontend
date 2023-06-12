@@ -22,7 +22,7 @@ const FormModal = () => {
   let row = tableData.table.getRowModel().rows[index];
   let columns = tableData.table.getAllColumns();
   const [showCreateField, setShowCreateField] = useState(false);
-  console.log("tableData ", columns);
+  console.log("tableData ", tableData);
 
   return (
     <ErrorBoundary fallback={<div>Something went wrong</div>}>
@@ -42,7 +42,7 @@ const FormModal = () => {
                 <div> </div>
                 <Dialog.Panel
                   className={
-                    "flex w-[960px] h-[90vh] flex-col justify-start p-4 bg-white text-black  overflow-y-auto rounded"
+                    "flex w-[960px] h-[90vh] flex-col justify-start p-5 px-20 bg-white text-black  overflow-y-auto rounded"
                   }>
                   <hr className="h-px my-6 bg-gray-500 border-0 dark:bg-gray-700" />
                   <div className="flex-col justify-star">
@@ -60,7 +60,7 @@ const FormModal = () => {
                               <div className="p-2">
                                 {getSvg(column.columnDef.fieldType)}
                               </div>
-                              <div>{column.columnDef.fieldName}</div>
+                              <div className="px-1 py-1">{column.columnDef.fieldName}</div>
                             </div>
                             <div
                               className="w-full border rounded"
@@ -85,7 +85,7 @@ const FormModal = () => {
                           className="flex flex-col md:flex-row w-full p-5">
                           <div className=" flex" style={{ flex: "3" }}>
                             <div>{getSvg(column.columnDef.fieldType)}</div>
-                            <div>
+                            <div className="px-1" >
                               <label htmlFor={column.id}>
                                 {column.columnDef.fieldName}
                               </label>

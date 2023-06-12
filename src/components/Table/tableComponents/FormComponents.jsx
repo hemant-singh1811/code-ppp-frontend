@@ -1,44 +1,45 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { TableContext } from "./TableComponents";
-import { Input, Textarea } from "@material-tailwind/react";
+
 
 const FormComponents = ({ row, column, type }) => {
+  
   const components = {
     singleSelect: <SingleSelect row={row} column={column} />,
     linkedRecords: <SingleLineText row={row} column={column} />,
-    singleLineText: <SingleLineText row={row} column={column} />,
-    multilineText: <MultilineTextCell row={row} column={column} />,
+    singleLineText: <SingleLineText row={row} column={column} />,  //Done
+    multilineText: <MultilineTextCell row={row} column={column} />,  //Done
     attachments: <SingleLineText row={row} column={column} />,
-    checkbox: <Checkbox row={row} column={column} />,
+    checkbox: <Checkbox row={row} column={column} />, //Done
     multipleSelect: <SingleLineText row={row} column={column} />,
     user: <SingleLineText row={row} column={column} />,
     date: <SingleLineText row={row} column={column} />,
-    phoneNumber: <SingleLineText row={row} column={column} />,
-    email: <Email row={row} column={column} />,
-    url: <SingleLineText row={row} column={column} />,
-    number: <SingleLineText row={row} column={column} />,
-    currency: <Currency row={row} column={column} />,
-    percent: <SingleLineText row={row} column={column} />,
-    duration: <SingleLineText row={row} column={column} />,
+    phoneNumber: <SingleLineText row={row} column={column} />,  //Done
+    email: <Email row={row} column={column} />,  //Done
+    url: <SingleLineText row={row} column={column} />,  //Done
+    number: <Number row={row} column={column} />,  //Done
+    currency: <Currency row={row} column={column} />,  //Done
+    percent: <Percent row={row} column={column} />,  //Done
+    duration: <SingleLineText row={row} column={column} />, 
     rating: <SingleLineText row={row} column={column} />,
-    formula: <SingleLineText row={row} column={column} />,
+    formula: <Formula row={row} column={column} />, //Done
     rollup: <SingleLineText row={row} column={column} />,
-    count: <SingleLineText row={row} column={column} />,
+    count: <Count row={row} column={column} />,  //Done
     lookup: <SingleLineText row={row} column={column} />,
     createdTime: (
-      <ModifiedAndCreatedCell type={type} column={column} row={row} />
+      <ModifiedAndCreatedCell type={type} column={column} row={row} />  //Done
     ),
     lastModifiedTime: (
-      <ModifiedAndCreatedCell type={type} column={column} row={row} />
+      <ModifiedAndCreatedCell type={type} column={column} row={row} />  //Done
     ),
-    createdBy: <ModifiedAndCreatedCell type={type} column={column} row={row} />,
+    createdBy: <ModifiedAndCreatedCell type={type} column={column} row={row} />,  //Done
     lastModifiedBy: (
-      <ModifiedAndCreatedCell type={type} column={column} row={row} />
+      <ModifiedAndCreatedCell type={type} column={column} row={row} /> //Done
     ),
-    autoNumber: <SingleLineText row={row} column={column} />,
-    barcode: <SingleLineText row={row} column={column} />,
+    autoNumber: <AutoNumber row={row} column={column} />, //Done
+    barcode: <SingleLineText row={row} column={column} />,  //Done
     button: <SingleLineText row={row} column={column} />,
   };
   return <>{components[type]}</>;
@@ -57,7 +58,7 @@ export const SingleLineText = ({ row, column }) => {
     setValue(e.target.value);
   };
 
-  console.log("column", column);
+  //console.log("column", column);
   function handleBlur() {
     if (row?.getValue(column?.id) !== value) {
       let newRowPart = value;
@@ -87,11 +88,11 @@ export const SingleLineText = ({ row, column }) => {
   }
 
   return (
-    <div className="w-full hover:shadow-md">
-      <Input
+    <div className="w-full hover:shadow-md border-gray-600">
+      <input
         type="text"
-        label={column?.columnDef?.fieldName || ""}
-        className="outline-blue-700"
+        label={null}
+        className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded"
         value={value}
         onChange={onChange}
         onBlur={handleBlur}
@@ -206,9 +207,10 @@ export function MultilineTextCell({ row, column }) {
     }
   }
   return (
-    <Textarea
-      className="w-full h-full outline-none placeholder:p-1"
+    <textarea
+      className="p-1 px-2 flex-auto w-full rounded-big border border-gray-300 focus:border-blue-700 border-rounded h-auto"
       value={value}
+      autoFocus
       onChange={changeHandler}
       onBlur={handleBlur}
 
@@ -270,6 +272,7 @@ export function Checkbox({ row, column }) {
 
 export function SingleSelect({ row, column }) {
   const [options, setOptions] = useState(column?.columnDef.options || []);
+  console.log(options)
   const socket = useSelector((state) => state.socketWebData.socket);
   const { table, activeNumberOfLines } = useContext(TableContext);
   const { selectedBaseId, selectedTableId } = useSelector(
@@ -281,6 +284,23 @@ export function SingleSelect({ row, column }) {
     console.log(e.target.value);
     //setValue(e.target.value);
   };
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [textInput, setTextInput] = useState('');
+  //const options = ['Option 1', 'Option 2', 'Option 3']; // Replace with your own array
+
+  const handleFieldClick = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleSearchChange = (e) => {
+    console.log("options",options);
+    setSearchTerm(e.target.value);
+  };
+
+  const handleTextInputChange = (e) => {
+    setTextInput(e.target.value);
+  }
   console.log("Single Select column", column);
   function handleBlur() {
     if (row?.getValue(column.id) !== value) {
@@ -310,18 +330,60 @@ export function SingleSelect({ row, column }) {
     }
   }
   return (
-    <select
-      className="w-full h-full outline-none"
-      value={value}
-      onChange={onChange}
-      onBlur={handleBlur}
-      multiple={true}>
-      {/* {column.columnDef.options.map((opt) => (
-        <option key={opt} value={opt}>
-          {opt}
-        </option>
-      ))} */}
-    </select>
+    <div className="relative">
+      <button
+        className="py-2 px-4 rounded border border-gray-300 focus:outline-none focus:border-blue-500 w-full"
+        onClick={handleFieldClick}
+      >
+        Select Field
+      </button>
+      {isOpen && (
+        <div className="absolute mt-1 bg-white rounded shadow-lg">
+          <div className="p-4">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            <input
+              type="text"
+              placeholder="Text Input"
+              value={textInput}
+              onChange={handleTextInputChange}
+              className="w-full mt-2 p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <ul>
+            { options
+              .filter((option) =>
+                option?.name?.includes(searchTerm.toLowerCase())
+              )
+              .map((option) => (
+                <li
+                  key={option.name}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer z-2000"
+                >
+                  {option.name}
+                </li>
+              ))}
+          </ul>
+        </div>
+      )}
+    </div>
+    // <select
+    //   className="w-full h-full outline-none"
+    //   value={value}
+    //   onChange={onChange}
+    //   onBlur={handleBlur}
+    //   multiple={true}>
+    //   {/* {column.columnDef.options.map((opt) => (
+    //     <option key={opt} value={opt}>
+    //       {opt}
+    //     </option>
+    //   ))} */}
+    // </select>
   );
 }
 
@@ -383,13 +445,13 @@ export function Email({ row, column }) {
     }
   }
 
-  const myCLasses = `w-full h-full placeholder:p-1 border-gray-800 outline-blue-700 ${
+  const myCLasses = `h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded ${
     validateEmailString(value) ? "" : "bg-red-200"
   }`;
 
   return (
     <div>
-      <Input
+      <input
         type="text"
         value={value}
         onChange={onChange}
@@ -488,7 +550,7 @@ export function Currency({ row, column }) {
   }
 
   return (
-    <Input
+    <input
       type="text"
       value={value && options?.currencyValue + addCommas(value)}
       onChange={handleChange}
@@ -503,13 +565,256 @@ export function Currency({ row, column }) {
             : activeNumberOfLines === 2
             ? 30
             : activeNumberOfLines === 1 && 4,
-        boxShadow: "0 0 0px 2px inset #166ee1",
+        // boxShadow: "0 0 0px 2px inset #166ee1",
       }}
-      className="w-full h-full border-none flex px-2 p-1 outline-none rounded-sm  text-right"
+      className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left"
     />
   );
 }
 
-export function PhoneNumber({ row, column }) {}
+export function Number({row,column}) {
+  
+  const socket = useSelector((state) => state.socketWebData.socket);
+  const [value, setValue] = useState(row?.getValue(column?.id) || "");
+  const [isEditMode, setIsEditMode] = useState(false);
+  const { table, activeNumberOfLines } = useContext(TableContext);
+  const { selectedBaseId, selectedTableId } = useSelector(
+    (state) => state.globalState
+  );
+  const userToken = useSelector((state) => state.auth.userInfo?.userToken);
+  let options = column.columnDef?.numberFieldOptions;
+  //console.log(options);
+
+  function handleChange(event) {
+    const arr = [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9", 
+      "0",
+      ".",
+      options?.numberValue,
+    ];
+    if (arr.includes(event.target.value[event.target.value.length - 1])) {
+      setValue(event.target.value);
+    } else if (event.target.value === "") {
+      setValue(event.target.value);
+    } else {
+      //setValue(event.target.value);
+    }
+  }
+  //   console.log(options);
+  function handleBlur() {
+    setIsEditMode(false);
+    const val = (value);
+    if (row.getValue(column.id) !== val) {
+      let updatedValue = (val);
+      console.log("isNaN", isNaN(parseFloat(val)), parseFloat(val));
+      updatedValue = isNaN(parseFloat(val))
+        ? ""
+        : parseFloat(val).toFixed(options?.fieldPrecision);
+      console.log("updatedValue", updatedValue);
+      setValue(updatedValue);
+
+      let rowObj = {
+        userToken: userToken,
+        data: {
+          baseId: selectedBaseId,
+          tableId: selectedTableId,
+          recordId: row?.original.id52148213343234567,
+          updatedData: updatedValue,
+          fieldType: column.columnDef.fieldType,
+          fieldId: column.columnDef.fieldId,
+        },
+      };
+
+      socket.emit("updateData", rowObj, (response) => {
+        table.options.meta?.updateData(
+          row.index,
+          column.id,
+          updatedValue,
+          response.metaData
+        );
+        console.log("res : ", response);
+      });
+    }
+  }
+
+
+
+  return (
+    <input
+
+      type="text"
+      value={value}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      autoFocus
+      className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left"
+    />
+  );
+
+  
+}
+
+export function Percent({row,column}) {
+    
+    const socket = useSelector((state) => state.socketWebData.socket);
+    const rowData = row?.getValue(column?.id).replace(/%/g, "")+"%" || "";
+    console.log("rowData", rowData);
+    const [value, setValue] = useState(rowData);
+    //console.log("value", value)
+    
+    const [isEditMode, setIsEditMode] = useState(false);
+    const { table, activeNumberOfLines } = useContext(TableContext);
+    const { selectedBaseId, selectedTableId } = useSelector(
+      (state) => state.globalState
+    );
+    const userToken = useSelector((state) => state.auth.userInfo?.userToken);
+    let options = column.columnDef?.percentFieldOptions;
+    //console.log(options);
+  
+    function handleChange(event) {
+      
+      //regex to remove alphabets and special characters except % and .
+      const regex = /[^0-9.%]+$/g;
+      const inputValue = event.target.value.replace(regex, "");
+      setValue(inputValue);
+    }
+    //   console.log(options);
+    function handleBlur(event) {
+      setIsEditMode(false);
+      event.target.value = event.target.value.replace(/%/g, "");
+      const val = (event.target.value);
+      if (row.getValue(column.id) !== val) {
+        let updatedValue = (val);
+        console.log("isNaN", isNaN(parseFloat(val)), parseFloat(val));
+        updatedValue = isNaN(parseFloat(val))
+          ? ""
+          : parseFloat(val).toFixed(options?.fieldPrecision);
+        console.log("updatedValue", updatedValue);
+        setValue(updatedValue+"%");
+  
+        let rowObj = {
+          userToken: userToken,
+          data: {
+            baseId: selectedBaseId,
+            tableId: selectedTableId,
+            recordId: row?.original.id52148213343234567,
+            updatedData: updatedValue,
+            fieldType: column.columnDef.fieldType,
+            fieldId: column.columnDef.fieldId,
+          },
+        };
+  
+        socket.emit("updateData", rowObj, (response) => {
+          table.options.meta?.updateData(
+            row.index,
+            column.id,
+            updatedValue,
+            response.metaData
+          );
+          console.log("res : ", response);
+        });
+      }
+    }
+
+    return (
+      <input
+
+        type="text"
+        value={value}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        autoFocus
+        className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left"
+      />
+    );
+}
+
+
+export function Formula({row,column}) {
+  const [value,setValue] = useState("");
+    //console.log(cell);
+    const formula = column?.columnDef?.formulaFieldOptions?.formula;
+    //const formula = "Num1 + Num2";
+    if(!formula){
+      return <div className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left"></div>
+    }
+    //console.log(formula)
+    const {columns,data } = useContext(TableContext);
+    
+    const myMap = new Map();
+    columns.forEach((column)=>{
+      if(column.fieldName){
+        myMap.set(column.fieldName,row.getValue(column.fieldId));
+        //console.log(column.fieldName,cell.row.getValue(column.fieldId))
+      }
+    })
+    
+    const myString = Array.from(myMap.keys()).join('|');
+    //console.log("myMap",myMap)
+    //console.log(myString)
+    const regexPattern = new RegExp(`(${myString})`, 'g');
+    const formulaArray = formula.split(regexPattern);
+    //console.log(formulaArray)
+    const formulaArray2 = formulaArray.map((item)=>{
+      if(myMap.has(item)){
+        return myMap.get(item);
+      }
+      if(item !== "")
+        return item;
+    })
+    //console.log(formulaArray2)
+    const formulaString = formulaArray2.join('');
+    //console.log(formulaString)
+    //console.log(eval(formulaString))
+    useEffect(()=>{
+      try{
+        setValue(Function("return "+formulaString)())
+
+      }
+      catch(err){
+        console.log(err)
+        setValue("")
+      }
+    },[data])
+  return (
+    <div className="fh-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left">
+        {value}
+    </div>
+  )
+}
+
+export function Count({ row,column }) {
+  const value =
+    row.original[
+      column.columnDef.countFieldOptions?.selectedFieldId
+    ] || "";
+
+  return (
+    <div
+      className={`overflow-hidden w-full h-10 break-words truncate px-2 p-1`}
+    >
+      {value?.length || 0}
+    </div>
+  );
+}
+
+
+export function AutoNumber({row}) {
+  const value = row?.index+1 || "";
+  return (
+    <div className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left bg-gray-100">
+      {value}
+    </div>
+  )
+
+}
 
 export default FormComponents;
