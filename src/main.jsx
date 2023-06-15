@@ -6,10 +6,10 @@ import { Provider } from "react-redux";
 import { store } from "./store/app/store";
 import { BrowserRouter } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
+import RefreshPageModal from "./components/utilities/modal/RefreshPageModal";
 
 // @material-tailwind/react
 import { ThemeProvider } from "@material-tailwind/react";
-import RefreshPageModal from "./components/utilities/modal/RefreshPageModal";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>

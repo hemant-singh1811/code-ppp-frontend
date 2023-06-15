@@ -62,8 +62,8 @@ const viewsSlice = createSlice({
         return view;
       });
     },
-    handelAddInitialState: (state, { payload }) => {
-      // console.log('handelAddInitialState called');
+    handelAddInitialViewsState: (state, { payload }) => {
+      // console.log('handelAddInitialViewsState called');
       if (payload?.sharedview)
         payload?.sharedview?.map((ele, i) => {
           if (i === 0) {
@@ -112,7 +112,7 @@ export const {
   handleUpdateSelectedViews,
   handleAddViews,
   handelUpdateModel,
-  handelAddInitialState,
+  handelAddInitialViewsState,
   handelRemoveView,
   handelToggleView,
 } = viewsSlice.actions;

@@ -3,43 +3,44 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { TableContext } from "./TableComponents";
 
-
 const FormComponents = ({ row, column, type }) => {
-  
   const components = {
     singleSelect: <SingleSelect row={row} column={column} />,
     linkedRecords: <SingleLineText row={row} column={column} />,
-    singleLineText: <SingleLineText row={row} column={column} />,  //Done
-    multilineText: <MultilineTextCell row={row} column={column} />,  //Done
+    singleLineText: <SingleLineText row={row} column={column} />, //Done
+    multilineText: <MultilineTextCell row={row} column={column} />, //Done
     attachments: <SingleLineText row={row} column={column} />,
     checkbox: <Checkbox row={row} column={column} />, //Done
     multipleSelect: <SingleLineText row={row} column={column} />,
     user: <SingleLineText row={row} column={column} />,
     date: <SingleLineText row={row} column={column} />,
-    phoneNumber: <SingleLineText row={row} column={column} />,  //Done
-    email: <Email row={row} column={column} />,  //Done
-    url: <SingleLineText row={row} column={column} />,  //Done
-    number: <Number row={row} column={column} />,  //Done
-    currency: <Currency row={row} column={column} />,  //Done
-    percent: <Percent row={row} column={column} />,  //Done
-    duration: <SingleLineText row={row} column={column} />, 
+    phoneNumber: <SingleLineText row={row} column={column} />, //Done
+    email: <Email row={row} column={column} />, //Done
+    url: <SingleLineText row={row} column={column} />, //Done
+    number: <Number row={row} column={column} />, //Done
+    currency: <Currency row={row} column={column} />, //Done
+    percent: <Percent row={row} column={column} />, //Done
+    duration: <SingleLineText row={row} column={column} />,
     rating: <SingleLineText row={row} column={column} />,
     formula: <Formula row={row} column={column} />, //Done
     rollup: <SingleLineText row={row} column={column} />,
-    count: <Count row={row} column={column} />,  //Done
+    count: <Count row={row} column={column} />, //Done
     lookup: <SingleLineText row={row} column={column} />,
+    //Done
     createdTime: (
-      <ModifiedAndCreatedCell type={type} column={column} row={row} />  //Done
+      <ModifiedAndCreatedCell type={type} column={column} row={row} />
     ),
+    //Done
     lastModifiedTime: (
-      <ModifiedAndCreatedCell type={type} column={column} row={row} />  //Done
+      <ModifiedAndCreatedCell type={type} column={column} row={row} />
     ),
-    createdBy: <ModifiedAndCreatedCell type={type} column={column} row={row} />,  //Done
+    createdBy: <ModifiedAndCreatedCell type={type} column={column} row={row} />, //Done
+    //Done
     lastModifiedBy: (
-      <ModifiedAndCreatedCell type={type} column={column} row={row} /> //Done
+      <ModifiedAndCreatedCell type={type} column={column} row={row} />
     ),
     autoNumber: <AutoNumber row={row} column={column} />, //Done
-    barcode: <SingleLineText row={row} column={column} />,  //Done
+    barcode: <SingleLineText row={row} column={column} />, //Done
     button: <SingleLineText row={row} column={column} />,
   };
   return <>{components[type]}</>;
@@ -68,7 +69,7 @@ export const SingleLineText = ({ row, column }) => {
         data: {
           baseId: selectedBaseId,
           tableId: selectedTableId,
-          recordId: row?.original.id52148213343234567,
+          recordId: row?.original.recordId,
           updatedData: newRowPart,
           fieldType: column?.columnDef?.fieldType,
           fieldId: column?.columnDef?.fieldId,
@@ -111,7 +112,8 @@ export function ModifiedAndCreatedCell({ type, row }) {
               background: row?.original.lastModifiedBy?.background,
               color: row?.original.lastModifiedBy?.color,
             }}
-            className="w-6 h-6 rounded-full flex items-center justify-center relative z-10">
+            className="w-6 h-6 rounded-full flex items-center justify-center relative z-10"
+          >
             {row?.original?.lastModifiedBy?.userName.slice(0, 1).toUpperCase()}
           </div>
           <div className="capitalize text-sm px-2 pl-6 relative z-0 -ml-5 rounded-full bg-[#eee] mt-0.5">
@@ -142,7 +144,8 @@ export function ModifiedAndCreatedCell({ type, row }) {
               background: row?.original.createdBy?.background,
               color: row?.original.createdBy?.color,
             }}
-            className="w-6 h-6 rounded-full flex items-center justify-center relative z-10">
+            className="w-6 h-6 rounded-full flex items-center justify-center relative z-10"
+          >
             {row?.original?.createdBy?.userName.slice(0, 1).toUpperCase()}
           </div>
           <div className="capitalize text-sm px-2 pl-6 relative z-0 -ml-5 rounded-full bg-[#eee] mt-0.5">
@@ -188,7 +191,7 @@ export function MultilineTextCell({ row, column }) {
         data: {
           baseId: selectedBaseId,
           tableId: selectedTableId,
-          recordId: row?.original.id52148213343234567,
+          recordId: row?.original.recordId,
           updatedData: newRowPart,
           fieldType: column.columnDef.fieldType,
           fieldId: column.columnDef.fieldId,
@@ -241,7 +244,7 @@ export function Checkbox({ row, column }) {
         data: {
           baseId: selectedBaseId,
           tableId: selectedTableId,
-          recordId: row?.original.id52148213343234567,
+          recordId: row?.original.recordId,
           updatedData: newRowPart,
           fieldType: column.columnDef.fieldType,
           fieldId: column.columnDef.fieldId,
@@ -272,7 +275,7 @@ export function Checkbox({ row, column }) {
 
 export function SingleSelect({ row, column }) {
   const [options, setOptions] = useState(column?.columnDef.options || []);
-  console.log(options)
+  console.log(options);
   const socket = useSelector((state) => state.socketWebData.socket);
   const { table, activeNumberOfLines } = useContext(TableContext);
   const { selectedBaseId, selectedTableId } = useSelector(
@@ -285,8 +288,8 @@ export function SingleSelect({ row, column }) {
     //setValue(e.target.value);
   };
   const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [textInput, setTextInput] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [textInput, setTextInput] = useState("");
   //const options = ['Option 1', 'Option 2', 'Option 3']; // Replace with your own array
 
   const handleFieldClick = () => {
@@ -294,13 +297,13 @@ export function SingleSelect({ row, column }) {
   };
 
   const handleSearchChange = (e) => {
-    console.log("options",options);
+    console.log("options", options);
     setSearchTerm(e.target.value);
   };
 
   const handleTextInputChange = (e) => {
     setTextInput(e.target.value);
-  }
+  };
   console.log("Single Select column", column);
   function handleBlur() {
     if (row?.getValue(column.id) !== value) {
@@ -311,7 +314,7 @@ export function SingleSelect({ row, column }) {
         data: {
           baseId: selectedBaseId,
           tableId: selectedTableId,
-          recordId: row?.original.id52148213343234567,
+          recordId: row?.original.recordId,
           updatedData: newRowPart,
           fieldType: column.columnDef.fieldType,
           fieldId: column.columnDef.fieldId,
@@ -356,7 +359,7 @@ export function SingleSelect({ row, column }) {
             />
           </div>
           <ul>
-            { options
+            {options
               .filter((option) =>
                 option?.name?.includes(searchTerm.toLowerCase())
               )
@@ -426,7 +429,7 @@ export function Email({ row, column }) {
         data: {
           baseId: selectedBaseId,
           tableId: selectedTableId,
-          recordId: row?.original.id52148213343234567,
+          recordId: row?.original.recordId,
           updatedData: newRowPart,
           fieldType: column.columnDef.fieldType,
           fieldId: column.columnDef.fieldId,
@@ -515,7 +518,7 @@ export function Currency({ row, column }) {
         data: {
           baseId: selectedBaseId,
           tableId: selectedTableId,
-          recordId: row?.original.id52148213343234567,
+          recordId: row?.original.recordId,
           updatedData: updatedValue,
           fieldType: column.columnDef.fieldType,
           fieldId: column.columnDef.fieldId,
@@ -572,8 +575,7 @@ export function Currency({ row, column }) {
   );
 }
 
-export function Number({row,column}) {
-  
+export function Number({ row, column }) {
   const socket = useSelector((state) => state.socketWebData.socket);
   const [value, setValue] = useState(row?.getValue(column?.id) || "");
   const [isEditMode, setIsEditMode] = useState(false);
@@ -595,7 +597,7 @@ export function Number({row,column}) {
       "6",
       "7",
       "8",
-      "9", 
+      "9",
       "0",
       ".",
       options?.numberValue,
@@ -611,9 +613,9 @@ export function Number({row,column}) {
   //   console.log(options);
   function handleBlur() {
     setIsEditMode(false);
-    const val = (value);
+    const val = value;
     if (row.getValue(column.id) !== val) {
-      let updatedValue = (val);
+      let updatedValue = val;
       console.log("isNaN", isNaN(parseFloat(val)), parseFloat(val));
       updatedValue = isNaN(parseFloat(val))
         ? ""
@@ -626,7 +628,7 @@ export function Number({row,column}) {
         data: {
           baseId: selectedBaseId,
           tableId: selectedTableId,
-          recordId: row?.original.id52148213343234567,
+          recordId: row?.original.recordId,
           updatedData: updatedValue,
           fieldType: column.columnDef.fieldType,
           fieldId: column.columnDef.fieldId,
@@ -645,11 +647,8 @@ export function Number({row,column}) {
     }
   }
 
-
-
   return (
     <input
-
       type="text"
       value={value}
       onChange={handleChange}
@@ -658,144 +657,135 @@ export function Number({row,column}) {
       className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left"
     />
   );
-
-  
 }
 
-export function Percent({row,column}) {
-    
-    const socket = useSelector((state) => state.socketWebData.socket);
-    const rowData = row?.getValue(column?.id).replace(/%/g, "")+"%" || "";
-    console.log("rowData", rowData);
-    const [value, setValue] = useState(rowData);
-    //console.log("value", value)
-    
-    const [isEditMode, setIsEditMode] = useState(false);
-    const { table, activeNumberOfLines } = useContext(TableContext);
-    const { selectedBaseId, selectedTableId } = useSelector(
-      (state) => state.globalState
-    );
-    const userToken = useSelector((state) => state.auth.userInfo?.userToken);
-    let options = column.columnDef?.percentFieldOptions;
-    //console.log(options);
-  
-    function handleChange(event) {
-      
-      //regex to remove alphabets and special characters except % and .
-      const regex = /[^0-9.%]+$/g;
-      const inputValue = event.target.value.replace(regex, "");
-      setValue(inputValue);
-    }
-    //   console.log(options);
-    function handleBlur(event) {
-      setIsEditMode(false);
-      event.target.value = event.target.value.replace(/%/g, "");
-      const val = (event.target.value);
-      if (row.getValue(column.id) !== val) {
-        let updatedValue = (val);
-        console.log("isNaN", isNaN(parseFloat(val)), parseFloat(val));
-        updatedValue = isNaN(parseFloat(val))
-          ? ""
-          : parseFloat(val).toFixed(options?.fieldPrecision);
-        console.log("updatedValue", updatedValue);
-        setValue(updatedValue+"%");
-  
-        let rowObj = {
-          userToken: userToken,
-          data: {
-            baseId: selectedBaseId,
-            tableId: selectedTableId,
-            recordId: row?.original.id52148213343234567,
-            updatedData: updatedValue,
-            fieldType: column.columnDef.fieldType,
-            fieldId: column.columnDef.fieldId,
-          },
-        };
-  
-        socket.emit("updateData", rowObj, (response) => {
-          table.options.meta?.updateData(
-            row.index,
-            column.id,
-            updatedValue,
-            response.metaData
-          );
-          console.log("res : ", response);
-        });
-      }
-    }
+export function Percent({ row, column }) {
+  const socket = useSelector((state) => state.socketWebData.socket);
+  const rowData = row?.getValue(column?.id).replace(/%/g, "") + "%" || "";
+  console.log("rowData", rowData);
+  const [value, setValue] = useState(rowData);
+  //console.log("value", value)
 
+  const [isEditMode, setIsEditMode] = useState(false);
+  const { table, activeNumberOfLines } = useContext(TableContext);
+  const { selectedBaseId, selectedTableId } = useSelector(
+    (state) => state.globalState
+  );
+  const userToken = useSelector((state) => state.auth.userInfo?.userToken);
+  let options = column.columnDef?.percentFieldOptions;
+  //console.log(options);
+
+  function handleChange(event) {
+    //regex to remove alphabets and special characters except % and .
+    const regex = /[^0-9.%]+$/g;
+    const inputValue = event.target.value.replace(regex, "");
+    setValue(inputValue);
+  }
+  //   console.log(options);
+  function handleBlur(event) {
+    setIsEditMode(false);
+    event.target.value = event.target.value.replace(/%/g, "");
+    const val = event.target.value;
+    if (row.getValue(column.id) !== val) {
+      let updatedValue = val;
+      console.log("isNaN", isNaN(parseFloat(val)), parseFloat(val));
+      updatedValue = isNaN(parseFloat(val))
+        ? ""
+        : parseFloat(val).toFixed(options?.fieldPrecision);
+      console.log("updatedValue", updatedValue);
+      setValue(updatedValue + "%");
+
+      let rowObj = {
+        userToken: userToken,
+        data: {
+          baseId: selectedBaseId,
+          tableId: selectedTableId,
+          recordId: row?.original.recordId,
+          updatedData: updatedValue,
+          fieldType: column.columnDef.fieldType,
+          fieldId: column.columnDef.fieldId,
+        },
+      };
+
+      socket.emit("updateData", rowObj, (response) => {
+        table.options.meta?.updateData(
+          row.index,
+          column.id,
+          updatedValue,
+          response.metaData
+        );
+        console.log("res : ", response);
+      });
+    }
+  }
+
+  return (
+    <input
+      type="text"
+      value={value}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      autoFocus
+      className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left"
+    />
+  );
+}
+
+export function Formula({ row, column }) {
+  const [value, setValue] = useState("");
+  //console.log(cell);
+  const formula = column?.columnDef?.formulaFieldOptions?.formula;
+  //const formula = "Num1 + Num2";
+  if (!formula) {
     return (
-      <input
-
-        type="text"
-        value={value}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        autoFocus
-        className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left"
-      />
+      <div className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left"></div>
     );
-}
+  }
+  //console.log(formula)
+  const { columns, data } = useContext(TableContext);
 
-
-export function Formula({row,column}) {
-  const [value,setValue] = useState("");
-    //console.log(cell);
-    const formula = column?.columnDef?.formulaFieldOptions?.formula;
-    //const formula = "Num1 + Num2";
-    if(!formula){
-      return <div className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left"></div>
+  const myMap = new Map();
+  columns.forEach((column) => {
+    if (column.fieldName) {
+      myMap.set(column.fieldName, row.getValue(column.fieldId));
+      //console.log(column.fieldName,cell.row.getValue(column.fieldId))
     }
-    //console.log(formula)
-    const {columns,data } = useContext(TableContext);
-    
-    const myMap = new Map();
-    columns.forEach((column)=>{
-      if(column.fieldName){
-        myMap.set(column.fieldName,row.getValue(column.fieldId));
-        //console.log(column.fieldName,cell.row.getValue(column.fieldId))
-      }
-    })
-    
-    const myString = Array.from(myMap.keys()).join('|');
-    //console.log("myMap",myMap)
-    //console.log(myString)
-    const regexPattern = new RegExp(`(${myString})`, 'g');
-    const formulaArray = formula.split(regexPattern);
-    //console.log(formulaArray)
-    const formulaArray2 = formulaArray.map((item)=>{
-      if(myMap.has(item)){
-        return myMap.get(item);
-      }
-      if(item !== "")
-        return item;
-    })
-    //console.log(formulaArray2)
-    const formulaString = formulaArray2.join('');
-    //console.log(formulaString)
-    //console.log(eval(formulaString))
-    useEffect(()=>{
-      try{
-        setValue(Function("return "+formulaString)())
+  });
 
-      }
-      catch(err){
-        console.log(err)
-        setValue("")
-      }
-    },[data])
+  const myString = Array.from(myMap.keys()).join("|");
+  //console.log("myMap",myMap)
+  //console.log(myString)
+  const regexPattern = new RegExp(`(${myString})`, "g");
+  const formulaArray = formula.split(regexPattern);
+  //console.log(formulaArray)
+  const formulaArray2 = formulaArray.map((item) => {
+    if (myMap.has(item)) {
+      return myMap.get(item);
+    }
+    if (item !== "") return item;
+  });
+  //console.log(formulaArray2)
+  const formulaString = formulaArray2.join("");
+  //console.log(formulaString)
+  //console.log(eval(formulaString))
+  useEffect(() => {
+    try {
+      setValue(Function("return " + formulaString)());
+    } catch (err) {
+      console.log(err);
+      setValue("");
+    }
+  }, [data]);
   return (
     <div className="fh-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left">
-        {value}
+      {value}
     </div>
-  )
+  );
 }
 
-export function Count({ row,column }) {
+export function Count({ row, column }) {
   const value =
-    row.original[
-      column.columnDef.countFieldOptions?.selectedFieldId
-    ] || "";
+    row.original[column.columnDef.countFieldOptions?.selectedFieldId] || "";
 
   return (
     <div
@@ -806,23 +796,19 @@ export function Count({ row,column }) {
   );
 }
 
-
-export function AutoNumber({row}) {
-  const value = row?.index+1 || "";
+export function AutoNumber({ row }) {
+  const value = row?.index + 1 || "";
   return (
     <div className="h-10 p-1 px-2 flex-auto width-full rounded-big border border-gray-300 focus:border-blue-700 focus:ring-0 border-rounded text-left bg-gray-100">
       {value}
     </div>
-  )
-
+  );
 }
 
-export function Button({row}) {
+export function Button({ row }) {
   const value =
     (column.columnDef?.buttonFieldOptions?.selectedFieldId &&
-      row?.getValue(
-        column.columnDef?.buttonFieldOptions?.selectedFieldId
-      )) ||
+      row?.getValue(column.columnDef?.buttonFieldOptions?.selectedFieldId)) ||
     "";
 
   function isValidURL(url) {

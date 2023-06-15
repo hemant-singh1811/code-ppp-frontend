@@ -14,6 +14,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { handelLinkedRecordsData } from "../../../store/features/globalStateSlice";
 import { ErrorBoundary } from "react-error-boundary";
+import { setTable } from "../../../store/features/TableSlice.jsx";
 
 export const TableContext = React.createContext();
 
@@ -97,7 +98,7 @@ const defaultColumn = {
         data: {
           baseId: selectedBaseId,
           tableId: selectedTableId,
-          recordId: rowCopy.id52148213343234567,
+          recordId: rowCopy.recordId,
           updatedData: newRowPart,
           fieldType: columnDef.fieldType,
           fieldId: columnDef.fieldId,
@@ -138,11 +139,12 @@ const defaultColumn = {
 export default function TableComponents({
   defaultColumns,
   data,
-  toggle,
   setData,
   linkedRecordIdAndDataMap,
 }) {
   const dispatch = useDispatch();
+  const { toggle } = useSelector((state) => state.globalState.mainSideBar);
+  const { tableData } = useSelector((state) => state.table);
   const { selectedView } = useSelector((state) => state.views);
   const [columns, setColumns] = useState(() => [...defaultColumns]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -223,7 +225,7 @@ export default function TableComponents({
   let { activeRowHeight, activeNumberOfLines } = handleRowHeight(rowHeight);
   const [columnPinning, setColumnPinning] = useState({});
   // const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
-  const table = useReactTable({
+  let table = useReactTable({
     //onChange "onEnd"
     columnResizeMode: "onChange",
     state: {
@@ -276,6 +278,16 @@ export default function TableComponents({
           })
         );
       },
+      deleteRow: (recordId) => {
+        // Skip age index reset until after next rerender
+        // skipAutoResetPageIndex();
+        setData((old) =>
+          old.filter((row, index) => {
+            console.log();
+            return row.recordId !== recordId;
+          })
+        );
+      },
     },
     debugTable: false,
     debugHeaders: false,
@@ -299,7 +311,7 @@ export default function TableComponents({
 
     dispatch(handelLinkedRecordsData(linkedRecData));
   }, []);
-
+  // console.log(table);
   // useEffect(() => {
   //   if (selectedView && Object.keys(selectedView?.model).length > 0) {
   //     console.log("model:", selectedView);
@@ -307,6 +319,13 @@ export default function TableComponents({
   //   }
   //   console.log("model updated", table.options.state);
   // }, [selectedView?.model]);
+
+  useEffect(() => {
+    // console.log(table.options);
+    if (table) {
+      dispatch(setTable({ table: table?.options?.meta }));
+    }
+  }, []);
 
   return (
     <TableContext.Provider

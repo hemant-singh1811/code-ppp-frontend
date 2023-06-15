@@ -22,6 +22,8 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
     overscan: 0,
   });
 
+  // console.log(table);
+
   return (
     <>
       <div
@@ -56,6 +58,7 @@ export default function TableVirtualRows({ tableContainerRef, rows }) {
                   activeRowHeight={activeRowHeight}
                   initialArray={initialArray}
                   activeNumberOfLines={activeNumberOfLines}
+                  table={table}
                 />
               );
             })}
@@ -93,6 +96,7 @@ function VirtualRow({
   columns,
   activeRowHeight,
   initialArray,
+  table,
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const dispatch = useDispatch();
@@ -106,7 +110,7 @@ function VirtualRow({
 
   const [isFocused, setIsFocused] = useState(false);
 
-  const handleContextMenu = (event) => {
+  const handleContextMenu = (event, row) => {
     event.preventDefault();
 
     const clickedX = event.clientX;
@@ -120,13 +124,19 @@ function VirtualRow({
       clickedX + menuWidth > innerWidth ? innerWidth - menuWidth : clickedX;
     const adjustedY =
       clickedY + menuHeight > innerHeight ? innerHeight - menuHeight : clickedY;
-
-    dispatch(openMenu({ x: adjustedX - 245, y: adjustedY }));
+    dispatch(
+      openMenu({
+        x: adjustedX - 245,
+        y: adjustedY,
+        row: row,
+        deleteRow: table?.options?.meta?.deleteRow,
+      })
+    );
   };
 
   return (
     <div
-      onContextMenu={handleContextMenu}
+      onContextMenu={(event) => handleContextMenu(event, row)}
       tabIndex={-1}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -173,7 +183,7 @@ function VirtualRow({
 
 function TableCell({ cell, activeRowHeight, row, isHovered, rowIndex }) {
   const [isFocused, setIsFocused] = useState(false);
-  // const cellRef = useRef(null);
+  // console.log(cell.column.columnDef?.hiddenInConditions);
   return (
     <div
       onFocus={() => {
@@ -182,27 +192,26 @@ function TableCell({ cell, activeRowHeight, row, isHovered, rowIndex }) {
       onBlur={() => {
         setIsFocused(false);
       }}
-      // ref={cellRef}
       tabIndex={cell.column.columnDef?.hiddenInConditions ? -1 : 1}
-      className={`cell mx-auto my-auto text-center select-none  `}
+      className={`cell mx-auto my-auto text-center select-none`}
       key={cell.id}
-      {...{
-        style: {
-          outline: "none",
-          width: cell.column.getSize(),
-          height: activeRowHeight,
-          background: cell.getIsGrouped()
-            ? "#0aff0082"
-            : cell.getIsAggregated()
-            ? "#ffa50078"
-            : cell.getIsPlaceholder()
-            ? "#ff000042"
-            : "",
-          zIndex: isFocused && 1000,
-          borderLeftWidth: cell.column.columnDef?.primary && 0,
-          boxShadow: isFocused && "0 0 0px 2px #166ee1",
-          borderRadius: isFocused && "1px",
-        },
+      style={{
+        outline: "none",
+        width: cell.column.getSize(),
+        height: activeRowHeight,
+        background: cell.getIsGrouped()
+          ? "#0aff0082"
+          : cell.getIsAggregated()
+          ? "#ffa50078"
+          : cell.getIsPlaceholder()
+          ? "#ff000042"
+          : "",
+        zIndex: isFocused && 1000,
+        borderLeftWidth: cell.column.columnDef?.primary && 0,
+        boxShadow: cell.column.columnDef?.hiddenInConditions
+          ? ""
+          : isFocused && "0 0 0px 2px #166ee1",
+        borderRadius: isFocused && "2px",
       }}
     >
       {cell.getIsGrouped() ? (

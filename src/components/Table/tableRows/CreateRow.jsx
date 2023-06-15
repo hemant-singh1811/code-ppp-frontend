@@ -18,7 +18,7 @@ const CreateRow = React.memo(function CreateRow() {
       console.log("Create Row", responseCreateRow.data);
       let newData = {
         ...responseCreateRow.data?.data,
-        id52148213343234567: responseCreateRow.data?.metaData?.recordId,
+        recordId: responseCreateRow.data?.metaData?.recordId,
       };
       setData([...data, newData]);
     }

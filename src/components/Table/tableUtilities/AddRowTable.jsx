@@ -5,11 +5,11 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { useAddTableRowMutation } from "../../../store/services/alphaTruckingApi";
-import { useDetectOutsideClick } from "../../../utilities/customHooks/useDetectOutsideClick";
 import { TableContext } from "../tableComponents/TableComponents";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../../firebase";
 import SingleSelectWithAddOption from "../tableRows/tableCells/SingleSelectWithAddOption";
+import { useClickAway } from "react-use";
 
 export default function AddRowTable() {
   const location = useLocation();
@@ -21,7 +21,9 @@ export default function AddRowTable() {
   // Call hook passing in the ref and a function to call on outside click
   const [openAddRowToggle, setOpenAddRowToggle] = useState(false);
 
-  useDetectOutsideClick(addRowToggle, () => setOpenAddRowToggle(false));
+  useClickAway(ref, () => {
+    setOpenAddRowToggle(false);
+  });
 
   const { columns, setData, data } = useContext(TableContext);
 
@@ -216,39 +218,39 @@ export default function AddRowTable() {
   return (
     <div
       ref={addRowToggle}
-      className='absolute z-[1] flex items-center w-full bottom-0 rounded-md text-[#4d4d4d]  text-lg '
+      className="absolute z-[1] flex items-center w-full bottom-0 rounded-md text-[#4d4d4d]  text-lg "
     >
       <div
         onClick={() => {
           setOpenAddRowToggle(!openAddRowToggle);
         }}
-        className='text-black border-[1px] shadow-md bg-white hover:bg-blue-100 border-black   absolute bottom-3 left-3 rounded-full px-3 pl-1 h-10 flex justify-center items-center cursor-pointer '
+        className="text-black border-[1px] shadow-md bg-white hover:bg-blue-100 border-black   absolute bottom-3 left-3 rounded-full px-3 pl-1 h-10 flex justify-center items-center cursor-pointer "
       >
         <svg
-          xmlns='http://www.w3.org/2000/svg'
-          fill='none'
-          viewBox='0 0 24 24'
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
           strokeWidth={1.5}
-          stroke='currentColor'
-          className='w-5 h-5'
+          stroke="currentColor"
+          className="w-5 h-5"
         >
           <path
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            d='M12 4.5v15m7.5-7.5h-15'
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 4.5v15m7.5-7.5h-15"
           />
         </svg>
         Add Row
       </div>
       {openAddRowToggle && (
-        <div className='h-4/5 w-1/2 overflow-scroll max-h-[80vh] min-w-[500px] max-w-[700px] mr-auto mt-auto bg-orange-100 z-50 p-10 pt-4 flex flex-col rounded-tr-md shadow-md'>
+        <div className="h-4/5 w-1/2 overflow-scroll max-h-[80vh] min-w-[500px] max-w-[700px] mr-auto mt-auto bg-orange-100 z-50 p-10 pt-4 flex flex-col rounded-tr-md shadow-md">
           <h1>
-            <div className=' text-center font-semibold text-2xl mb-5 capitalize border-b-2 border-black'>
+            <div className=" text-center font-semibold text-2xl mb-5 capitalize border-b-2 border-black">
               {tableNamesWithId.get(selectedTableId)} Add Rows
             </div>
           </h1>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className='grid grid-cols-2 gap-y-4 gap-x-5 flex-1'>
+            <div className="grid grid-cols-2 gap-y-4 gap-x-5 flex-1">
               {columns?.map((data, i) => {
                 let FieldsType = [
                   "linkedRecords",
@@ -273,28 +275,28 @@ export default function AddRowTable() {
                 switch (data?.fieldType) {
                   case "singleLineText":
                     return (
-                      <div key={i} className=''>
-                        <div className='text-sm ml-1 mb-1'>{data?.id}</div>
-                        <div className=''>
+                      <div key={i} className="">
+                        <div className="text-sm ml-1 mb-1">{data?.id}</div>
+                        <div className="">
                           <input
                             {...register(data?.id)}
-                            type='text'
+                            type="text"
                             placeholder={data?.id}
-                            className='text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500'
+                            className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
                           />
                         </div>
                       </div>
                     );
                   case "multilineText":
                     return (
-                      <div key={i} className=''>
-                        <div className='text-sm ml-1 mb-1'>{data?.id}</div>
-                        <div className=''>
+                      <div key={i} className="">
+                        <div className="text-sm ml-1 mb-1">{data?.id}</div>
+                        <div className="">
                           <input
                             // style={{ resize: 'none' }}
                             {...register(data?.id)}
                             placeholder={data?.id}
-                            className='text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500'
+                            className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
                             // name="" id="" rows="3"
                           />
                         </div>
@@ -302,36 +304,36 @@ export default function AddRowTable() {
                     );
                   case "phoneNumber":
                     return (
-                      <div key={i} className=''>
-                        <div className='text-sm ml-1 mb-1'>{data?.id}</div>
-                        <div className=''>
+                      <div key={i} className="">
+                        <div className="text-sm ml-1 mb-1">{data?.id}</div>
+                        <div className="">
                           <input
                             {...register(data?.id)}
                             placeholder={data?.id}
-                            type='number'
-                            className='text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500'
+                            type="number"
+                            className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
                           />
                         </div>
                       </div>
                     );
                   case "date":
                     return (
-                      <div key={i} className=''>
-                        <div className='text-sm ml-1 mb-1'>{data?.id}</div>
-                        <div className=''>
+                      <div key={i} className="">
+                        <div className="text-sm ml-1 mb-1">{data?.id}</div>
+                        <div className="">
                           <input
                             {...register(data?.id)}
                             placeholder={data?.id}
-                            type='date'
-                            className='text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500'
+                            type="date"
+                            className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
                           />
                         </div>
                       </div>
                     );
                   case "attachments":
                     return (
-                      <div key={i} className=''>
-                        <div className='text-sm ml-1 mb-1'>{data?.id}</div>
+                      <div key={i} className="">
+                        <div className="text-sm ml-1 mb-1">{data?.id}</div>
                         {/* <div className="">
                           <input
                             type="file"
@@ -340,18 +342,18 @@ export default function AddRowTable() {
                             className="text-black w-full p-1.5 py-[2.5px] bg-white px-2 rounded-md shadow-md focus:outline-blue-500"
                           />
                         </div> */}
-                        <div className='bg-white rounded-md'>
+                        <div className="bg-white rounded-md">
                           <input
                             // {...register(data?.id)}
-                            accept='image/*'
-                            type='file'
-                            id='file'
+                            accept="image/*"
+                            type="file"
+                            id="file"
                             onChange={(e) => {
                               if (e.target.files[0]) uploader(e, data?.id);
                             }}
-                            className='text-black w-full p-1.5 py-[2.5px] bg-white px-2 rounded-md shadow-md focus:outline-blue-500'
+                            className="text-black w-full p-1.5 py-[2.5px] bg-white px-2 rounded-md shadow-md focus:outline-blue-500"
                           />
-                          <div className='m-1'>
+                          <div className="m-1">
                             {uploadProgress === 0 ? "" : uploadProgress}
                           </div>
                         </div>
@@ -359,21 +361,21 @@ export default function AddRowTable() {
                     );
                   case "url":
                     return (
-                      <div key={i} className=''>
-                        <div className='text-sm ml-1 mb-1'>{data?.id}</div>
-                        <div className=''>
+                      <div key={i} className="">
+                        <div className="text-sm ml-1 mb-1">{data?.id}</div>
+                        <div className="">
                           <input
-                            type='url'
+                            type="url"
                             {...register(data?.id)}
                             placeholder={data?.id}
-                            className='text-black w-full p-1.5 py-[2.5px] bg-white px-2 rounded-md shadow-md focus:outline-blue-500'
+                            className="text-black w-full p-1.5 py-[2.5px] bg-white px-2 rounded-md shadow-md focus:outline-blue-500"
                           />
                         </div>
                       </div>
                     );
                   case "singleSelect":
                     return (
-                      <div key={i} className=''>
+                      <div key={i} className="">
                         <SingleSelectWithAddOption />
                       </div>
                     );
@@ -381,13 +383,13 @@ export default function AddRowTable() {
                   default:
                     // console.log(data)
                     return (
-                      <div key={i} className=''>
-                        <div className='text-sm ml-1 mb-1'>{data?.id}</div>
-                        <div className=''>
+                      <div key={i} className="">
+                        <div className="text-sm ml-1 mb-1">{data?.id}</div>
+                        <div className="">
                           <input
                             {...register(data?.id)}
                             placeholder={data?.fieldType}
-                            className='text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500'
+                            className="text-black w-full p-1.5 px-2 rounded-md shadow-md  focus:outline-blue-500"
                           />
                         </div>
                       </div>
@@ -395,17 +397,17 @@ export default function AddRowTable() {
                 }
               })}
             </div>
-            <div className='flex gap-2 justify-between text-white text-xl mt-8'>
+            <div className="flex gap-2 justify-between text-white text-xl mt-8">
               <button
-                className='px-4 p-1 hover:bg-red-600 bg-red-400   rounded-md shadow-md'
+                className="px-4 p-1 hover:bg-red-600 bg-red-400   rounded-md shadow-md"
                 onClick={() => setOpenAddRowToggle(false)}
               >
                 Cancel
               </button>
               <button
                 disabled={submitButton}
-                type='submit'
-                className='px-4 p-1 hover:bg-green-600 bg-green-400  rounded-md shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed'
+                type="submit"
+                className="px-4 p-1 hover:bg-green-600 bg-green-400  rounded-md shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 Submit
               </button>

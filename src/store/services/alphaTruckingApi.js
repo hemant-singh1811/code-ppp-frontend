@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
-
 // const dataAdapter = createEntityAdapter();
 
 export const alphaTruckingApi = createApi({
@@ -103,7 +102,7 @@ export const alphaTruckingApi = createApi({
       }),
     }),
 
-    GetTableRecords: builder.query({
+    GetLinkedTableRecords: builder.query({
       query: (payload) => ({
         url: `API/V1/getRecords`,
         method: "POST",
@@ -208,6 +207,14 @@ export const alphaTruckingApi = createApi({
         method: "DELETE",
       }),
     }),
+
+    DeleteTableRow: builder.mutation({
+      query: (payload) => ({
+        url: `API/V1/deleteentry/${payload.baseId}`,
+        body: payload.data, // field id is required to delete a column; like this:- {"fieldId":"C9cdc4LgvYGI"}
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -308,8 +315,9 @@ export const {
   useRenameTableFileMutation,
   useGetModelDataMutation,
   useGetTableDataPartMutation,
+  useDeleteTableRowMutation,
 
-  useGetTableRecordsQuery,
+  useGetLinkedTableRecordsQuery,
   useGetBasesQuery,
   useGetModelQuery,
   useGetMultiModelQuery,

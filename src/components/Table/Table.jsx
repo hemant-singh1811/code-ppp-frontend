@@ -1,13 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import TableComponents from "./tableComponents/TableComponents";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Loading from "../utilities/Loading";
 import Error from "../utilities/Error";
-import { useGetTableRecordsQuery } from "../../store/services/alphaTruckingApi";
+import { useGetLinkedTableRecordsQuery } from "../../store/services/alphaTruckingApi";
 import IndeterminateCheckbox from "./tableUtilities/IndeterminateCheckbox";
 import { handelAddTableWithMultipleRecords } from "../../store/features/globalStateSlice";
 import { useEffectOnce } from "react-use";
-import { handelAddInitialState } from "../../store/features/viewsSlice";
+import { handelAddInitialViewsState } from "../../store/features/viewsSlice";
+import { setInitialTableData } from "../../store/features/TableSlice";
 
 const Table = function Table({
   tableData,
@@ -15,25 +16,23 @@ const Table = function Table({
   tableView,
   modifiedArrayOfObject,
   multipleRecordLinksArray,
+  selectedTableId,
 }) {
-  const { toggle } = useSelector((state) => state.globalState.mainSideBar);
-  const { selectedTableId } = useSelector((state) => state.globalState);
-  const { data, isFetching, error, isSuccess, refetch } =
-    useGetTableRecordsQuery({
-      data: modifiedArrayOfObject,
-    });
+  const getLinkedRecordsApi = useGetLinkedTableRecordsQuery({
+    data: modifiedArrayOfObject,
+  });
   const dispatch = useDispatch();
   const linkedRecordIdAndDataMap = new Map();
 
   useEffect(() => {
-    refetch({
+    getLinkedRecordsApi.refetch({
       data: { tableId: modifiedArrayOfObject },
     });
   }, [selectedTableId]);
 
-  useEffect(() => {
-    dispatch(handelAddInitialState(tableView));
-  }, [tableView]);
+  // useEffect(() => {
+  //   dispatch(handelAddInitialViewsState(tableView));
+  // }, [tableView]);
 
   useEffectOnce(() => {
     console.log(
@@ -70,13 +69,13 @@ const Table = function Table({
       });
     }
   });
-
+  ` `;
   defaultColumns.unshift({
     accessorKey: "",
     id: "select",
     primary: true,
     hiddenInConditions: true,
-    size: 67,
+    size: 75,
     enableHiding: false,
     header: ({ table }) => (
       <IndeterminateCheckbox
@@ -98,66 +97,65 @@ const Table = function Table({
 
   // console.log(tableModel)
 
-  const [tableDataModified, setTableDataModified] = React.useState(
-    []
-    // tableData.map(({ data, id }) => {
-    //   const object = {};
-    //   defaultColumns.map(({ header }) => {
-    //     object[header] = data?.[header] || "";
-    //   });
-    //   object.id52148213343234567 = id;
-    //   return object;
-    // })
-  );
+  const [tableDataModified, setTableDataModified] = useState([]);
+  // tableData.map(({ data, id }) => {
+  //   const object = {};
+  //   defaultColumns.map(({ header }) => {
+  //     object[header] = data?.[header] || "";
+  //   });
+  //   object.recordId = id;
+  //   return object;
+  // })
 
   useEffect(() => {
-    dispatch(handelAddTableWithMultipleRecords(multipleRecordLinksArray));
+    if (multipleRecordLinksArray.length > 0)
+      dispatch(handelAddTableWithMultipleRecords(multipleRecordLinksArray));
   }, []);
 
   useEffect(() => {
-    if (data) {
-      console.log("Get linked table Records", data);
-      setTableDataModified(
-        tableData.map(({ data, id }, index) => {
-          const object = {};
-          defaultColumns.map(({ header, fieldType }) => {
-            // console.log(data?.lastModifiedBy.toString());
-            object[header] = data?.[header] || "";
-            if (fieldType === "linkedRecords") {
-              if (Array.isArray(data?.[header])) {
-                object[header] = data?.[header].map((ele) => {
-                  return {
-                    data: linkedRecordIdAndDataMap.get(ele),
-                    recordId: ele,
-                  };
-                });
-              }
+    if (getLinkedRecordsApi.data) {
+      console.log("Get linked table Records", getLinkedRecordsApi.data);
+      const updatedTableData = tableData.map(({ data, id }, index) => {
+        const object = {};
+        defaultColumns.map(({ header, fieldType }) => {
+          // console.log(data?.lastModifiedBy.toString());
+          object[header] = data?.[header] || "";
+          if (fieldType === "linkedRecords") {
+            if (Array.isArray(data?.[header])) {
+              object[header] = data?.[header].map((ele) => {
+                return {
+                  data: linkedRecordIdAndDataMap.get(ele),
+                  recordId: ele,
+                };
+              });
             }
-            if (fieldType === "autoNumber") {
-              object[header] = index + 1;
-            }
-          });
-          object.id52148213343234567 = id;
-          object.createdBy = data?.createdBy;
-          object.lastModifiedBy = data?.lastModifiedBy;
-          object.lastModifiedTime = data?.lastModifiedTime;
-          object.createdTime = data?.createdTime;
+          }
+          if (fieldType === "autoNumber") {
+            object[header] = index + 1;
+          }
+        });
+        object.recordId = id;
+        object.createdBy = data?.createdBy;
+        object.lastModifiedBy = data?.lastModifiedBy;
+        object.lastModifiedTime = data?.lastModifiedTime;
+        object.createdTime = data?.createdTime;
 
-          return object;
-        })
-      );
+        return object;
+      });
+      setTableDataModified(updatedTableData);
+      dispatch(setInitialTableData({ tableData: updatedTableData }));
     }
-  }, [isSuccess]);
+  }, [getLinkedRecordsApi.isSuccess]);
 
-  if (isFetching) {
+  if (getLinkedRecordsApi.isFetching) {
     return <Loading />;
   }
-  if (error) {
+  if (getLinkedRecordsApi.error) {
     return <Error />;
   }
 
   // console.log(data);
-  data.forEach((ele) => {
+  getLinkedRecordsApi.data.forEach((ele) => {
     ele?.data.forEach(({ id, data }) => {
       linkedRecordIdAndDataMap.set(id, data);
     });
@@ -167,10 +165,15 @@ const Table = function Table({
   //   console.log(key, value);
   // }
 
+  // console.log(
+  //   "table called ----------------------------------------------------------"
+  // );
+
+  // return <div>table</div>;
+
   return (
     <div className="relative overflow-hidden">
       <TableComponents
-        toggle={toggle}
         defaultColumns={defaultColumns}
         data={tableDataModified}
         setData={setTableDataModified}
