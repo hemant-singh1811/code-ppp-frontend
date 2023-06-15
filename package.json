@@ -24,6 +24,8 @@
     "firebase": "^9.20.0",
     "framer-motion": "^10.12.7",
     "moment": "^2.29.4",
+    "monaco-editor": "^0.39.0",
+    "monaco-languages": "^2.11.1",
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",

@@ -8,7 +8,8 @@ import getSvg from "./getSvg";
 import SelectWithSearch from "./SelectWithSearch";
 import { usePopper } from "react-popper";
 import CheckboxPallate from "../../../utilities/checkboxPallate";
-import { set } from "react-hook-form";
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api.js";
+// import * as monacoLanguages from 'monaco-languages';
 
 const selectedOptionDescription = {
   "Single line text":
@@ -276,20 +277,19 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
         });
         break;
 
-        case "Formula":
-          addColumnApi({
+      case "Formula":
+        addColumnApi({
+          baseId: selectedBaseId,
+          data: {
+            tableId: selectedTableId,
+            fieldDescription: fieldDescriptionInput,
+            fieldName: fieldNameInput,
+            fieldType: fieldsMap.get(selectedFieldType),
             baseId: selectedBaseId,
-            data: {
-              tableId: selectedTableId,
-              fieldDescription: fieldDescriptionInput,
-              fieldName: fieldNameInput,
-              fieldType: fieldsMap.get(selectedFieldType),
-              baseId: selectedBaseId,
-              formulaFieldOptions: fieldOptions,
-            },
-          });
-          break;
-
+            formulaFieldOptions: fieldOptions,
+          },
+        });
+        break;
 
       default:
         addColumnApi({
@@ -339,7 +339,8 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
               onClick={() => console.log(open)}
               ref={setReferenceElement}
               className="outline-none w-[120px]  th bg-[#f5f5f5] h-8"
-              style={{ height: 32 }}>
+              style={{ height: 32 }}
+            >
               <div className="capitalize text-left text-lg font-normal select-none px-2 truncate w-full flex justify-center items-center cursor-pointer h-8">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -347,7 +348,8 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-6 h-6">
+                  className="w-6 h-6"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -364,13 +366,15 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
               enterTo="opacity-100 translate-y-0"
               leave="transition ease-in duration-150"
               leaveFrom="opacity-100 translate-y-0"
-              leaveTo="opacity-0 translate-y-1">
+              leaveTo="opacity-0 translate-y-1"
+            >
               <Popover.Panel
                 ref={setPopperElement}
                 style={styles.popper}
                 {...attributes.popper}
                 className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4  shadow-custom flex flex-col 
-              ${headers.length < 3 ? "left-0" : "right-0"}`}>
+              ${headers.length < 3 ? "left-0" : "right-0"}`}
+              >
                 <div className="h-full w-full ">
                   <input
                     type="text"
@@ -443,14 +447,16 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                         className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
                           descriptionToggle && "hidden"
                         } `}
-                        onClick={() => setDescriptionToggle(true)}>
+                        onClick={() => setDescriptionToggle(true)}
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
                           strokeWidth={1.5}
                           stroke="currentColor"
-                          className="w-5 h-5 mr-1">
+                          className="w-5 h-5 mr-1"
+                        >
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -469,7 +475,8 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                           setSelectedFieldType(undefined);
                           setFieldSearchInput("");
                           setFieldNameInput("");
-                        }}>
+                        }}
+                      >
                         Cancel
                       </div>
                       {selectedFieldType && (
@@ -479,7 +486,8 @@ const TableColumnAdd = React.memo(function TableColumnAdd({ headers }) {
                             close();
                             onCreateField();
                           }}
-                          className="bg-blue-600 rounded-md p-1.5 px-4 text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400">
+                          className="bg-blue-600 rounded-md p-1.5 px-4 text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400"
+                        >
                           Create Field
                         </button>
                       )}
@@ -550,7 +558,8 @@ function GetFieldByType({
                     setSelectedFieldType(field);
                     setFieldSearchInput(field);
                   }}
-                  className="flex items-center px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md">
+                  className="flex items-center px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md"
+                >
                   {getSvg(fieldsType[i])}
                   <div className="ml-2">{field}</div>
                 </div>
@@ -685,14 +694,13 @@ function GetFieldByType({
         </>
       );
 
-      case "Formula" : 
+    case "Formula":
       return (
         <>
           {SelectedFieldOption}
-          <FormulaOptions columns={columns} setFieldOptions={setFieldOptions}/>
-          
+          <FormulaOptions columns={columns} setFieldOptions={setFieldOptions} />
         </>
-      )
+      );
 
     default:
       return (
@@ -737,7 +745,8 @@ function GetFieldByType({
                         setSelectedFieldType(field);
                         setFieldSearchInput(field);
                       }}
-                      className="flex items-center px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md">
+                      className="flex items-center px-2 p-1.5 cursor-pointer hover:bg-blue-100 rounded-md"
+                    >
                       {getSvg(fieldsType[i])}
                       <div className="ml-2">{field}</div>
                     </div>
@@ -788,13 +797,15 @@ function LinkedToAnotherRecordOptions({
               setIsExistFieldNameInput(false);
               setSelectedFieldType(undefined);
             }}
-            className="flex items-center px-2 rounded-lg overflow-hidden cursor-pointer opacity-80 hover:opacity-100  ">
+            className="flex items-center px-2 rounded-lg overflow-hidden cursor-pointer opacity-80 hover:opacity-100  "
+          >
             <svg
               className="font-thin fill-blue-500 "
               xmlns="http://www.w3.org/2000/svg"
               height="20"
               viewBox="0 96 960 960"
-              width="20">
+              width="20"
+            >
               <path d="M372 948 21 597q-5-5-7-10t-2-11q0-6 2-11t7-10l351-351q11-11 28-11t28 11q12 12 12 28.5T428 261L113 576l315 315q12 12 11.5 28.5T428 947q-12 12-28.5 12T372 948Z" />
             </svg>
             back
@@ -840,7 +851,8 @@ function LinkedToAnotherRecordOptions({
                           setFieldSearchInputLinkedRecord(
                             "Link to " + tableName
                           );
-                        }}>
+                        }}
+                      >
                         {tableName}
                       </div>
                     );
@@ -1040,7 +1052,8 @@ function CurrencyOptions({ setFieldOptions }) {
           height="20"
           viewBox="0 96 960 960"
           width="20"
-          className="absolute z-10  right-1 top-1/2 transform -translate-y-1/2 ">
+          className="absolute z-10  right-1 top-1/2 transform -translate-y-1/2 "
+        >
           <path d="M480 708 256 484l34-34 190 190 190-190 34 34-224 224Z" />
         </svg>
       </div>
@@ -1411,7 +1424,8 @@ function ButtonOptions({ setFieldOptions, columns }) {
           height="20"
           viewBox="0 96 960 960"
           width="20"
-          className="absolute z-10  right-1 top-1/2 transform -translate-y-1/2 ">
+          className="absolute z-10  right-1 top-1/2 transform -translate-y-1/2 "
+        >
           <path d="M480 708 256 484l34-34 190 190 190-190 34 34-224 224Z" />
         </svg>
       </div>
@@ -1487,47 +1501,189 @@ function CheckboxOptions({ setFieldOptions, columns }) {
   );
 }
 
-function FormulaOptions({setFieldOptions}){
-  const [value,setValue] = useState("");
-  const [error,setError] = useState(false);
-  const [errorMessage,setErrorMessage] = useState("");
-  const {columns} = useContext(TableContext);
-  console.log(columns);
+function FormulaOptions({ setFieldOptions }) {
+  const [value, setValue] = useState("");
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const editorRef = useRef(null);
+  const [variables, setVariables] = useState([]);
+  const [isEditorFocused, setIsEditorFocused] = useState(false);
 
-  useEffect(()=>{
-    setFieldOptions({
-      formula:value
-    })
-  },[value])
+  useEffect(() => {
+    // Initialize the Monaco Editor
+    editorRef.current = monaco.editor.create(
+      document.getElementById("editorContainer"),
+      {
+        value: "",
+        language: "formula", // Set the language mode to 'formula'
+        minimap: { enabled: false }, // Disable the minimap
+        scrollBeyondLastLine: false, // Disable scrolling beyond the last line
+        automaticLayout: false, // Enable automatic layout
+        bracketPairColorization: true,
+        suggestOnTriggerCharacters: true, // Enable suggestions on trigger characters
+        lineNumbers: "off",
+        autoClosingBrackets: "always",
+        glyphMargin: false,
+      }
+    );
 
-  const validate = (value)=>{
-    if(columns.some((ele)=>ele.fieldName === value)){
-      setError(false);
-      return true;
-    }
-    //setError(true);
-    //setErrorMessage("Invalid Column Name");
-    return false;
-  }
 
-  const onChangeHandler = (e)=>{
-    if(e.target.value === ""){
-      setError(false);
-      setValue(e.target.value);
-      return
-    }
-    validate(e.target.value);
-    setValue(e.target.value);
+    editorRef.current.onDidFocusEditorText(() => {
+      setIsEditorFocused(true);
+    });
+
+    editorRef.current.onDidBlurEditorText(() => {
+      setIsEditorFocused(false);
+    });
+
+    monaco.languages.register({ id: "formula" });
+
+monaco.languages.setLanguageConfiguration("formula", {
+      brackets: [
+        ["(", ")"],
+        ["{", "}"],
+        ["[", "]"],
+      ]
+    });
+
+// Register a tokens provider for the language
+monaco.languages.setMonarchTokensProvider("formula", {
+	tokenizer: {
+		root: [
+			[/\[error.*/, "custom-error"],
+			[/\[notice.*/, "custom-notice"],
+			[/\[info.*/, "custom-info"],
+			[/\[[a-zA-Z 0-9:]+\]/, "custom-date"],
+		// 	[/\bSUM\b|\bMIN\b|\bMAX\b|\bAVG\b/, 'function'], // Recognize aggregate functions
+        //   [/[num1|num2|num3]\w*/, 'variable'], // Recognize variables
+        //   [/\d+/, 'number'], // Recognize numbers
+		],
+	},
+});
+
+// Define a new theme that contains only rules that match this language
+monaco.editor.defineTheme("myCoolTheme", {
+	base: "vs",
+	inherit: false,
+	rules: [
+		{ token: "custom-info", foreground: "808080" },
+		{ token: "custom-error", foreground: "ff0000", fontStyle: "bold" },
+		{ token: "custom-notice", foreground: "FFA500" },
+		{ token: "custom-date", foreground: "008800" },
+	],
+	colors: {
+		"editor.foreground": "#000000",
+	},
+});
+
+// Register a completion item provider for the new language
+monaco.languages.registerCompletionItemProvider("formula", {
+	provideCompletionItems: (model, position) => {
+		var word = model.getWordUntilPosition(position);
+		var range = {
+			startLineNumber: position.lineNumber,
+			endLineNumber: position.lineNumber,
+			startColumn: word.startColumn,
+			endColumn: word.endColumn,
+		};
+		var suggestions = [
+			{
+				label: "SUM",
+				kind: monaco.languages.CompletionItemKind.Function,
+				insertText: "SUM(${1})",
+				insertTextRules:
+					monaco.languages.CompletionItemInsertTextRule
+						.InsertAsSnippet,
+				range: range,
+			},
+			{
+				label: "AVG",
+				kind: monaco.languages.CompletionItemKind.Function,
+				insertText: "AVG(${1})",
+				insertTextRules:
+					monaco.languages.CompletionItemInsertTextRule
+						.InsertAsSnippet,
+				range: range,
+			},
+			{
+				label: "MIN",
+				kind: monaco.languages.CompletionItemKind.Function,
+				insertText: "MIN(${1})",
+				insertTextRules:
+					monaco.languages.CompletionItemInsertTextRule
+						.InsertAsSnippet,
+				range: range,
+			},
+			{
+				label: "MAX",
+				kind: monaco.languages.CompletionItemKind.Function,
+				insertText: "MAX(${1})",
+				insertTextRules:
+					monaco.languages.CompletionItemInsertTextRule
+						.InsertAsSnippet,
+				range: range,
+			},
+		];
+		return { suggestions: suggestions };
+	},
+});
+
     
+
+    // Fetch the available variables and populate the select element
+    fetchVariables().then((variables) => {
+      setVariables(variables);
+    });
+
+    // Set the theme for the editor (optional)
+    //monaco.editor.setTheme('vs-dark');
+  }, []);
+
+  const handleVariableSelection = () => {
+    const selectedVariable = document.getElementById("variableSelect").value;
+    const editor = editorRef.current;
+
+    if (editor) {
+      const currentPosition = editor.getPosition();
+      editor.executeEdits("", [
+        {
+          range: new monaco.Range(
+            currentPosition.lineNumber,
+            currentPosition.column,
+            currentPosition.lineNumber,
+            currentPosition.column
+          ),
+          text: selectedVariable,
+          forceMoveMarkers: true,
+        },
+      ]);
+    }
+  };
+
+  function fetchVariables() {
+    return Promise.resolve(["num1", "num2", "num3"]);
   }
 
   return (
     <>
       <div className="mt-2 mb-2">Formula</div>
-      <textarea className="w-full border rounded p-1 px-2" placeholder="formula" value={value} onChange={onChangeHandler} />
+      <div
+        id="editorContainer"
+        className={`w-full h-36 rounded border border${
+          isEditorFocused ? " border-blue-700" : ""
+        }`}
+      />
+      <select id="variableSelect" onChange={handleVariableSelection}>
+        <option value="">Select a variable</option>
+        {variables.map((variable) => (
+          <option key={variable} value={variable}>
+            {variable}
+          </option>
+        ))}
+      </select>
       {error ? <div className="text-red-500">{errorMessage}</div> : null}
     </>
-  )
+  );
 }
 
 export default TableColumnAdd;
