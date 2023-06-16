@@ -179,134 +179,152 @@ function TableColumnAddModal({}) {
 
   const onCreateField = () => {
     switch (fieldSearchInput) {
-      //   case "Link to another record":
-      //     addColumnApi({
-      //       baseId: selectedBaseId,
-      //       data: {
-      //         baseId: selectedBaseId,
-      //         tableId: selectedTableId,
-      //         fieldDescription: fieldDescriptionInput,
-      //         fieldName: fieldNameInput,
-      //         fieldType: fieldsMap.get(selectedFieldType),
-      //         linkedRecord: {
-      //           baseId: selectedBaseId,
-      //           tableId: tableIdMap.get(selectedFieldTypeLinkedRecord),
-      //         },
-      //       },
-      //     });
-      //     break;
+      case "Link to another record":
+        editFieldApi({
+          baseId: selectedBaseId,
+          body: {
+            tableId: selectedTableId,
+            fieldType: fieldsMap.get(selectedFieldType),
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              linkedRecord: {
+                baseId: selectedBaseId,
+                tableId: tableIdMap.get(selectedFieldTypeLinkedRecord),
+              },
+            },
+          },
+        });
+        break;
 
-      //   case "Number":
-      //     addColumnApi({
-      //       baseId: selectedBaseId,
-      //       data: {
-      //         tableId: selectedTableId,
-      //         fieldDescription: fieldDescriptionInput,
-      //         fieldName: fieldNameInput,
-      //         fieldType: fieldsMap.get(selectedFieldType),
-      //         baseId: selectedBaseId,
-      //         fieldOptions,
-      //       },
-      //     });
-      //     break;
+      case "Number":
+        editFieldApi({
+          baseId: selectedBaseId,
+          body: {
+            tableId: selectedTableId,
+            fieldType: fieldsMap.get(selectedFieldType),
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              fieldOptions,
+            },
+          },
+        });
+        break;
 
-      //   case "Currency":
-      //     addColumnApi({
-      //       baseId: selectedBaseId,
-      //       data: {
-      //         tableId: selectedTableId,
-      //         fieldDescription: fieldDescriptionInput,
-      //         fieldName: fieldNameInput,
-      //         fieldType: fieldsMap.get(selectedFieldType),
-      //         baseId: selectedBaseId,
-      //         currencyFieldOptions: fieldOptions,
-      //       },
-      //     });
-      //     break;
+      case "Currency":
+        editFieldApi({
+          baseId: selectedBaseId,
+          body: {
+            tableId: selectedTableId,
+            fieldType: fieldsMap.get(selectedFieldType),
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              currencyFieldOptions: fieldOptions,
+            },
+          },
+        });
+        break;
 
-      //   case "Percent":
-      //     addColumnApi({
-      //       baseId: selectedBaseId,
-      //       data: {
-      //         tableId: selectedTableId,
-      //         fieldDescription: fieldDescriptionInput,
-      //         fieldName: fieldNameInput,
-      //         fieldType: fieldsMap.get(selectedFieldType),
-      //         baseId: selectedBaseId,
-      //         percentFieldOptions: fieldOptions,
-      //       },
-      //     });
-      //     break;
+      case "Percent":
+        editFieldApi({
+          baseId: selectedBaseId,
+          body: {
+            tableId: selectedTableId,
+            fieldType: fieldsMap.get(selectedFieldType),
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              percentFieldOptions: fieldOptions,
+            },
+          },
+        });
+        break;
 
-      //   case "Duration":
-      //     addColumnApi({
-      //       baseId: selectedBaseId,
-      //       data: {
-      //         tableId: selectedTableId,
-      //         fieldDescription: fieldDescriptionInput,
-      //         fieldName: fieldNameInput,
-      //         fieldType: fieldsMap.get(selectedFieldType),
-      //         baseId: selectedBaseId,
-      //         durationFieldOptions: fieldOptions,
-      //       },
-      //     });
-      //     break;
+      case "Duration":
+        editFieldApi({
+          baseId: selectedBaseId,
+          body: {
+            tableId: selectedTableId,
+            fieldType: fieldsMap.get(selectedFieldType),
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              durationFieldOptions: fieldOptions,
+            },
+          },
+        });
+        break;
 
-      //   case "Rating":
-      //     addColumnApi({
-      //       baseId: selectedBaseId,
-      //       data: {
-      //         tableId: selectedTableId,
-      //         fieldDescription: fieldDescriptionInput,
-      //         fieldName: fieldNameInput,
-      //         fieldType: fieldsMap.get(selectedFieldType),
-      //         baseId: selectedBaseId,
-      //         ratingFieldOptions: fieldOptions,
-      //       },
-      //     });
-      //     break;
+      case "Rating":
+        editFieldApi({
+          baseId: selectedBaseId,
+          body: {
+            tableId: selectedTableId,
+            fieldType: fieldsMap.get(selectedFieldType),
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              ratingFieldOptions: fieldOptions,
+            },
+          },
+        });
+        break;
 
-      //   case "Button":
-      //     addColumnApi({
-      //       baseId: selectedBaseId,
-      //       data: {
-      //         tableId: selectedTableId,
-      //         fieldDescription: fieldDescriptionInput,
-      //         fieldName: fieldNameInput,
-      //         fieldType: fieldsMap.get(selectedFieldType),
-      //         baseId: selectedBaseId,
-      //         buttonFieldOptions: fieldOptions,
-      //       },
-      //     });
-      //     break;
+      case "Button":
+        editFieldApi({
+          baseId: selectedBaseId,
+          body: {
+            tableId: selectedTableId,
+            fieldType: fieldsMap.get(selectedFieldType),
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              buttonFieldOptions: fieldOptions,
+            },
+          },
+        });
+        break;
 
-      //   case "Count":
-      //     addColumnApi({
-      //       baseId: selectedBaseId,
-      //       data: {
-      //         tableId: selectedTableId,
-      //         fieldDescription: fieldDescriptionInput,
-      //         fieldName: fieldNameInput,
-      //         fieldType: fieldsMap.get(selectedFieldType),
-      //         baseId: selectedBaseId,
-      //         countFieldOptions: fieldOptions,
-      //       },
-      //     });
-      //     break;
+      case "Count":
+        editFieldApi({
+          baseId: selectedBaseId,
+          body: {
+            tableId: selectedTableId,
+            fieldType: fieldsMap.get(selectedFieldType),
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              countFieldOptions: fieldOptions,
+            },
+          },
+        });
+        break;
 
-      //   case "Formula":
-      //     addColumnApi({
-      //       baseId: selectedBaseId,
-      //       data: {
-      //         tableId: selectedTableId,
-      //         fieldDescription: fieldDescriptionInput,
-      //         fieldName: fieldNameInput,
-      //         fieldType: fieldsMap.get(selectedFieldType),
-      //         baseId: selectedBaseId,
-      //         formulaFieldOptions: fieldOptions,
-      //       },
-      //     });
-      //     break;
+      case "Formula":
+        editFieldApi({
+          baseId: selectedBaseId,
+          body: {
+            tableId: selectedTableId,
+            fieldType: fieldsMap.get(selectedFieldType),
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              formulaFieldOptions: fieldOptions,
+            },
+          },
+        });
+        break;
 
       default:
         editFieldApi({
