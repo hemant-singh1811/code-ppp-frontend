@@ -7,6 +7,12 @@ const initialState = {
   row: {},
   selectedRow: [],
   deleteRow: () => {},
+  selectedRow: () => {},
+  addColumnIsOpen: false,
+  addColumnPosition: { x: 0, y: 0 },
+  columns: [],
+  setColumns: () => {},
+  selectedColumn: {},
 };
 
 const menuSlice = createSlice({
@@ -17,15 +23,26 @@ const menuSlice = createSlice({
       state.isOpen = true;
       state.row = action.payload.row;
       state.deleteRow = action.payload.deleteRow;
+      state.selectedRow = action.payload.selectedRow;
       state.position = { x: action.payload.x, y: action.payload.y };
     },
     closeMenu: (state) => {
       state.isOpen = false;
     },
-    setSelectedRow: (state, action) => {},
+    openAddColumnMenu: (state, { payload }) => {
+      state.addColumnIsOpen = true;
+      state.columns = payload?.columns;
+      state.setColumns = payload?.setColumns;
+      state.selectedColumn = payload?.selectedColumn;
+      state.addColumnPosition = payload?.addColumnPosition;
+    },
+    closeAddColumnMenu: (state) => {
+      state.addColumnIsOpen = false;
+    },
   },
 });
 
-export const { openMenu, closeMenu, setSelectedRow } = menuSlice.actions;
+export const { openMenu, closeMenu, closeAddColumnMenu, openAddColumnMenu } =
+  menuSlice.actions;
 
 export default menuSlice.reducer;

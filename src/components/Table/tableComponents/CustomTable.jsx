@@ -319,6 +319,7 @@ const CustomTable = React.memo(function CustomTable() {
                       index={index}
                     />
                   ))}
+
                   <TableColumnAdd headers={headerGroup.headers} />
                 </div>
               ))}

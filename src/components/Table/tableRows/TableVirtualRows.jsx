@@ -130,6 +130,7 @@ function VirtualRow({
         y: adjustedY,
         row: row,
         deleteRow: table?.options?.meta?.deleteRow,
+        selectedRow: table?.getSelectedRowModel,
       })
     );
   };

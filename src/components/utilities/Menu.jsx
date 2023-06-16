@@ -7,7 +7,7 @@ import { useDeleteTableRowMutation } from "../../store/services/alphaTruckingApi
 
 const Menu = () => {
   const dispatch = useDispatch();
-  const { isOpen, position, row, deleteRow } = useSelector(
+  const { isOpen, position, row, deleteRow, selectedRow } = useSelector(
     (state) => state.menu
   );
   const { selectedBaseId, selectedTableId } = useSelector(
@@ -38,6 +38,7 @@ const Menu = () => {
   useEffect(() => {
     if (deleteRowResponse.isSuccess) {
       console.log(deleteRowResponse.data);
+      console.log(selectedRow());
       deleteRow(row.original.recordId);
     }
   }, [deleteRowResponse.isSuccess]);

@@ -8,6 +8,7 @@ import RefreshPageModal from "./components/utilities/modal/RefreshPageModal";
 import FileViewer from "./components/Table/tableUtilities/FileReader";
 import { ColorPalletSelect } from "./components/utilities/popover/ColorPalletSelect";
 import Menu from "./components/utilities/Menu";
+import TableColumnAddModal from "./components/Table/tableUtilities/TableColumnAddModal";
 
 function App() {
   const { userInfo } = useSelector((state) => state.auth);
@@ -24,6 +25,7 @@ function App() {
       </div>
       <RefreshPageModal />
       <ColorPalletSelect />
+      <TableColumnAddModal />
     </div>
   );
 }

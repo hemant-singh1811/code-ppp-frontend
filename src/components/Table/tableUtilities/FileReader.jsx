@@ -24,7 +24,7 @@ const FileViewer = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFileIdForRename, setSelectedFileIdForRename] = useState("");
 
-  console.log(fileViewer);
+  // console.log(fileViewer);
   const renderFile = (file) => {
     switch (file?.type.split("/")[0]) {
       case "image":

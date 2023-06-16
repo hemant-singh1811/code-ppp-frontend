@@ -192,13 +192,15 @@ export const alphaTruckingApi = createApi({
       }),
     }),
 
-    RenameTableColumn: builder.mutation({
+    EditTableField: builder.mutation({
       query: (payload) => ({
-        url: `API/V1/renameField`,
-        body: payload,
-        method: "PUT",
+        url: `API/V1/editField/${payload.baseId}`,
+        body: payload.body,
+        method: "PATCH",
       }),
     }),
+
+    // editField
 
     DeleteTableColumn: builder.mutation({
       query: (payload) => ({
@@ -304,7 +306,7 @@ export const {
   useCreateBaseMutation,
   useCreateViewMutation,
   useAddTableColumnMutation,
-  useRenameTableColumnMutation,
+  useEditTableFieldMutation,
   useDeleteTableMutation,
   useDeleteViewMutation,
   useDeleteTableColumnMutation,
