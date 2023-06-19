@@ -42,6 +42,7 @@ export default function Login() {
     console.log(decodedToken);
     if (decodedToken.verified_email) {
       decodedToken.userToken = refreshToken;
+      localStorage.setItem('userInfo', JSON.stringify(decodedToken));
       dispatch(googleLogin(decodedToken))
       navigate("/");
     }

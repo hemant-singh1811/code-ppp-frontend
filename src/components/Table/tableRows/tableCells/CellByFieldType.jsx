@@ -19,6 +19,7 @@ import DurationCell from "./DurationCell";
 import CountCell from "./CountCell";
 import RatingCell from "./RatingCell";
 import FormulaCell from "./FormulaCell";
+import UserCell from "./UserCell";
 
 export function CellByFieldType({
   rowIndex,
@@ -163,6 +164,9 @@ export function CellByFieldType({
 
     case "formula":
       return <FormulaCell cell={cell} rowData={cell?.getValue()} />;
+
+    case "user":
+      return <UserCell cell={cell} />;
 
     default:
       return (

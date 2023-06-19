@@ -7,10 +7,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { userLogout } from "../../../../store/features/auth/authActions";
 import { handleLogout } from "../../../../store/features/auth/authSlice";
 
+import Cookies from 'js-cookie';
+
 function UserMenu() {
   const dispatch = useDispatch();
   const { userToken, userInfo } = useSelector((state) => state.auth);
   const logout = () => {
+
+    Cookies.remove('accessToken');
+    Cookies.remove('refreshToken');
+    localStorage.removeItem('userInfo');
     dispatch(userLogout(userToken));
     dispatch(handleLogout(userToken));
   };
@@ -56,7 +62,7 @@ function UserMenu() {
       >
         <img
           className="w-8 h-8 rounded-full"
-          src={UserAvatar}
+          src={userInfo.picture ? userInfo.picture : UserAvatar}
           width="32"
           height="32"
           alt="User"
