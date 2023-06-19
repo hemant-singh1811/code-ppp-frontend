@@ -204,9 +204,9 @@ function TableCell({ cell, activeRowHeight, row, isHovered, rowIndex }) {
           ? "#0aff0082"
           : cell.getIsAggregated()
           ? "#ffa50078"
-          : cell.getIsPlaceholder()
-          ? "#ff000042"
-          : "",
+          : // : cell.getIsPlaceholder()
+            // ? "#ff000042"
+            "",
         zIndex: isFocused && 1000,
         borderLeftWidth: cell.column.columnDef?.primary && 0,
         boxShadow: cell.column.columnDef?.hiddenInConditions
@@ -228,8 +228,8 @@ function TableCell({ cell, activeRowHeight, row, isHovered, rowIndex }) {
             }}
           >
             <div>{row.getIsExpanded() ? "👇" : "👉"} </div>
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}(
-            {row.subRows.length})
+            {/* {flexRender(cell.column.columnDef.cell, cell.getContext())}(
+            {row.subRows.length}) */}
           </button>
         </>
       ) : cell.getIsAggregated() ? (
@@ -240,12 +240,20 @@ function TableCell({ cell, activeRowHeight, row, isHovered, rowIndex }) {
         //     cell.column.columnDef.cell,
         //   cell.getContext()
         // )
+        // <CellByFieldType
+        //   row={row}
+        //   cell={cell}
+        //   fieldType={cell.column.columnDef.fieldType}
+        // />
+        <></>
+      ) : cell.getIsPlaceholder() ? (
         <CellByFieldType
           row={row}
           cell={cell}
           fieldType={cell.column.columnDef.fieldType}
         />
-      ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
+      ) : (
+        // For cells with repeated values, render null
         // Otherwise, just render the regular cell
         <>
           <CellByFieldType

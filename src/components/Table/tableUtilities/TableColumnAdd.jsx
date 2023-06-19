@@ -177,6 +177,20 @@ function TableColumnAdd({ headers }) {
         });
         break;
 
+      case "Lookup":
+        addColumnApi({
+          baseId: selectedBaseId,
+          data: {
+            tableId: selectedTableId,
+            fieldDescription: fieldDescriptionInput,
+            fieldName: fieldNameInput,
+            fieldType: fieldsMap.get(selectedFieldType),
+            baseId: selectedBaseId,
+            [fieldsMap.get(selectedFieldType) + "FieldOptions"]: fieldOptions,
+          },
+        });
+        break;
+
       case "Number":
         addColumnApi({
           baseId: selectedBaseId,
@@ -311,6 +325,7 @@ function TableColumnAdd({ headers }) {
     setFieldDescriptionInput("");
   };
 
+  // console.log(fieldOptions);
   useEffect(() => {
     if (responseCreateColumn.data) {
       console.log("Create column: " + responseCreateColumn.data);
@@ -592,16 +607,7 @@ function GetFieldByType({
       );
 
     case "Lookup":
-      return (
-        <LookUpOptions
-          setFieldSearchInput={setFieldSearchInput}
-          setFieldNameInput={setFieldNameInput}
-          setIsExistFieldNameInput={setIsExistFieldNameInput}
-          setSelectedFieldType={setSelectedFieldType}
-          selectedFieldTypeLinkedRecord={selectedFieldTypeLinkedRecord}
-          setSelectedFieldTypeLinkedRecord={setSelectedFieldTypeLinkedRecord}
-        />
-      );
+      return <LookUpOptions setFieldOptions={setFieldOptions} />;
 
     case "Number":
       return (
@@ -888,9 +894,13 @@ function LinkedToAnotherRecordOptions({
   );
 }
 
-function LookUpOptions() {
+function LookUpOptions({ setFieldOptions }) {
   const [selectedTable, setSelectedTable] = useState("");
   const [selectedField, setSelectedField] = useState("");
+
+  const { tableWithMultipleRecords } = useSelector(
+    (state) => state.globalState
+  );
 
   const uniqueTablesMap = new Map();
 
@@ -912,7 +922,6 @@ function LookUpOptions() {
   let selectFieldData = [];
 
   if (selectedTable !== "") {
-    console.log(selectedTable);
     selectFieldData = selectedTable.data?.linkedRecord?.model.map((ele) => {
       return ele;
     });
@@ -924,8 +933,16 @@ function LookUpOptions() {
       };
     });
   }
-
-  console.log(selectTableData);
+  useEffect(() => {
+    setFieldOptions({
+      tableId: selectedTable.data?.linkedRecord.tableId,
+      selectedFieldId: selectedField.data?.fieldId,
+      selectedLinkedRecordFieldId: selectedTable.data?.fieldId,
+      lookUpFieldType: selectedField.data?.fieldType,
+      // selectedTable: selectedTable.data,
+      // selectedField: selectedField.data,
+    });
+  }, [selectedField, selectedTable]);
 
   return (
     <>
