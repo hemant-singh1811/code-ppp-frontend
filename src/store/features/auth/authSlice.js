@@ -21,6 +21,9 @@ const authSlice = createSlice({
       state.userInfo = null;
       localStorage.removeItem("userToken");
     },
+    googleLogin: (state, { payload }) => {
+      state.userInfo = payload;
+    }
   },
   extraReducers: {
     // login user
@@ -42,4 +45,4 @@ const authSlice = createSlice({
 
 export default authSlice.reducer;
 
-export const { handleLogout } = authSlice.actions;
+export const { handleLogout, googleLogin } = authSlice.actions;

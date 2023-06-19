@@ -5,6 +5,13 @@ import { useNavigate } from "react-router-dom";
 import Loading from "../../components/utilities/Loading";
 import { userLogin } from "../../store/features/auth/authActions";
 import axios from "axios";
+import Cookies from 'js-cookie';
+import jwtDecode from 'jwt-decode';
+import { googleLogin } from "../../store/features/auth/authSlice";
+import { ref } from "firebase/storage";
+
+
+
 // import Modal from 'react-modal';
 // import './Modal.css'; // import your custom modal styles
 
@@ -28,6 +35,20 @@ export default function Login() {
 
   // redirect authenticated user to profile screen
   useEffect(() => {
+    try{
+    const accessToken = Cookies.get('accessToken');
+    const refreshToken = Cookies.get('refreshToken');
+    const decodedToken = jwtDecode(refreshToken);
+    console.log(decodedToken);
+    if (decodedToken.verified_email) {
+      decodedToken.userToken = refreshToken;
+      dispatch(googleLogin(decodedToken))
+      navigate("/");
+    }
+    }catch(err){
+      console.log(err);
+    }
+    
     if (userInfo) {
       navigate("/");
     }
@@ -39,6 +60,27 @@ export default function Login() {
         <Loading />
       </div>
     );
+  }
+
+  function getGoogleOAuthURL() {
+    const rootUrl = "https://accounts.google.com/o/oauth2/v2/auth";
+
+    const options = {
+      redirect_uri: "http://localhost:8080/auth/google",
+      client_id:
+        "333939866440-quro3d2ls4tn9o0cn091g3l9gp304v42.apps.googleusercontent.com",
+      access_type: "offline",
+      response_type: "code",
+      prompt: "consent",
+      scope: [
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email",
+      ].join(" "),
+    };
+
+    const qs = new URLSearchParams(options);
+
+    return `${rootUrl}?${qs.toString()}`;
   }
 
   const handleGoogleLogin = async () => {
@@ -89,7 +131,8 @@ export default function Login() {
                         />
                         <div
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute  z-50 right-2 text-xl cursor-pointer select-none">
+                          className="absolute  z-50 right-2 text-xl cursor-pointer select-none"
+                        >
                           {showPassword ? (
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -97,7 +140,8 @@ export default function Login() {
                               viewBox="0 0 24 24"
                               strokeWidth={1.5}
                               stroke="currentColor"
-                              className="w-5 h-5">
+                              className="w-5 h-5"
+                            >
                               <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -116,7 +160,8 @@ export default function Login() {
                               viewBox="0 0 24 24"
                               strokeWidth={1.5}
                               stroke="currentColor"
-                              className="w-5 h-5">
+                              className="w-5 h-5"
+                            >
                               <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -129,7 +174,8 @@ export default function Login() {
                       <div className="text-center pt-1 mb-12 pb-1">
                         <button
                           className="bg-orange-500 inline-block px-6 py-2.5 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
-                          type="submit">
+                          type="submit"
+                        >
                           Log in
                         </button>
                         {/* <a className='text-gray-500'>Forgot password?</a> */}
@@ -137,12 +183,14 @@ export default function Login() {
                       </div>
                       <div className="flex items-center justify-between pb-6">
                         {/* <p className='mb-0 mr-2'>Don't have an account?</p> */}
-                        <button
-                          className="bg-orange-500 inline-block px-6 py-2.5 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
-                          type="button"
-                          onClick={handleGoogleLogin}>
-                          Log in with Google
-                        </button>
+                        <a href={getGoogleOAuthURL()} className="w-full">
+                          <button
+                            className="bg-orange-500 inline-block px-6 py-2.5 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
+                            type="button"
+                          >
+                            Log in with Google
+                          </button>
+                        </a>
                       </div>
                     </form>
                   </div>
