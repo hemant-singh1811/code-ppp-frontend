@@ -97,7 +97,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
       data: {
         baseId: selectedBaseId,
         tableId: selectedTableId,
-        recordId: rowCopy.id52148213343234567,
+        recordId: rowCopy.recordId,
         updatedData: [...selectedOption, searchTerm],
         fieldType: cell.column.columnDef.fieldType,
         fieldId: cell.column.columnDef.fieldId,
@@ -130,7 +130,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
       data: {
         baseId: selectedBaseId,
         tableId: selectedTableId,
-        recordId: rowCopy.id52148213343234567,
+        recordId: rowCopy.recordId,
         updatedData: [...selectedOption, name],
         fieldType: cell.column.columnDef.fieldType,
         fieldId: cell.column.columnDef.fieldId,
@@ -168,7 +168,7 @@ function MultiselectWithAddOption({ columnData, rowData, cell }) {
       data: {
         baseId: selectedBaseId,
         tableId: selectedTableId,
-        recordId: rowCopy.id52148213343234567,
+        recordId: rowCopy.recordId,
         updatedData: updatedSelectedData,
         fieldType: cell.column.columnDef.fieldType,
         fieldId: cell.column.columnDef.fieldId,

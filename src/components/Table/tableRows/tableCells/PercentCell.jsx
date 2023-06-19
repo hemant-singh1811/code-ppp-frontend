@@ -43,7 +43,7 @@ export default function PercentCell({ cell }) {
         data: {
           baseId: selectedBaseId,
           tableId: selectedTableId,
-          recordId: cell?.row?.original.id52148213343234567,
+          recordId: cell?.row?.original.recordId,
           updatedData: updatedValue,
           fieldType: cell.column.columnDef.fieldType,
           fieldId: cell.column.columnDef.fieldId,

@@ -99,7 +99,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
       data: {
         baseId: selectedBaseId,
         tableId: selectedTableId,
-        recordId: rowCopy.id52148213343234567,
+        recordId: rowCopy.recordId,
         updatedData: newRowPart,
         fieldType: cell.column.columnDef.fieldType,
         fieldId: cell.column.columnDef.fieldId,
@@ -134,7 +134,7 @@ function SingleSelectWithAddOption({ columnData, rowData, cell }) {
       data: {
         baseId: selectedBaseId,
         tableId: selectedTableId,
-        recordId: rowCopy.id52148213343234567,
+        recordId: rowCopy.recordId,
         updatedData: newRowPart,
         fieldType: cell.column.columnDef.fieldType,
         fieldId: cell.column.columnDef.fieldId,

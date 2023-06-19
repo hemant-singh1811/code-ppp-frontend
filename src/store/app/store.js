@@ -11,6 +11,8 @@ import sidebarReducer from "../features/SideBarStateSlice";
 import fileViewerReducer from "../features/fileViewerSlice";
 import socketWebDataReducer from "../features/sockets/SocketWebDataSlice";
 import menuReducer from "../features/menuSlice";
+import tableReducer from "../features/TableSlice";
+
 // import dataSliceReducer from '../services/alphaTruckingApi';
 
 const reducer = {
@@ -25,6 +27,7 @@ const reducer = {
   fileViewer: fileViewerReducer,
   socketWebData: socketWebDataReducer,
   menu: menuReducer,
+  table: tableReducer,
   // dataSlice: dataSliceReducer,
 };
 

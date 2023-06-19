@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
-
 // const dataAdapter = createEntityAdapter();
 
 export const alphaTruckingApi = createApi({
@@ -103,7 +102,7 @@ export const alphaTruckingApi = createApi({
       }),
     }),
 
-    GetTableRecords: builder.query({
+    GetLinkedTableRecords: builder.query({
       query: (payload) => ({
         url: `API/V1/getRecords`,
         method: "POST",
@@ -193,18 +192,28 @@ export const alphaTruckingApi = createApi({
       }),
     }),
 
-    RenameTableColumn: builder.mutation({
+    EditTableField: builder.mutation({
       query: (payload) => ({
-        url: `API/V1/renameField`,
-        body: payload,
-        method: "PUT",
+        url: `API/V1/editField/${payload.baseId}`,
+        body: payload.body,
+        method: "PATCH",
       }),
     }),
+
+    // editField
 
     DeleteTableColumn: builder.mutation({
       query: (payload) => ({
         url: `API/V1/removeColumn/${payload.baseId}`,
         body: payload.data, // field id is required to delete a column; like this:- {"fieldId":"fldzmC9cdc4LgvYGI"}
+        method: "DELETE",
+      }),
+    }),
+
+    DeleteTableRow: builder.mutation({
+      query: (payload) => ({
+        url: `API/V1/deleteentry/${payload.baseId}`,
+        body: payload.data, // field id is required to delete a column; like this:- {"fieldId":"C9cdc4LgvYGI"}
         method: "DELETE",
       }),
     }),
@@ -297,7 +306,7 @@ export const {
   useCreateBaseMutation,
   useCreateViewMutation,
   useAddTableColumnMutation,
-  useRenameTableColumnMutation,
+  useEditTableFieldMutation,
   useDeleteTableMutation,
   useDeleteViewMutation,
   useDeleteTableColumnMutation,
@@ -308,8 +317,9 @@ export const {
   useRenameTableFileMutation,
   useGetModelDataMutation,
   useGetTableDataPartMutation,
+  useDeleteTableRowMutation,
 
-  useGetTableRecordsQuery,
+  useGetLinkedTableRecordsQuery,
   useGetBasesQuery,
   useGetModelQuery,
   useGetMultiModelQuery,

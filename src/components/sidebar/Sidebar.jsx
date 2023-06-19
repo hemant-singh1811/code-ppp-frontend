@@ -170,7 +170,7 @@ export default function Sidebar() {
         // }
       );
 
-      console.log(createMenusByBase);
+      // console.log(createMenusByBase);
 
       dispatch(handelAddSideBar(createMenusByBase));
     }

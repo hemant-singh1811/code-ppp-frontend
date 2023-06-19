@@ -1,6 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { useAddTableColumnMutation } from "../../../store/services/alphaTruckingApi";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  useAddTableColumnMutation,
+  useEditTableFieldMutation,
+} from "../../../store/services/alphaTruckingApi";
 import { TableContext } from "../tableComponents/TableComponents";
 import { Popover, Transition } from "@headlessui/react";
 import { Fragment } from "react";
@@ -8,8 +11,8 @@ import getSvg from "./getSvg";
 import SelectWithSearch from "./SelectWithSearch";
 import { usePopper } from "react-popper";
 import CheckboxPallate from "../../../utilities/checkboxPallate";
-import * as monaco from "monaco-editor/esm/vs/editor/editor.api.js";
-// import * as monacoLanguages from 'monaco-languages';
+import { useClickAway, useEffectOnce } from "react-use";
+import { closeAddColumnMenu } from "../../../store/features/menuSlice";
 
 const selectedOptionDescription = {
   "Single line text":
@@ -55,7 +58,7 @@ let columnType = [
   "Checkbox",
   "Single Select",
   "Multiple select",
-  "User",
+  // "User",
   "Date",
   "Phone number",
   "Email",
@@ -86,7 +89,7 @@ let fieldsType = [
   "checkbox",
   "singleSelect",
   "multipleSelect",
-  "user",
+  // "user",
   "date",
   "phoneNumber",
   "email",
@@ -109,14 +112,36 @@ let fieldsType = [
   "button",
 ];
 
-function TableColumnAdd({ headers }) {
-  const { columns, setColumns } = useContext(TableContext);
+const tableIdMap = new Map();
+const existingColumns = new Map();
+const fieldsMap = new Map();
+const getColumnType = new Map();
+
+function TableColumnAddModal({}) {
+  const dispatch = useDispatch();
+
   const { selectedTableId, selectedBaseId } = useSelector(
     (state) => state.globalState
   );
   const { bases } = useSelector((state) => state.bases);
+  const {
+    addColumnIsOpen,
+    addColumnPosition,
+    selectedColumn,
+    columns,
+    setColumns,
+  } = useSelector((state) => state.menu);
 
-  const [addColumnApi, responseCreateColumn] = useAddTableColumnMutation();
+  for (let i = 0; i < columnType?.length; i++) {
+    fieldsMap.set(columnType[i], fieldsType[i]);
+    getColumnType.set(fieldsType[i], columnType[i]);
+  }
+
+  for (let i = 1; i < columns?.length; i++) {
+    existingColumns.set(columns[i]?.fieldName.toLocaleLowerCase(), true);
+  }
+
+  const [editFieldApi, responseEditField] = useEditTableFieldMutation();
 
   const [descriptionToggle, setDescriptionToggle] = React.useState(false);
 
@@ -134,23 +159,15 @@ function TableColumnAdd({ headers }) {
   const [selectedFieldTypeLinkedRecord, setSelectedFieldTypeLinkedRecord] =
     React.useState(undefined);
 
-  const [fieldOptions, setFieldOptions] = useState(null);
+  const ref = useRef();
 
+  const [fieldOptions, setFieldOptions] = useState(null);
+  useClickAway(ref, () => {
+    dispatch(closeAddColumnMenu());
+  });
   let [referenceElement, setReferenceElement] = useState();
   let [popperElement, setPopperElement] = useState();
   let { styles, attributes } = usePopper(referenceElement, popperElement);
-
-  const tableIdMap = new Map();
-  const existingColumns = new Map();
-  const fieldsMap = new Map();
-
-  for (let i = 0; i < columnType?.length; i++) {
-    fieldsMap.set(columnType[i], fieldsType[i]);
-  }
-
-  for (let i = 1; i < columns?.length; i++) {
-    existingColumns.set(columns[i]?.fieldName?.toLocaleLowerCase(), true);
-  }
 
   bases.forEach((ele) => {
     if (ele?.baseId === selectedBaseId) {
@@ -163,162 +180,169 @@ function TableColumnAdd({ headers }) {
   const onCreateField = () => {
     switch (fieldSearchInput) {
       case "Link to another record":
-        addColumnApi({
+        editFieldApi({
           baseId: selectedBaseId,
-          data: {
-            baseId: selectedBaseId,
+          body: {
             tableId: selectedTableId,
-            fieldDescription: fieldDescriptionInput,
-            fieldName: fieldNameInput,
             fieldType: fieldsMap.get(selectedFieldType),
-            linkedRecord: {
-              baseId: selectedBaseId,
-              tableId: tableIdMap.get(selectedFieldTypeLinkedRecord),
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              linkedRecord: {
+                baseId: selectedBaseId,
+                tableId: tableIdMap.get(selectedFieldTypeLinkedRecord),
+              },
             },
           },
         });
         break;
 
       case "Number":
-        addColumnApi({
+        editFieldApi({
           baseId: selectedBaseId,
-          data: {
+          body: {
             tableId: selectedTableId,
-            fieldDescription: fieldDescriptionInput,
-            fieldName: fieldNameInput,
             fieldType: fieldsMap.get(selectedFieldType),
-            baseId: selectedBaseId,
-            fieldOptions,
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              fieldOptions,
+            },
           },
         });
         break;
 
       case "Currency":
-        addColumnApi({
+        editFieldApi({
           baseId: selectedBaseId,
-          data: {
+          body: {
             tableId: selectedTableId,
-            fieldDescription: fieldDescriptionInput,
-            fieldName: fieldNameInput,
             fieldType: fieldsMap.get(selectedFieldType),
-            baseId: selectedBaseId,
-            currencyFieldOptions: fieldOptions,
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              currencyFieldOptions: fieldOptions,
+            },
           },
         });
         break;
 
       case "Percent":
-        addColumnApi({
+        editFieldApi({
           baseId: selectedBaseId,
-          data: {
+          body: {
             tableId: selectedTableId,
-            fieldDescription: fieldDescriptionInput,
-            fieldName: fieldNameInput,
             fieldType: fieldsMap.get(selectedFieldType),
-            baseId: selectedBaseId,
-            percentFieldOptions: fieldOptions,
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              percentFieldOptions: fieldOptions,
+            },
           },
         });
         break;
 
       case "Duration":
-        addColumnApi({
+        editFieldApi({
           baseId: selectedBaseId,
-          data: {
+          body: {
             tableId: selectedTableId,
-            fieldDescription: fieldDescriptionInput,
-            fieldName: fieldNameInput,
             fieldType: fieldsMap.get(selectedFieldType),
-            baseId: selectedBaseId,
-            durationFieldOptions: fieldOptions,
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              durationFieldOptions: fieldOptions,
+            },
           },
         });
         break;
 
       case "Rating":
-        addColumnApi({
+        editFieldApi({
           baseId: selectedBaseId,
-          data: {
+          body: {
             tableId: selectedTableId,
-            fieldDescription: fieldDescriptionInput,
-            fieldName: fieldNameInput,
             fieldType: fieldsMap.get(selectedFieldType),
-            baseId: selectedBaseId,
-            ratingFieldOptions: fieldOptions,
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              ratingFieldOptions: fieldOptions,
+            },
           },
         });
         break;
 
       case "Button":
-        addColumnApi({
+        editFieldApi({
           baseId: selectedBaseId,
-          data: {
+          body: {
             tableId: selectedTableId,
-            fieldDescription: fieldDescriptionInput,
-            fieldName: fieldNameInput,
             fieldType: fieldsMap.get(selectedFieldType),
-            baseId: selectedBaseId,
-            buttonFieldOptions: fieldOptions,
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              buttonFieldOptions: fieldOptions,
+            },
           },
         });
         break;
 
       case "Count":
-        addColumnApi({
+        editFieldApi({
           baseId: selectedBaseId,
-          data: {
+          body: {
             tableId: selectedTableId,
-            fieldDescription: fieldDescriptionInput,
-            fieldName: fieldNameInput,
             fieldType: fieldsMap.get(selectedFieldType),
-            baseId: selectedBaseId,
-            countFieldOptions: fieldOptions,
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              countFieldOptions: fieldOptions,
+            },
           },
         });
         break;
 
       case "Formula":
-        addColumnApi({
+        editFieldApi({
           baseId: selectedBaseId,
-          data: {
+          body: {
             tableId: selectedTableId,
-            fieldDescription: fieldDescriptionInput,
-            fieldName: fieldNameInput,
             fieldType: fieldsMap.get(selectedFieldType),
-            baseId: selectedBaseId,
-            formulaFieldOptions: fieldOptions,
-          },
-        });
-        break;
-      case "Formula":
-        addColumnApi({
-          baseId: selectedBaseId,
-          data: {
-            tableId: selectedTableId,
-            fieldDescription: fieldDescriptionInput,
-            fieldName: fieldNameInput,
-            fieldType: fieldsMap.get(selectedFieldType),
-            baseId: selectedBaseId,
-            formulaFieldOptions: fieldOptions,
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+              formulaFieldOptions: fieldOptions,
+            },
           },
         });
         break;
 
       default:
-        addColumnApi({
+        editFieldApi({
           baseId: selectedBaseId,
-          data: {
+          body: {
             tableId: selectedTableId,
-            fieldDescription: fieldDescriptionInput,
-            fieldName: fieldNameInput,
             fieldType: fieldsMap.get(selectedFieldType),
-            baseId: selectedBaseId,
+            fieldId: selectedColumn.fieldId,
+            fieldData: {
+              fieldDescription: fieldDescriptionInput,
+              fieldName: fieldNameInput,
+            },
           },
         });
         break;
     }
 
-    close();
+    // close();
     setDescriptionToggle(false);
     setSelectedFieldType(undefined);
     setFieldSearchInput("");
@@ -327,41 +351,137 @@ function TableColumnAdd({ headers }) {
   };
 
   useEffect(() => {
-    if (responseCreateColumn.data) {
-      console.log("Create column: " + responseCreateColumn.data);
-      setColumns([
-        ...columns,
-        {
-          ...responseCreateColumn.data,
-          accessorKey: responseCreateColumn.data.fieldId,
-          id: responseCreateColumn.data.fieldId,
-          header: responseCreateColumn.data.fieldId,
-          minSize: 100,
-        },
-      ]);
-      console.log(responseCreateColumn.data);
+    console.log(columns);
+    console.log("Edit column: " + responseEditField.data);
+    if (responseEditField.data) {
+      setColumns(() => {
+        return responseEditField.data.map(({ data, id }, index) => {
+          return {
+            ...data,
+            accessorKey: id,
+            id: id,
+            header: id,
+            minSize: 100,
+          };
+        });
+      });
+
+      // setColumns([
+      //   ...columns,
+      //   {
+      //     ...responseEditField.data,
+      //     accessorKey: responseEditField.data.fieldId,
+      //     id: responseEditField.data.fieldId,
+      //     header: responseEditField.data.fieldId,
+      //     minSize: 100,
+      //   },
+      // ]);
     }
-  }, [responseCreateColumn.isSuccess]);
+  }, [responseEditField.isSuccess]);
+
+  useEffect(() => {
+    setFieldNameInput(selectedColumn.fieldName);
+    setSelectedFieldType(getColumnType.get(selectedColumn?.fieldType));
+    setFieldSearchInput(getColumnType.get(selectedColumn?.fieldType));
+  }, [selectedColumn]);
 
   return (
-    <div className="relative">
-      <Popover className="relative select-none">
-        {({ open, close }) => (
-          <>
-            <Popover.Button
-              onClick={() => console.log(open)}
-              ref={setReferenceElement}
-              className="outline-none w-[120px]  th bg-[#f5f5f5] h-8"
-              style={{ height: 32 }}
-            >
-              <div className="capitalize text-left text-lg font-normal select-none px-2 truncate w-full flex justify-center items-center cursor-pointer h-8">
+    <Transition
+      ref={ref}
+      show={addColumnIsOpen}
+      className="bg-white"
+      as={Fragment}
+      enter="transition ease-out duration-200"
+      enterFrom="opacity-0 translate-y-1"
+      enterTo="opacity-100 translate-y-0"
+      leave="transition ease-in duration-150"
+      leaveFrom="opacity-100 translate-y-0"
+      leaveTo="opacity-0 translate-y-1"
+    >
+      <div
+        ref={setPopperElement}
+        style={{
+          left: addColumnPosition.x,
+          top: addColumnPosition.y,
+        }}
+        {...attributes.popper}
+        className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4  shadow-custom flex flex-col `}
+      >
+        <div className="h-full w-full ">
+          <input
+            type="text"
+            placeholder="Field Name (Mandatory)"
+            className={`w-full  p-1.5  rounded-md  outline-none shadow-input  border-2  ${
+              isExistFieldNameInput
+                ? "border-red-500 focus:border-red-500"
+                : "focus:border-blue-500 border-transparent"
+            }  `}
+            value={fieldNameInput}
+            autoFocus
+            onChange={(e) => {
+              setFieldNameInput(e.target.value);
+              existingColumns.get(e.target.value.toLocaleLowerCase())
+                ? setIsExistFieldNameInput(true)
+                : setIsExistFieldNameInput(false);
+            }}
+          />
+
+          {isExistFieldNameInput && (
+            <div className="text-red-700 text-sm m-1 ">
+              Please enter a unique field name
+            </div>
+          )}
+
+          {selectedFieldType && (
+            <div className="m-1 text-sm ">
+              {selectedOptionDescription[selectedFieldType]}
+            </div>
+          )}
+
+          <GetFieldByType
+            columns={columns}
+            type={fieldSearchInput}
+            setFieldSearchInput={setFieldSearchInput}
+            setFieldNameInput={setFieldNameInput}
+            setIsExistFieldNameInput={setIsExistFieldNameInput}
+            setSelectedFieldType={setSelectedFieldType}
+            selectedFieldTypeLinkedRecord={selectedFieldTypeLinkedRecord}
+            setSelectedFieldTypeLinkedRecord={setSelectedFieldTypeLinkedRecord}
+            fieldOptions={fieldOptions}
+            setFieldOptions={setFieldOptions}
+            fieldSearchInput={fieldSearchInput}
+            selectedFieldType={selectedFieldType}
+            fieldsMap={fieldsMap}
+          />
+
+          {descriptionToggle && (
+            <div className="mt-4">
+              <div className="mb-1">Description</div>
+              <input
+                type="text"
+                className="px-2 p-1 w-full outline-gray-400  bg-[#f2f2f2] rounded-sm"
+                placeholder="Describe this field (optional)"
+                value={fieldDescriptionInput}
+                onChange={(e) => setFieldDescriptionInput(e.target.value)}
+              />
+            </div>
+          )}
+
+          <div className="flex justify-between items-center mt-8">
+            <div>
+              <div
+                className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
+                  descriptionToggle && "hidden"
+                } `}
+                onClick={() => setDescriptionToggle(true)}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-6 h-6"
+                  className="w-5 h-5 mr-1"
                 >
                   <path
                     strokeLinecap="round"
@@ -369,150 +489,40 @@ function TableColumnAdd({ headers }) {
                     d="M12 4.5v15m7.5-7.5h-15"
                   />
                 </svg>
+                Add description
               </div>
-            </Popover.Button>
-            <Transition
-              className="bg-white"
-              as={Fragment}
-              enter="transition ease-out duration-200"
-              enterFrom="opacity-0 translate-y-1"
-              enterTo="opacity-100 translate-y-0"
-              leave="transition ease-in duration-150"
-              leaveFrom="opacity-100 translate-y-0"
-              leaveTo="opacity-0 translate-y-1"
-            >
-              <Popover.Panel
-                ref={setPopperElement}
-                style={styles.popper}
-                {...attributes.popper}
-                className={`text-black absolute z-[100] top-[30px] bg-white w-96 rounded-md p-4  shadow-custom flex flex-col 
-              ${headers.length < 3 ? "left-0" : "right-0"}`}
+            </div>
+            <div className="flex items-center gap-2">
+              <div
+                className="hover:bg-gray-200 p-1.5 rounded-md px-4 cursor-pointer"
+                onClick={() => {
+                  // close();
+                  dispatch(closeAddColumnMenu());
+                  // setDescriptionToggle(false);
+                  // setSelectedFieldType(undefined);
+                  // setFieldSearchInput("");
+                  // setFieldNameInput("");
+                }}
               >
-                <div className="h-full w-full ">
-                  <input
-                    type="text"
-                    placeholder="Field Name (Mandatory)"
-                    className={`w-full  p-1.5  rounded-md  outline-none shadow-input  border-2  ${
-                      isExistFieldNameInput
-                        ? "border-red-500 focus:border-red-500"
-                        : "focus:border-blue-500 border-transparent"
-                    }  `}
-                    value={fieldNameInput}
-                    autoFocus
-                    onChange={(e) => {
-                      setFieldNameInput(e.target.value);
-                      existingColumns.get(e.target.value.toLocaleLowerCase())
-                        ? setIsExistFieldNameInput(true)
-                        : setIsExistFieldNameInput(false);
-                    }}
-                  />
-
-                  {isExistFieldNameInput && (
-                    <div className="text-red-700 text-sm m-1 ">
-                      Please enter a unique field name
-                    </div>
-                  )}
-
-                  {selectedFieldType && (
-                    <div className="m-1 text-sm ">
-                      {selectedOptionDescription[selectedFieldType]}
-                    </div>
-                  )}
-
-                  <GetFieldByType
-                    columns={columns}
-                    type={fieldSearchInput}
-                    setFieldSearchInput={setFieldSearchInput}
-                    setFieldNameInput={setFieldNameInput}
-                    setIsExistFieldNameInput={setIsExistFieldNameInput}
-                    setSelectedFieldType={setSelectedFieldType}
-                    selectedFieldTypeLinkedRecord={
-                      selectedFieldTypeLinkedRecord
-                    }
-                    setSelectedFieldTypeLinkedRecord={
-                      setSelectedFieldTypeLinkedRecord
-                    }
-                    fieldOptions={fieldOptions}
-                    setFieldOptions={setFieldOptions}
-                    fieldSearchInput={fieldSearchInput}
-                    selectedFieldType={selectedFieldType}
-                    fieldsMap={fieldsMap}
-                  />
-
-                  {descriptionToggle && (
-                    <div className="mt-4">
-                      <div className="mb-1">Description</div>
-                      <input
-                        type="text"
-                        className="px-2 p-1 w-full outline-gray-400  bg-[#f2f2f2] rounded-sm"
-                        placeholder="Describe this field (optional)"
-                        value={fieldDescriptionInput}
-                        onChange={(e) =>
-                          setFieldDescriptionInput(e.target.value)
-                        }
-                      />
-                    </div>
-                  )}
-
-                  <div className="flex justify-between items-center mt-8">
-                    <div>
-                      <div
-                        className={`flex items-center hover:text-black text-gray-600 cursor-pointer ${
-                          descriptionToggle && "hidden"
-                        } `}
-                        onClick={() => setDescriptionToggle(true)}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                          className="w-5 h-5 mr-1"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M12 4.5v15m7.5-7.5h-15"
-                          />
-                        </svg>
-                        Add description
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="hover:bg-gray-200 p-1.5 rounded-md px-4 cursor-pointer"
-                        onClick={() => {
-                          close();
-                          setDescriptionToggle(false);
-                          setSelectedFieldType(undefined);
-                          setFieldSearchInput("");
-                          setFieldNameInput("");
-                        }}
-                      >
-                        Cancel
-                      </div>
-                      {selectedFieldType && (
-                        <button
-                          disabled={!fieldNameInput || isExistFieldNameInput}
-                          onClick={() => {
-                            close();
-                            onCreateField();
-                          }}
-                          className="bg-blue-600 rounded-md p-1.5 px-4 text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400"
-                        >
-                          Create Field
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </Popover.Panel>
-            </Transition>
-          </>
-        )}
-      </Popover>
-    </div>
+                Cancel
+              </div>
+              {selectedFieldType && (
+                <button
+                  disabled={!fieldNameInput || isExistFieldNameInput}
+                  onClick={() => {
+                    // close();
+                    onCreateField();
+                  }}
+                  className="bg-blue-600 rounded-md p-1.5 px-4 text-white cursor-pointer hover:bg-blue-700 disabled:bg-gray-400"
+                >
+                  Save
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </Transition>
   );
 }
 
@@ -708,11 +718,9 @@ function GetFieldByType({
       );
 
     case "Formula":
-    case "Formula":
       return (
         <>
           {SelectedFieldOption}
-          <FormulaOptions columns={columns} setFieldOptions={setFieldOptions} />
           <FormulaOptions columns={columns} setFieldOptions={setFieldOptions} />
         </>
       );
@@ -1520,185 +1528,47 @@ function FormulaOptions({ setFieldOptions }) {
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const editorRef = useRef(null);
-  const [variables, setVariables] = useState([]);
-  const [isEditorFocused, setIsEditorFocused] = useState(false);
+  const { columns } = useContext(TableContext);
+  console.log(columns);
 
   useEffect(() => {
-    // Initialize the Monaco Editor
-    editorRef.current = monaco.editor.create(
-      document.getElementById("editorContainer"),
-      {
-        value: "",
-        language: "formula", // Set the language mode to 'formula'
-        minimap: { enabled: false }, // Disable the minimap
-        scrollBeyondLastLine: false, // Disable scrolling beyond the last line
-        automaticLayout: false, // Enable automatic layout
-        bracketPairColorization: true,
-        suggestOnTriggerCharacters: true, // Enable suggestions on trigger characters
-        lineNumbers: "off",
-        autoClosingBrackets: "always",
-        glyphMargin: false,
-      }
-    );
-
-
-    editorRef.current.onDidFocusEditorText(() => {
-      setIsEditorFocused(true);
+    setFieldOptions({
+      formula: value,
     });
+  }, [value]);
 
-    editorRef.current.onDidBlurEditorText(() => {
-      setIsEditorFocused(false);
-    });
-
-    monaco.languages.register({ id: "formula" });
-
-monaco.languages.setLanguageConfiguration("formula", {
-      brackets: [
-        ["(", ")"],
-        ["{", "}"],
-        ["[", "]"],
-      ]
-    });
-
-// Register a tokens provider for the language
-monaco.languages.setMonarchTokensProvider("formula", {
-	tokenizer: {
-		root: [
-			[/\[error.*/, "custom-error"],
-			[/\[notice.*/, "custom-notice"],
-			[/\[info.*/, "custom-info"],
-			[/\[[a-zA-Z 0-9:]+\]/, "custom-date"],
-		// 	[/\bSUM\b|\bMIN\b|\bMAX\b|\bAVG\b/, 'function'], // Recognize aggregate functions
-        //   [/[num1|num2|num3]\w*/, 'variable'], // Recognize variables
-        //   [/\d+/, 'number'], // Recognize numbers
-		],
-	},
-});
-
-// Define a new theme that contains only rules that match this language
-monaco.editor.defineTheme("myCoolTheme", {
-	base: "vs",
-	inherit: false,
-	rules: [
-		{ token: "custom-info", foreground: "808080" },
-		{ token: "custom-error", foreground: "ff0000", fontStyle: "bold" },
-		{ token: "custom-notice", foreground: "FFA500" },
-		{ token: "custom-date", foreground: "008800" },
-	],
-	colors: {
-		"editor.foreground": "#000000",
-	},
-});
-
-// Register a completion item provider for the new language
-monaco.languages.registerCompletionItemProvider("formula", {
-	provideCompletionItems: (model, position) => {
-		var word = model.getWordUntilPosition(position);
-		var range = {
-			startLineNumber: position.lineNumber,
-			endLineNumber: position.lineNumber,
-			startColumn: word.startColumn,
-			endColumn: word.endColumn,
-		};
-		var suggestions = [
-			{
-				label: "SUM",
-				kind: monaco.languages.CompletionItemKind.Function,
-				insertText: "SUM(${1})",
-				insertTextRules:
-					monaco.languages.CompletionItemInsertTextRule
-						.InsertAsSnippet,
-				range: range,
-			},
-			{
-				label: "AVG",
-				kind: monaco.languages.CompletionItemKind.Function,
-				insertText: "AVG(${1})",
-				insertTextRules:
-					monaco.languages.CompletionItemInsertTextRule
-						.InsertAsSnippet,
-				range: range,
-			},
-			{
-				label: "MIN",
-				kind: monaco.languages.CompletionItemKind.Function,
-				insertText: "MIN(${1})",
-				insertTextRules:
-					monaco.languages.CompletionItemInsertTextRule
-						.InsertAsSnippet,
-				range: range,
-			},
-			{
-				label: "MAX",
-				kind: monaco.languages.CompletionItemKind.Function,
-				insertText: "MAX(${1})",
-				insertTextRules:
-					monaco.languages.CompletionItemInsertTextRule
-						.InsertAsSnippet,
-				range: range,
-			},
-		];
-		return { suggestions: suggestions };
-	},
-});
-
-    
-
-    // Fetch the available variables and populate the select element
-    fetchVariables().then((variables) => {
-      setVariables(variables);
-    });
-
-    // Set the theme for the editor (optional)
-    //monaco.editor.setTheme('vs-dark');
-  }, []);
-
-  const handleVariableSelection = () => {
-    const selectedVariable = document.getElementById("variableSelect").value;
-    const editor = editorRef.current;
-
-    if (editor) {
-      const currentPosition = editor.getPosition();
-      editor.executeEdits("", [
-        {
-          range: new monaco.Range(
-            currentPosition.lineNumber,
-            currentPosition.column,
-            currentPosition.lineNumber,
-            currentPosition.column
-          ),
-          text: selectedVariable,
-          forceMoveMarkers: true,
-        },
-      ]);
+  const validate = (value) => {
+    if (columns.some((ele) => ele.fieldName === value)) {
+      setError(false);
+      return true;
     }
+    //setError(true);
+    //setErrorMessage("Invalid Column Name");
+    return false;
   };
 
-  function fetchVariables() {
-    return Promise.resolve(["num1", "num2", "num3"]);
-  }
+  const onChangeHandler = (e) => {
+    if (e.target.value === "") {
+      setError(false);
+      setValue(e.target.value);
+      return;
+    }
+    validate(e.target.value);
+    setValue(e.target.value);
+  };
 
   return (
     <>
       <div className="mt-2 mb-2">Formula</div>
-      <div
-        id="editorContainer"
-        className={`w-full h-36 rounded border border${
-          isEditorFocused ? " border-blue-700" : ""
-        }`}
+      <textarea
+        className="w-full border rounded p-1 px-2"
+        placeholder="formula"
+        value={value}
+        onChange={onChangeHandler}
       />
-      <select id="variableSelect" onChange={handleVariableSelection}>
-        <option value="">Select a variable</option>
-        {variables.map((variable) => (
-          <option key={variable} value={variable}>
-            {variable}
-          </option>
-        ))}
-      </select>
       {error ? <div className="text-red-500">{errorMessage}</div> : null}
     </>
   );
 }
 
-export default TableColumnAdd;
+export default TableColumnAddModal;

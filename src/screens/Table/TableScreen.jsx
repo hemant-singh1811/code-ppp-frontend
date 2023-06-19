@@ -8,10 +8,11 @@ import {
 } from "../../store/services/alphaTruckingApi";
 import { useSelector } from "react-redux";
 import Table from "../../components/Table/Table";
+import { memo } from "react";
 
 let multipleRecordLinksArray = [];
 
-export default function TableScreen() {
+const TableScreen = memo(function TableScreen() {
   const { selectedTableId } = useSelector((state) => state.globalState);
 
   let getTableDataApi = useGetTableDataQuery(selectedTableId);
@@ -25,6 +26,7 @@ export default function TableScreen() {
   const RecordIdArrayWithTableIdMap = new Map(); // table id -> multiple record [] of a particular column
 
   useEffect(() => {
+    // console.log("api called");
     getTableDataApi.refetch(selectedTableId);
     getModalApi.refetch(selectedTableId);
     // getViewsApi.refetch({
@@ -38,17 +40,17 @@ export default function TableScreen() {
   //   }
   // }, [getViewsApi.isSuccess]);
 
-  useEffect(() => {
-    if (getModalApi.data) {
-      console.log("GET MODAL:", getModalApi.data);
-    }
-  }, [getModalApi.isSuccess]);
+  // useEffect(() => {
+  //   if (getModalApi.data) {
+  //     console.log("GET MODAL:", getModalApi.data);
+  //   }
+  // }, [getModalApi.isSuccess]);
 
-  useEffect(() => {
-    if (getTableDataApi.data) {
-      console.log("GET DATA:", getTableDataApi.data);
-    }
-  }, [getTableDataApi.isSuccess]);
+  // useEffect(() => {
+  //   if (getTableDataApi.data) {
+  //     console.log("GET DATA:", getTableDataApi.data);
+  //   }
+  // }, [getTableDataApi.isSuccess]);
 
   if (
     getTableDataApi.isFetching ||
@@ -83,6 +85,7 @@ export default function TableScreen() {
     .filter((data) => data); // removes empty array
 
   const uniqueRecordIdSet = new Set();
+
   for (let [key, value] of multipleRecordLinksMap.entries()) {
     // console.log(key, value);
     getTableDataApi.data.map(({ data }) => {
@@ -104,13 +107,17 @@ export default function TableScreen() {
   let modifiedArrayOfObject = [];
 
   for (let [key, value] of RecordIdArrayWithTableIdMap) {
-    // console.log(key, value);
     modifiedArrayOfObject.push({
       tableId: key,
       recordIds: value,
     });
   }
 
+  // console.log(
+  //   "table screen called ++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+  // );
+
+  // return <div>table screen</div>;
   return (
     <Table
       // tableView={getViewsApi.data}
@@ -119,6 +126,8 @@ export default function TableScreen() {
       tableModel={getModalApi.data}
       modifiedArrayOfObject={modifiedArrayOfObject}
       multipleRecordLinksArray={multipleRecordLinksArray}
+      selectedTableId={selectedTableId}
     />
   );
-}
+});
+export default TableScreen;

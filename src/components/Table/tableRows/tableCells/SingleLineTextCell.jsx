@@ -35,7 +35,7 @@ export default function SingleLineTextCell({ cell, isFocused }) {
         data: {
           baseId: selectedBaseId,
           tableId: selectedTableId,
-          recordId: cell?.row?.original.id52148213343234567,
+          recordId: cell?.row?.original.recordId,
           updatedData: newRowPart,
           fieldType: cell.column.columnDef.fieldType,
           fieldId: cell.column.columnDef.fieldId,

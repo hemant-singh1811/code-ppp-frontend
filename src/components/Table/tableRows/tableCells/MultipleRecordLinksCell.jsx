@@ -77,7 +77,7 @@ function MultipleRecordLinksCell({ cell }) {
       data: {
         baseId: selectedBaseId,
         tableId: selectedTableId,
-        recordId: rowCopy.id52148213343234567,
+        recordId: rowCopy.recordId,
         updatedData: ele?.id,
         linkedRecord: linkedRecord,
         added: true,
@@ -118,7 +118,7 @@ function MultipleRecordLinksCell({ cell }) {
         tableId: selectedTableId,
         fieldType: cell.column.columnDef.fieldType,
         fieldId: cell.column.columnDef.fieldId,
-        recordId: rowCopy.id52148213343234567,
+        recordId: rowCopy.recordId,
         updatedData: ele?.recordId,
         linkedRecord: linkedRecord,
         added: false,

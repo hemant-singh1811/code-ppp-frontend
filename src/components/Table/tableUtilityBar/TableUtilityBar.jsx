@@ -19,10 +19,10 @@ export default function TableUtilityBar() {
   const { table } = useContext(TableContext);
   const socket = useSelector((state) => state.socketWebData.socket);
   const dispatch = useDispatch();
-  const { selectedView, previousSelectedView } = useSelector(
-    (state) => state.views
-  );
-  const { userInfo } = useSelector((state) => state.auth);
+  // const { selectedView, previousSelectedView } = useSelector(
+  //   (state) => state.views
+  // );
+  // const { userInfo } = useSelector((state) => state.auth);
   let tabledata = table?.options.state;
 
   useEffect(() => {

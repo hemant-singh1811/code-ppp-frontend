@@ -22,8 +22,8 @@ export default function CheckBox({ cell, rowData, isHovered }) {
       data: {
         baseId: selectedBaseId,
         tableId: selectedTableId,
-        recordId: cell?.row?.original.id52148213343234567,
-        updatedData: checkBoxRef.current.checked,
+        recordId: cell?.row?.original.recordId,
+        updatedData: checkBoxRef.current?.checked,
         fieldType: cell.column.columnDef.fieldType,
         fieldId: cell.column.columnDef.fieldId,
       },
@@ -33,28 +33,30 @@ export default function CheckBox({ cell, rowData, isHovered }) {
       table.options.meta?.updateData(
         cell.row.index,
         cell.column.id,
-        checkBoxRef.current.checked,
+        checkBoxRef.current?.checked,
         response.metaData
       );
     });
   }
 
   return (
-    (isHovered || isSelected) && (
-      <label
-        className="w-full h-full flex items-center justify-center cursor-pointer "
-        htmlFor={cell?.row?.id + cell?.id}
-      >
-        <input
-          ref={checkBoxRef}
-          type="checkbox"
-          className="m-auto h-auto cursor-pointer outline-none "
-          name=""
-          id={cell?.row?.id + cell?.id}
-          checked={isSelected}
-          onChange={handleUpdate}
-        />
-      </label>
-    )
+    <div className="w-full h-full flex items-center justify-center">
+      {(isHovered || isSelected) && (
+        <label
+          className="w-full h-full flex items-center justify-center cursor-pointer "
+          htmlFor={cell?.row?.id + cell?.id}
+        >
+          <input
+            ref={checkBoxRef}
+            type="checkbox"
+            className="m-auto h-auto cursor-pointer outline-none "
+            name=""
+            id={cell?.row?.id + cell?.id}
+            checked={isSelected}
+            onChange={handleUpdate}
+          />
+        </label>
+      )}
+    </div>
   );
 }
