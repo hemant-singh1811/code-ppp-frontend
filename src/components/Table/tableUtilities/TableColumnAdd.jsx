@@ -622,8 +622,12 @@ function GetFieldByType({
       );
 
     case "Lookup":
-      return <LookUpOptions setFieldOptions={setFieldOptions} />;
-
+      return (
+        <>
+          {SelectedFieldOption}
+          <LookUpOptions setFieldOptions={setFieldOptions} />
+        </>
+      );
     case "Number":
       return (
         <>
@@ -941,13 +945,24 @@ function LookUpOptions({ setFieldOptions }) {
     selectFieldData = selectedTable.data?.linkedRecord?.model.map((ele) => {
       return ele;
     });
-    selectFieldData = selectFieldData.map((ele) => {
-      return {
-        name: ele.data.fieldName,
-        icon: ele.data.fieldType,
-        data: ele.data,
-      };
-    });
+    selectFieldData = selectFieldData
+      .map((ele) => {
+        return {
+          name: ele.data.fieldName,
+          icon: ele.data.fieldType,
+          data: ele.data,
+        };
+      })
+      .filter((ele) => {
+        if (
+          ele.data.fieldType === "lookup" ||
+          ele.data.fieldType === "linkedRecords"
+        ) {
+          return false;
+        } else {
+          return true;
+        }
+      });
   }
   useEffect(() => {
     setFieldOptions({
@@ -955,11 +970,9 @@ function LookUpOptions({ setFieldOptions }) {
       selectedFieldId: selectedField.data?.fieldId,
       selectedLinkedRecordFieldId: selectedTable.data?.fieldId,
       lookUpFieldType: selectedField.data?.fieldType,
-      // selectedTable: selectedTable.data,
-      // selectedField: selectedField.data,
     });
   }, [selectedField, selectedTable]);
-
+  console.log(selectTableData);
   return (
     <>
       <div className="mt-2 -mb-2 text-sm">
@@ -1558,7 +1571,6 @@ function FormulaOptions({ setFieldOptions }) {
       }
     );
 
-
     editorRef.current.onDidFocusEditorText(() => {
       setIsEditorFocused(true);
     });
@@ -1569,97 +1581,91 @@ function FormulaOptions({ setFieldOptions }) {
 
     monaco.languages.register({ id: "formula" });
 
-monaco.languages.setLanguageConfiguration("formula", {
+    monaco.languages.setLanguageConfiguration("formula", {
       brackets: [
         ["(", ")"],
         ["{", "}"],
         ["[", "]"],
-      ]
+      ],
     });
 
-// Register a tokens provider for the language
-monaco.languages.setMonarchTokensProvider("formula", {
-	tokenizer: {
-		root: [
-			[/\[error.*/, "custom-error"],
-			[/\[notice.*/, "custom-notice"],
-			[/\[info.*/, "custom-info"],
-			[/\[[a-zA-Z 0-9:]+\]/, "custom-date"],
-		// 	[/\bSUM\b|\bMIN\b|\bMAX\b|\bAVG\b/, 'function'], // Recognize aggregate functions
-        //   [/[num1|num2|num3]\w*/, 'variable'], // Recognize variables
-        //   [/\d+/, 'number'], // Recognize numbers
-		],
-	},
-});
+    // Register a tokens provider for the language
+    monaco.languages.setMonarchTokensProvider("formula", {
+      tokenizer: {
+        root: [
+          [/\[error.*/, "custom-error"],
+          [/\[notice.*/, "custom-notice"],
+          [/\[info.*/, "custom-info"],
+          [/\[[a-zA-Z 0-9:]+\]/, "custom-date"],
+          // 	[/\bSUM\b|\bMIN\b|\bMAX\b|\bAVG\b/, 'function'], // Recognize aggregate functions
+          //   [/[num1|num2|num3]\w*/, 'variable'], // Recognize variables
+          //   [/\d+/, 'number'], // Recognize numbers
+        ],
+      },
+    });
 
-// Define a new theme that contains only rules that match this language
-monaco.editor.defineTheme("myCoolTheme", {
-	base: "vs",
-	inherit: false,
-	rules: [
-		{ token: "custom-info", foreground: "808080" },
-		{ token: "custom-error", foreground: "ff0000", fontStyle: "bold" },
-		{ token: "custom-notice", foreground: "FFA500" },
-		{ token: "custom-date", foreground: "008800" },
-	],
-	colors: {
-		"editor.foreground": "#000000",
-	},
-});
+    // Define a new theme that contains only rules that match this language
+    monaco.editor.defineTheme("myCoolTheme", {
+      base: "vs",
+      inherit: false,
+      rules: [
+        { token: "custom-info", foreground: "808080" },
+        { token: "custom-error", foreground: "ff0000", fontStyle: "bold" },
+        { token: "custom-notice", foreground: "FFA500" },
+        { token: "custom-date", foreground: "008800" },
+      ],
+      colors: {
+        "editor.foreground": "#000000",
+      },
+    });
 
-// Register a completion item provider for the new language
-monaco.languages.registerCompletionItemProvider("formula", {
-	provideCompletionItems: (model, position) => {
-		var word = model.getWordUntilPosition(position);
-		var range = {
-			startLineNumber: position.lineNumber,
-			endLineNumber: position.lineNumber,
-			startColumn: word.startColumn,
-			endColumn: word.endColumn,
-		};
-		var suggestions = [
-			{
-				label: "SUM",
-				kind: monaco.languages.CompletionItemKind.Function,
-				insertText: "SUM(${1})",
-				insertTextRules:
-					monaco.languages.CompletionItemInsertTextRule
-						.InsertAsSnippet,
-				range: range,
-			},
-			{
-				label: "AVG",
-				kind: monaco.languages.CompletionItemKind.Function,
-				insertText: "AVG(${1})",
-				insertTextRules:
-					monaco.languages.CompletionItemInsertTextRule
-						.InsertAsSnippet,
-				range: range,
-			},
-			{
-				label: "MIN",
-				kind: monaco.languages.CompletionItemKind.Function,
-				insertText: "MIN(${1})",
-				insertTextRules:
-					monaco.languages.CompletionItemInsertTextRule
-						.InsertAsSnippet,
-				range: range,
-			},
-			{
-				label: "MAX",
-				kind: monaco.languages.CompletionItemKind.Function,
-				insertText: "MAX(${1})",
-				insertTextRules:
-					monaco.languages.CompletionItemInsertTextRule
-						.InsertAsSnippet,
-				range: range,
-			},
-		];
-		return { suggestions: suggestions };
-	},
-});
-
-    
+    // Register a completion item provider for the new language
+    monaco.languages.registerCompletionItemProvider("formula", {
+      provideCompletionItems: (model, position) => {
+        var word = model.getWordUntilPosition(position);
+        var range = {
+          startLineNumber: position.lineNumber,
+          endLineNumber: position.lineNumber,
+          startColumn: word.startColumn,
+          endColumn: word.endColumn,
+        };
+        var suggestions = [
+          {
+            label: "SUM",
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: "SUM(${1})",
+            insertTextRules:
+              monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            range: range,
+          },
+          {
+            label: "AVG",
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: "AVG(${1})",
+            insertTextRules:
+              monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            range: range,
+          },
+          {
+            label: "MIN",
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: "MIN(${1})",
+            insertTextRules:
+              monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            range: range,
+          },
+          {
+            label: "MAX",
+            kind: monaco.languages.CompletionItemKind.Function,
+            insertText: "MAX(${1})",
+            insertTextRules:
+              monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            range: range,
+          },
+        ];
+        return { suggestions: suggestions };
+      },
+    });
 
     // Fetch the available variables and populate the select element
     fetchVariables().then((variables) => {
