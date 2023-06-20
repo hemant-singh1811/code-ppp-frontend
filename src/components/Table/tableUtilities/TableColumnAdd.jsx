@@ -304,19 +304,7 @@ function TableColumnAdd({ headers }) {
           },
         });
         break;
-      case "Formula":
-        addColumnApi({
-          baseId: selectedBaseId,
-          data: {
-            tableId: selectedTableId,
-            fieldDescription: fieldDescriptionInput,
-            fieldName: fieldNameInput,
-            fieldType: fieldsMap.get(selectedFieldType),
-            baseId: selectedBaseId,
-            formulaFieldOptions: fieldOptions,
-          },
-        });
-        break;
+
 
       default:
         addColumnApi({
