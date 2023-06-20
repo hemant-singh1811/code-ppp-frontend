@@ -714,7 +714,6 @@ function GetFieldByType({
       );
 
     case "Formula":
-    case "Formula":
       return (
         <>
           {SelectedFieldOption}
