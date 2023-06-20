@@ -20,6 +20,7 @@ import CountCell from "./CountCell";
 import RatingCell from "./RatingCell";
 import FormulaCell from "./FormulaCell";
 import UserCell from "./UserCell";
+import LookUpCells from "../LookUpCells";
 
 export function CellByFieldType({
   rowIndex,
@@ -155,6 +156,9 @@ export function CellByFieldType({
           isHovered={isHovered}
         />
       );
+
+    case "lookup": //boolean
+      return <LookUpCells cell={cell} />;
 
     case "date": //string
       return <DateTableCell cell={cell} />;

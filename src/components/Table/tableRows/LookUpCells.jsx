@@ -1,8 +1,46 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { TableContext } from "../../tableComponents/TableComponents";
+import { TableContext } from "../tableComponents/TableComponents";
+// "linkedRecords",
+// "singleLineText",
+// "multilineText",
+// "attachments",
+// "checkbox",
+// "singleSelect",
+// "multipleSelect",
+// // "user",
+// "date",
+// "phoneNumber",
+// "email",
+// "url",
+// "number",
+// "currency",
+// "percent",
+// "duration",
+// "rating",
+// "formula",
+// // "rollup",
+// "count",
+// "lookup",
+// "createdTime",
+// "lastModifiedTime",
+// "createdBy",
+// "lastModifiedBy",
+// "autoNumber",
+// "barcode",
+// "button",
 
-export default function SingleLineTextCell({ cell }) {
+export default function LookUpCells({ cell }) {
+  console.log(cell.column.columnDef);
+  switch (cell.column.columnDef.lookupFieldOptions.lookUpFieldType) {
+    case "singleLineText":
+      return <SingleLineTextCell cell={cell} />;
+  }
+
+  return <div>LookUpCells</div>;
+}
+
+function SingleLineTextCell({ cell }) {
   let val = cell?.getValue();
   const socket = useSelector((state) => state.socketWebData.socket);
   const [value, setValue] = useState(val || "");
@@ -53,18 +91,6 @@ export default function SingleLineTextCell({ cell }) {
       });
     }
   }
-
-  // console.log(isFocused);
-
-  // const divRef = useRef(null);
-
-  // console.log(cellRef);
-
-  // useEffect(() => {
-  //   if (isFocused) {
-  //     divRef.current.focus();
-  //   }
-  // }, [isFocused]);
 
   return isEditMode ? (
     <input
